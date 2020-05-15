@@ -1,6 +1,10 @@
 # soccer-common
 This repositiory contains classes and methods that can be used by ssl, vss or any other category of robot soccer that allows the same architecture
 
+--------------------
+https://doc.qt.io/archives/qt-4.8/threads-qobject.html
+
+
 Common {
   description: Concentrates everything that can be shared in different categories of robot soccer;
 
