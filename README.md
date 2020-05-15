@@ -4,6 +4,7 @@ This repositiory contains classes and methods that can be used by ssl, vss or an
 --------------------
 https://doc.qt.io/archives/qt-4.8/threads-qobject.html
 
+https://doc.qt.io/archives/qq/qq10-signalmapper.html
 
 Common {
   description: Concentrates everything that can be shared in different categories of robot soccer;
