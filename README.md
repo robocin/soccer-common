@@ -1,3 +1,11 @@
+```mermaid
+graph LR
+A[Square Rect] -- Link text --> B((Circle))
+A --> C(Round Rect)
+B --> D{Rhombus}
+C --> D
+```
+
 # soccer-common
 This repositiory contains classes and methods that can be used by ssl, vss or any other category of robot soccer that allows the same architecture
 
