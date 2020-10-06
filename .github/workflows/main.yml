@@ -28,4 +28,4 @@ jobs:
       shell: bash
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake -project "QMAKE_CXXFLAGS += -std=c++1z" && qmake && make && ./$REPOSITORY_NAME
+      run: cd $GITHUB_WORKSPACE/ && qmake $REPOSITORY_NAME.pro -spec linux-g++ && make qmake_all
