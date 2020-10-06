@@ -1,9 +1,10 @@
+# Includes must contain the necessary relative includepaths.
 include($$PWD/../template/template.pri)
 include($$PWD/../libs/libs.pri)
 include($$PWD/../src/src.pri)
 
 # Putting the binary in the root of project.
-DESTDIR = $$PWD/../bin
+DESTDIR = $$PWD/../lib # lib, because it's a library.
 
 # The binary will have the same name as the project.
 TARGET = $$PROJECT_NAME
