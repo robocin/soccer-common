@@ -24,4 +24,4 @@ jobs:
       run: qmake --version
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make qmake_all
+      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
