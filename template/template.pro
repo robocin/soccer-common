@@ -1,7 +1,8 @@
 TEMPLATE = subdirs
 
+include(template.pri)
+
 DISTFILES +=           \
-  template.pri         \
   src-app-template.pri \
   src-lib-template.pri \
   test-template.pri    \
