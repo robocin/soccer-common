@@ -20,6 +20,9 @@ jobs:
       with:
         version: '5.15.1'
 
+    - name: Install OpenGL
+      run: apt-get install freeglut3 freeglut3-dev
+
     - name: Get qmake version
       run: qmake --version
 
