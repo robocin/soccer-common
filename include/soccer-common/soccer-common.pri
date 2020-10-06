@@ -13,4 +13,4 @@ INCLUDEPATH += $$PWD/..
 include($$PWD/../../src/src.pri)
 
 # HEADERS that will be visible and may be included by another project.
-HEADERS += $$PWD/soccer-common
+HEADERS += $$PWD/soccer-common.h
