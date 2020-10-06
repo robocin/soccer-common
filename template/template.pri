@@ -30,5 +30,5 @@ macx: {
 }
 
 win32: {
-  error(this code is not compatible with Windows OS.)
+  error("this code isn't compatible with Windows OS.")
 }
