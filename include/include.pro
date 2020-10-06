@@ -12,5 +12,5 @@ include($$PWD/../version.pri)
 # include it in another project, without further complications.                #
 # ---------------------------------------------------------------------------- #
 } else {
-  DISTFILES += $$PWD/$${PROJECT_NAME}/$${PROJECT_NAME}.pri
+  include($$PWD/$${PROJECT_NAME}/$${PROJECT_NAME}.pri)
 }

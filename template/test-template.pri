@@ -12,7 +12,7 @@ include($$PWD/../../libs/libs.pri)
 include($$PWD/../../src/src.pri)
 
 # Putting the binary in the root of project, specific for testing.
-DESTDIR = $$PWD/../../bin/test
+DESTDIR = $$PWD/../../bin/test # bin, because tests are executable files in Qt.
 
 TARGET # The binary will remain with the name of the project, as it is the same name as the test.
 
