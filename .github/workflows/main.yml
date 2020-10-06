@@ -23,8 +23,5 @@ jobs:
     - name: Install OpenGL
       run: sudo apt-get install freeglut3 freeglut3-dev
 
-    - name: Get qmake version
-      run: qmake --version
-
-    - name: test project build
+    - name: Test project build
       run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
