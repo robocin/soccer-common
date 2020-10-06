@@ -18,14 +18,10 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.8.0
       with:
-        version: '5.14.2'
+        version: '5.15.1'
 
     - name: Get qmake version
       run: qmake --version
-    
-    - name: set repository name
-      run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
-      shell: bash
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake $REPOSITORY_NAME.pro -spec linux-g++ && make qmake_all
+      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make qmake_all
