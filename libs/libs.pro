@@ -8,4 +8,4 @@ TEMPLATE = subdirs
 # and use in src.                                                              #
 # ---------------------------------------------------------------------------- #
 
-DISTFILES += $$PWD/libs.pri
+include($$PWD/libs.pri)
