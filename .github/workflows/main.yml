@@ -24,9 +24,9 @@ jobs:
       run: sudo apt-get install freeglut3 freeglut3-dev
 
     - name: clang-format lint
-      uses: DoozyX/clang-format-lint-action@v0.10
+      uses: DoozyX/clang-format-lint-action@v0.9
       with:
-        clangFormatVersion: 11
+        clangFormatVersion: 10
 
     - name: test project build
       run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
