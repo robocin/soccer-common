@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------- #
-# Just paste this code in your 'test-name.pro' and add 'test-name.cpp'         #
+# Just paste this code in your 'test-name.pro' and add 'test-name.(h | cpp)'   #
 # WARNING: You may need to adjust the relative paths.                          #
 #                                                                              #
 # You can learn how to create a unity-test here:                               #
@@ -9,6 +9,8 @@
 # Includes must contain the necessary relative includepaths.
 include($$PWD/../../template/template.pri)
 include($$PWD/../../libs/libs.pri)
+
+INCLUDEPATH += $$PWD/../../src
 include($$PWD/../../src/src.pri)
 
 # Putting the binary in the root of project, specific for testing.
