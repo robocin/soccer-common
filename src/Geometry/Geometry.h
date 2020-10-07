@@ -23,11 +23,11 @@ namespace Geometry {
   static constexpr qreal PI = M_PI;
 
   RC_T_TEMPLATE_CONSTEXPR qreal radiansToDegrees(T radians) {
-    return radians*(180.0/PI);
+    return radians * (180.0 / PI);
   }
 
   RC_T_TEMPLATE_CONSTEXPR qreal degreesToRadians(T degrees) {
-    return (degrees*PI)/180.0;
+    return (degrees * PI) / 180.0;
   }
 } // namespace Geometry
 
