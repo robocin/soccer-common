@@ -23,5 +23,10 @@ jobs:
     - name: Install OpenGL
       run: sudo apt-get install freeglut3 freeglut3-dev
 
+    - name: clang-format lint
+      uses: DoozyX/clang-format-lint-action@v0.10
+      with:
+        clangFormatVersion: 10
+
     - name: Test project build
       run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
