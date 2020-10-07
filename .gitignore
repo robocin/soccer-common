@@ -26,6 +26,7 @@ tags
 Makefile*
 *.prl
 *.app
+moc_*.h
 moc_*.cpp
 ui_*.h
 qrc_*.cpp
@@ -70,3 +71,7 @@ Thumbs.db
 # --------
 *.dll
 *.exe
+
+# The following files works only in this kind of project.
+# ----------------------------------------------------------------------------
+/bin/test
