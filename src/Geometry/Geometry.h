@@ -35,7 +35,7 @@ namespace Geometry2D {
   using namespace Geometry;
 
   RC_PT_T_TEMPLATE_CONSTEXPR T dot(const PT& lhs, const PT& rhs) {
-    return PT::dotProduct(lhs, rhs);
+    return lhs.x() * rhs.x() + lhs.y() * rhs.y();
   }
 
   RC_PT_T_TEMPLATE_CONSTEXPR T cross(const PT& lhs, const PT& rhs) {
@@ -137,6 +137,10 @@ namespace Geometry2D {
     return 2.0 * projectPointLine(a, b, c) - c;
   }
 } // namespace Geometry2D
+
+namespace Geometry3D {
+  // Implementations can use the QVector3D class.
+} // namespace Geometry3D
 
 #undef RC_CONSTEXPR
 #undef RC_T_TEMPLATE_CONSTEXPR
