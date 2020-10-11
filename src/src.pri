@@ -1,5 +1,1 @@
-HEADERS += \
-  $$PWD/Geometry/Geometry.h
-
-SOURCES += \
-  $$PWD/Geometry/Geometry.cpp
+include($$PWD/Geometry/Geometry.pri)
