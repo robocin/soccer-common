@@ -72,6 +72,9 @@ Thumbs.db
 *.dll
 *.exe
 
-# The following files works only in this kind of project.
-# ----------------------------------------------------------------------------
-/bin/test
+# qtcreator unit tests
+target_wrapper.*
+
+# Binaries
+# --------
+/bin
