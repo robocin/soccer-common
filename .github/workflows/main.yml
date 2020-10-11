@@ -23,7 +23,7 @@ jobs:
         version: '5.15.1'
 
     - name: install OpenGL
-      run: sudo apt-get install g++ freeglut3 freeglut3-dev
+      run: sudo apt-get install freeglut3 freeglut3-dev && g++ --version
 
     - name: clang-format lint
       uses: DoozyX/clang-format-lint-action@v0.9
@@ -31,4 +31,4 @@ jobs:
         clangFormatVersion: 10
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
+      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro && make
