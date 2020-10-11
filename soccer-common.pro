@@ -9,7 +9,8 @@ SUBDIRS +=        \
   $$PWD/include   \
   $$PWD/libs      \
   $$PWD/src       \
-  $$PWD/test
+  $$PWD/test      \
+  $$PWD/scripts
 
 # For Qt Creator beautifier.
 DISTFILES +=                  \
