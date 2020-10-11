@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # Currently 'ubuntu-latest' is an alias for ubuntu-18.04. Once changed, use.
 
     steps:
     - name: checkout
@@ -23,7 +23,7 @@ jobs:
         version: '5.15.1'
 
     - name: install OpenGL
-      run: sudo apt-get install freeglut3 freeglut3-dev && g++ --version
+      run: sudo apt-get install freeglut3 freeglut3-dev
 
     - name: clang-format lint
       uses: DoozyX/clang-format-lint-action@v0.9
@@ -31,4 +31,4 @@ jobs:
         clangFormatVersion: 10
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro && make
+      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
