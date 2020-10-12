@@ -28,6 +28,3 @@ jobs:
 
     - name: test project build
       run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
-    
-    - name: generate changelog
-      uses: heinrichreimer/action-github-changelog-generator@v2.1.1
