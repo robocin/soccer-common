@@ -32,6 +32,6 @@ jobs:
     - name: changelog ci
       uses: saadmk11/changelog-ci@v0.6.1
       with:
-        config_file: changelog-ci-config.json
+        config_file: 'changelog-ci-config.json'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
