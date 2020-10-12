@@ -28,3 +28,10 @@ jobs:
 
     - name: test project build
       run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
+
+    - name: changelog ci
+      uses: saadmk11/changelog-ci@v0.6.1
+      with:
+        config_file: changelog-ci-config.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
