@@ -1,0 +1,14 @@
+name: Changelog CI
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: run changelog ci
+      uses: saadmk11/changelog-ci@v0.6.1
+      with:
+        config_file: changelog-ci-config.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
