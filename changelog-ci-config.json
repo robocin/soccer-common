@@ -1,43 +1,5 @@
 {
   "commit_changelog": true,
   "comment_changelog": true,
-  "pull_request_title_regex": "^(?i:release)|^(?i:hotfix)",
-  "group_config": [
-    {
-      "title": "Bug Fixes",
-      "labels": ["bug", "fix", "bugfix"]
-    },
-    {
-      "title": "Code Improvements",
-      "labels": ["refactor", "improvements", "enhancement"]
-    },
-    {
-      "title": "New Features",
-      "labels": ["feat", "feature"]
-    },
-    {
-      "title": "Documentation Updates",
-      "labels": ["docs", "documentation", "doc"]
-    },
-    {
-      "title": "Continuous Integration Updates",
-      "labels": ["ci"]
-    },
-    {
-      "title": "Tests Updates",
-      "labels": ["test"]
-    },
-    {
-      "title": "Style Updates",
-      "labels": ["style"]
-    },
-    {
-      "title": "Chore Updates",
-      "labels": ["chore"]
-    },
-    {
-      "title": "Build Updates",
-      "labels": ["build"]
-    }
-  ]
+  "pull_request_title_regex": "^(?i:release)|^(?i:hotfix)"
 }
