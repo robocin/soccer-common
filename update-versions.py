@@ -128,7 +128,7 @@ with open(filename, 'r+') as file:
           continue
         lines[index] = r.match(line).group(1) + new_value
   file.seek(0)
-  file.write('\n'.join(lines))
+  file.write('\n'.join(lines) + '\n')
   file.truncate()
 
 progress_bar(len(original_message) - 2)

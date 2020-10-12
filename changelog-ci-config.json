@@ -1,0 +1,42 @@
+{
+  "commit_changelog": true,
+  "comment_changelog": true,
+  "group_config": [
+    {
+      "title": "Bug Fixes",
+      "labels": ["bug", "fix", "bugfix"]
+    },
+    {
+      "title": "Code Improvements",
+      "labels": ["refactor", "improvements", "enhancement"]
+    },
+    {
+      "title": "New Features",
+      "labels": ["feat", "feature"]
+    },
+    {
+      "title": "Documentation Updates",
+      "labels": ["docs", "documentation", "doc"]
+    },
+    {
+      "title": "Continuous Integration Updates",
+      "labels": ["ci"]
+    },
+    {
+      "title": "Tests Updates",
+      "labels": ["test"]
+    },
+    {
+      "title": "Style Updates",
+      "labels": ["style"]
+    },
+    {
+      "title": "Chore Updates",
+      "labels": ["chore"]
+    },
+    {
+      "title": "Build Updates",
+      "labels": ["build"]
+    }
+  ]
+}
