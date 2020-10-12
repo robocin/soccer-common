@@ -33,7 +33,7 @@
     {
       "title": "Chore Updates",
       "labels": ["chore"]
-    }
+    },
     {
       "title": "Build Updates",
       "labels": ["build"]
