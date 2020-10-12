@@ -1,31 +1,33 @@
 name: C/C++ CI
 
-on:
-  push:
-    branches: [ master, develop ]
-  pull_request:
-    branches: [ master, develop ]
+on: [push, pull_request]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # Currently 'ubuntu-latest' is an alias for ubuntu-18.04. Once changed, use.
 
     steps:
-    - name: Checkout
+    - name: checkout
       uses: actions/checkout@v2.3.2
+      with:
+        submodules: recursive
 
-    - name: Install Qt
+    - name: install Qt
       uses: jurplel/install-qt-action@v2.8.0
       with:
-        version: '5.14.2'
+        version: '5.15.1'
 
-    - name: Get qmake version
-      run: qmake --version
-    
-    - name: set repository name
-      run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
-      shell: bash
+    - name: install OpenGL
+      run: sudo apt-get install freeglut3 freeglut3-dev
+
+    - name: clang-format lint
+      uses: DoozyX/clang-format-lint-action@v0.9
+      with:
+        clangFormatVersion: 10
 
     - name: test project build
-      run: cd $GITHUB_WORKSPACE/ && qmake -project "QMAKE_CXXFLAGS += -std=c++1z" && qmake && make && ./$REPOSITORY_NAME
+      run: cd $GITHUB_WORKSPACE/ && qmake ${{ github.event.repository.name }}.pro -spec linux-g++ && make
+    
+    - name: generate changelog
+      uses: heinrichreimer/action-github-changelog-generator@v2.1.1

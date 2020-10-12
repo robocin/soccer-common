@@ -1,0 +1,3 @@
+[submodule "libs/magic-enum/magic_enum"]
+	path = libs/magic-enum/magic_enum
+	url = https://github.com/Neargye/magic_enum.git
