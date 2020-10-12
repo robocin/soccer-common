@@ -1,4 +1,6 @@
 {
+  "commit_changelog": true,
+  "comment_changelog": true,
   "group_config": [
     {
       "title": "Bug Fixes",
