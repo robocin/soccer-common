@@ -3,7 +3,7 @@ PROJECT_NAME = soccer-common
 isEmpty(PROJECT_NAME): error(PROJECT_NAME is not defined.)
 
 VER_MAJOR = 0
-VER_MINOR = 0
+VER_MINOR = 1
 VER_PATCH = 0
 
 PROJECT_VERSION = $${VER_MAJOR}.$${VER_MINOR}.$${VER_PATCH}
