@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
   TestGeometry \
-  TestMagicEnum
+  TestMagicEnum \
+  TestUtils
