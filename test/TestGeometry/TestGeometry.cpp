@@ -1,5 +1,11 @@
 #include "TestGeometry.h"
 
+TestGeometry::TestGeometry() {
+}
+
+TestGeometry::~TestGeometry() {
+}
+
 void TestGeometry::initTestCase() {
 }
 

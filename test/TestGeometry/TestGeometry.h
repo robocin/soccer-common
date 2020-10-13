@@ -6,10 +6,8 @@ class TestGeometry : public QObject {
   Q_OBJECT
 
  public:
-  TestGeometry() {
-  }
-  ~TestGeometry() {
-  }
+  TestGeometry();
+  ~TestGeometry();
 
  private slots:
   void initTestCase();

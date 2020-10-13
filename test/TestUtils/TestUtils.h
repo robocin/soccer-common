@@ -12,10 +12,8 @@ class TestUtils : public QObject {
   using pair = std::pair<U, V>;
 
  public:
-  TestUtils() {
-  }
-  ~TestUtils() {
-  }
+  TestUtils();
+  ~TestUtils();
 
  private slots:
   void initTestCase();

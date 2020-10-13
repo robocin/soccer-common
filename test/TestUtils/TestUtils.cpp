@@ -1,5 +1,11 @@
 #include "TestUtils.h"
 
+TestUtils::TestUtils() {
+}
+
+TestUtils::~TestUtils() {
+}
+
 void TestUtils::initTestCase() {
 }
 

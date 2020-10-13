@@ -6,10 +6,8 @@ class $$NameOfTest : public QObject {
   Q_OBJECT
 
  public:
-  $$NameOfTest() {
-  }
-  ~$$NameOfTest() {
-  }
+  $$NameOfTest();
+  ~$$NameOfTest();
 
  private slots:
   // called before the first test function
