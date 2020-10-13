@@ -1,5 +1,11 @@
 #include "TestMagicEnum.h"
 
+TestMagicEnum::TestMagicEnum() {
+}
+
+TestMagicEnum::~TestMagicEnum() {
+}
+
 void TestMagicEnum::initTestCase() {
 }
 

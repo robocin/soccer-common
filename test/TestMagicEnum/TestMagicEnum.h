@@ -12,10 +12,8 @@ class TestMagicEnum : public QObject {
   enum { ValueEUnnamed_A = -3, ValueEUnnamed_B, ValueEUnnamed_C };
 
  public:
-  TestMagicEnum() {
-  }
-  ~TestMagicEnum() {
-  }
+  TestMagicEnum();
+  ~TestMagicEnum();
 
  private slots:
   void initTestCase();
