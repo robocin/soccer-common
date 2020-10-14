@@ -38,7 +38,7 @@ namespace Parameters {
     virtual QString description() const = 0;
     virtual QString payload() const = 0;
     virtual bool isChooseable() const = 0;
-    virtual void update(QString str) = 0;
+    virtual void update(const QString& str) = 0;
   };
 
   template <class T>
@@ -94,7 +94,7 @@ namespace Parameters {
     QString payload() const override = 0;
     bool isChooseable() const override = 0;
 
-    void update(QString str) override {
+    void update(const QString& str) override {
       if constexpr (std::is_enum_v<T>) {
         std::optional<T> op = MagicEnum::cast<T>(str);
         assert(op.has_value());
@@ -102,7 +102,8 @@ namespace Parameters {
       } else if constexpr (std::is_same_v<T, bool>) {
         ref = QVariant(str).toBool();
       } else {
-        QTextStream stream(&str);
+        QString buffer = str;
+        QTextStream stream(&buffer);
         stream >> ref;
       }
     }
@@ -338,7 +339,7 @@ namespace Parameters {
       return true;
     }
 
-    void update(QString str) override final {
+    void update(const QString& str) override final {
       ParameterType<T>::ref = map[str];
     }
   };
