@@ -18,30 +18,30 @@ namespace Parameters {
   QString ParametersHandler::dfs() const {
     QString ret;
     std::function<void(const ParametersHandler&)> f =
-        [&ret, &f](const ParametersHandler& ParametersHandler) {
-          if (ParametersHandler.value) {
+        [&ret, &f](const ParametersHandler& parametersHandler) {
+          if (parametersHandler.value) {
             ret += "{";
             //
             ret += Utils::quoted(Detail::InputType);
             ret += ": ";
-            ret += Utils::quoted(ParametersHandler.value->inputType());
+            ret += Utils::quoted(parametersHandler.value->inputType());
             ret += ", ";
             //
             ret += Utils::quoted(Detail::Type);
             ret += ": ";
-            ret += Utils::quoted(ParametersHandler.value->type());
+            ret += Utils::quoted(parametersHandler.value->type());
             ret += ", ";
             //
             ret += Utils::quoted(Detail::Description);
             ret += ": ";
-            ret += Utils::quoted(ParametersHandler.value->description());
+            ret += Utils::quoted(parametersHandler.value->description());
             ret += ", ";
             //
             ret += Utils::quoted(Detail::Value);
             ret += ": ";
-            ret += ParametersHandler.value->value();
+            ret += parametersHandler.value->value();
             //
-            QString payload = ParametersHandler.value->payload();
+            QString payload = parametersHandler.value->payload();
             if (!payload.isEmpty()) {
               ret += ", ";
             }
@@ -49,22 +49,22 @@ namespace Parameters {
             //
           }
 
-          if (!ParametersHandler.map.empty()) {
-            if (ParametersHandler.value) {
-              assert(ParametersHandler.value->isChooseable());
-              if (ParametersHandler.value->inputType() == InputType::CheckBox) {
-                for (auto& [key, value] : ParametersHandler.map) {
+          if (!parametersHandler.map.empty()) {
+            if (parametersHandler.value) {
+              assert(parametersHandler.value->isChooseable());
+              if (parametersHandler.value->inputType() == InputType::CheckBox) {
+                for (auto& [key, value] : parametersHandler.map) {
                   assert(key == "true" || key == "false");
                 }
-              } else if (ParametersHandler.value->inputType() ==
+              } else if (parametersHandler.value->inputType() ==
                          InputType::ComboBox) {
 
                 const QJsonDocument& doc(QJsonDocument::fromJson(
-                    ("{" + ParametersHandler.value->payload() + "}").toUtf8()));
+                    ("{" + parametersHandler.value->payload() + "}").toUtf8()));
                 const QVariantList& variantList =
                     doc.object()[Detail::Options].toArray().toVariantList();
 
-                for (auto& [key, value] : ParametersHandler.map) {
+                for (auto& [key, value] : parametersHandler.map) {
                   bool can = false;
                   for (const auto& op : variantList) {
                     if (key == op.toString()) {
@@ -80,25 +80,24 @@ namespace Parameters {
 
             ret += "{";
 
-            for (auto it = ParametersHandler.map.begin();
-                 it != ParametersHandler.map.end();
+            for (auto it = parametersHandler.map.begin();
+                 it != parametersHandler.map.end();
                  ++it) {
-              auto& [first, second] = *it;
-              ret += Utils::quoted(first);
+              ret += Utils::quoted(it->first);
               ret += ": ";
-              f(second);
+              f(it->second);
 
-              if (std::next(it) != ParametersHandler.map.end()) {
+              if (std::next(it) != parametersHandler.map.end()) {
                 ret += ", ";
               }
             }
 
             ret += "}";
           } else {
-            assert(ParametersHandler.value);
+            assert(parametersHandler.value);
           }
 
-          if (ParametersHandler.value) {
+          if (parametersHandler.value) {
             ret += "}";
           }
         };
@@ -124,22 +123,31 @@ namespace Parameters {
     return QJsonDocument::fromJson(json().toUtf8());
   }
 
-  void ParametersHandler::update(const QVector<UpdateRequest>& updates) {
+  QVector<UpdateRequest>
+  ParametersHandler::update(const QVector<UpdateRequest>& updates) {
+    QVector<UpdateRequest> ret;
     for (const auto& up : updates) {
       auto path = up.path();
       ParametersHandler* ptr = this;
+      bool notFound = false;
       for (auto key : path) {
         if (ptr->map.find(key) != ptr->map.end()) {
           ptr = &(ptr->map[key]);
         } else {
-          throw std::runtime_error("key not found.");
+          notFound = true;
+          break;
         }
       }
-      if (ptr->value) {
-        ptr->value->update(up.value());
+      if (notFound) {
+        ret += up;
+      } else if (ptr->value) {
+        if (!ptr->value->update(up.value())) {
+          ret += up;
+        }
       } else {
-        throw std::runtime_error("parameter to update not found.");
+        ret += up;
       }
     }
+    return ret;
   }
 } // namespace Parameters
