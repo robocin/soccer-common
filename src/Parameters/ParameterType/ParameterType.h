@@ -38,7 +38,7 @@ namespace Parameters {
     virtual QString description() const = 0;
     virtual QString payload() const = 0;
     virtual bool isChooseable() const = 0;
-    virtual void update(const QString& str) = 0;
+    virtual bool update(const QString& str) = 0;
   };
 
   template <class T>
@@ -55,6 +55,11 @@ namespace Parameters {
     ParameterType(T& _ref, const QString& _about = "") :
         ref(_ref),
         about(_about) {
+      if constexpr (std::is_enum_v<T>) {
+        if (!MagicEnum::contains(ref)) {
+          throw std::runtime_error("enum value out of range.");
+        }
+      }
     }
 
     ~ParameterType() override {
@@ -65,7 +70,6 @@ namespace Parameters {
     QString value() const override {
       QString str;
       if constexpr (std::is_enum_v<T>) {
-        assert(MagicEnum::contains(ref));
         str = MagicEnum::name(ref);
       } else if constexpr (std::is_same_v<T, bool>) {
         str = ref ? "true" : "false";
@@ -94,17 +98,32 @@ namespace Parameters {
     QString payload() const override = 0;
     bool isChooseable() const override = 0;
 
-    void update(const QString& str) override {
+    bool update(const QString& str) override {
       if constexpr (std::is_enum_v<T>) {
         std::optional<T> op = MagicEnum::cast<T>(str);
-        assert(op.has_value());
-        ref = *op;
+        if (op) {
+          ref = *op;
+          return true;
+        } else {
+          return false;
+        }
       } else if constexpr (std::is_same_v<T, bool>) {
-        ref = QVariant(str).toBool();
+        if (str == "true" || str == "false") {
+          ref = (str == "true");
+          return true;
+        } else {
+          return false;
+        }
+      } else if constexpr (std::is_same_v<T, QString>) {
+        QString buffer = str;
+        QTextStream stream(&buffer);
+        ref = stream.readLine();
+        return stream.status() == QTextStream::Ok;
       } else {
         QString buffer = str;
         QTextStream stream(&buffer);
         stream >> ref;
+        return stream.status() == QTextStream::Ok;
       }
     }
   };
@@ -114,7 +133,7 @@ namespace Parameters {
     QString regex;
 
    public:
-    Text(T& _ref, const QString& _regex = ".*", const QString& _about = "") :
+    Text(T& _ref, const QString& _regex = "(.*)", const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         regex(_regex) {
     }
@@ -143,9 +162,12 @@ namespace Parameters {
     QString maxValue;
 
    public:
-    SpinBox(T& _ref, T _minValue, T _maxValue, const QString& _about = "") :
+    template <class U>
+    SpinBox(T& _ref, U _minValue, U _maxValue, const QString& _about = "") :
         ParameterType<T>(_ref, _about) {
-      assert(_minValue <= _ref && _ref <= _maxValue);
+      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+        throw std::runtime_error("SpinBox ref value out of range.");
+      }
       QString buffer;
       QTextStream stream(&buffer);
       stream << _minValue << ' ' << _maxValue;
@@ -182,9 +204,12 @@ namespace Parameters {
     QString maxValue;
 
    public:
-    Slider(T& _ref, T _minValue, T _maxValue, const QString& _about = "") :
+    template <class U>
+    Slider(T& _ref, U _minValue, U _maxValue, const QString& _about = "") :
         ParameterType<T>(_ref, _about) {
-      assert(_minValue <= _ref && _ref <= _maxValue);
+      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+        throw std::runtime_error("Slider ref value out of range.");
+      }
       QString buffer;
       QTextStream stream(&buffer);
       stream << _minValue << ' ' << _maxValue;
@@ -241,8 +266,10 @@ namespace Parameters {
     ComboBox(T& _ref, const QSet<T>& _set, const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         set(_set.begin(), _set.end()) {
-      assert(_set.size() > 1);
-      assert(_set.contains(_ref));
+      if (!((_set.size() > 1) && _set.contains(_ref))) {
+        throw std::runtime_error(
+            "the size of set must be greater than 1, and must contain ref.");
+      }
     }
 
     ComboBox* clone() const override final {
@@ -265,7 +292,6 @@ namespace Parameters {
         if constexpr (std::is_same_v<T, QString>) {
           stream << Utils::quoted(value);
         } else if constexpr (std::is_enum_v<T>) {
-          assert(MagicEnum::contains(value));
           stream << Utils::quoted(MagicEnum::name(value));
         } else {
           stream << value;
@@ -292,13 +318,15 @@ namespace Parameters {
                    const QMap<T, QString>& _map,
                    const QString& _about = "") :
         ParameterType<T>(_ref, _about) {
-      assert(_map.size() > 1);
       bool contains = false;
-      for (auto& [key, value] : _map) {
-        contains |= (value == _ref);
-        map[value] = key;
+      for (auto it = _map.begin(); it != _map.end(); ++it) {
+        contains |= (it.key() == _ref);
+        map[it.value()] = it.key();
       }
-      assert(contains);
+      if (!((_map.size() > 1) && contains)) {
+        throw std::runtime_error(
+            "the size of map must be greater than 1, and must contain ref.");
+      }
     }
 
     MappedComboBox* clone() const override final {
@@ -306,12 +334,12 @@ namespace Parameters {
     }
 
     QString value() const override {
-      for (auto& [key, value] : map) {
+      for (const auto& [key, value] : map) {
         if (ParameterType<T>::ref == value) {
           return Utils::quoted(key);
         }
       }
-      throw(std::runtime_error("the value was not found."));
+      throw std::runtime_error("the value was not found.");
     }
 
     QString inputType() const override final {
@@ -326,21 +354,27 @@ namespace Parameters {
       QString options;
       QTextStream stream(&options);
 
-      for (auto& [key, value] : map) {
-        stream << Utils::quoted(key) << " ";
-      }
+      for (auto it = map.begin(); it != map.end(); ++it) {
+        stream << Utils::quoted(it->first);
 
-      options = "[" + options;
-      options.back() = ']';
-      return Utils::quoted(Detail::Options) + ": " + options.replace(" ", ", ");
+        if (std::next(it) != map.end()) {
+          stream << ", ";
+        }
+      }
+      options = "[" + options + "]";
+      return Utils::quoted(Detail::Options) + ": " + options;
     }
 
     bool isChooseable() const override final {
       return true;
     }
 
-    void update(const QString& str) override final {
-      ParameterType<T>::ref = map[str];
+    bool update(const QString& str) override final {
+      if (auto it = map.find(str); it != map.end()) {
+        ParameterType<T>::ref = map[str];
+        return true;
+      }
+      return false;
     }
   };
 } // namespace Parameters
