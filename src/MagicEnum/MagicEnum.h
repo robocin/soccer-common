@@ -9,13 +9,13 @@
 
 namespace MagicEnum {
   template <class E, class BinaryPredicate>
-  std::optional<std::decay_t<E>> cast(const QString& value,
-                                      const BinaryPredicate& p) {
+  constexpr std::optional<std::decay_t<E>> cast(const QString& value,
+                                                const BinaryPredicate& p) {
     return magic_enum::enum_cast<E, BinaryPredicate>(value.toUtf8().data(), p);
   }
 
   template <class E, class T>
-  std::optional<std::decay_t<E>> cast(const T& value) {
+  constexpr std::optional<std::decay_t<E>> cast(const T& value) {
     if constexpr (std::is_same_v<T, QString>) {
       return magic_enum::enum_cast<E>(value.toUtf8().data());
     } else {
@@ -24,7 +24,7 @@ namespace MagicEnum {
   }
 
   template <class E>
-  std::decay_t<E> valueAt(int index) {
+  constexpr std::decay_t<E> valueAt(int index) {
     return magic_enum::enum_value<E>(static_cast<std::size_t>(index));
   }
 
@@ -36,12 +36,12 @@ namespace MagicEnum {
   }
 
   template <class E>
-  int count() {
+  constexpr int count() {
     return static_cast<int>(magic_enum::enum_count<E>());
   }
 
   template <class E>
-  decltype(auto) integer(const E& value) {
+  constexpr decltype(auto) integer(const E& value) {
     return magic_enum::enum_integer<E>(value);
   }
 
@@ -77,22 +77,22 @@ namespace MagicEnum {
   }
 
   template <class E>
-  std::optional<int> index(const E& value) {
+  constexpr std::optional<int> index(const E& value) {
     return static_cast<std::optional<int>>(magic_enum::enum_index<E>(value));
   }
 
   template <class E>
-  bool contains(const E& value) {
+  constexpr bool contains(const E& value) {
     return magic_enum::enum_contains<E>(value);
   }
 
   template <class E>
-  bool contains(magic_enum::underlying_type_t<E> value) {
+  constexpr bool contains(magic_enum::underlying_type_t<E> value) {
     return magic_enum::enum_contains<E>(value);
   }
 
   template <class E>
-  bool contains(const QString& value) {
+  constexpr bool contains(const QString& value) {
     return magic_enum::enum_contains<E>(value.toUtf8().data());
   }
 }; // namespace MagicEnum
