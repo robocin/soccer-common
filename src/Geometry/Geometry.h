@@ -108,6 +108,7 @@ namespace Geometry2D {
     }
 
     T ret = 0;
+
     for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
       ret += cross(polygon[h], polygon[i]);
     }
@@ -128,7 +129,6 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE_CONSTEXPR PT centroid(const QVector<PT>& polygon) {
     static_assert(std::is_floating_point_v<T>);
-
     PT ret(0, 0);
     const qreal& scale = 6.0 * signedArea(polygon);
 
