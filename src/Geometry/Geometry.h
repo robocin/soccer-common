@@ -34,6 +34,10 @@ namespace Geometry {
 namespace Geometry2D {
   using namespace Geometry;
 
+  RC_PT_T_TEMPLATE_CONSTEXPR bool operator<(const PT& lhs, const PT& rhs) {
+    return (lhs.x() != rhs.x()) ? (lhs.x() < rhs.x()) : (lhs.y() < rhs.y());
+  }
+
   RC_PT_T_TEMPLATE_CONSTEXPR T dot(const PT& lhs, const PT& rhs) {
     return lhs.x() * rhs.x() + lhs.y() * rhs.y();
   }
@@ -72,7 +76,11 @@ namespace Geometry2D {
               p.x() * std::sin(t) + p.y() * std::cos(t));
   }
 
-  RC_PT_T_TEMPLATE_CONSTEXPR qreal angle(const PT& lhs, const PT& rhs) {
+  RC_PT_T_TEMPLATE_CONSTEXPR qreal angle(const PT& p) {
+    return std::atan2(p.y(), p.x());
+  }
+
+  RC_PT_T_TEMPLATE_CONSTEXPR qreal angleBetween(const PT& lhs, const PT& rhs) {
     return std::atan2(cross(lhs, rhs), dot(lhs, rhs));
   }
 
@@ -93,31 +101,42 @@ namespace Geometry2D {
     return (a + b) > c && (a + c) > b && (b + c) > a;
   }
 
-  RC_PT_T_TEMPLATE_CONSTEXPR T area2(const PT& a, const PT& b, const PT& c) {
-    return (b.x() - a.x()) * (c.y() - a.y()) -
-           (c.x() - a.x()) * (b.y() - a.y());
-  }
-
-  RC_PT_T_TEMPLATE_CONSTEXPR qreal area(const PT& a, const PT& b, const PT& c) {
-    return static_cast<qreal>(area2(a, b, c)) / 2.0;
-  }
-
-  RC_PT_T_TEMPLATE_CONSTEXPR T area2(const QVector<PT>& polygon) {
+  RC_PT_T_TEMPLATE_CONSTEXPR T signedArea2(const QVector<PT>& polygon) {
     if (polygon.size() < 3) {
       throw std::runtime_error("polygon size is less than 3.");
     }
 
     T ret = 0;
 
-    for (int i = 1; i + 1 < polygon.size(); ++i) {
-      ret += area2(polygon[0], polygon[i], polygon[i + 1]);
+    for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
+      ret += cross(polygon[h], polygon[i]);
     }
 
     return ret;
   }
 
+  RC_PT_T_TEMPLATE_CONSTEXPR qreal signedArea(const QVector<PT>& polygon) {
+    return static_cast<qreal>(signedArea2(polygon)) / 2.0;
+  }
+
+  RC_PT_T_TEMPLATE_CONSTEXPR T area2(const QVector<PT>& polygon) {
+    return std::abs(signedArea2(polygon));
+  }
+
   RC_PT_T_TEMPLATE_CONSTEXPR qreal area(const QVector<PT>& polygon) {
     return static_cast<qreal>(area2(polygon)) / 2.0;
+  }
+
+  RC_PT_T_TEMPLATE_CONSTEXPR PT centroid(const QVector<PT>& polygon) {
+    static_assert(std::is_floating_point_v<T>);
+    PT ret(0, 0);
+    const qreal& scale = 6.0 * signedArea(polygon);
+
+    for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
+      ret += (polygon[h] + polygon[i]) * cross(polygon[h], polygon[i]);
+    }
+
+    return ret / scale;
   }
 
   RC_PT_T_TEMPLATE_CONSTEXPR PT projectPointLine(const PT& a,
