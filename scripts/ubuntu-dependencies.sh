@@ -24,7 +24,7 @@ if [[ "$PARAM_SIZE" > 0 ]] ; then
 fi
 
 echo "Starting installation..."
-if [[ ! "${PARAMS[@]}" =~ "-clang" ]] ; then
+if [[ ! "${PARAMS[@]}" =~ "-clang-format" ]] ; then
 	echo $'Installing clang-format...'
 	apt-get install clang-format
 	echo $'clang-format installation finished'
