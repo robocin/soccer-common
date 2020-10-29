@@ -3,6 +3,7 @@
 
 #include <QPoint>
 #include <QPolygon>
+#include <QLine>
 #include <cmath>
 #include <cassert>
 #include <type_traits>
@@ -107,11 +108,9 @@ namespace Geometry2D {
     }
 
     T ret = 0;
-
     for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
       ret += cross(polygon[h], polygon[i]);
     }
-
     return ret;
   }
 
@@ -129,6 +128,7 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE_CONSTEXPR PT centroid(const QVector<PT>& polygon) {
     static_assert(std::is_floating_point_v<T>);
+
     PT ret(0, 0);
     const qreal& scale = 6.0 * signedArea(polygon);
 
@@ -150,10 +150,20 @@ namespace Geometry2D {
            (b - a) * dot(b - a, c - a) / static_cast<qreal>(dot(b - a, b - a));
   }
 
+  RC_PT_T_TEMPLATE_CONSTEXPR PT projectPointLine(const QLineF& line,
+                                                 const PT& c) {
+    return projectPointLine<PT, T>(line.p1(), line.p2(), c);
+  }
+
   RC_PT_T_TEMPLATE_CONSTEXPR PT reflectPointLine(const PT& a,
                                                  const PT& b,
                                                  const PT& c) {
     return 2.0 * projectPointLine(a, b, c) - c;
+  }
+
+  RC_PT_T_TEMPLATE_CONSTEXPR PT reflectPointLine(const QLineF& line,
+                                                 const PT& c) {
+    return reflectPointLine<PT, T>(line.p1(), line.p2(), c);
   }
 } // namespace Geometry2D
 
