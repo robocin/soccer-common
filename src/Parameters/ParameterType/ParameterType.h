@@ -4,6 +4,7 @@
 #include <set>
 #include <QString>
 #include <QTextStream>
+#include <QRegularExpression>
 #include "Utils/Utils.h"
 #include "MagicEnum/MagicEnum.h"
 
@@ -24,6 +25,7 @@ namespace Parameters {
     static constexpr const char* Description = "Description";
     static constexpr const char* MinValue = "MinValue";
     static constexpr const char* MaxValue = "MaxValue";
+    static constexpr const char* Precision = "Precision";
     static constexpr const char* Options = "Options";
     static constexpr const char* Regex = "Regex";
     static constexpr const char* Conditional = "Conditional";
@@ -75,6 +77,7 @@ namespace Parameters {
         str = ref ? "true" : "false";
       } else {
         QTextStream stream(&str);
+        stream << Qt::fixed;
         stream << ref;
       }
 
@@ -115,10 +118,8 @@ namespace Parameters {
           return false;
         }
       } else if constexpr (std::is_same_v<T, QString>) {
-        QString buffer = str;
-        QTextStream stream(&buffer);
-        ref = stream.readLine();
-        return stream.status() == QTextStream::Ok;
+        ref = str;
+        return true;
       } else {
         QString buffer = str;
         QTextStream stream(&buffer);
@@ -130,12 +131,17 @@ namespace Parameters {
 
   template <class T>
   class Text : public ParameterType<T> {
-    QString regex;
+    QRegularExpression regex;
 
    public:
-    Text(T& _ref, const QString& _regex = "(.*)", const QString& _about = "") :
+    Text(T& _ref,
+         const QString& _regexPattern = "(.*)",
+         const QString& _about = "") :
         ParameterType<T>(_ref, _about),
-        regex(_regex) {
+        regex(_regexPattern) {
+      if (!regex.match(ParameterType<T>::value()).hasMatch()) {
+        throw std::runtime_error("Text regex doesn't match.");
+      }
     }
 
     Text* clone() const override final {
@@ -147,17 +153,26 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::Regex) + ": " + Utils::quoted(regex);
+      return Utils::quoted(Detail::Regex) + ": " +
+             Utils::quoted(regex.pattern());
     }
 
     bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString& str) override final {
+      if (regex.match(str).hasMatch()) {
+        ParameterType<T>::update(str);
+        return true;
+      }
       return false;
     }
   };
 
   template <class T>
   class SpinBox : public ParameterType<T> {
-    static_assert(std::is_arithmetic_v<T>, "unsupported type.");
+    static_assert(std::is_integral_v<T>, "unsupported type.");
     QString minValue;
     QString maxValue;
 
@@ -180,16 +195,59 @@ namespace Parameters {
     }
 
     QString inputType() const override final {
-      if constexpr (std::is_floating_point_v<T>) {
-        return InputType::DoubleSpinBox;
-      } else {
-        return InputType::SpinBox;
-      }
+      return InputType::SpinBox;
     }
 
     QString payload() const override final {
       return Utils::quoted(Detail::MinValue) + ": " + minValue + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + maxValue;
+    }
+
+    bool isChooseable() const override final {
+      return false;
+    }
+  };
+
+  template <class T>
+  class DoubleSpinBox : public ParameterType<T> {
+    static_assert(std::is_floating_point_v<T>, "unsupported type.");
+    QString minValue;
+    QString maxValue;
+    QString precision;
+
+   public:
+    template <class U>
+    DoubleSpinBox(T& _ref,
+                  U _minValue,
+                  U _maxValue,
+                  int _precision = 2,
+                  const QString& _about = "") :
+        ParameterType<T>(_ref, _about) {
+      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+        throw std::runtime_error("SpinBox ref value out of range.");
+      }
+      QString buffer;
+      QTextStream stream(&buffer);
+      stream << Qt::fixed;
+      stream.setRealNumberPrecision(_precision);
+      stream << _minValue << ' ' << _maxValue << ' ' << _precision;
+      stream >> minValue;
+      stream >> maxValue;
+      stream >> precision;
+    }
+
+    DoubleSpinBox* clone() const override final {
+      return new DoubleSpinBox(*this);
+    }
+
+    QString inputType() const override final {
+      return InputType::DoubleSpinBox;
+    }
+
+    QString payload() const override final {
+      return Utils::quoted(Detail::MinValue) + ": " + minValue + ", " +
+             Utils::quoted(Detail::MaxValue) + ": " + maxValue + ", " +
+             Utils::quoted(Detail::Precision) + ": " + precision;
     }
 
     bool isChooseable() const override final {
@@ -287,6 +345,7 @@ namespace Parameters {
     QString payload() const override final {
       QString options;
       QTextStream stream(&options);
+      stream << Qt::fixed;
 
       for (T value : set) {
         if constexpr (std::is_same_v<T, QString>) {
@@ -353,6 +412,7 @@ namespace Parameters {
     QString payload() const override final {
       QString options;
       QTextStream stream(&options);
+      stream << Qt::fixed;
 
       for (auto it = map.begin(); it != map.end(); ++it) {
         stream << Utils::quoted(it->first);
