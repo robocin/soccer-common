@@ -347,7 +347,8 @@ namespace Parameters {
       QTextStream stream(&options);
       stream << Qt::fixed;
 
-      for (T value : set) {
+      for (auto it = set.begin(); it != set.end(); ++it) {
+        const T& value = *it;
         if constexpr (std::is_same_v<T, QString>) {
           stream << Utils::quoted(value);
         } else if constexpr (std::is_enum_v<T>) {
@@ -355,12 +356,12 @@ namespace Parameters {
         } else {
           stream << value;
         }
-        stream << " ";
+        if (std::next(it) != set.end()) {
+          stream << ", ";
+        }
       }
-
-      options = "[" + options;
-      options.back() = ']';
-      return Utils::quoted(Detail::Options) + ": " + options.replace(" ", ", ");
+      options = "[" + options + "]";
+      return Utils::quoted(Detail::Options) + ": " + options;
     }
 
     bool isChooseable() const override final {
