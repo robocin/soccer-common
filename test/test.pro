@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-  TestGeometry \
-  TestMagicEnum \
-  TestUtils
+  $$PWD/TestGeometry \
+  $$PWD/TestMagicEnum \
+  $$PWD/TestUtils

@@ -4,7 +4,7 @@ isEmpty(PROJECT_NAME): error(PROJECT_NAME is not defined.)
 
 VER_MAJOR = 0
 VER_MINOR = 2
-VER_PATCH = 0
+VER_PATCH = 1
 
 PROJECT_VERSION = $${VER_MAJOR}.$${VER_MINOR}.$${VER_PATCH}
 

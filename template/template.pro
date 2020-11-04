@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 
-include(template.pri)
+include($$PWD/template.pri)
 
 DISTFILES +=           \
-  src-app-template.pri \
-  src-lib-template.pri \
-  test-template.h      \
-  test-template.pri    \
-  main.cpp
+  $$PWD/src-app-template.pri \
+  $$PWD/src-lib-template.pri \
+  $$PWD/test-template.h      \
+  $$PWD/test-template.pri    \
+  $$PWD/main.cpp
