@@ -18,8 +18,8 @@ jobs:
       with:
         version: '5.15.1'
 
-    - name: install OpenGL
-      run: sudo apt-get install freeglut3 freeglut3-dev
+    - name: install OpenGL && boost
+      run: sudo apt-get install freeglut3 freeglut3-dev libboost-all-dev -y
 
     - name: clang-format lint
       uses: DoozyX/clang-format-lint-action@v0.9
