@@ -4,6 +4,7 @@
 #include <set>
 #include <QString>
 #include <QTextStream>
+#include <boost/bimap.hpp>
 #include <QRegularExpression>
 #include "Utils/Utils.h"
 #include "MagicEnum/MagicEnum.h"
@@ -371,19 +372,22 @@ namespace Parameters {
 
   template <class T>
   class MappedComboBox : public ParameterType<T> {
-    std::map<QString, T> map;
+    boost::bimap<T, QString> bimap;
 
    public:
     MappedComboBox(T& _ref,
                    const QMap<T, QString>& _map,
                    const QString& _about = "") :
-        ParameterType<T>(_ref, _about) {
-      bool contains = false;
-      for (auto it = _map.begin(); it != _map.end(); ++it) {
-        contains |= (it.key() == _ref);
-        map[it.value()] = it.key();
-      }
-      if (!((_map.size() > 1) && contains)) {
+        ParameterType<T>(_ref, _about),
+        bimap([](const QMap<T, QString>& map) {
+          boost::bimap<T, QString> ret;
+          for (auto it = map.begin(); it != map.end(); ++it) {
+            ret.insert({it.key(), it.value()});
+          }
+          return ret;
+        }(_map)) {
+      bool contains = bimap.left.find(_ref) != bimap.left.end();
+      if (!((bimap.size() > 1) && (bimap.size() == _map.size()) && contains)) {
         throw std::runtime_error(
             "the size of map must be greater than 1, and must contain ref.");
       }
@@ -394,12 +398,12 @@ namespace Parameters {
     }
 
     QString value() const override {
-      for (const auto& [key, value] : map) {
-        if (ParameterType<T>::ref == value) {
-          return Utils::quoted(key);
-        }
+      auto it = bimap.left.find(ParameterType<T>::ref);
+      if (it == bimap.left.end()) {
+        throw std::runtime_error("the value was not found.");
+      } else {
+        return Utils::quoted(it->second);
       }
-      throw std::runtime_error("the value was not found.");
     }
 
     QString inputType() const override final {
@@ -415,10 +419,10 @@ namespace Parameters {
       QTextStream stream(&options);
       stream << Qt::fixed;
 
-      for (auto it = map.begin(); it != map.end(); ++it) {
+      for (auto it = bimap.right.begin(); it != bimap.right.end(); ++it) {
         stream << Utils::quoted(it->first);
 
-        if (std::next(it) != map.end()) {
+        if (std::next(it) != bimap.right.end()) {
           stream << ", ";
         }
       }
@@ -431,8 +435,8 @@ namespace Parameters {
     }
 
     bool update(const QString& str) override final {
-      if (auto it = map.find(str); it != map.end()) {
-        ParameterType<T>::ref = map[str];
+      if (auto it = bimap.right.find(str); it != bimap.right.end()) {
+        ParameterType<T>::ref = bimap.right.find(str)->get_left();
         return true;
       }
       return false;
