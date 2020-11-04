@@ -1,1 +1,1 @@
-include(magic-enum/magic-enum.pri)
+include($$PWD/magic-enum/magic-enum.pri)
