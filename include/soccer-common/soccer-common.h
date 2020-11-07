@@ -1,3 +1,6 @@
 #include "../../src/Geometry/Geometry.h"
 #include "../../src/MagicEnum/MagicEnum.h"
 #include "../../src/Utils/Utils.h"
+#include "../../src/ModuleBase/ModuleBase.h"
+#include "../../src/PackageBase/PackageBase.h"
+#include "../../src/Entities/Entities.h"
