@@ -11,6 +11,8 @@ INCLUDEPATH += $$PWD/..
 # src and libs files, to export. Since the INCLUDEPATH isn't adding 'src' path,
 # they will be omitted.
 include($$PWD/../../libs/libs.pri)
+
+INCLUDEPATH += $$PWD/../../src
 include($$PWD/../../src/src.pri)
 
 # HEADERS that will be visible and may be included by another project.
