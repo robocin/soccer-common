@@ -2,7 +2,8 @@
 #define UTILS_H
 
 #include <QString>
-#include "StaticBlockTag.h"
+#include "Color/Color.h"
+#include "StaticBlockTag/StaticBlockTag.h"
 
 namespace Utils {
   template <class T>

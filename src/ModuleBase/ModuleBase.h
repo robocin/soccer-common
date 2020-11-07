@@ -2,8 +2,8 @@
 #define MODULEBASE_H
 
 #include <QObject>
-#include "AnyVisitor.h"
-#include "ModulePrivate.h"
+#include "AnyVisitor/AnyVisitor.h"
+#include "ModulePrivate/ModulePrivate.h"
 
 class ModuleBase : public ModulePrivate {
   Q_OBJECT

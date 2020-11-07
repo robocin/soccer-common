@@ -1,9 +1,9 @@
 HEADERS += \
-  $$PWD/AnyVisitor.h \
   $$PWD/ModuleBase.h \
-  $$PWD/ModulePrivate.h
+  $$PWD/AnyVisitor/AnyVisitor.h \
+  $$PWD/ModulePrivate/ModulePrivate.h
 
 SOURCES += \
-  $$PWD/AnyVisitor.cpp \
   $$PWD/ModuleBase.cpp \
-  $$PWD/ModulePrivate.cpp
+  $$PWD/AnyVisitor/AnyVisitor.cpp \
+  $$PWD/ModulePrivate/ModulePrivate.cpp
