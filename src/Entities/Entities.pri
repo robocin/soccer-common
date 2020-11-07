@@ -6,5 +6,6 @@ HEADERS += \
 
 SOURCES += \
   $$PWD/Ball/Ball.cpp \
+  $$PWD/Entities.cpp \
   $$PWD/Entity/Entity.cpp \
   $$PWD/Robot/Robot.cpp
