@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "Utils/Utils.h"
+#include "soccer-common/Utils/Utils.h"
 
 class TestUtils : public QObject {
   Q_OBJECT

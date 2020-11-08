@@ -2,7 +2,7 @@
 #define ANYVISITOR_H
 
 #include <typeindex>
-#include "ModuleBase/ModulePrivate/ModulePrivate.h"
+#include "soccer-common/ModuleBase/ModulePrivate/ModulePrivate.h"
 
 class ModulePrivate::AnyVisitor {
   using Key = const std::type_index;

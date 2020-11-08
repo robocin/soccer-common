@@ -1,7 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "Entities/Entity/Entity.h"
+#include "soccer-common/Entities/Entity/Entity.h"
 
 class RawBall : virtual public RawEntity {
  public:

@@ -1,7 +1,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include "Entities/Entity/Entity.h"
+#include "soccer-common/Entities/Entity/Entity.h"
 
 class RawRobot : virtual public RawEntity {
   int m_id;

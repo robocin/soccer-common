@@ -1,5 +1,5 @@
 #include "ModulePrivate.h"
-#include "ModuleBase/AnyVisitor/AnyVisitor.h"
+#include "soccer-common/ModuleBase/AnyVisitor/AnyVisitor.h"
 #include <mutex>
 
 ModulePrivate::ModulePrivate(QThreadPool* _threadPool) :

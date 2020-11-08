@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "MagicEnum/MagicEnum.h"
+#include "soccer-common/MagicEnum/MagicEnum.h"
 
 class TestMagicEnum : public QObject {
   Q_OBJECT

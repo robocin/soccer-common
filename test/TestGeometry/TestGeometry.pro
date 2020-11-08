@@ -1,9 +1,7 @@
 # Includes must contain the necessary relative includepaths.
 include($$PWD/../../template/template.pri)
 include($$PWD/../../libs/libs.pri)
-
-INCLUDEPATH += $$PWD/../../src
-include($$PWD/../../src/src.pri)
+include($$PWD/../../include/include.pri)
 
 # Putting the binary in the root of project, specific for testing.
 DESTDIR = $$PWD/../../bin/test # bin, because tests are executable files in Qt.
