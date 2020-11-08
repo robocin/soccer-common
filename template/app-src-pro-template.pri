@@ -5,7 +5,6 @@
 
 # Includes must contain the necessary relative includepaths.
 include($$PWD/../template/template.pri)
-include($$PWD/../libs/libs.pri)
 include($$PWD/../src/src.pri)
 
 # Putting the binary in the root of project.

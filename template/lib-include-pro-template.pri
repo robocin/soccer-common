@@ -5,7 +5,6 @@
 
 # Includes must contain the necessary relative includepaths.
 include($$PWD/../template/template.pri)
-include($$PWD/../libs/libs.pri)
 include($$PWD/../include/include.pri)
 
 # Removes self library inclusion from 'include.pri'.
