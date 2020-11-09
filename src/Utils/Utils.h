@@ -27,6 +27,9 @@ namespace Utils {
   QString nameOfTypeFromValue(const T&) {
     return nameOfType<T>();
   }
+
+  QString quoted(const QString& str);
+  QString removeQuotes(const QString& str);
 } // namespace Utils
 
 #endif // UTILS_H
