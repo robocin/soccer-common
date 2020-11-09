@@ -1,3 +1,19 @@
+# Version: v1.0.0
+
+* [#6](https://github.com/robocin/soccer-common/pull/6): release(v0.2.0)
+* [#13](https://github.com/robocin/soccer-common/pull/13): release(0.2.1)
+* [#7](https://github.com/robocin/soccer-common/pull/7): test(*): fixes constructors and destructors declaration
+* [#4](https://github.com/robocin/soccer-common/pull/4): chore(changelog-ci-config.json): includes hotfixes branches
+* [#3](https://github.com/robocin/soccer-common/pull/3): release(v0.1.2)
+* [#2](https://github.com/robocin/soccer-common/pull/2): chore/changelog-ci-config
+* [#1](https://github.com/robocin/soccer-common/pull/1): release(v0.1.0)
+* [#5](https://github.com/robocin/soccer-common/pull/5): feature(Utils)
+* [#12](https://github.com/robocin/soccer-common/pull/12): chore(all): fixes relative includepaths.
+* [#11](https://github.com/robocin/soccer-common/pull/11): feat(Parameters): creates a way to manipulate game parameters
+* [#10](https://github.com/robocin/soccer-common/pull/10): refactor(src/Geometry)
+* [#14](https://github.com/robocin/soccer-common/pull/14): feat(src/ModuleBase): creates the class and refactors the project structure
+
+
 # Version: 0.2.1
 
 * [#3](https://github.com/robocin/soccer-common/pull/3): release(v0.1.2)
