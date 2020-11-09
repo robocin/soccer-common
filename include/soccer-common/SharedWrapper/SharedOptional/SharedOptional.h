@@ -19,7 +19,7 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::reset;
   using std::optional<T>::emplace;
 
-  T get() const {
+  constexpr T get() const {
     return std::optional<T>::value();
   }
 
@@ -27,6 +27,11 @@ class SharedOptional : public std::optional<T> {
     T ret(std::move(std::optional<T>::value()));
     std::optional<T>::reset();
     return ret;
+  }
+
+  template <class U>
+  constexpr decltype(auto) getOrElse(U&& value) {
+    return std::optional<T>::value_or(value);
   }
 
   template <class U>
