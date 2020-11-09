@@ -6,8 +6,8 @@
 #include <QTextStream>
 #include <boost/bimap.hpp>
 #include <QRegularExpression>
-#include "Utils/Utils.h"
-#include "MagicEnum/MagicEnum.h"
+#include "soccer-common/Utils/Utils.h"
+#include "soccer-common/MagicEnum/MagicEnum.h"
 
 namespace Parameters {
   namespace InputType {

@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "MagicEnum/MagicEnum.h"
+#include "soccer-common/MagicEnum/MagicEnum.h"
 
 class TestMagicEnum : public QObject {
   Q_OBJECT
@@ -24,5 +24,5 @@ class TestMagicEnum : public QObject {
 
   void cleanupTestCase();
 
-  void testCast();
+  void test_cast_WithGivenABinaryPredicate_ShouldFindValue();
 };

@@ -2,6 +2,8 @@
 #define UTILS_H
 
 #include <QString>
+#include "Color/Color.h"
+#include "StaticBlockTag/StaticBlockTag.h"
 
 namespace Utils {
   template <class T>
@@ -17,8 +19,7 @@ namespace Utils {
       ret += __PRETTY_FUNCTION__[i];
     }
 #else
-    static_assert(std::false_type::value,
-                  "the chosen compiler is not allowed.");
+  #error the chosen compiler is not allowed.
 #endif
     return ret;
   }

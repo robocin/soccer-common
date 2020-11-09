@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------- #
-# Just paste this code in your 'test-name.pro' and add 'test-name.(h | cpp)'   #
+# Just paste this code in your 'test-name.pro' and add 'test-name.(h & cpp)'   #
 # WARNING: You may need to adjust the relative paths.                          #
 #                                                                              #
 # You can learn how to create a unity-test here:                               #
@@ -8,10 +8,9 @@
 
 # Includes must contain the necessary relative includepaths.
 include($$PWD/../../template/template.pri)
-include($$PWD/../../libs/libs.pri)
 
-INCLUDEPATH += $$PWD/../../src
-include($$PWD/../../src/src.pri)
+INCLUDEPATH += $$PWD/../../src   # or include, depends on project type.
+include($$PWD/../../src/src.pri) # same as above.
 
 # Putting the binary in the root of project, specific for testing.
 DESTDIR = $$PWD/../../bin/test # bin, because tests are executable files in Qt.

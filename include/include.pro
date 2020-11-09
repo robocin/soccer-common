@@ -1,21 +1,20 @@
-TEMPLATE = subdirs
+# Includes must contain the necessary relative includepaths.
+include($$PWD/../template/template.pri)
+include($$PWD/../include/include.pri)
 
-include($$PWD/../version.pri)
+# Removes self library inclusion from 'include.pri'.
+unix: LIBS -= -L$$PWD/../lib -l$${PROJECT_NAME}
 
-# ---------------------------------------------------------------------------- #
-# Please, read this documentation:                                             #
-# https://doc.qt.io/qt-5/third-party-libraries.html                            #
-#                                                                              #
-# The idea is to put everything you need to export in the '.pri' file, to      #
-# include it in another project, without further complications.                #
-# ---------------------------------------------------------------------------- #
+# Putting the binary in the root of project.
+DESTDIR = $$PWD/../lib # lib, because it's a library.
 
-!exists($$PWD/$${PROJECT_NAME}/$${PROJECT_NAME}.pri) {
-  message(To export the library to other projects, you must create a '.pri' file with the name of the project, which contains HEADERS, SOURCES, INCLUDEPATHs and LIBS, with their relative paths (PWD), inside a folder with the name of the project, in the current directory.)
-} else {
-  HEADERS += $$files($$PWD/$${PROJECT_NAME}/*.h, true)
+# The binary will have the same name as the project.
+TARGET = $$PROJECT_NAME
 
-  SOURCES += $$files($$PWD/$${PROJECT_NAME}/*.cpp, true)
+TEMPLATE = lib
 
-  DISTFILES = $$PWD/$${PROJECT_NAME}/$${PROJECT_NAME}.pri
+# Default rules for deployment.
+unix {
+  target.path = /usr/lib
 }
+!isEmpty(target.path): INSTALLS += target

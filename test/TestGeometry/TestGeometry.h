@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "Geometry/Geometry.h"
+#include "soccer-common/Geometry/Geometry.h"
 
 class TestGeometry : public QObject {
   Q_OBJECT

@@ -4,7 +4,7 @@ ROBOCIN_APP = src
 ROBOCIN_LIB = include
 
 # Project type. Choose one of the two options above.
-PROJECT_TYPE = $$ROBOCIN_LIB
+PROJECT_TYPE =
 
 isEmpty(PROJECT_TYPE): error(PROJECT_TYPE is not defined.)
 

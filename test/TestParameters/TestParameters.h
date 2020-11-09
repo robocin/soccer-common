@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "Parameters/Parameters.h"
+#include "soccer-common/Parameters/Parameters.h"
 
 class TestParameters : public QObject {
   Q_OBJECT

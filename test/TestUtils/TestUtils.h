@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "Utils/Utils.h"
+#include "soccer-common/Utils/Utils.h"
 
 class TestUtils : public QObject {
   Q_OBJECT
@@ -24,6 +24,6 @@ class TestUtils : public QObject {
 
   void cleanupTestCase();
 
-  void testNameOfType();
-  void testNameOfTypeFromValue();
+  void test_nameOfType_WithGivenType_ShouldWork();
+  void test_nameOfTypeFromValue_WithGivenType_ShouldWork();
 };
