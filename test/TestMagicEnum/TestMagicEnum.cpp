@@ -18,17 +18,13 @@ void TestMagicEnum::cleanup() {
 void TestMagicEnum::cleanupTestCase() {
 }
 
-void TestMagicEnum::testCast() {
+void TestMagicEnum::test_cast_WithGivenABinaryPredicate_ShouldFindValue() {
   auto op1 = MagicEnum::cast<EnumNormal>("ValueEN_A", [](char a, char b) {
     return tolower(a) == tolower(b);
   });
-  if (op1) {
-    qDebug() << op1.value();
-  }
+  QVERIFY(op1.has_value());
   auto op2 = MagicEnum::cast<EnumNormal>(0ll);
-  if (op2) {
-    qDebug() << op2.value();
-  }
+  QVERIFY(op2.has_value());
 }
 
 QTEST_MAIN(TestMagicEnum)

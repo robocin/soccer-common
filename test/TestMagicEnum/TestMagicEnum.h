@@ -24,5 +24,5 @@ class TestMagicEnum : public QObject {
 
   void cleanupTestCase();
 
-  void testCast();
+  void test_cast_WithGivenABinaryPredicate_ShouldFindValue();
 };

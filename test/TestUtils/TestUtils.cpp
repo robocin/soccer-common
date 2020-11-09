@@ -18,7 +18,7 @@ void TestUtils::cleanup() {
 void TestUtils::cleanupTestCase() {
 }
 
-void TestUtils::testNameOfType() {
+void TestUtils::test_nameOfType_WithGivenType_ShouldWork() {
   QCOMPARE(Utils::nameOfType<integer>(), "int");
   QCOMPARE(Utils::nameOfType<real>(), "double");
 
@@ -34,7 +34,7 @@ void TestUtils::testNameOfType() {
   QCOMPARE((Utils::nameOfType<pair<int, int>>()), "std::pair<int, int>");
 }
 
-void TestUtils::testNameOfTypeFromValue() {
+void TestUtils::test_nameOfTypeFromValue_WithGivenType_ShouldWork() {
   QCOMPARE(Utils::nameOfTypeFromValue(integer()), "int");
   QCOMPARE(Utils::nameOfTypeFromValue(real()), "double");
 
