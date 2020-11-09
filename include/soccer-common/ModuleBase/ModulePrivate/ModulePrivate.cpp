@@ -10,8 +10,6 @@ ModulePrivate::ModulePrivate(QThreadPool* _threadPool) :
 }
 
 ModulePrivate::~ModulePrivate() {
-  while (threadPool->waitForDone()) {
-  }
 }
 
 void ModulePrivate::receive(const std::any& package) {
