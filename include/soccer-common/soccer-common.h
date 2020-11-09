@@ -3,4 +3,5 @@
 #include "MagicEnum/MagicEnum.h"
 #include "ModuleBase/ModuleBase.h"
 #include "PackageBase/PackageBase.h"
+#include "Parameters/Parameters.h"
 #include "Utils/Utils.h"

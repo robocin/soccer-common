@@ -5,7 +5,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QVariantList>
-#include "Parameters/ParameterType/ParameterType.h"
+#include "soccer-common/Parameters/ParameterType/ParameterType.h"
 
 namespace Parameters {
   class UpdateRequest {
