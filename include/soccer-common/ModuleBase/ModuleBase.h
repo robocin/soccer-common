@@ -5,6 +5,8 @@
 #include "AnyVisitor/AnyVisitor.h"
 #include "ModulePrivate/ModulePrivate.h"
 
+struct Modules;
+
 class ModuleBase : public ModulePrivate {
   Q_OBJECT
   using ModulePrivate::visitor;
@@ -12,6 +14,8 @@ class ModuleBase : public ModulePrivate {
  public:
   explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
+
+  virtual void connectModules(const Modules* modules) = 0;
 
  protected:
   template <class T, class F>

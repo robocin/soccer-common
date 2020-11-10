@@ -16,7 +16,7 @@ class ModulePrivate : public QObject, private QRunnable {
   ~ModulePrivate() override;
 
  public slots:
-  void receive(const std::any& package);
+  void receive(const std::any& package) const;
   void runInParallel();
   void receiveAndRunInParallel(const std::any& package);
 
