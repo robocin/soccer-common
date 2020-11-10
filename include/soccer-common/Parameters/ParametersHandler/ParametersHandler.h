@@ -52,7 +52,6 @@ namespace Parameters {
     }
 
     QString json() const;
-    QJsonDocument jsonDocument() const;
 
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };

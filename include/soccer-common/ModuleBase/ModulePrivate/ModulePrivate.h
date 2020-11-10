@@ -15,6 +15,9 @@ class ModulePrivate : public QObject, private QRunnable {
   explicit ModulePrivate(QThreadPool* threadPool);
   ~ModulePrivate() override;
 
+ signals:
+  void sendParametersAsJson(const QString& json);
+
  public slots:
   void receive(const std::any& package) const;
   void runInParallel();
@@ -24,8 +27,8 @@ class ModulePrivate : public QObject, private QRunnable {
   std::unique_ptr<AnyVisitor> visitor;
 
   virtual void exec() = 0;
-  virtual void insertReceivers() = 0;
   virtual void buildParameters() = 0;
+  virtual void insertReceivers() = 0;
 
  private:
   QThreadPool* threadPool;
