@@ -5,7 +5,7 @@
 #include "AnyVisitor/AnyVisitor.h"
 #include "ModulePrivate/ModulePrivate.h"
 
-struct Modules;
+class Modules;
 
 class ModuleBase : public ModulePrivate {
   Q_OBJECT
