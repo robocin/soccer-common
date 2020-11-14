@@ -7,7 +7,7 @@ class RawEntity {
   QPointF m_position;
 
  public:
-  RawEntity(const QPointF& m_position);
+  RawEntity(const QPointF& _position);
 
   const QPointF& position() const;
 };
