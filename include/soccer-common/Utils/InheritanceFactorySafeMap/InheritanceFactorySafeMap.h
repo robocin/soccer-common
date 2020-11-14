@@ -1,43 +1,11 @@
-#ifndef SAFEMAP_H
-#define SAFEMAP_H
+#ifndef INHERITANCEFACTORYSAFEMAP_H
+#define INHERITANCEFACTORYSAFEMAP_H
 
 #include <QMap>
 #include <mutex>
 #include <QMutex>
 #include <functional>
 #include "soccer-common/Utils/StringHelper/StringHelper.h"
-
-template <class Key, class Value>
-class SafeMap {
-  mutable QMutex mutex;
-  QMap<Key, Value> m_map;
-
- public:
-  void insert(const Key& key, const Value& value) {
-    std::lock_guard locker(mutex);
-    m_map.insert(key, value);
-  }
-
-  int size() const {
-    std::lock_guard locker(mutex);
-    return m_map.size();
-  }
-
-  QStringList keys() const {
-    std::lock_guard locker(mutex);
-    return m_map.keys();
-  }
-
-  QMap<Key, Value> map() const {
-    std::lock_guard locker(mutex);
-    return m_map;
-  }
-
-  Value operator[](const Key& key) const {
-    std::lock_guard locker(mutex);
-    return m_map[key];
-  }
-};
 
 template <class T, class... Args>
 class InheritanceFactorySafeMap {
@@ -81,4 +49,4 @@ class InheritanceFactorySafeMap {
   }
 };
 
-#endif // SAFEMAP_H
+#endif // INHERITANCEFACTORYSAFEMAP_H
