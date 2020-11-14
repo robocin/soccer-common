@@ -40,9 +40,7 @@ class IndexedModuleBase : public ModuleBase {
   void connectModules(const Modules* modules) override = 0;
 
  protected:
-  int index() const {
-    return m_index;
-  }
+  int index() const;
 
   void exec() override = 0;
   void insertReceivers() override = 0;

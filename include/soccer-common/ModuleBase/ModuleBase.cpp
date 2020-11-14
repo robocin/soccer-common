@@ -13,3 +13,7 @@ IndexedModuleBase::IndexedModuleBase(int _index, QThreadPool* threadPool) :
 
 IndexedModuleBase::~IndexedModuleBase() {
 }
+
+int IndexedModuleBase::index() const {
+  return m_index;
+}
