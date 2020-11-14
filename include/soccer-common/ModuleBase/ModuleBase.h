@@ -5,6 +5,8 @@
 #include "AnyVisitor/AnyVisitor.h"
 #include "ModulePrivate/ModulePrivate.h"
 
+class Modules;
+
 class ModuleBase : public ModulePrivate {
   Q_OBJECT
   using ModulePrivate::visitor;
@@ -12,6 +14,8 @@ class ModuleBase : public ModulePrivate {
  public:
   explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
+
+  virtual void connectModules(const Modules* modules) = 0;
 
  protected:
   template <class T, class F>
@@ -22,6 +26,28 @@ class ModuleBase : public ModulePrivate {
   void exec() override = 0;
   void insertReceivers() override = 0;
   void buildParameters() override = 0;
+};
+
+class IndexedModuleBase : public ModuleBase {
+  Q_OBJECT
+
+ public:
+  explicit IndexedModuleBase(int _index, QThreadPool* threadPool);
+  ~IndexedModuleBase() override;
+
+  void connectModules(const Modules* modules) override = 0;
+
+ protected:
+  int index() const {
+    return m_index;
+  }
+
+  void exec() override = 0;
+  void insertReceivers() override = 0;
+  void buildParameters() override = 0;
+
+ private:
+  int m_index;
 };
 
 #endif // MODULEBASE_H

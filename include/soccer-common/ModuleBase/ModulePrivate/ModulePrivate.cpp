@@ -12,7 +12,7 @@ ModulePrivate::ModulePrivate(QThreadPool* _threadPool) :
 ModulePrivate::~ModulePrivate() {
 }
 
-void ModulePrivate::receive(const std::any& package) {
+void ModulePrivate::receive(const std::any& package) const {
   (*visitor)(package);
 }
 

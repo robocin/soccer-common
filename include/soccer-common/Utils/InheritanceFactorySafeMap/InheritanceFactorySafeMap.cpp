@@ -1,0 +1,1 @@
+#include "InheritanceFactorySafeMap.h"
