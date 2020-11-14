@@ -3,7 +3,7 @@
 
 #include "Color/Color.h"
 #include "StaticBlockTag/StaticBlockTag.h"
-#include "SafeMap/SafeMap.h"
+#include "InheritanceFactorySafeMap/InheritanceFactorySafeMap.h"
 #include "StringHelper/StringHelper.h"
 
 #endif // UTILS_H
