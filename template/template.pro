@@ -2,12 +2,12 @@ TEMPLATE = subdirs
 
 include($$PWD/template.pri)
 
-DISTFILES +=                         \
-  $$PWD/app-src-pro-template.pri     \
-  $$PWD/app-src-pri-template.pri     \
-  $$PWD/lib-include-pro-template.pri \
-  $$PWD/lib-include-pri-template.pri \
-$$PWD/test-template.h              \
-  $$PWD/test-template.pri            \
-  $$PWD/subdir-project-template.pri  \
-  $$PWD/main.cpp
+DISTFILES +=                                       \
+  $$PWD/examples/app-src-pri-template.pri.txt      \
+  $$PWD/examples/app-src-pro-template.pro.txt      \
+  $$PWD/examples/lib-include-pri-template.pri.txt  \
+  $$PWD/examples/lib-include-pro-template.pro.txt  \
+  $$PWD/examples/main.cpp.txt                      \
+  $$PWD/examples/subdir-project-template.pro.txt   \
+  $$PWD/examples/test-template.h.txt               \
+  $$PWD/examples/test-template.pro.txt
