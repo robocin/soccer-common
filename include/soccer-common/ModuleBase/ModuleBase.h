@@ -18,9 +18,11 @@ class ModuleBase : public ModulePrivate {
   virtual void connectModules(const Modules* modules) = 0;
 
  protected:
-  template <class T, class F>
-  void insertReceiveFunction(const F& f) {
-    visitor->insert<T>(f);
+  template <class T, class C, class F>
+  void insertReceiveFunction(C&& c, F&& f) {
+    visitor->insert<T>(std::bind(std::forward<F>(f),
+                                 std::forward<C>(c),
+                                 std::placeholders::_1));
   }
 
   void exec() override = 0;

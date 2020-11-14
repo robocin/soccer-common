@@ -119,10 +119,6 @@ namespace Parameters {
     return dfs();
   }
 
-  QJsonDocument ParametersHandler::jsonDocument() const {
-    return QJsonDocument::fromJson(json().toUtf8());
-  }
-
   QVector<UpdateRequest>
   ParametersHandler::update(const QVector<UpdateRequest>& updates) {
     QVector<UpdateRequest> ret;

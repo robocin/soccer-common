@@ -11,13 +11,13 @@ class ModulePrivate::AnyVisitor {
 
  public:
   template <class T, class F>
-  void insert(const F& f) {
+  void insert(F&& f) {
     static_assert(not std::is_same_v<T, std::any>,
                   "std::any cannot be registered.");
     if (visitor.find(typeid(T)) != visitor.end()) {
       throw std::runtime_error("inserting the same type more than once.");
     }
-    visitor[typeid(T)] = [g = f](const std::any& a) {
+    visitor[typeid(T)] = [g = std::forward<F>(f)](const std::any& a) {
       if constexpr (std::is_void_v<T>) {
         g();
       } else {
