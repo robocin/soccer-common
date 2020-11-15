@@ -22,4 +22,17 @@ class Package {
   const std::any& data() const;
 };
 
+template <class T>
+class PackageOf : public Package {
+ public:
+  PackageOf(long long _timestamp, T&& _data) :
+      Package(_timestamp, std::forward<T>(_data)) {
+  }
+
+  template <class... Args>
+  PackageOf(long long _timestamp, Args&&... _args) :
+      Package(_timestamp, T(std::forward<Args>(_args)...)) {
+  }
+};
+
 #endif // PACKAGE_H
