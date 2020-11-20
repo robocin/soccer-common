@@ -322,10 +322,10 @@ namespace Parameters {
     std::set<T> set;
 
    public:
-    ComboBox(T& _ref, const QSet<T>& _set, const QString& _about = "") :
+    ComboBox(T& _ref, const QVector<T>& _set, const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         set(_set.begin(), _set.end()) {
-      if (!((_set.size() > 1) && _set.contains(_ref))) {
+      if (!((set.size() > 1) && set.find(_ref) != set.end())) {
         throw std::runtime_error(
             "the size of set must be greater than 1, and must contain ref.");
       }
