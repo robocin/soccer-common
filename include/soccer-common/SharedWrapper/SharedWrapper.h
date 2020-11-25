@@ -9,7 +9,7 @@ template <class T, class Mutex, class Locker = std::lock_guard<Mutex>>
 class SharedWrapper {
   class Proxy;
   struct shared_wrapper_tag {};
-  inline static constexpr shared_wrapper_tag tag{};
+  static constexpr shared_wrapper_tag tag{};
 
  public:
   template <class... Args>
