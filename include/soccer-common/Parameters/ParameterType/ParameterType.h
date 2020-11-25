@@ -387,7 +387,8 @@ namespace Parameters {
           return ret;
         }(_map)) {
       bool contains = bimap.left.find(_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) && (bimap.size() == _map.size()) && contains)) {
+      if (!((bimap.size() > 1) &&
+            (static_cast<int>(bimap.size()) == _map.size()) && contains)) {
         throw std::runtime_error(
             "the size of map must be greater than 1, and must contain ref.");
       }
