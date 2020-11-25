@@ -9,21 +9,37 @@ class SetterGetter {
 
  public:
   template <class... Args>
-  SetterGetter(Args&&... args) : m_instance(std::forward<Args>(args)...) {
+  constexpr SetterGetter(Args&&... args) :
+      m_instance(std::forward<Args>(args)...) {
   }
 
   template <class U>
-  void set(U&& other) {
-    m_instance = other;
+  constexpr SetterGetter& operator=(U&& other) {
+    m_instance = std::forward<U>(other);
+    return *this;
+  }
+
+  constexpr operator T() const {
+    return m_instance;
+  }
+
+  constexpr T get() const {
+    return m_instance;
+  }
+
+  template <class U>
+  constexpr void set(U&& other) {
+    m_instance = std::forward<U>(other);
+  }
+
+  template <class FunctionPointer>
+  constexpr decltype(auto) apply(const FunctionPointer& f) {
+    return f(m_instance);
   }
 
   template <class... Args>
-  void emplace(Args&&... args) {
+  constexpr void emplace(Args&&... args) {
     m_instance = T(std::forward<Args>(args)...);
-  }
-
-  T get() const {
-    return m_instance;
   }
 };
 

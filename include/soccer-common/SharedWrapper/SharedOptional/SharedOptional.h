@@ -7,7 +7,7 @@ template <class T>
 class SharedOptional : public std::optional<T> {
  public:
   template <class... Args>
-  SharedOptional(Args&&... args) :
+  constexpr SharedOptional(Args&&... args) :
       std::optional<T>(std::forward<Args>(args)...) {
   }
 
@@ -15,9 +15,12 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::operator bool;
   using std::optional<T>::has_value;
   using std::optional<T>::value_or;
-  using std::optional<T>::swap;
   using std::optional<T>::reset;
   using std::optional<T>::emplace;
+
+  constexpr operator T() const {
+    return std::optional<T>::value();
+  }
 
   constexpr T get() const {
     return std::optional<T>::value();
@@ -40,7 +43,7 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class FunctionPointer>
-  decltype(auto) apply(const FunctionPointer& f) {
+  constexpr decltype(auto) apply(const FunctionPointer& f) {
     return f(std::optional<T>::value());
   }
 
@@ -48,6 +51,7 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::operator->;
   using std::optional<T>::operator*;
   using std::optional<T>::value;
+  using std::optional<T>::swap;
 };
 
 #endif // SHAREDOPTIONAL_H
