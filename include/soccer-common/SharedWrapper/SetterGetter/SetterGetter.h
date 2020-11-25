@@ -14,9 +14,8 @@ class SetterGetter {
   }
 
   template <class U>
-  constexpr SetterGetter& operator=(U&& other) {
+  constexpr void operator=(U&& other) {
     m_instance = std::forward<U>(other);
-    return *this;
   }
 
   constexpr operator T() const {

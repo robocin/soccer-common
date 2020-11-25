@@ -11,7 +11,11 @@ class SharedOptional : public std::optional<T> {
       std::optional<T>(std::forward<Args>(args)...) {
   }
 
-  using std::optional<T>::operator=;
+  template <class U>
+  constexpr void operator=(U&& value) {
+    std::optional<T>::operator=(std::forward(value));
+  }
+
   using std::optional<T>::operator bool;
   using std::optional<T>::has_value;
   using std::optional<T>::value_or;
@@ -48,6 +52,7 @@ class SharedOptional : public std::optional<T> {
   }
 
  private:
+  using std::optional<T>::operator=;
   using std::optional<T>::operator->;
   using std::optional<T>::operator*;
   using std::optional<T>::value;
