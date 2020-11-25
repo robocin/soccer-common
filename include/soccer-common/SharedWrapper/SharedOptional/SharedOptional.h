@@ -36,7 +36,7 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class U>
-  constexpr decltype(auto) getOrElse(U&& value) {
+  constexpr decltype(auto) getOrElse(U&& value) const {
     return std::optional<T>::value_or(std::forward<U>(value));
   }
 
@@ -52,7 +52,7 @@ class SharedOptional : public std::optional<T> {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(const FunctionPointer& f) {
-    return f(std::optional<T>::value());
+    return f(static_cast<std::optional<T>&>(*this));
   }
 
  private:
