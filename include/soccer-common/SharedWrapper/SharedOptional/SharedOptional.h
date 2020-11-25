@@ -34,12 +34,12 @@ class SharedOptional : public std::optional<T> {
 
   template <class U>
   constexpr decltype(auto) getOrElse(U&& value) {
-    return std::optional<T>::value_or(value);
+    return std::optional<T>::value_or(std::forward(value));
   }
 
   template <class U>
   void set(U&& value) {
-    std::optional<T>::operator=(value);
+    std::optional<T>::operator=(std::forward(value));
   }
 
   template <class FunctionPointer>
