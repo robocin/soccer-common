@@ -140,7 +140,8 @@ namespace Parameters {
          const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         regex(_regex) {
-      if (!regex.match(ParameterType<T>::value()).hasMatch()) {
+      if (!regex.match(Utils::removeQuotes(ParameterType<T>::value()))
+               .hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
     }
