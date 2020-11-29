@@ -20,9 +20,9 @@
   #define M_PI 3.14159265358979323846
 #endif
 
-namespace Geometry {
-  static constexpr qreal PI = M_PI;
+static constexpr qreal PI = M_PI;
 
+namespace Geometry {
   RC_T_TEMPLATE_CONSTEXPR qreal radiansToDegrees(T radians) {
     return radians * (180.0 / PI);
   }

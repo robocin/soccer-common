@@ -140,7 +140,8 @@ namespace Parameters {
          const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         regex(_regex) {
-      if (!regex.match(ParameterType<T>::value()).hasMatch()) {
+      if (!regex.match(Utils::removeQuotes(ParameterType<T>::value()))
+               .hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
     }
@@ -322,10 +323,10 @@ namespace Parameters {
     std::set<T> set;
 
    public:
-    ComboBox(T& _ref, const QSet<T>& _set, const QString& _about = "") :
+    ComboBox(T& _ref, const QVector<T>& _set, const QString& _about = "") :
         ParameterType<T>(_ref, _about),
         set(_set.begin(), _set.end()) {
-      if (!((_set.size() > 1) && _set.contains(_ref))) {
+      if (!((set.size() > 1) && set.find(_ref) != set.end())) {
         throw std::runtime_error(
             "the size of set must be greater than 1, and must contain ref.");
       }
@@ -387,7 +388,8 @@ namespace Parameters {
           return ret;
         }(_map)) {
       bool contains = bimap.left.find(_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) && (bimap.size() == _map.size()) && contains)) {
+      if (!((bimap.size() > 1) &&
+            (static_cast<int>(bimap.size()) == _map.size()) && contains)) {
         throw std::runtime_error(
             "the size of map must be greater than 1, and must contain ref.");
       }

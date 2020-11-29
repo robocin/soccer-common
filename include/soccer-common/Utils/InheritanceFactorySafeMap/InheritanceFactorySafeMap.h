@@ -10,7 +10,7 @@
 template <class T, class... Args>
 class InheritanceFactorySafeMap {
   using Key = QString;
-  using Value = QPair<std::function<T*(Args&&...)>, QString>;
+  using Value = QPair<std::function<T*(Args...)>, QString>;
 
   mutable QMutex mutex;
   QMap<Key, Value> m_map;

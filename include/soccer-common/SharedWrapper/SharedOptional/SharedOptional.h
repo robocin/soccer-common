@@ -7,17 +7,23 @@ template <class T>
 class SharedOptional : public std::optional<T> {
  public:
   template <class... Args>
-  SharedOptional(Args&&... args) :
+  constexpr SharedOptional(Args&&... args) :
       std::optional<T>(std::forward<Args>(args)...) {
   }
 
-  using std::optional<T>::operator=;
+  template <class U>
+  constexpr void operator=(U&& value) {
+    std::optional<T>::operator=(std::forward<U>(value));
+  }
+
   using std::optional<T>::operator bool;
   using std::optional<T>::has_value;
   using std::optional<T>::value_or;
-  using std::optional<T>::swap;
   using std::optional<T>::reset;
-  using std::optional<T>::emplace;
+
+  constexpr operator T() const {
+    return std::optional<T>::value();
+  }
 
   constexpr T get() const {
     return std::optional<T>::value();
@@ -30,24 +36,32 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class U>
-  constexpr decltype(auto) getOrElse(U&& value) {
-    return std::optional<T>::value_or(value);
+  constexpr decltype(auto) getOrElse(U&& value) const {
+    return std::optional<T>::value_or(std::forward<U>(value));
   }
 
   template <class U>
-  void set(U&& value) {
-    std::optional<T>::operator=(value);
+  constexpr void set(U&& value) {
+    std::optional<T>::operator=(std::forward<U>(value));
+  }
+
+  template <class... Args>
+  constexpr void emplace(Args&&... args) {
+    std::optional<T>::operator=(T(std::forward<Args>(args)...));
   }
 
   template <class FunctionPointer>
-  decltype(auto) apply(const FunctionPointer& f) {
-    return f(std::optional<T>::value());
+  constexpr decltype(auto) apply(const FunctionPointer& f) {
+    return f(static_cast<std::optional<T>&>(*this));
   }
 
  private:
+  using std::optional<T>::operator=;
   using std::optional<T>::operator->;
   using std::optional<T>::operator*;
   using std::optional<T>::value;
+  using std::optional<T>::emplace;
+  using std::optional<T>::swap;
 };
 
 #endif // SHAREDOPTIONAL_H
