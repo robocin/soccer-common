@@ -7,6 +7,9 @@ template <class T>
 class Extends {};
 
 template <class T>
+Extends(const T&) -> Extends<T>;
+
+template <class T>
 constexpr decltype(auto) extends(T&& object) noexcept {
   if constexpr (std::is_empty_v<Extends<std::decay_t<T>>>) {
     return T(object);
