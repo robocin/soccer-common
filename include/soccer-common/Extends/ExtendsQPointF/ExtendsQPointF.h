@@ -11,6 +11,22 @@ class Extends<QPointF> : public QPointF {
   Extends(Args&&... args) : QPointF(std::forward<Args>(args)...) {
   }
 
+  decltype(auto) operator[](int i) {
+    switch (i) {
+      case 0: return rx();
+      case 1: return ry();
+      default: throw std::out_of_range("index out of range.");
+    }
+  }
+
+  decltype(auto) operator[](int i) const {
+    switch (i) {
+      case 0: return x();
+      case 1: return y();
+      default: throw std::out_of_range("index out of range.");
+    }
+  }
+
   decltype(auto) dot(const QPointF& other) const {
     return Geometry2D::dot<QPointF>(*this, other);
   }
