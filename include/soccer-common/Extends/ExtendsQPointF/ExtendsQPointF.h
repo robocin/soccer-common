@@ -11,9 +11,21 @@ class Extends<QPointF> : public QPointF {
   Extends(Args&&... args) : QPointF(std::forward<Args>(args)...) {
   }
 
+  decltype(auto) operator<(const Extends<QPointF>& other) const {
+    using Geometry2D::operator<;
+    return static_cast<const QPointF&>(*this) <
+           static_cast<const QPointF&>(other);
+  }
+
   decltype(auto) operator<(const QPointF& other) const {
     using Geometry2D::operator<;
     return static_cast<const QPointF&>(*this) < other;
+  }
+
+  friend decltype(auto) operator<(const QPointF& lhs,
+                                  const Extends<QPointF>& rhs) {
+    using Geometry2D::operator<;
+    return lhs < static_cast<const QPointF&>(rhs);
   }
 
   decltype(auto) operator[](int i) {
