@@ -33,9 +33,11 @@ class TestGeometry : public QObject {
   void test_2D_angle_whenGivenAPoint_shouldWork();
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
   void test_2D_length_whenGivenAPoint_shouldWork();
-  void test_2D_manhattanLength_whenGivenAnIntegerPoint_shouldWork();
+  void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
   void
   test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
+  void
+  test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
   void test_2D_isTriangle_whenGivenThreeNumbers_shouldWork();
   void test_2D_signedArea2_whenGivenAPolygon_shouldWork();
   void test_2D_signedArea_whenGivenAPolygon_shouldWork();

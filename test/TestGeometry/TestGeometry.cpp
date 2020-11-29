@@ -254,11 +254,11 @@ void TestGeometry::test_2D_length_whenGivenAPoint_shouldWork() {
   QCOMPARE(length(QPointF(40.0, 30.0)), 50.0);
 }
 
-void TestGeometry::
-    test_2D_manhattanLength_whenGivenAnIntegerPoint_shouldWork() {
+void TestGeometry::test_2D_manhattanLength_whenGivenAPoint_shouldWork() {
   using namespace Geometry2D;
 
   QCOMPARE(manhattanLength(QPoint(40, 30)), 70);
+  QCOMPARE(manhattanLength(QPointF(40, 30)), 70);
 }
 
 void TestGeometry::
@@ -269,6 +269,17 @@ void TestGeometry::
            QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
 
   QCOMPARE(resize(QPointF(-10, -10), std::sqrt(2)), -QPointF(1, 1));
+}
+
+void TestGeometry::
+    test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QCOMPARE(normalize(QPointF(2, 2)),
+           QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
+
+  QCOMPARE(normalize(QPointF(-10, -10)),
+           -QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
 }
 
 void TestGeometry::test_2D_isTriangle_whenGivenThreeNumbers_shouldWork() {
