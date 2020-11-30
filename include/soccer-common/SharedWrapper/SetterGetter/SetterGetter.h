@@ -40,6 +40,10 @@ class SetterGetter {
   constexpr void emplace(Args&&... args) {
     m_instance = T(std::forward<Args>(args)...);
   }
+
+  constexpr T& ref() {
+    return m_instance;
+  }
 };
 
 #endif // SETTERGETTER_H
