@@ -55,6 +55,10 @@ class SharedOptional : public std::optional<T> {
     return f(static_cast<std::optional<T>&>(*this));
   }
 
+  constexpr std::optional<T>& ref() {
+    return static_cast<std::optional<T>&>(*this);
+  }
+
  private:
   using std::optional<T>::operator=;
   using std::optional<T>::operator->;
