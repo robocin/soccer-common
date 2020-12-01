@@ -2,6 +2,6 @@
 #define EXTENDS_H
 
 #include "detail/ExtendsImpl.h"
-#include "ExtendsQPointF/ExtendsQPointF.h"
+#include "ExtendsPoint/ExtendsPoint.h"
 
 #endif // EXTENDS_H

@@ -44,16 +44,16 @@ namespace Geometry2D {
     return lhs.x() * rhs.y() - lhs.y() * rhs.x();
   }
 
-  RC_T_TEMPLATE T distanceSquare(T x1, T y1, T x2, T y2) {
+  RC_T_TEMPLATE T distanceSquared(T x1, T y1, T x2, T y2) {
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
   }
 
-  RC_PT_T_TEMPLATE T distanceSquare(const PT& lhs, const PT& rhs) {
-    return distanceSquare(lhs.x(), lhs.y(), rhs.x(), rhs.y());
+  RC_PT_T_TEMPLATE T distanceSquared(const PT& lhs, const PT& rhs) {
+    return distanceSquared(lhs.x(), lhs.y(), rhs.x(), rhs.y());
   }
 
   RC_T_TEMPLATE qreal distance(T x1, T y1, T x2, T y2) {
-    return std::sqrt(distanceSquare(x1, y1, x2, y2));
+    return std::sqrt(distanceSquared(x1, y1, x2, y2));
   }
 
   RC_PT_T_TEMPLATE qreal distance(const PT& lhs, const PT& rhs) {

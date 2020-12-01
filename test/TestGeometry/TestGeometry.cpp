@@ -113,28 +113,28 @@ void TestGeometry::test_2D_cross_whenGivenTwoPoints_shouldWork() {
   QVERIFY(cross(fb, fa) < 0);
 }
 
-void TestGeometry::test_2D_distanceSquare_whenGivenFourNumbers_shouldWork() {
+void TestGeometry::test_2D_distanceSquared_whenGivenFourNumbers_shouldWork() {
   using namespace Geometry2D;
 
   int px = 0, py = 0;
   int qx = 3, qy = 4;
-  QCOMPARE(distanceSquare(px, py, qx, qy), 25);
+  QCOMPARE(distanceSquared(px, py, qx, qy), 25);
 
   double pfx = 0, pfy = 0;
   double qfx = 6, qfy = 8;
-  QCOMPARE(distanceSquare(pfx, pfy, qfx, qfy), 100);
+  QCOMPARE(distanceSquared(pfx, pfy, qfx, qfy), 100);
 }
 
-void TestGeometry::test_2D_distanceSquare_whenGivenTwoPoints_shouldWork() {
+void TestGeometry::test_2D_distanceSquared_whenGivenTwoPoints_shouldWork() {
   using namespace Geometry2D;
 
   QPoint p(0, 0);
   QPoint q(3, 4);
-  QCOMPARE(distanceSquare(p, q), 25);
+  QCOMPARE(distanceSquared(p, q), 25);
 
   QPointF pf(0, 0);
   QPointF qf(6, 8);
-  QCOMPARE(distanceSquare(pf, qf), 100);
+  QCOMPARE(distanceSquared(pf, qf), 100);
 }
 
 void TestGeometry::test_2D_distance_whenGivenFourNumbers_shouldWork() {
