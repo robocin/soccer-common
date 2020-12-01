@@ -16,17 +16,14 @@ template <class T, class U = void>
 class Extends {};
 
 template <class T>
-Extends(T&) -> Extends<T&>;
+Extends(const T&) -> Extends<T>;
 
 template <class T>
-Extends(const T&) -> Extends<const T&>;
-
-template <class T>
-constexpr decltype(auto) extends(T&& object) noexcept {
+constexpr decltype(auto) extends(const T& object) {
   if constexpr (std::is_empty_v<Extends<T>>) {
     static_assert(detail::dependent_false_v<T>, "this class has no extension.");
   }
-  return Extends<T>(std::forward<T>(object));
+  return Extends<T>(object);
 }
 
 #endif // EXTENDSIMPL_H
