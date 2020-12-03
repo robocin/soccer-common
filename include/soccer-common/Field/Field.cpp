@@ -1,24 +1,27 @@
 #include "Field.h"
 
-Field::Field(double fieldLength, double fieldWidth, double goalWidth, double goalDepth){
-    this->m_fieldLength = fieldLength;
-    this->m_fieldWidth = fieldWidth;
-    this->m_goalDepth = goalDepth;
-    this->m_goalWidth = goalWidth;
+Field::Field(qreal fieldLength,
+             qreal fieldWidth,
+             qreal goalWidth,
+             qreal goalDepth) :
+    m_fieldLength(fieldLength),
+    m_fieldWidth(fieldWidth),
+    m_goalWidth(goalWidth),
+    m_goalDepth(goalDepth) {
 }
 
-double Field::fieldLength() const{
-    return this->m_fieldLength;
+qreal Field::fieldLength() const {
+  return m_fieldLength;
 }
 
-double Field::fieldWidth() const{
-    return this->m_fieldWidth;
+qreal Field::fieldWidth() const {
+  return m_fieldWidth;
 }
 
-double Field::goalWidth() const{
-    return this->m_goalWidth;
+qreal Field::goalWidth() const {
+  return m_goalWidth;
 }
 
-double Field::goalDepth() const{
-    return this->m_goalDepth;
+qreal Field::goalDepth() const {
+  return m_goalDepth;
 }

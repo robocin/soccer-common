@@ -1,21 +1,23 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-class Field{
-    private:
-        double m_fieldLength;                       
-        double m_fieldWidth;                        
+#include <QtCore>
 
-        double m_goalWidth;                    
-        double m_goalDepth;                    
+class Field {
+ private:
+  qreal m_fieldLength;
+  qreal m_fieldWidth;
 
-    public:
-        Field(double filedLength, double fieldWidth, double goalWidth, double goalDepth);
+  qreal m_goalWidth;
+  qreal m_goalDepth;
 
-        double fieldLength() const;
-        double fieldWidth() const;
-        double goalWidth() const;
-        double goalDepth() const;
+ public:
+  Field(qreal fieldLength, qreal fieldWidth, qreal goalWidth, qreal goalDepth);
+
+  qreal fieldLength() const;
+  qreal fieldWidth() const;
+  qreal goalWidth() const;
+  qreal goalDepth() const;
 };
 
-#endif 
+#endif // FIELD_H
