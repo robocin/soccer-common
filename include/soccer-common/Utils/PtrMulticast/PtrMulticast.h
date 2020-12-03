@@ -8,7 +8,7 @@ class PtrCastOperator {
   T* m_ptr;
 
   template <class U>
-  static constexpr T* makeT(U* ptr) {
+  static constexpr T* makeT([[maybe_unused]] U* ptr) {
     if constexpr (std::is_base_of_v<T, U>) {
       return static_cast<T*>(ptr);
     } else {
