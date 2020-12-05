@@ -8,7 +8,7 @@ class RawRobot : virtual public RawEntity {
   qreal m_angle;
 
  public:
-  RawRobot(int _id, qreal _angle, const QPointF& _position);
+  RawRobot(int id, qreal angle, const QPointF& position);
 
   int id() const;
   qreal angle() const;
@@ -16,11 +16,11 @@ class RawRobot : virtual public RawEntity {
 
 class Robot : public Entity, public RawRobot {
  public:
-  Robot(int _id,
-        qreal _angle,
-        const QPointF& _position,
-        const QPointF& _velocity,
-        const QPointF& _acceleration);
+  Robot(int id,
+        qreal angle,
+        const QPointF& position,
+        const QPointF& velocity,
+        const QPointF& acceleration);
 };
 
 #endif // ROBOT_H

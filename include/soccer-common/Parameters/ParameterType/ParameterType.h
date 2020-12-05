@@ -55,9 +55,9 @@ namespace Parameters {
     QString about;
 
    public:
-    ParameterType(T& _ref, const QString& _about = "") :
-        ref(_ref),
-        about(_about) {
+    ParameterType(T& t_ref, const QString& t_about = "") :
+        ref(t_ref),
+        about(t_about) {
       if constexpr (std::is_enum_v<T>) {
         if (!MagicEnum::contains(ref)) {
           throw std::runtime_error("enum value out of range.");
@@ -135,11 +135,11 @@ namespace Parameters {
     QRegularExpression regex;
 
    public:
-    Text(T& _ref,
-         const QRegularExpression& _regex = QRegularExpression("(.*)"),
-         const QString& _about = "") :
-        ParameterType<T>(_ref, _about),
-        regex(_regex) {
+    Text(T& t_ref,
+         const QRegularExpression& t_regex = QRegularExpression("(.*)"),
+         const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about),
+        regex(t_regex) {
       if (!regex.match(Utils::removeQuotes(ParameterType<T>::value()))
                .hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
@@ -180,14 +180,14 @@ namespace Parameters {
 
    public:
     template <class U>
-    SpinBox(T& _ref, U _minValue, U _maxValue, const QString& _about = "") :
-        ParameterType<T>(_ref, _about) {
-      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+    SpinBox(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about) {
+      if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
       QString buffer;
       QTextStream stream(&buffer);
-      stream << _minValue << ' ' << _maxValue;
+      stream << t_minValue << ' ' << t_maxValue;
       stream >> minValue;
       stream >> maxValue;
     }
@@ -219,20 +219,20 @@ namespace Parameters {
 
    public:
     template <class U>
-    DoubleSpinBox(T& _ref,
-                  U _minValue,
-                  U _maxValue,
-                  int _precision = 2,
-                  const QString& _about = "") :
-        ParameterType<T>(_ref, _about) {
-      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+    DoubleSpinBox(T& t_ref,
+                  U t_minValue,
+                  U t_maxValue,
+                  int t_precision = 2,
+                  const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about) {
+      if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
       QString buffer;
       QTextStream stream(&buffer);
       stream << Qt::fixed;
-      stream.setRealNumberPrecision(_precision);
-      stream << _minValue << ' ' << _maxValue << ' ' << _precision;
+      stream.setRealNumberPrecision(t_precision);
+      stream << t_minValue << ' ' << t_maxValue << ' ' << t_precision;
       stream >> minValue;
       stream >> maxValue;
       stream >> precision;
@@ -265,14 +265,14 @@ namespace Parameters {
 
    public:
     template <class U>
-    Slider(T& _ref, U _minValue, U _maxValue, const QString& _about = "") :
-        ParameterType<T>(_ref, _about) {
-      if (!(_minValue <= _ref && _ref <= _maxValue)) {
+    Slider(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about) {
+      if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("Slider ref value out of range.");
       }
       QString buffer;
       QTextStream stream(&buffer);
-      stream << _minValue << ' ' << _maxValue;
+      stream << t_minValue << ' ' << t_maxValue;
       stream >> minValue;
       stream >> maxValue;
     }
@@ -297,8 +297,8 @@ namespace Parameters {
 
   class CheckBox : public ParameterType<bool> {
    public:
-    CheckBox(bool& _ref, const QString& _about = "") :
-        ParameterType<bool>(_ref, _about) {
+    CheckBox(bool& t_ref, const QString& t_about = "") :
+        ParameterType<bool>(t_ref, t_about) {
     }
 
     CheckBox* clone() const override final {
@@ -323,10 +323,10 @@ namespace Parameters {
     std::set<T> set;
 
    public:
-    ComboBox(T& _ref, const QVector<T>& _set, const QString& _about = "") :
-        ParameterType<T>(_ref, _about),
-        set(_set.begin(), _set.end()) {
-      if (!((set.size() > 1) && set.find(_ref) != set.end())) {
+    ComboBox(T& t_ref, const QVector<T>& t_set, const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about),
+        set(t_set.begin(), t_set.end()) {
+      if (!((set.size() > 1) && set.find(t_ref) != set.end())) {
         throw std::runtime_error(
             "the size of set must be greater than 1, and must contain ref.");
       }
@@ -376,20 +376,20 @@ namespace Parameters {
     boost::bimap<T, QString> bimap;
 
    public:
-    MappedComboBox(T& _ref,
-                   const QMap<T, QString>& _map,
-                   const QString& _about = "") :
-        ParameterType<T>(_ref, _about),
+    MappedComboBox(T& t_ref,
+                   const QMap<T, QString>& t_map,
+                   const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about),
         bimap([](const QMap<T, QString>& map) {
           boost::bimap<T, QString> ret;
           for (auto it = map.begin(); it != map.end(); ++it) {
             ret.insert({it.key(), it.value()});
           }
           return ret;
-        }(_map)) {
-      bool contains = bimap.left.find(_ref) != bimap.left.end();
+        }(t_map)) {
+      bool contains = bimap.left.find(t_ref) != bimap.left.end();
       if (!((bimap.size() > 1) &&
-            (static_cast<int>(bimap.size()) == _map.size()) && contains)) {
+            (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
         throw std::runtime_error(
             "the size of map must be greater than 1, and must contain ref.");
       }

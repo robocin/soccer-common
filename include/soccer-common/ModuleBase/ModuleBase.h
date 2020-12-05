@@ -34,7 +34,7 @@ class IndexedModuleBase : public ModuleBase {
   Q_OBJECT
 
  public:
-  explicit IndexedModuleBase(int _index, QThreadPool* threadPool);
+  explicit IndexedModuleBase(int index, QThreadPool* threadPool);
   ~IndexedModuleBase() override;
 
   void connectModules(const Modules* modules) override = 0;

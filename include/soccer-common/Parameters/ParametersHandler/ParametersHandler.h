@@ -13,10 +13,10 @@ namespace Parameters {
     QString m_value;
 
    public:
-    UpdateRequest(const QStringList& _path, const QString& _value);
+    UpdateRequest(const QStringList& path, const QString& value);
 
-    const QStringList& path() const;
-    const QString& value() const;
+    QStringList path() const;
+    QString value() const;
   };
 
   class ParametersHandler {

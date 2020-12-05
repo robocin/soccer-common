@@ -1,17 +1,16 @@
 #include "ParametersHandler.h"
 
 namespace Parameters {
-  UpdateRequest::UpdateRequest(const QStringList& _path,
-                               const QString& _value) :
-      m_path(_path),
-      m_value(_value) {
+  UpdateRequest::UpdateRequest(const QStringList& path, const QString& value) :
+      m_path(path),
+      m_value(value) {
   }
 
-  const QStringList& UpdateRequest::path() const {
+  QStringList UpdateRequest::path() const {
     return m_path;
   }
 
-  const QString& UpdateRequest::value() const {
+  QString UpdateRequest::value() const {
     return m_value;
   }
 

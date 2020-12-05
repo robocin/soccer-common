@@ -1,9 +1,9 @@
 #include "Robot.h"
 
-RawRobot::RawRobot(int _id, qreal _angle, const QPointF& _position) :
-    RawEntity(_position),
-    m_id(_id),
-    m_angle(_angle) {
+RawRobot::RawRobot(int id, qreal angle, const QPointF& position) :
+    RawEntity(position),
+    m_id(id),
+    m_angle(angle) {
 }
 
 int RawRobot::id() const {
@@ -14,12 +14,12 @@ qreal RawRobot::angle() const {
   return m_angle;
 }
 
-Robot::Robot(int _id,
-             qreal _angle,
-             const QPointF& _position,
-             const QPointF& _velocity,
-             const QPointF& _acceleration) :
-    RawEntity(_position),
-    Entity(_position, _velocity, _acceleration),
-    RawRobot(_id, _angle, _position) {
+Robot::Robot(int id,
+             qreal angle,
+             const QPointF& position,
+             const QPointF& velocity,
+             const QPointF& acceleration) :
+    RawEntity(position),
+    Entity(position, velocity, acceleration),
+    RawRobot(id, angle, position) {
 }

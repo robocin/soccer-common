@@ -2,10 +2,10 @@
 #include "soccer-common/ModuleBase/AnyVisitor/AnyVisitor.h"
 #include <mutex>
 
-ModulePrivate::ModulePrivate(QThreadPool* _threadPool) :
-    QObject(_threadPool),
+ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
+    QObject(threadPool),
     visitor(std::make_unique<AnyVisitor>()),
-    threadPool(_threadPool) {
+    threadPool(threadPool) {
   QRunnable::setAutoDelete(false);
 }
 

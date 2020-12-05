@@ -7,9 +7,9 @@ class RawEntity {
   QPointF m_position;
 
  public:
-  RawEntity(const QPointF& _position);
+  RawEntity(const QPointF& position);
 
-  const QPointF& position() const;
+  QPointF position() const;
 };
 
 class Entity : virtual public RawEntity {
@@ -17,12 +17,12 @@ class Entity : virtual public RawEntity {
   QPointF m_acceleration;
 
  public:
-  Entity(const QPointF& _position,
-         const QPointF& _velocity,
-         const QPointF& _acceleration);
+  Entity(const QPointF& position,
+         const QPointF& velocity,
+         const QPointF& acceleration);
 
-  const QPointF& velocity() const;
-  const QPointF& acceleration() const;
+  QPointF velocity() const;
+  QPointF acceleration() const;
 };
 
 #endif // ENTITY_H

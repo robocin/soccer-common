@@ -64,9 +64,9 @@ class SharedWrapper {
     Locker locker;
 
    public:
-    explicit Proxy(T& _instance, Mutex& _mutex, shared_wrapper_tag) :
-        instance(_instance),
-        locker(_mutex) {
+    explicit Proxy(T& instance, Mutex& mutex, shared_wrapper_tag) :
+        instance(instance),
+        locker(mutex) {
     }
 
     ~Proxy() {
