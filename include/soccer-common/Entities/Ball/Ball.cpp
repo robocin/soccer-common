@@ -1,12 +1,12 @@
 #include "Ball.h"
 
-RawBall::RawBall(const QPointF& _position) : RawEntity(_position) {
+RawBall::RawBall(const QPointF& position) : RawEntity(position) {
 }
 
-Ball::Ball(const QPointF& _position,
-           const QPointF& _velocity,
-           const QPointF& _acceleration) :
-    RawEntity(_position),
-    Entity(_position, _velocity, _acceleration),
-    RawBall(_position) {
+Ball::Ball(const QPointF& position,
+           const QPointF& velocity,
+           const QPointF& acceleration) :
+    RawEntity(position),
+    Entity(position, velocity, acceleration),
+    RawBall(position) {
 }

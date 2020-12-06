@@ -46,8 +46,8 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class... Args>
-  constexpr void emplace(Args&&... args) {
-    std::optional<T>::operator=(T(std::forward<Args>(args)...));
+  void emplace(Args&&... args) {
+    std::optional<T>::emplace(std::forward<Args>(args)...);
   }
 
   template <class FunctionPointer>

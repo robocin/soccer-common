@@ -5,14 +5,14 @@
 
 class RawBall : virtual public RawEntity {
  public:
-  RawBall(const QPointF& _position);
+  RawBall(const QPointF& position);
 };
 
 class Ball : public Entity, public RawBall {
  public:
-  Ball(const QPointF& _position,
-       const QPointF& _velocity,
-       const QPointF& _acceleration);
+  Ball(const QPointF& position,
+       const QPointF& velocity,
+       const QPointF& acceleration);
 };
 
 #endif // BALL_H

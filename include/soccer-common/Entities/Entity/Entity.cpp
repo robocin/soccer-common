@@ -1,24 +1,28 @@
 #include "Entity.h"
 
-RawEntity::RawEntity(const QPointF& _position) : m_position(_position) {
+RawEntity::RawEntity(const QPointF& position) : m_position(position) {
 }
 
-const QPointF& RawEntity::position() const {
+QPointF RawEntity::position() const {
   return m_position;
 }
 
-Entity::Entity(const QPointF& _position,
-               const QPointF& _velocity,
-               const QPointF& _acceleration) :
-    RawEntity(_position),
-    m_velocity(_velocity),
-    m_acceleration(_acceleration) {
+RawEntity::operator QPointF() const {
+  return position();
 }
 
-const QPointF& Entity::velocity() const {
+Entity::Entity(const QPointF& position,
+               const QPointF& velocity,
+               const QPointF& acceleration) :
+    RawEntity(position),
+    m_velocity(velocity),
+    m_acceleration(acceleration) {
+}
+
+QPointF Entity::velocity() const {
   return m_velocity;
 }
 
-const QPointF& Entity::acceleration() const {
+QPointF Entity::acceleration() const {
   return m_acceleration;
 }

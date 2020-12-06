@@ -6,9 +6,9 @@ ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
 ModuleBase::~ModuleBase() {
 }
 
-IndexedModuleBase::IndexedModuleBase(int _index, QThreadPool* threadPool) :
+IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
     ModuleBase(threadPool),
-    m_index(_index) {
+    m_index(index) {
 }
 
 IndexedModuleBase::~IndexedModuleBase() {
