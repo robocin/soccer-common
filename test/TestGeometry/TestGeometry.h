@@ -23,8 +23,8 @@ class TestGeometry : public QObject {
   void test_2D_operatorLess_whenGivenTwoPoints_shouldWork();
   void test_2D_dot_whenGivenTwoPoints_shouldWork();
   void test_2D_cross_whenGivenTwoPoints_shouldWork();
-  void test_2D_distanceSquare_whenGivenFourNumbers_shouldWork();
-  void test_2D_distanceSquare_whenGivenTwoPoints_shouldWork();
+  void test_2D_distanceSquared_whenGivenFourNumbers_shouldWork();
+  void test_2D_distanceSquared_whenGivenTwoPoints_shouldWork();
   void test_2D_distance_whenGivenFourNumbers_shouldWork();
   void test_2D_distance_whenGivenTwoPoints_shouldWork();
   void test_2D_rotateCW90_whenGivenAPoint_shouldWork();
@@ -33,9 +33,11 @@ class TestGeometry : public QObject {
   void test_2D_angle_whenGivenAPoint_shouldWork();
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
   void test_2D_length_whenGivenAPoint_shouldWork();
-  void test_2D_manhattanLength_whenGivenAnIntegerPoint_shouldWork();
+  void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
   void
   test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
+  void
+  test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
   void test_2D_isTriangle_whenGivenThreeNumbers_shouldWork();
   void test_2D_signedArea2_whenGivenAPolygon_shouldWork();
   void test_2D_signedArea_whenGivenAPolygon_shouldWork();
