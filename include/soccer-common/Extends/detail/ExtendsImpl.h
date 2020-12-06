@@ -4,15 +4,11 @@
 #include <utility>
 
 namespace detail {
-  template <class T, class... Args>
-  using enable_if_any_t =
-      std::enable_if_t<(std::is_same_v<std::decay_t<T>, Args> || ...)>;
-
   template <class T>
   constexpr bool dependent_false_v = false;
 } // namespace detail
 
-template <class T, class U = void>
+template <class T>
 class Extends {};
 
 template <class T>
