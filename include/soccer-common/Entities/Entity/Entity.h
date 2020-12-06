@@ -10,6 +10,7 @@ class RawEntity {
   RawEntity(const QPointF& position);
 
   QPointF position() const;
+  operator QPointF() const;
 };
 
 class Entity : virtual public RawEntity {
