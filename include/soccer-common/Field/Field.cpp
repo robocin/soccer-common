@@ -1,9 +1,6 @@
 #include "Field.h"
 
-Field::Field(qreal length,
-             qreal width,
-             qreal goalWidth,
-             qreal goalDepth) :
+Field::Field(qreal length, qreal width, qreal goalWidth, qreal goalDepth) :
     m_length(length),
     m_width(width),
     m_goalWidth(goalWidth),
