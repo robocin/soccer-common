@@ -5,17 +5,17 @@
 
 class Field {
  private:
-  qreal m_fieldLength;
-  qreal m_fieldWidth;
+  qreal m_length;
+  qreal m_width;
 
   qreal m_goalWidth;
   qreal m_goalDepth;
 
  public:
-  Field(qreal fieldLength, qreal fieldWidth, qreal goalWidth, qreal goalDepth);
+  Field(qreal length, qreal width, qreal goalWidth, qreal goalDepth);
 
-  qreal fieldLength() const;
-  qreal fieldWidth() const;
+  qreal length() const;
+  qreal width() const;
   qreal goalWidth() const;
   qreal goalDepth() const;
 };
