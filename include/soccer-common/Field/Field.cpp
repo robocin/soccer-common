@@ -1,21 +1,21 @@
 #include "Field.h"
 
-Field::Field(qreal fieldLength,
-             qreal fieldWidth,
+Field::Field(qreal length,
+             qreal width,
              qreal goalWidth,
              qreal goalDepth) :
-    m_fieldLength(fieldLength),
-    m_fieldWidth(fieldWidth),
+    m_length(length),
+    m_width(width),
     m_goalWidth(goalWidth),
     m_goalDepth(goalDepth) {
 }
 
-qreal Field::fieldLength() const {
-  return m_fieldLength;
+qreal Field::length() const {
+  return m_length;
 }
 
-qreal Field::fieldWidth() const {
-  return m_fieldWidth;
+qreal Field::width() const {
+  return m_width;
 }
 
 qreal Field::goalWidth() const {
