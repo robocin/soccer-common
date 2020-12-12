@@ -50,10 +50,10 @@ namespace Parameters {
 
           if (!parametersHandler.map.empty()) {
             if (parametersHandler.value) {
-              assert(parametersHandler.value->isChooseable());
+              Q_ASSERT(parametersHandler.value->isChooseable());
               if (parametersHandler.value->inputType() == InputType::CheckBox) {
                 for (auto& [key, value] : parametersHandler.map) {
-                  assert(key == "true" || key == "false");
+                  Q_ASSERT(key == "true" || key == "false");
                 }
               } else if (parametersHandler.value->inputType() ==
                          InputType::ComboBox) {
@@ -70,7 +70,7 @@ namespace Parameters {
                       can = true;
                     }
                   }
-                  assert(can);
+                  Q_ASSERT(can);
                 }
               }
 
@@ -93,7 +93,7 @@ namespace Parameters {
 
             ret += "}";
           } else {
-            assert(parametersHandler.value);
+            Q_ASSERT(parametersHandler.value);
           }
 
           if (parametersHandler.value) {
