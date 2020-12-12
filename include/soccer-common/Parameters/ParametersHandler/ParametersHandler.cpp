@@ -14,10 +14,10 @@ namespace Parameters {
     return m_value;
   }
 
-  QString ParametersHandler::dfs() const {
+  QString Handler::dfs() const {
     QString ret;
-    std::function<void(const ParametersHandler&)> f =
-        [&ret, &f](const ParametersHandler& parametersHandler) {
+    std::function<void(const Handler&)> f =
+        [&ret, &f](const Handler& parametersHandler) {
           if (parametersHandler.value) {
             ret += "{";
             //
@@ -104,26 +104,30 @@ namespace Parameters {
     return ret;
   }
 
-  ParametersHandler::ParametersHandler() : value(nullptr) {
+  Handler::Handler() : value(nullptr) {
   }
 
-  ParametersHandler::~ParametersHandler() {
+  Handler::~Handler() {
     if (value != nullptr) {
       delete value;
     }
     value = nullptr;
   }
 
-  QString ParametersHandler::json() const {
+  QString Handler::json() const {
     return dfs();
   }
 
+  QJsonObject Handler::jsonObject() const {
+    return QJsonDocument::fromJson(dfs().toUtf8()).object();
+  }
+
   QVector<UpdateRequest>
-  ParametersHandler::update(const QVector<UpdateRequest>& updates) {
+  Handler::update(const QVector<UpdateRequest>& updates) {
     QVector<UpdateRequest> ret;
     for (const auto& up : updates) {
       auto path = up.path();
-      ParametersHandler* ptr = this;
+      Handler* ptr = this;
       bool notFound = false;
       for (auto key : path) {
         if (ptr->map.find(key) != ptr->map.end()) {

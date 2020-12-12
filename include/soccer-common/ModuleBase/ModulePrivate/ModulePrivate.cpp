@@ -16,7 +16,7 @@ void ModulePrivate::runInParallel() {
   }
 }
 
-Parameters::ParametersHandler& ModulePrivate::parameters() {
+Parameters::Handler& ModulePrivate::parameters() {
   return parametersHandler;
 }
 

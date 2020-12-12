@@ -19,26 +19,26 @@ namespace Parameters {
     QString value() const;
   };
 
-  class ParametersHandler {
+  class Handler {
     ParameterBase* value;
-    std::map<QString, ParametersHandler> map;
+    std::map<QString, Handler> map;
 
     // disable_copy:
-    ParametersHandler(const ParametersHandler&) = delete;
-    ParametersHandler& operator=(const ParametersHandler&) = delete;
+    Handler(const Handler&) = delete;
+    Handler& operator=(const Handler&) = delete;
 
     // disable_move:
-    ParametersHandler(ParametersHandler&&) = delete;
-    ParametersHandler& operator=(ParametersHandler&&) = delete;
+    Handler(Handler&&) = delete;
+    Handler& operator=(Handler&&) = delete;
 
     QString dfs() const;
 
    public:
-    ParametersHandler();
-    ~ParametersHandler();
+    Handler();
+    ~Handler();
 
     template <class T>
-    ParametersHandler& operator=(T&& p) {
+    Handler& operator=(T&& p) {
       static_assert(std::is_base_of_v<ParameterBase, T>);
       if (value) {
         delete value;
@@ -47,11 +47,12 @@ namespace Parameters {
       return *this;
     }
 
-    inline ParametersHandler& operator[](const QString& p) {
+    inline Handler& operator[](const QString& p) {
       return map[p];
     }
 
     QString json() const;
+    QJsonObject jsonObject() const;
 
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };
