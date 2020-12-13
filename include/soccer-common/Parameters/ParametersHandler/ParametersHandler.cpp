@@ -14,10 +14,10 @@ namespace Parameters {
     return m_value;
   }
 
-  QString ParametersHandler::dfs() const {
+  QString Handler::dfs() const {
     QString ret;
-    std::function<void(const ParametersHandler&)> f =
-        [&ret, &f](const ParametersHandler& parametersHandler) {
+    std::function<void(const Handler&)> f =
+        [&ret, &f](const Handler& parametersHandler) {
           if (parametersHandler.value) {
             ret += "{";
             //
@@ -50,10 +50,10 @@ namespace Parameters {
 
           if (!parametersHandler.map.empty()) {
             if (parametersHandler.value) {
-              assert(parametersHandler.value->isChooseable());
+              Q_ASSERT(parametersHandler.value->isChooseable());
               if (parametersHandler.value->inputType() == InputType::CheckBox) {
                 for (auto& [key, value] : parametersHandler.map) {
-                  assert(key == "true" || key == "false");
+                  Q_ASSERT(key == "true" || key == "false");
                 }
               } else if (parametersHandler.value->inputType() ==
                          InputType::ComboBox) {
@@ -70,7 +70,7 @@ namespace Parameters {
                       can = true;
                     }
                   }
-                  assert(can);
+                  Q_ASSERT(can);
                 }
               }
 
@@ -93,7 +93,7 @@ namespace Parameters {
 
             ret += "}";
           } else {
-            assert(parametersHandler.value);
+            Q_ASSERT(parametersHandler.value);
           }
 
           if (parametersHandler.value) {
@@ -104,26 +104,30 @@ namespace Parameters {
     return ret;
   }
 
-  ParametersHandler::ParametersHandler() : value(nullptr) {
+  Handler::Handler() : value(nullptr) {
   }
 
-  ParametersHandler::~ParametersHandler() {
+  Handler::~Handler() {
     if (value != nullptr) {
       delete value;
     }
     value = nullptr;
   }
 
-  QString ParametersHandler::json() const {
+  QString Handler::json() const {
     return dfs();
   }
 
+  QJsonObject Handler::jsonObject() const {
+    return QJsonDocument::fromJson(dfs().toUtf8()).object();
+  }
+
   QVector<UpdateRequest>
-  ParametersHandler::update(const QVector<UpdateRequest>& updates) {
+  Handler::update(const QVector<UpdateRequest>& updates) {
     QVector<UpdateRequest> ret;
     for (const auto& up : updates) {
       auto path = up.path();
-      ParametersHandler* ptr = this;
+      Handler* ptr = this;
       bool notFound = false;
       for (auto key : path) {
         if (ptr->map.find(key) != ptr->map.end()) {

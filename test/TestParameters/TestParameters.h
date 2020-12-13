@@ -22,7 +22,7 @@ class TestParameters : public QObject {
     MyEnum myEnum = MyEnum::A;
   } args;
 
-  Parameters::ParametersHandler handler;
+  Parameters::Handler handler;
 
  public:
   TestParameters();

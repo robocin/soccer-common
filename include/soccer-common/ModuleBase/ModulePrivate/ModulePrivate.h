@@ -17,13 +17,13 @@ class ModulePrivate : public QObject, private QRunnable {
   void runInParallel();
 
  protected:
-  Parameters::ParametersHandler& parameters();
+  Parameters::Handler& parameters();
 
   virtual void wasSkipped();
   virtual void exec() = 0;
 
  private:
-  Parameters::ParametersHandler parametersHandler;
+  Parameters::Handler parametersHandler;
   QThreadPool* threadPool;
   QMutex execMutex;
 
