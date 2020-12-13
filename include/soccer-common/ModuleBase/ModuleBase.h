@@ -13,11 +13,18 @@ class ModuleBase : public ModulePrivate {
   explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
 
-  virtual void connectModules(const Modules* modules) = 0;
+  void setup(const Modules* modules) {
+    connectModules(modules);
+    buildParameters();
+    init(modules);
+  }
 
  protected:
   void exec() override = 0;
-  void buildParameters() override = 0;
+
+  virtual void connectModules(const Modules* modules);
+  virtual void buildParameters();
+  virtual void init(const Modules* modules);
 };
 
 class IndexedModuleBase : public ModuleBase {
@@ -27,13 +34,9 @@ class IndexedModuleBase : public ModuleBase {
   explicit IndexedModuleBase(int index, QThreadPool* threadPool);
   ~IndexedModuleBase() override;
 
-  void connectModules(const Modules* modules) override = 0;
-
  protected:
   int index() const;
-
   void exec() override = 0;
-  void buildParameters() override = 0;
 
  private:
   int m_index;
