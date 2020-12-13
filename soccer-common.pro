@@ -19,11 +19,11 @@ SUBDIRS +=         \
   test             \
   scripts
 
-template.subdir          = $$PWD/template
-$${PROJECT_TYPE}.subir   = $$PWD/$${PROJECT_TYPE}
-libs.subdir              = $$PWD/libs
-test.subir               = $$PWD/test
-scripts.subir            = $$PWD/scripts
+template.subdir           = $$PWD/template
+$${PROJECT_TYPE}.subdir   = $$PWD/$${PROJECT_TYPE}
+libs.subdir               = $$PWD/libs
+test.subdir               = $$PWD/test
+scripts.subdir            = $$PWD/scripts
 
 $${PROJECT_TYPE}.depends = template libs
 test.depends = template libs $${PROJECT_TYPE}
