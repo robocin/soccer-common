@@ -4,14 +4,19 @@
 #include <utility>
 
 template <class T>
-class Extends {};
+class Extends {
+  template <class U>
+  static constexpr bool dependent_false_v = false;
+
+ private:
+  static_assert(dependent_false_v<T>, "this class has no extension.");
+};
 
 template <class T>
 Extends(const T&) -> Extends<T>;
 
 template <class T>
 constexpr decltype(auto) extends(const T& object) {
-  static_assert(!std::is_empty_v<Extends<T>>, "this class has no extension.");
   return Extends<T>(object);
 }
 
