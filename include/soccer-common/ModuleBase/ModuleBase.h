@@ -20,8 +20,6 @@ class ModuleBase : public ModulePrivate {
   }
 
  protected:
-  void exec() override = 0;
-
   virtual void connectModules(const Modules* modules);
   virtual void buildParameters();
   virtual void init(const Modules* modules);
@@ -36,7 +34,6 @@ class IndexedModuleBase : public ModuleBase {
 
  protected:
   int index() const;
-  void exec() override = 0;
 
  private:
   int m_index;

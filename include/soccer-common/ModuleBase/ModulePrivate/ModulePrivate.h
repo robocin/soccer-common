@@ -20,7 +20,6 @@ class ModulePrivate : public QObject, private QRunnable {
   Parameters::ParametersHandler& parameters();
 
   virtual void wasSkipped();
-
   virtual void exec() = 0;
 
  private:
