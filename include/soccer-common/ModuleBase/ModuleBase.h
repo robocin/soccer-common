@@ -20,6 +20,17 @@ class ModuleBase : public ModulePrivate {
   }
 
  protected:
+  class RunInParallelAtEnd {
+    ModuleBase* m;
+
+   public:
+    inline RunInParallelAtEnd(ModuleBase* m) : m(m) {
+    }
+    inline ~RunInParallelAtEnd() {
+      m->runInParallel();
+    }
+  };
+
   virtual void connectModules(const Modules* modules);
   virtual void buildParameters();
   virtual void init(const Modules* modules);

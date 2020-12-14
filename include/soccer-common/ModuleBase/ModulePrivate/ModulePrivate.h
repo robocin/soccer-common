@@ -19,8 +19,9 @@ class ModulePrivate : public QObject, private QRunnable {
  protected:
   Parameters::Handler& parameters();
 
-  virtual void wasSkipped();
+  virtual void update();
   virtual void exec() = 0;
+  virtual void wasSkipped();
 
  private:
   Parameters::Handler parametersHandler;

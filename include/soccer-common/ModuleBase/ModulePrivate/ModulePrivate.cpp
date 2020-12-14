@@ -20,13 +20,17 @@ Parameters::Handler& ModulePrivate::parameters() {
   return parametersHandler;
 }
 
-void ModulePrivate::wasSkipped() {
+void ModulePrivate::update() {
 }
 
 void ModulePrivate::run() {
   if (std::unique_lock locker{execMutex, std::try_to_lock}) {
+    update();
     exec();
   } else {
     wasSkipped();
   }
+}
+
+void ModulePrivate::wasSkipped() {
 }
