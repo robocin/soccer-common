@@ -24,7 +24,7 @@ class ModuleBase : public ModulePrivate {
     ModuleBase* m;
 
    public:
-    inline RunInParallelAtEnd(ModuleBase* m) : m(m) {
+    inline RunInParallelAtEnd(ModuleBase* self) : m(self) {
     }
     inline ~RunInParallelAtEnd() {
       m->runInParallel();
