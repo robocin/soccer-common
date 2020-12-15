@@ -42,13 +42,14 @@ class InterruptRequest {
       m_function = f;
     }
     std::signal(I, [](int s) {
+      std::cout << "signal called after interrupt (code: " << s << ")"
+                << std::endl;
+      std::cout << "  message(): " << message() << std::endl << std::endl;
       if (m_function) {
         m_function();
+      } else /* natural behavior */ {
+        std::exit(128 + s);
       }
-      std::cout << "terminate called after interrupt (code: " << s << ")"
-                << std::endl;
-      std::cout << "  message(): " << message() << std::endl;
-      std::exit(128 + s);
     });
   }
 
