@@ -6,5 +6,6 @@
 #include "InheritanceFactorySafeMap/InheritanceFactorySafeMap.h"
 #include "StringHelper/StringHelper.h"
 #include "PtrMulticast/PtrMulticast.h"
+#include "InterruptRequest/InterruptRequest.h"
 
 #endif // UTILS_H
