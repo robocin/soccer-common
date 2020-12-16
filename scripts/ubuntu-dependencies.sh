@@ -1,5 +1,8 @@
 #!/bin/bash
 # Dependencies able to be installed: qt, g++, open-gl, clang.
+######################################################################
+###### Warning: changing this file name can cause a infite loop ######
+######################################################################
 
 PARAMS=()
 PARAM_SIZE="${#@}"
@@ -51,4 +54,16 @@ if [[ ! "${PARAMS[@]}" =~ "-qt" ]] ; then
 	rm qt-unified-linux-x64-online.run
 	echo $'qt installation finished'
 fi
+
+printf "\nSearching for scripts in this folder...\n\n"
+for file in ./ubuntu/*.sh; do
+
+	if [[ "$(basename "$file")" != "install-ubuntu-dependencies.sh" ]] ; then
+		echo "Started ["$(basename "$file")"]"
+    	bash $(basename "$file")
+    	echo "Ended ["$(basename "$file")"]"
+    	echo "--------------------------------------//--------------------------------------"
+	fi
+done
+
 echo $'\nScript finished!\nHappy coding :)'
