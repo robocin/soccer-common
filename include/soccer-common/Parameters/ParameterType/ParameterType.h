@@ -96,8 +96,7 @@ namespace Parameters {
         return Utils::quoted(MagicEnum::name(ref));
       } else if constexpr (std::is_same_v<T, bool>) {
         return ref ? "true" : "false";
-      }
-      if constexpr (std::is_same_v<T, QString>) {
+      } else if constexpr (std::is_same_v<T, QString>) {
         return Utils::quoted(ref);
       } else if constexpr (std::is_floating_point_v<T>) {
         return QString::number(ref, 'f', 10);
