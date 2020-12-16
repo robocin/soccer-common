@@ -34,7 +34,6 @@ namespace Parameters {
 
   struct ParameterBase {
     virtual ~ParameterBase();
-    virtual ParameterBase* clone() const = 0;
     virtual QString value() const = 0;
     virtual QString inputType() const = 0;
     virtual QString type() const = 0;
@@ -54,6 +53,30 @@ namespace Parameters {
     T& ref;
     QString about;
 
+    static std::optional<T> eval(const QString& str) {
+      if constexpr (std::is_enum_v<T>) {
+        return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
+      } else if constexpr (std::is_same_v<T, bool>) {
+        if (str == "true" || str == "false") {
+          return std::make_optional<T>(str == "true");
+        } else {
+          return std::nullopt;
+        }
+      } else if constexpr (std::is_arithmetic_v<T>) {
+        T value;
+        QString buffer = str;
+        QTextStream stream(&buffer);
+        stream >> value;
+        if (stream.status() == QTextStream::Ok) {
+          return std::make_optional<T>(std::move(value));
+        } else {
+          return std::nullopt;
+        }
+      } else if constexpr (std::is_same_v<T, QString>) {
+        return std::make_optional<T>(str);
+      }
+    }
+
    public:
     ParameterType(T& t_ref, const QString& t_about = "") :
         ref(t_ref),
@@ -68,24 +91,18 @@ namespace Parameters {
     ~ParameterType() override {
     }
 
-    ParameterType* clone() const override = 0;
-
     QString value() const override {
-      QString str;
       if constexpr (std::is_enum_v<T>) {
-        str = MagicEnum::name(ref);
+        return Utils::quoted(MagicEnum::name(ref));
       } else if constexpr (std::is_same_v<T, bool>) {
-        str = ref ? "true" : "false";
-      } else {
-        QTextStream stream(&str);
-        stream << Qt::fixed;
-        stream << ref;
+        return ref ? "true" : "false";
       }
-
-      if constexpr (std::is_arithmetic_v<T>) {
-        return str;
+      if constexpr (std::is_same_v<T, QString>) {
+        return Utils::quoted(ref);
+      } else if constexpr (std::is_floating_point_v<T>) {
+        return QString::number(ref, 'f', 10);
       } else {
-        return Utils::quoted(str);
+        return QString::number(ref);
       }
     }
 
@@ -102,36 +119,14 @@ namespace Parameters {
     QString payload() const override = 0;
     bool isChooseable() const override = 0;
 
-    bool update(const QString& str) override {
-      if constexpr (std::is_enum_v<T>) {
-        std::optional<T> op = MagicEnum::cast<T>(str);
-        if (op) {
-          ref = *op;
-          return true;
-        } else {
-          return false;
-        }
-      } else if constexpr (std::is_same_v<T, bool>) {
-        if (str == "true" || str == "false") {
-          ref = (str == "true");
-          return true;
-        } else {
-          return false;
-        }
-      } else if constexpr (std::is_same_v<T, QString>) {
-        ref = str;
-        return true;
-      } else {
-        QString buffer = str;
-        QTextStream stream(&buffer);
-        stream >> ref;
-        return stream.status() == QTextStream::Ok;
-      }
-    }
+    bool update(const QString& str) override = 0;
   };
 
   template <class T>
   class Text : public ParameterType<T> {
+    using ParameterType<T>::value;
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     QRegularExpression regex;
 
    public:
@@ -140,14 +135,10 @@ namespace Parameters {
          const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         regex(t_regex) {
-      if (!regex.match(Utils::removeQuotes(ParameterType<T>::value()))
+      if (!regex.match(Utils::removeQuotes(static_cast<QString>(value())))
                .hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
-    }
-
-    Text* clone() const override final {
-      return new Text(*this);
     }
 
     QString inputType() const override final {
@@ -164,9 +155,11 @@ namespace Parameters {
     }
 
     bool update(const QString& str) override final {
-      if (regex.match(str).hasMatch()) {
-        ParameterType<T>::update(str);
-        return true;
+      if (auto op = eval(str)) {
+        if (regex.match(str).hasMatch()) {
+          ref = *op;
+          return true;
+        }
       }
       return false;
     }
@@ -174,9 +167,11 @@ namespace Parameters {
 
   template <class T>
   class SpinBox : public ParameterType<T> {
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    QString minValue;
-    QString maxValue;
+    T minValue;
+    T maxValue;
 
    public:
     template <class U>
@@ -185,15 +180,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
-      QString buffer;
-      QTextStream stream(&buffer);
-      stream << t_minValue << ' ' << t_maxValue;
-      stream >> minValue;
-      stream >> maxValue;
-    }
-
-    SpinBox* clone() const override final {
-      return new SpinBox(*this);
+      minValue = static_cast<T>(t_minValue);
+      maxValue = static_cast<T>(t_maxValue);
     }
 
     QString inputType() const override final {
@@ -201,21 +189,34 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " + minValue + ", " +
-             Utils::quoted(Detail::MaxValue) + ": " + maxValue;
+      return Utils::quoted(Detail::MinValue) + ": " +
+             QString::number(minValue) + ", " +
+             Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
     bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (minValue <= *op && *op <= maxValue) {
+          ref = *op;
+          return true;
+        }
+      }
       return false;
     }
   };
 
   template <class T>
   class DoubleSpinBox : public ParameterType<T> {
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     static_assert(std::is_floating_point_v<T>, "unsupported type.");
-    QString minValue;
-    QString maxValue;
-    QString precision;
+    T minValue;
+    T maxValue;
+    int precision;
 
    public:
     template <class U>
@@ -228,18 +229,13 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
-      QString buffer;
-      QTextStream stream(&buffer);
-      stream << Qt::fixed;
-      stream.setRealNumberPrecision(t_precision);
-      stream << t_minValue << ' ' << t_maxValue << ' ' << t_precision;
-      stream >> minValue;
-      stream >> maxValue;
-      stream >> precision;
+      minValue = static_cast<T>(t_minValue);
+      maxValue = static_cast<T>(t_maxValue);
+      precision = t_precision;
     }
 
-    DoubleSpinBox* clone() const override final {
-      return new DoubleSpinBox(*this);
+    QString value() const override final {
+      return QString::number(ref, 'f', precision);
     }
 
     QString inputType() const override final {
@@ -247,21 +243,36 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " + minValue + ", " +
-             Utils::quoted(Detail::MaxValue) + ": " + maxValue + ", " +
-             Utils::quoted(Detail::Precision) + ": " + precision;
+      return Utils::quoted(Detail::MinValue) + ": " +
+             QString::number(minValue, 'f', precision) + ", " +
+             Utils::quoted(Detail::MaxValue) + ": " +
+             QString::number(maxValue, 'f', precision) + ", " +
+             Utils::quoted(Detail::Precision) + ": " +
+             QString::number(precision);
     }
 
     bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (minValue <= *op && *op <= maxValue) {
+          ref = *op;
+          return true;
+        }
+      }
       return false;
     }
   };
 
   template <class T>
   class Slider : public ParameterType<T> {
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    QString minValue;
-    QString maxValue;
+    T minValue;
+    T maxValue;
 
    public:
     template <class U>
@@ -270,15 +281,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("Slider ref value out of range.");
       }
-      QString buffer;
-      QTextStream stream(&buffer);
-      stream << t_minValue << ' ' << t_maxValue;
-      stream >> minValue;
-      stream >> maxValue;
-    }
-
-    Slider* clone() const override final {
-      return new Slider(*this);
+      minValue = static_cast<T>(t_minValue);
+      maxValue = static_cast<T>(t_maxValue);
     }
 
     QString inputType() const override final {
@@ -286,23 +290,33 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " + minValue + ", " +
-             Utils::quoted(Detail::MaxValue) + ": " + maxValue;
+      return Utils::quoted(Detail::MinValue) + ": " +
+             QString::number(minValue) + ", " +
+             Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
     bool isChooseable() const override final {
       return false;
     }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (minValue <= *op && *op <= maxValue) {
+          ref = *op;
+          return true;
+        }
+      }
+      return false;
+    }
   };
 
   class CheckBox : public ParameterType<bool> {
+    using ParameterType<bool>::eval;
+    using ParameterType<bool>::ref;
+
    public:
     CheckBox(bool& t_ref, const QString& t_about = "") :
         ParameterType<bool>(t_ref, t_about) {
-    }
-
-    CheckBox* clone() const override final {
-      return new CheckBox(*this);
     }
 
     QString inputType() const override final {
@@ -316,10 +330,20 @@ namespace Parameters {
     bool isChooseable() const override final {
       return true;
     }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        ref = *op;
+        return true;
+      }
+      return false;
+    }
   };
 
   template <class T>
   class ComboBox : public ParameterType<T> {
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     std::set<T> set;
 
    public:
@@ -330,10 +354,6 @@ namespace Parameters {
         throw std::runtime_error(
             "the size of set must be greater than 1, and must contain ref.");
       }
-    }
-
-    ComboBox* clone() const override final {
-      return new ComboBox(*this);
     }
 
     QString type() const override final {
@@ -369,10 +389,22 @@ namespace Parameters {
     bool isChooseable() const override final {
       return true;
     }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (set.find(*op) != set.end()) {
+          ref = *op;
+          return true;
+        }
+      }
+      return false;
+    }
   };
 
   template <class T>
   class MappedComboBox : public ParameterType<T> {
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
     boost::bimap<T, QString> bimap;
 
    public:
@@ -393,10 +425,6 @@ namespace Parameters {
         throw std::runtime_error(
             "the size of map must be greater than 1, and must contain ref.");
       }
-    }
-
-    MappedComboBox* clone() const override final {
-      return new MappedComboBox(*this);
     }
 
     QString value() const override {
@@ -438,7 +466,7 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto it = bimap.right.find(str); it != bimap.right.end()) {
-        ParameterType<T>::ref = bimap.right.find(str)->get_left();
+        ref = bimap.right.find(str)->get_left();
         return true;
       }
       return false;
