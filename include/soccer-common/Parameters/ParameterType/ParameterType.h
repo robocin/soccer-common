@@ -45,7 +45,13 @@ namespace Parameters {
 
   template <class T>
   class ParameterType : public ParameterBase {
-    static_assert(std::is_enum_v<T> || std::is_arithmetic_v<T> ||
+    template <class... Ts>
+    static constexpr bool is_any_of_v =
+        std::disjunction_v<std::is_same<T, Ts>...>;
+
+    static_assert(std::is_enum_v<T> ||
+                      (std::is_arithmetic_v<T> &&
+                       !(is_any_of_v<char, long double>) ) ||
                       std::is_same_v<T, QString>,
                   "unsuported type.");
 
@@ -53,12 +59,13 @@ namespace Parameters {
     T& ref;
     QString about;
 
+   public:
     static std::optional<T> eval(const QString& str) {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (str == "true" || str == "false") {
-          return std::make_optional<T>(str == "true");
+        if (str == "0" || str == "1" || str == "true" || str == "false") {
+          return std::make_optional<T>(str == "1" || str == "true");
         } else {
           return std::nullopt;
         }
@@ -77,7 +84,6 @@ namespace Parameters {
       }
     }
 
-   public:
     ParameterType(T& t_ref, const QString& t_about = "") :
         ref(t_ref),
         about(t_about) {
@@ -123,14 +129,15 @@ namespace Parameters {
 
   template <class T>
   class Text : public ParameterType<T> {
-    using ParameterType<T>::value;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     QRegularExpression regex;
 
    public:
+    using ParameterType<T>::value;
+
     Text(T& t_ref,
-         const QRegularExpression& t_regex = QRegularExpression("(.*)"),
+         const QRegularExpression& t_regex = Regex::AnyMatch,
          const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         regex(t_regex) {
@@ -176,6 +183,9 @@ namespace Parameters {
     template <class U>
     SpinBox(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
+      if (t_minValue >= t_maxValue) {
+        throw std::runtime_error("minValue is greater or equal than maxValue.");
+      }
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
@@ -225,6 +235,9 @@ namespace Parameters {
                   int t_precision = 2,
                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
+      if (t_minValue >= t_maxValue) {
+        throw std::runtime_error("minValue is greater or equal than maxValue.");
+      }
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
@@ -277,6 +290,9 @@ namespace Parameters {
     template <class U>
     Slider(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
+      if (t_minValue >= t_maxValue) {
+        throw std::runtime_error("minValue is greater or equal than maxValue.");
+      }
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("Slider ref value out of range.");
       }
