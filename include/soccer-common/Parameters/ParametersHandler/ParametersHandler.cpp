@@ -104,14 +104,10 @@ namespace Parameters {
     return ret;
   }
 
-  Handler::Handler() : value(nullptr) {
+  Handler::Handler() {
   }
 
   Handler::~Handler() {
-    if (value != nullptr) {
-      delete value;
-    }
-    value = nullptr;
   }
 
   QString Handler::json() const {

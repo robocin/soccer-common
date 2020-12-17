@@ -20,7 +20,7 @@ namespace Parameters {
   };
 
   class Handler {
-    ParameterBase* value;
+    std::unique_ptr<ParameterBase> value;
     std::map<QString, Handler> map;
 
     // disable_copy:
@@ -40,10 +40,7 @@ namespace Parameters {
     template <class T>
     Handler& operator=(T&& p) {
       static_assert(std::is_base_of_v<ParameterBase, T>);
-      if (value) {
-        delete value;
-      }
-      value = new T(p);
+      value = std::make_unique<T>(std::move(p));
       return *this;
     }
 
