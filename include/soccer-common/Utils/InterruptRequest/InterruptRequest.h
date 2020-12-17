@@ -3,7 +3,6 @@
 
 #include <atomic>
 #include <csignal>
-#include <iostream>
 #include <functional>
 
 template <int I>
@@ -42,9 +41,6 @@ class InterruptRequest {
       m_function = f;
     }
     std::signal(I, [](int s) {
-      std::cout << "signal called after interrupt (code: " << s << ")"
-                << std::endl;
-      std::cout << "  message(): " << message() << std::endl << std::endl;
       if (m_function) {
         m_function();
       } else /* natural behavior */ {
