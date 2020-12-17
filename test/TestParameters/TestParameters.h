@@ -22,6 +22,7 @@ class TestParameters : public QObject {
 
   void cleanupTestCase();
 
+  // types:
   void test_ParameterType_eval_WithInvalidParameters_ShouldReturnNullopt();
   void test_ParameterType_eval_WithValidParameters_ShouldWork();
 
@@ -44,4 +45,7 @@ class TestParameters : public QObject {
 
   void test_MappedComboBox_WithValidParameters_ShouldConstruct();
   void test_MappedComboBox_WithInvalidParameters_ShouldThrowException();
+
+  // handler:
+  void test_ParametersHandler_WithValidParametersShouldConstruct();
 };

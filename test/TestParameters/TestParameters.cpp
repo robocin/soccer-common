@@ -686,4 +686,55 @@ void TestParameters::
   }
 }
 
+void TestParameters::
+    test_ParametersHandler_WithValidParametersShouldConstruct() {
+  using namespace Parameters;
+
+  struct Args {
+    bool boolean = true;
+    enum class Enum : int { A, B, C, D };
+    Enum enumeration = Enum::A;
+
+    enum class Enum2 : int { A, B, C, D };
+    Enum2 enumeration2 = Enum2::A;
+
+    struct FirstLayer {
+      int integer = 10;
+      double real = std::acos(-1.0);
+      QString string = "parameter-type";
+    };
+    FirstLayer firstLayer;
+  };
+  Args args;
+
+  Handler h;
+  h["boolean"] = CheckBox(args.boolean);
+  h["enumeration"] =
+      ComboBox(args.enumeration, MagicEnum::values<Args::Enum>());
+  h["enumeration2"] =
+      MappedComboBox(args.enumeration2, MagicEnum::entries<Args::Enum2>());
+  h["first-layer"]["integer"] = SpinBox(args.firstLayer.integer, 0, 20);
+  h["first-layer"]["real"] =
+      DoubleSpinBox(args.firstLayer.real, 0.0, 2.0 * std::acos(-1.0), 6);
+  h["first-layer"]["string"] = Text(args.firstLayer.string);
+
+  QJsonParseError error;
+  QJsonDocument::fromJson(h.json().toUtf8(), &error);
+  QCOMPARE(error.error, QJsonParseError::NoError);
+
+  QCOMPARE(args.boolean, true);
+  QCOMPARE(args.firstLayer.integer, 10);
+  QCOMPARE(args.firstLayer.real, std::acos(-1.0));
+
+  QVector<UpdateRequest> updates;
+  updates += UpdateRequest({"boolean"}, "false");
+  updates += UpdateRequest({"first-layer", "integer"}, "7");
+  updates += UpdateRequest({"first-layer", "real"}, "1.23456");
+  h.update(updates);
+
+  QCOMPARE(args.boolean, false);
+  QCOMPARE(args.firstLayer.integer, 7);
+  QCOMPARE(args.firstLayer.real, 1.23456);
+}
+
 QTEST_MAIN(TestParameters)
