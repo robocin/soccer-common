@@ -6,23 +6,8 @@ class TestParameters : public QObject {
   Q_OBJECT
 
   struct Args {
-    int maxSpeed = 0;
-    long long maxVelocity = 130;
-    QPoint startPosition = QPoint(50, 50);
-    QString robotName = "wall-e";
-    double epsilon = 1.0;
-
-    struct Draw {
-      bool canDraw = false;
-      QString colorName = "blue";
-    };
-    Draw draw;
-
-    enum class MyEnum { A, B, C };
-    MyEnum myEnum = MyEnum::A;
-  } args;
-
-  Parameters::Handler handler;
+    enum class MyEnum : int { A, B, C };
+  };
 
  public:
   TestParameters();
@@ -37,6 +22,26 @@ class TestParameters : public QObject {
 
   void cleanupTestCase();
 
+  void test_ParameterType_eval_WithInvalidParameters_ShouldReturnNullopt();
+  void test_ParameterType_eval_WithValidParameters_ShouldWork();
+
+  void test_Text_WithValidParameters_ShouldConstruct();
+  void test_Text_WithInvalidParameters_ShouldThrowException();
+
+  void test_SpinBox_WithValidParameters_ShouldConstruct();
+  void test_SpinBox_WithInvalidParameters_ShouldThrowException();
+
+  void test_DoubleSpinBox_WithValidParameters_ShouldConstruct();
+  void test_DoubleSpinBox_WithInvalidParameters_ShouldThrowException();
+
   void test_Slider_WithValidParameters_ShouldConstruct();
-  void test_Slider_WithRefOutOfRange_ShouldThrowException();
+  void test_Slider_WithInvalidParameters_ShouldThrowException();
+
+  void test_CheckBox_WithValidParameters_ShouldConstruct();
+
+  void test_ComboBox_WithValidParameters_ShouldConstruct();
+  void test_ComboBox_WithInvalidParameters_ShouldThrowException();
+
+  void test_MappedComboBox_WithValidParameters_ShouldConstruct();
+  void test_MappedComboBox_WithInvalidParameters_ShouldThrowException();
 };
