@@ -9,7 +9,7 @@ class PtrCastOperator {
 
   template <class U>
   static constexpr T* makeT([[maybe_unused]] U* ptr) {
-    if constexpr (std::is_base_of_v<T, U>) {
+    if constexpr (std::is_same_v<T, U> || std::is_base_of_v<T, U>) {
       return static_cast<T*>(ptr);
     } else {
       return nullptr;
@@ -32,12 +32,34 @@ class PtrCastOperator {
 
 template <class... Args>
 class PtrMulticast : public PtrCastOperator<Args>... {
+  template <class U>
+  static constexpr bool is_any_of_v =
+      std::disjunction_v<std::is_same<U, Args>...>;
+
  public:
-  constexpr PtrMulticast(std::nullptr_t null = nullptr) :
-      PtrCastOperator<Args>(null)... {
+  constexpr PtrMulticast(std::nullptr_t ptr = nullptr) :
+      PtrCastOperator<Args>(ptr)... {
   }
   template <class T>
   constexpr PtrMulticast(T* ptr) : PtrCastOperator<Args>(ptr)... {
+  }
+
+  template <class U>
+  constexpr operator U*() {
+    if constexpr (is_any_of_v<U>) {
+      return operator U*();
+    } else {
+      return nullptr;
+    }
+  }
+
+  template <class U>
+  constexpr operator const U*() const {
+    if constexpr (is_any_of_v<U>) {
+      return operator const U*();
+    } else {
+      return nullptr;
+    }
   }
 };
 
