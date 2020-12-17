@@ -7,5 +7,6 @@
 #include "StringHelper/StringHelper.h"
 #include "PtrMulticast/PtrMulticast.h"
 #include "InterruptRequest/InterruptRequest.h"
+#include "Regex/Regex.h"
 
 #endif // UTILS_H
