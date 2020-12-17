@@ -697,6 +697,7 @@ void TestParameters::
 
     enum class Enum2 : int { A, B, C, D };
     Enum2 enumeration2 = Enum2::A;
+    double nested = 2.1;
 
     struct FirstLayer {
       int integer = 10;
@@ -711,8 +712,11 @@ void TestParameters::
   h["boolean"] = CheckBox(args.boolean);
   h["enumeration"] =
       ComboBox(args.enumeration, MagicEnum::values<Args::Enum>());
+
   h["enumeration2"] =
       MappedComboBox(args.enumeration2, MagicEnum::entries<Args::Enum2>());
+  h["enumeration2"]["B"]["nested"] = DoubleSpinBox(args.nested, 0, 10);
+
   h["first-layer"]["integer"] = SpinBox(args.firstLayer.integer, 0, 20);
   h["first-layer"]["real"] =
       DoubleSpinBox(args.firstLayer.real, 0.0, 2.0 * std::acos(-1.0), 6);
@@ -725,16 +729,19 @@ void TestParameters::
   QCOMPARE(args.boolean, true);
   QCOMPARE(args.firstLayer.integer, 10);
   QCOMPARE(args.firstLayer.real, std::acos(-1.0));
+  QCOMPARE(args.nested, 2.1);
 
   QVector<UpdateRequest> updates;
   updates += UpdateRequest({"boolean"}, "false");
   updates += UpdateRequest({"first-layer", "integer"}, "7");
   updates += UpdateRequest({"first-layer", "real"}, "1.23456");
+  updates += UpdateRequest({"enumeration2", "B", "nested"}, "4.2");
   h.update(updates);
 
   QCOMPARE(args.boolean, false);
   QCOMPARE(args.firstLayer.integer, 7);
   QCOMPARE(args.firstLayer.real, 1.23456);
+  QCOMPARE(args.nested, 4.2);
 }
 
 QTEST_MAIN(TestParameters)
