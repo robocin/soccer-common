@@ -745,9 +745,23 @@ void TestParameters::
   QCOMPARE(args.firstLayer.real, 1.23456);
   QCOMPARE(args.nested, 4.2);
 
-  {
-    auto updates = UpdateRequest::fromJsonOfParameters(h.jsonObject());
+  /* testing JsonHandler::fromJsonObject and .get() */ {
+    auto updates = JsonHandler::fromJsonObject(h.jsonObject()).get();
     QVERIFY2(h.update(updates).isEmpty(), "Some updates were not made.");
+  }
+
+  /* testing JsonHandler::fromJsonObject and .update(), .get() */ {
+    QVector<UpdateRequest> updates;
+    updates += UpdateRequest({"boolean"}, "true");
+    updates += UpdateRequest({"first-layer", "integer"}, "8");
+    updates += UpdateRequest({"first-layer", "real"}, "2.23456");
+    updates += UpdateRequest({"enumeration2", "B", "nested"}, "6.4");
+
+    JsonHandler jh(JsonHandler::fromJsonObject(h.jsonObject()));
+    jh.update(updates);
+    updates = jh.get();
+
+    QVERIFY(h.update(updates).isEmpty());
   }
 }
 
