@@ -8,6 +8,8 @@
 #include "soccer-common/Parameters/ParameterType/ParameterType.h"
 
 namespace Parameters {
+  bool isParameterType(const QJsonObject& object);
+
   class UpdateRequest {
     QStringList m_path;
     QString m_value;
@@ -19,21 +21,29 @@ namespace Parameters {
     QString value() const;
   };
 
+  class JsonHandler {
+    std::optional<QString> m_value;
+    QMap<QString, JsonHandler> m_map;
+
+   public:
+    JsonHandler();
+    ~JsonHandler();
+
+    static JsonHandler fromJsonObject(const QJsonObject& object);
+    void update(const QVector<UpdateRequest>& updates);
+    QVector<UpdateRequest> get() const;
+    QString toJson() const;
+  };
+
   class Handler {
     std::unique_ptr<ParameterBase> value;
     std::map<QString, Handler> map;
 
-    // disable_copy:
-    Handler(const Handler&) = delete;
-    Handler& operator=(const Handler&) = delete;
-
-    // disable_move:
-    Handler(Handler&&) = delete;
-    Handler& operator=(Handler&&) = delete;
-
     QString dfs() const;
 
    public:
+    Q_DISABLE_COPY_MOVE(Handler);
+
     Handler();
     ~Handler();
 
@@ -50,7 +60,6 @@ namespace Parameters {
 
     QString json() const;
     QJsonObject jsonObject() const;
-
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };
 } // namespace Parameters
