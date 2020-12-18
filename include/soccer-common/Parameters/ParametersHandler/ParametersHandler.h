@@ -32,7 +32,7 @@ namespace Parameters {
     static JsonHandler fromJsonObject(const QJsonObject& object);
     void update(const QVector<UpdateRequest>& updates);
     QVector<UpdateRequest> get() const;
-    QString toJson() const;
+    QByteArray toJson() const;
   };
 
   class Handler {

@@ -78,7 +78,7 @@ namespace Parameters {
     return updates;
   }
 
-  QString JsonHandler::toJson() const {
+  QByteArray JsonHandler::toJson() const {
     QString json;
     std::function<void(const JsonHandler&)> f =
         [&](const JsonHandler& handler) {
@@ -111,7 +111,10 @@ namespace Parameters {
           json += "}";
         };
     f(*this);
-    return json;
+    QByteArray formatted =
+        QJsonDocument::fromJson(json.toUtf8()).toJson(QJsonDocument::Indented);
+    formatted.replace(QByteArray(4, ' '), QByteArray(2, ' '));
+    return formatted;
   }
 
   // Handler
