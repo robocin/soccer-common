@@ -731,17 +731,24 @@ void TestParameters::
   QCOMPARE(args.firstLayer.real, std::acos(-1.0));
   QCOMPARE(args.nested, 2.1);
 
-  QVector<UpdateRequest> updates;
-  updates += UpdateRequest({"boolean"}, "false");
-  updates += UpdateRequest({"first-layer", "integer"}, "7");
-  updates += UpdateRequest({"first-layer", "real"}, "1.23456");
-  updates += UpdateRequest({"enumeration2", "B", "nested"}, "4.2");
-  h.update(updates);
+  {
+    QVector<UpdateRequest> updates;
+    updates += UpdateRequest({"boolean"}, "false");
+    updates += UpdateRequest({"first-layer", "integer"}, "7");
+    updates += UpdateRequest({"first-layer", "real"}, "1.23456");
+    updates += UpdateRequest({"enumeration2", "B", "nested"}, "4.2");
+    h.update(updates);
+  }
 
   QCOMPARE(args.boolean, false);
   QCOMPARE(args.firstLayer.integer, 7);
   QCOMPARE(args.firstLayer.real, 1.23456);
   QCOMPARE(args.nested, 4.2);
+
+  {
+    auto updates = UpdateRequest::fromJsonOfParameters(h.jsonObject());
+    QVERIFY2(h.update(updates).isEmpty(), "Some updates were not made.");
+  }
 }
 
 QTEST_MAIN(TestParameters)
