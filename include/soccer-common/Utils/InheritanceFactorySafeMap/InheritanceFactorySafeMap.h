@@ -10,9 +10,25 @@
 template <class T, class... Args>
 class InheritanceFactorySafeMap {
   using Key = QString;
-  using Value = QPair<std::function<T*(Args...)>, QString>;
+  class Value : public std::function<T*(Args...)> {
+    QString m_description;
 
-  mutable QMutex mutex;
+   public:
+    Value() {
+    }
+
+    template <class F>
+    Value(F&& f, const QString& description) :
+        std::function<T*(Args...)>(std::forward<F>(f)),
+        m_description(description) {
+    }
+
+    QString description() const {
+      return m_description;
+    }
+  };
+
+  mutable QMutex m_mutex;
   QMap<Key, Value> m_map;
 
   template <class U>
@@ -24,27 +40,27 @@ class InheritanceFactorySafeMap {
   template <class U>
   void insert(const QString& description) {
     static_assert(std::is_base_of_v<T, U>);
-    std::lock_guard locker(mutex);
-    m_map.insert(Utils::nameOfType<U>(), QPair(makeFactory<U>, description));
+    std::lock_guard locker(m_mutex);
+    m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, description));
   }
 
   int size() const {
-    std::lock_guard locker(mutex);
+    std::lock_guard locker(m_mutex);
     return m_map.size();
   }
 
   QStringList keys() const {
-    std::lock_guard locker(mutex);
+    std::lock_guard locker(m_mutex);
     return m_map.keys();
   }
 
   QMap<Key, Value> map() const {
-    std::lock_guard locker(mutex);
+    std::lock_guard locker(m_mutex);
     return m_map;
   }
 
   Value operator[](const Key& key) const {
-    std::lock_guard locker(mutex);
+    std::lock_guard locker(m_mutex);
     return m_map[key];
   }
 };
