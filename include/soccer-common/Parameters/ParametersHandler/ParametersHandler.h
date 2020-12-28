@@ -39,8 +39,6 @@ namespace Parameters {
     std::unique_ptr<ParameterBase> value;
     std::map<QString, Handler> map;
 
-    QString dfs() const;
-
    public:
     Q_DISABLE_COPY_MOVE(Handler);
 
@@ -58,7 +56,8 @@ namespace Parameters {
       return map[p];
     }
 
-    QString json() const;
+    void clear();
+    QByteArray json() const;
     QJsonObject jsonObject() const;
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };

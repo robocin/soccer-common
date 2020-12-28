@@ -118,7 +118,21 @@ namespace Parameters {
   }
 
   // Handler
-  QString Handler::dfs() const {
+  Handler::Handler() {
+  }
+
+  Handler::~Handler() {
+  }
+
+  void Handler::clear() {
+    value.reset();
+    map.clear();
+  }
+
+  QByteArray Handler::json() const {
+    if (!value && map.empty()) {
+      return "{}";
+    }
     QString ret;
     std::function<void(const Handler&)> f =
         [&ret, &f](const Handler& parametersHandler) {
@@ -205,21 +219,11 @@ namespace Parameters {
           }
         };
     f(*this);
-    return ret;
-  }
-
-  Handler::Handler() {
-  }
-
-  Handler::~Handler() {
-  }
-
-  QString Handler::json() const {
-    return dfs();
+    return ret.toUtf8();
   }
 
   QJsonObject Handler::jsonObject() const {
-    return QJsonDocument::fromJson(dfs().toUtf8()).object();
+    return QJsonDocument::fromJson(json()).object();
   }
 
   QVector<UpdateRequest>
