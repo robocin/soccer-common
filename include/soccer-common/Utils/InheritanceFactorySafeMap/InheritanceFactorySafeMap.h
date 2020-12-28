@@ -49,6 +49,11 @@ class InheritanceFactorySafeMap {
     return m_map.size();
   }
 
+  int empty() const {
+    std::lock_guard locker(m_mutex);
+    return m_map.empty();
+  }
+
   QStringList keys() const {
     std::lock_guard locker(m_mutex);
     return m_map.keys();
