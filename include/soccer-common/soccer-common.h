@@ -1,3 +1,6 @@
+#ifndef SOCCER_COMMON_H
+#define SOCCER_COMMON_H
+
 #include "Geometry/Geometry.h"
 #include "MagicEnum/MagicEnum.h"
 #include "Utils/Utils.h"
@@ -8,3 +11,5 @@
 #include "SharedWrapper/SharedWrapper.h"
 #include "Extends/Extends.h"
 #include "Field/Field.h"
+
+#endif // SOCCER_COMMON_H
