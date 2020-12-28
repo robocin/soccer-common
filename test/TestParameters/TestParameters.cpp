@@ -723,7 +723,7 @@ void TestParameters::
   h["first-layer"]["string"] = Text(args.firstLayer.string);
 
   QJsonParseError error;
-  QJsonDocument::fromJson(h.json().toUtf8(), &error);
+  QJsonDocument::fromJson(h.json(), &error);
   QCOMPARE(error.error, QJsonParseError::NoError);
 
   QCOMPARE(args.boolean, true);
