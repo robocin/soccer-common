@@ -8,5 +8,6 @@
 #include "PtrMulticast/PtrMulticast.h"
 #include "InterruptRequest/InterruptRequest.h"
 #include "Regex/Regex.h"
+#include "Singleton/Singleton.h"
 
 #endif // UTILS_H

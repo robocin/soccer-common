@@ -4,6 +4,7 @@ HEADERS += \
   $$PWD/InterruptRequest/InterruptRequest.h \
   $$PWD/PtrMulticast/PtrMulticast.h \
   $$PWD/Regex/Regex.h \
+  $$PWD/Singleton/Singleton.h \
   $$PWD/StaticBlockTag/StaticBlockTag.h \
   $$PWD/StringHelper/StringHelper.h \
   $$PWD/Utils.h
@@ -14,6 +15,7 @@ SOURCES += \
   $$PWD/InterruptRequest/InterruptRequest.cpp \
   $$PWD/PtrMulticast/PtrMulticast.cpp \
   $$PWD/Regex/Regex.cpp \
+  $$PWD/Singleton/Singleton.cpp \
   $$PWD/StaticBlockTag/StaticBlockTag.cpp \
   $$PWD/StringHelper/StringHelper.cpp \
   $$PWD/Utils.cpp
