@@ -21,6 +21,8 @@ namespace Parameters {
     QString value() const;
   };
 
+  using UpdateRequests = QVector<UpdateRequest>;
+
   class JsonHandler {
     std::optional<QString> m_value;
     QMap<QString, JsonHandler> m_map;
@@ -30,9 +32,12 @@ namespace Parameters {
     ~JsonHandler();
 
     static JsonHandler fromJsonObject(const QJsonObject& object);
-    void update(const QVector<UpdateRequest>& updates);
-    QVector<UpdateRequest> get() const;
+    void insert_or_assign(const QVector<UpdateRequest>& updates);
+    void insert(const QVector<UpdateRequest>& updates);
+    bool contains(const QStringList& path) const;
+    QVector<UpdateRequest> updates() const;
     QByteArray toJson() const;
+    QJsonObject toObject() const;
   };
 
   class Handler {
@@ -45,9 +50,10 @@ namespace Parameters {
     Handler();
     ~Handler();
 
-    template <class T>
+    template <
+        class T,
+        class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
     Handler& operator=(T&& p) {
-      static_assert(std::is_base_of_v<ParameterBase, T>);
       value = std::make_unique<T>(std::move(p));
       return *this;
     }
@@ -56,7 +62,6 @@ namespace Parameters {
       return map[p];
     }
 
-    void clear();
     QByteArray json() const;
     QJsonObject jsonObject() const;
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);

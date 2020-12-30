@@ -746,7 +746,7 @@ void TestParameters::
   QCOMPARE(args.nested, 4.2);
 
   /* testing JsonHandler::fromJsonObject and .get() */ {
-    auto updates = JsonHandler::fromJsonObject(h.jsonObject()).get();
+    auto updates = JsonHandler::fromJsonObject(h.jsonObject()).updates();
     QVERIFY2(h.update(updates).isEmpty(), "Some updates were not made.");
   }
 
@@ -758,8 +758,8 @@ void TestParameters::
     updates += UpdateRequest({"enumeration2", "B", "nested"}, "6.4");
 
     JsonHandler jh(JsonHandler::fromJsonObject(h.jsonObject()));
-    jh.update(updates);
-    updates = jh.get();
+    jh.insert_or_assign(updates);
+    updates = jh.updates();
 
     QVERIFY(h.update(updates).isEmpty());
   }

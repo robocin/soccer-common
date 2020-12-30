@@ -47,7 +47,7 @@ namespace Parameters {
     return handler;
   }
 
-  void JsonHandler::update(const QVector<UpdateRequest>& updates) {
+  void JsonHandler::insert_or_assign(const QVector<UpdateRequest>& updates) {
     for (const auto& update : updates) {
       auto path = update.path();
       auto value = update.value();
@@ -59,7 +59,33 @@ namespace Parameters {
     }
   }
 
-  QVector<UpdateRequest> JsonHandler::get() const {
+  void JsonHandler::insert(const QVector<UpdateRequest>& updates) {
+    for (const auto& update : updates) {
+      auto path = update.path();
+      auto value = update.value();
+      JsonHandler* ptr = this;
+      for (const auto& key : path) {
+        ptr = &(ptr->m_map[key]);
+      }
+      if (!ptr->m_value) {
+        ptr->m_value = value;
+      }
+    }
+  }
+
+  bool JsonHandler::contains(const QStringList& path) const {
+    const JsonHandler* ptr = this;
+    for (const auto& key : path) {
+      if (auto it = ptr->m_map.find(key); it != ptr->m_map.end()) {
+        ptr = &it.value();
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  QVector<UpdateRequest> JsonHandler::updates() const {
     QVector<UpdateRequest> updates;
     std::function<void(QStringList&, const JsonHandler&)> f =
         [&f, &updates](QStringList& path, const JsonHandler& handler) {
@@ -117,16 +143,15 @@ namespace Parameters {
     return formatted;
   }
 
+  QJsonObject JsonHandler::toObject() const {
+    return QJsonDocument::fromJson(toJson()).object();
+  }
+
   // Handler
   Handler::Handler() {
   }
 
   Handler::~Handler() {
-  }
-
-  void Handler::clear() {
-    value.reset();
-    map.clear();
   }
 
   QByteArray Handler::json() const {
