@@ -52,7 +52,7 @@ class SharedOptional : public std::optional<T> {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(const FunctionPointer& f) {
-    return f(static_cast<std::optional<T>&>(*this));
+    return f(*this);
   }
 
   constexpr std::optional<T>& ref() {
