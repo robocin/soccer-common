@@ -1,26 +1,42 @@
 #include "ModuleBase.h"
 
-ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
+ModuleBase::ModuleBase() {
 }
 
 ModuleBase::~ModuleBase() {
 }
 
-void ModuleBase::connectModules(const Modules*) {
+void ModuleBase::build(QThreadPool* threadPool) {
+  buildPrivate(threadPool);
+  buildParameters();
+  emit sendParameters(parameters().jsonObject());
+}
+
+void ModuleBase::setup(const Modules* modules) {
+  connectModules(modules);
+  init(modules);
 }
 
 void ModuleBase::buildParameters() {
 }
 
+void ModuleBase::connectModules(const Modules*) {
+}
+
 void ModuleBase::init(const Modules*) {
 }
 
-IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
-    ModuleBase(threadPool),
-    m_index(index) {
+// -------------------------------------------------------------------------- //
+
+IndexedModuleBase::IndexedModuleBase() : m_index(-1) {
 }
 
 IndexedModuleBase::~IndexedModuleBase() {
+}
+
+void IndexedModuleBase::build(int index, QThreadPool* threadPool) {
+  m_index = index;
+  build(threadPool);
 }
 
 int IndexedModuleBase::index() const {
