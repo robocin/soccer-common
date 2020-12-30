@@ -37,6 +37,8 @@ class InheritanceFactorySafeMap {
   }
 
  public:
+  using type = QMap<Key, Value>;
+
   template <class U>
   void insert(const QString& description) {
     static_assert(std::is_base_of_v<T, U>);
@@ -44,29 +46,14 @@ class InheritanceFactorySafeMap {
     m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, description));
   }
 
-  int size() const {
-    std::lock_guard locker(m_mutex);
-    return m_map.size();
-  }
-
-  int empty() const {
-    std::lock_guard locker(m_mutex);
-    return m_map.empty();
-  }
-
-  QStringList keys() const {
-    std::lock_guard locker(m_mutex);
-    return m_map.keys();
-  }
-
   QMap<Key, Value> map() const {
     std::lock_guard locker(m_mutex);
     return m_map;
   }
 
-  Value operator[](const Key& key) const {
+  operator QMap<Key, Value>() const {
     std::lock_guard locker(m_mutex);
-    return m_map[key];
+    return m_map;
   }
 };
 
