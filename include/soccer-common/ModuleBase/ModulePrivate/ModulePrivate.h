@@ -9,14 +9,17 @@
 
 class ModulePrivate : public QObject, private QRunnable {
   Q_OBJECT
+
  public:
-  explicit ModulePrivate(QThreadPool* threadPool);
+  ModulePrivate();
   ~ModulePrivate() override;
 
  public slots:
   void runInParallel();
 
  protected:
+  void buildPrivate(QThreadPool* thread);
+
   Parameters::Handler& parameters();
 
   virtual void update();

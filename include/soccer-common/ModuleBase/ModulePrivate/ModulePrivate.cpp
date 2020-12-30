@@ -1,19 +1,27 @@
 #include "ModulePrivate.h"
 #include <mutex>
 
-ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
-    QObject(threadPool),
-    threadPool(threadPool) {
+ModulePrivate::ModulePrivate() : threadPool(nullptr) {
   QRunnable::setAutoDelete(false);
 }
 
 ModulePrivate::~ModulePrivate() {
+  if (threadPool) {
+    while (threadPool->tryTake(static_cast<QRunnable*>(this))) {
+      // removing all uninitiated calls.
+    }
+  }
 }
 
 void ModulePrivate::runInParallel() {
   if (threadPool) {
-    threadPool->start(this);
+    threadPool->start(static_cast<QRunnable*>(this));
   }
+}
+
+void ModulePrivate::buildPrivate(QThreadPool* thread) {
+  setParent(thread);
+  threadPool = thread;
 }
 
 Parameters::Handler& ModulePrivate::parameters() {
