@@ -12,5 +12,6 @@
 #include "Extends/Extends.h"
 #include "Field/Field.h"
 #include "ModulesPrivate/ModulesPrivate.h"
+#include "gui/gui.h"
 
 #endif // SOCCER_COMMON_H
