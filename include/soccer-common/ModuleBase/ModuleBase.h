@@ -10,10 +10,10 @@ class ModuleBase : public ModulePrivate {
   Q_OBJECT
 
  public:
-  ModuleBase();
+  ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
 
-  void build(QThreadPool* threadPool);
+  void build();
   void setup(const Modules* modules);
 
  signals:
@@ -33,7 +33,7 @@ class ModuleBase : public ModulePrivate {
   virtual void connectModules(const Modules* modules);
   virtual void init(const Modules* modules);
 };
-
+/*
 class IndexedModuleBase : public ModuleBase {
   Q_OBJECT
 
@@ -51,5 +51,5 @@ class IndexedModuleBase : public ModuleBase {
  private:
   int m_index;
 };
-
+*/
 #endif // MODULEBASE_H

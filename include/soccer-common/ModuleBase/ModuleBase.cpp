@@ -1,14 +1,15 @@
 #include "ModuleBase.h"
 
-ModuleBase::ModuleBase() {
+ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
+  /* during construction and destruction, virtual functions aren't virtual.
+   * Because of this, an extra function is needed, in this case, 'build()'. */
 }
 
 ModuleBase::~ModuleBase() {
   qWarning().nospace() << "deleting " << this << ".";
 }
 
-void ModuleBase::build(QThreadPool* threadPool) {
-  buildPrivate(threadPool);
+void ModuleBase::build() {
   buildParameters();
   emit sendParameters(parameters().jsonObject());
 }
@@ -28,7 +29,7 @@ void ModuleBase::init(const Modules*) {
 }
 
 // -------------------------------------------------------------------------- //
-
+/*
 IndexedModuleBase::IndexedModuleBase() : m_index(-1) {
 }
 
@@ -43,3 +44,4 @@ void IndexedModuleBase::build(int index, QThreadPool* threadPool) {
 int IndexedModuleBase::index() const {
   return m_index;
 }
+*/
