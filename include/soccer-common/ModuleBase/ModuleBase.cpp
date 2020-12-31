@@ -4,6 +4,7 @@ ModuleBase::ModuleBase() {
 }
 
 ModuleBase::~ModuleBase() {
+  qWarning().nospace() << "deleting " << this << ".";
 }
 
 void ModuleBase::build(QThreadPool* threadPool) {
