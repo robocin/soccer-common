@@ -11,5 +11,6 @@
 #include "SharedWrapper/SharedWrapper.h"
 #include "Extends/Extends.h"
 #include "Field/Field.h"
+#include "ModulesPrivate/ModulesPrivate.h"
 
 #endif // SOCCER_COMMON_H
