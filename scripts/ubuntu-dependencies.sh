@@ -1,69 +1,74 @@
 #!/bin/bash
-# Dependencies able to be installed: qt, g++, open-gl, clang.
-######################################################################
-###### Warning: changing this file name can cause a infite loop ######
-######################################################################
 
 PARAMS=()
+SCRIPTS=()
+CHOSEN=""
 PARAM_SIZE="${#@}"
-ans=" "
+folder="./ubuntu"
+declare -A SCR
+i=0
+MODE=""
 
-if [[ "$PARAM_SIZE" > 0 ]] ; then
-	echo "You are not installing:"
-	for var in "$@"
-	do 
-		PARAMS+=("$var")
-		echo "$var "
-	done
-	echo "Proceed with installation? [y/n]"
-	read ans
+cd $folder	# goes to the desired folder
 
-	if [[ "$ans" != y ]] ; then
-		if [[ "$ans" != n ]] ; then
-			echo "Invalid input"
-		fi
-		exit
-	fi
-fi
-
-echo "Starting installation..."
-if [[ ! "${PARAMS[@]}" =~ "-clang-format" ]] ; then
-	echo $'Installing clang-format...'
-	apt-get install clang-format
-	echo $'clang-format installation finished'
-fi
-
-if [[ ! "${PARAMS[@]}" =~ "-g++" ]] ; then
-	echo $'Installing g++...'
-	apt-get install g++
-	echo $'g++ installation finished'
-fi
-
-if [[ ! "${PARAMS[@]}" =~ "-gl" ]] ; then
-	echo $'Installing open-gl...'
-	apt-get install freeglut3 freeglut3-dev
-	echo $'open-gl installation finished'
-fi
-
-if [[ ! "${PARAMS[@]}" =~ "-qt" ]] ; then
-	echo 'Installing qt..'
-	apt-get install build-essential libfontconfig1 mesa-common-dev libglu1-mesa-dev -y
-	wget http://download.qt.io/official_releases/online_installers/qt-unified-linux-x64-online.run
-	chmod +x qt-unified-linux-x64-online.run
-	./qt-unified-linux-x64-online.run
-	rm qt-unified-linux-x64-online.run
-	echo $'qt installation finished'
-fi
-
-printf "\nSearching for scripts in this folder...\n\n"
-for file in ./ubuntu/*.sh; do
-
-	if [[ "$(basename "$file")" != "install-ubuntu-dependencies.sh" ]] ; then
-		echo "Started ["$(basename "$file")"]"
-    	bash $(basename "$file")
-    	echo "Ended ["$(basename "$file")"]"
-    	echo "--------------------------------------//--------------------------------------"
-	fi
+for file in ./*.sh; do 	# loop through every file in the folder
+	SCR+=(["$i"]="$(basename "$file")")
+	i=$((i+1))
 done
 
-echo $'\nScript finished!\nHappy coding :)'
+echo "There are $i scripts in $folder:"
+for key in ${!SCR[@]}; do
+	echo "[${key}] - ${SCR[${key}]}"
+done
+echo " "
+echo "[a] - Install all | [o] - Install only | [u] - Not install only | [q] - Quit"
+
+read MODE
+
+if [[ "$MODE" == "a" ]] ; then
+	clear
+	echo "[INSTALLING ALL SCRIPTS]"
+	for key in ${!SCR[@]}; do
+		bash ${SCR[${key}]}
+	done
+elif [[ "$MODE" == "o" ]] ; then
+	clear
+	echo "[INSTALL ONLY MODE]"
+	echo " "
+	echo "$i scripts found:"
+	for key in ${!SCR[@]}; do
+		echo "[${key}] - ${SCR[${key}]}"
+	done
+	echo " "
+	echo "Choose the [index] of the script to install:"
+	read CHOSEN
+	for (( j=0; j<${#CHOSEN}; j++ )); do
+  		if [[ "${CHOSEN:$j:1}" != " " ]]; then
+  			bash ${SCR[${CHOSEN:$j:1}]}
+  		fi
+	done
+elif [[ "$MODE" == "u" ]] ; then
+clear
+	echo "[NOT INSTALL ONLY MODE]"
+	echo " "
+	echo "$i scripts found:"
+	for key in ${!SCR[@]}; do
+		echo "[${key}] - ${SCR[${key}]}"
+	done
+	echo " "
+	echo "Choose the [index] of the script to avoid it's installation:"
+	read CHOSEN
+
+	for key in ${!SCR[@]}; do
+		if [[ ! "${CHOSEN[@]}" =~ "$key" ]]; then
+			bash ${SCR[${key}]}
+		fi
+	done
+
+elif [[ "$MODE" == "q" ]] ; then
+	echo "Script finished."
+else
+	echo "Wrong input"
+fi
+
+echo "Happy coding!"
