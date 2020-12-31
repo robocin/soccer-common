@@ -8,7 +8,6 @@
 #include "TrackedPackageBase/TrackedPackageBase.h"
 #include "Entities/Entities.h"
 #include "Parameters/Parameters.h"
-#include "SharedWrapper/SharedWrapper.h"
 #include "Extends/Extends.h"
 #include "Field/Field.h"
 #include "ModulesPrivate/ModulesPrivate.h"
