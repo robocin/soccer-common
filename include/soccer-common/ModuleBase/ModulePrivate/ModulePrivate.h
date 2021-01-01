@@ -11,7 +11,7 @@ class ModulePrivate : public QObject, private QRunnable {
   Q_OBJECT
 
  public:
-  ModulePrivate(QThreadPool* threadPool);
+  explicit ModulePrivate(QThreadPool* threadPool);
   ~ModulePrivate() override;
 
  public slots:

@@ -29,19 +29,15 @@ void ModuleBase::init(const Modules*) {
 }
 
 // -------------------------------------------------------------------------- //
-/*
-IndexedModuleBase::IndexedModuleBase() : m_index(-1) {
+
+IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
+    ModuleBase(threadPool),
+    m_index(index) {
 }
 
 IndexedModuleBase::~IndexedModuleBase() {
 }
 
-void IndexedModuleBase::build(int index, QThreadPool* threadPool) {
-  m_index = index;
-  build(threadPool);
-}
-
 int IndexedModuleBase::index() const {
   return m_index;
 }
-*/

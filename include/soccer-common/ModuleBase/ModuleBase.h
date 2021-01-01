@@ -4,13 +4,16 @@
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
 
+/*!
+ * \brief It will be defined in the executable project.
+ */
 class Modules;
 
 class ModuleBase : public ModulePrivate {
   Q_OBJECT
 
  public:
-  ModuleBase(QThreadPool* threadPool);
+  explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
 
   void build();
@@ -33,23 +36,21 @@ class ModuleBase : public ModulePrivate {
   virtual void connectModules(const Modules* modules);
   virtual void init(const Modules* modules);
 };
-/*
+
+// -------------------------------------------------------------------------- //
+
 class IndexedModuleBase : public ModuleBase {
   Q_OBJECT
 
  public:
-  explicit IndexedModuleBase();
+  explicit IndexedModuleBase(int index, QThreadPool* threadPool);
   ~IndexedModuleBase() override;
 
-  void build(int index, QThreadPool* threadPool);
-
  protected:
-  using ModuleBase::build;
-
   int index() const;
 
  private:
   int m_index;
 };
-*/
+
 #endif // MODULEBASE_H
