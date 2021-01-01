@@ -46,6 +46,21 @@ class InheritanceFactorySafeMap {
     m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, description));
   }
 
+  int size() const {
+    std::lock_guard locker(m_mutex);
+    return m_map.size();
+  }
+
+  int empty() const {
+    std::lock_guard locker(m_mutex);
+    return m_map.empty();
+  }
+
+  QStringList keys() const {
+    std::lock_guard locker(m_mutex);
+    return m_map.keys();
+  }
+
   QMap<Key, Value> map() const {
     std::lock_guard locker(m_mutex);
     return m_map;
@@ -54,6 +69,11 @@ class InheritanceFactorySafeMap {
   operator QMap<Key, Value>() const {
     std::lock_guard locker(m_mutex);
     return m_map;
+  }
+
+  Value operator[](const Key& key) const {
+    std::lock_guard locker(m_mutex);
+    return m_map[key];
   }
 };
 
