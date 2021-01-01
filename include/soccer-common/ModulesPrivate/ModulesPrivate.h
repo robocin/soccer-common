@@ -11,6 +11,16 @@ class ModulesPrivate : public QObject {
     QObject* m_parent;
     mutable QMap<int, QTimer*> m_map;
 
+    template <std::size_t I>
+    inline QTimer* get() const {
+      if (!m_map.contains(I)) {
+        QTimer* timer = new QTimer(m_parent);
+        timer->start(I);
+        m_map[I] = timer;
+      }
+      return m_map[I];
+    }
+
    public:
     explicit Timers(QObject* parent) : m_parent(parent) {
     }
@@ -19,7 +29,7 @@ class ModulesPrivate : public QObject {
       clear();
     }
 
-    void clear() {
+    inline void clear() {
       for (auto it = m_map.begin(); it != m_map.end(); ++it) {
         it.value()->deleteLater();
         it.value() = nullptr;
@@ -28,14 +38,13 @@ class ModulesPrivate : public QObject {
     }
 
     template <std::size_t I>
-    QTimer* hertz() const {
-      if (!m_map.contains(I)) {
-        static_assert(0 < I && I <= 600, "out of range.");
-        QTimer* timer = new QTimer(m_parent);
-        timer->start(1000 / I);
-        m_map[I] = timer;
-      }
-      return m_map[I];
+    inline QTimer* hertz() const {
+      static_assert(0 < I && I <= 600, "out of range.");
+      return get<1000 / I>();
+    }
+
+    inline QTimer* asap() const {
+      return get<0>();
     }
   };
 
