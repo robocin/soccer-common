@@ -20,6 +20,7 @@ ModulesPrivate::Timers* ModulesPrivate::timers() const {
 void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
   if (isRunning) {
     emit setup();
+    emit impulse();
   } else {
     qDebug() << "starting rebuild...";
     clear();

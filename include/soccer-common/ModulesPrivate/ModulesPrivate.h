@@ -58,8 +58,10 @@ class ModulesPrivate : public QObject {
   Timers* timers() const;
 
  signals:
-  void rebuild();
   void setup();
+  void impulse();
+
+  void rebuild();
 
  public slots:
   void onPlayPauseButtonPressed(bool isRunning);
@@ -75,7 +77,10 @@ class ModulesPrivate : public QObject {
     using F = typename InheritanceFactorySafeMap<T, Args...>::type;
 
     M* modules;
+
     T*& ref;
+    std::optional<int> index; // can be indexed, or not.
+
     F factory;
 
     static void deleteIfExists(T* instance) {
@@ -92,9 +97,10 @@ class ModulesPrivate : public QObject {
     }
 
     /* connecting updates, (TODO: painting) and building dialog before object
-     * build. Trazer pra dentro da classe.
+     * build. Trazer pra dentro da classe, se possível.
      */
-    inline static void setDefaultConnections(T* ref, MainWindow* gui) {
+    [[deprecated]] inline static void setDefaultConnections(T* ref,
+                                                            MainWindow* gui) {
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
 
       QObject::connect(ref,
@@ -130,6 +136,11 @@ class ModulesPrivate : public QObject {
                        &ModulesPrivate::setup,
                        ref,
                        std::bind(Maker::setup, ref, modules));
+
+      QObject::connect(modules,
+                       &ModulesPrivate::impulse,
+                       ref,
+                       &ModuleBase::runInParallel);
     }
 
     static void
@@ -152,18 +163,10 @@ class ModulesPrivate : public QObject {
       setToolTip(moduleBox, factory, type);
     }
 
-   public:
-    Maker(M* t_modules,
-          T*& t_ref,
-          const InheritanceFactorySafeMap<T, Args...>& t_factory) :
-        modules(t_modules),
-        ref(t_ref),
-        factory(t_factory) {
-    }
-
     template <class... Types>
-    void operator()(Types&&... types) {
+    inline void exec(Types&&... types) {
       if (factory.empty()) {
+        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
         return;
       }
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
@@ -189,6 +192,29 @@ class ModulesPrivate : public QObject {
                                  std::forward<Types>(types)...));
       //
       moduleBox->setComboBoxItems(factory.keys());
+    }
+
+   public:
+    Maker(M* t_modules,
+          T*& t_ref,
+          const InheritanceFactorySafeMap<T, Args...>& t_factory) :
+        modules(t_modules),
+        ref(t_ref),
+        factory(t_factory) {
+    }
+
+    template <class R = void, class... Types>
+    std::enable_if_t<!std::is_base_of_v<IndexedModuleBase, T>, R> // !indexed
+    operator()(Types&&... types) {
+      exec(std::forward<Types>(types)...);
+    }
+
+    template <class R = void, class... Types>
+    std::enable_if_t<std::is_base_of_v<IndexedModuleBase, T>, R> // indexed
+    operator()(int t_index, Types&&...) {
+      index.emplace(t_index);
+      // to do.
+      // exec(t_index, std::forward<Types>(types)...);
     }
   };
 
