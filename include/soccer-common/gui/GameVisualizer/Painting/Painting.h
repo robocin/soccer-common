@@ -15,7 +15,7 @@ class Painting {
   Painting();
   virtual ~Painting();
   virtual void run(GameVisualizerPainter2D* f) = 0;
-  virtual std::unique_ptr<Painting> clone() = 0;
+  virtual std::unique_ptr<Painting> clone() const = 0;
 
   static std::unique_ptr<Painting>
   create(std::function<void(GameVisualizerPainter2D*)> function);
@@ -42,7 +42,7 @@ class Painting::FunctionPainting : public Painting {
     m_function(f);
   }
 
-  inline std::unique_ptr<Painting> clone() override {
+  inline std::unique_ptr<Painting> clone() const override {
     return std::make_unique<FunctionPainting>(*this);
   }
 };
