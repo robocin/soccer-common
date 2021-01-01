@@ -29,7 +29,7 @@ class ModulesPrivate : public QObject {
       m_map.clear();
     }
 
-    template <int I>
+    template <std::size_t I>
     QTimer* hertz() const {
       if (!m_map.contains(I)) {
         static_assert(0 < I && I <= 600, "fps out of range.");
@@ -38,7 +38,7 @@ class ModulesPrivate : public QObject {
         m_map[I] = timer;
       }
       return m_map[I];
-    };
+    }
   };
 
   MainWindow* m_gui;
@@ -58,12 +58,17 @@ class ModulesPrivate : public QObject {
   void onPlayPauseButtonPressed(bool isRunning);
 
  protected:
-  template <class T, class F>
+  template <class T, class... Args>
   class Maker {
     static_assert(std::is_base_of_v<ModuleBase, T>);
 
+    using F = typename InheritanceFactorySafeMap<T, Args...>::type;
+
     T*& ref;
     F factory;
+
+    Modules* modules;
+    MainWindow* gui;
 
     static void deleteIfExists(T* instance) {
       if (instance) {
@@ -99,14 +104,14 @@ class ModulesPrivate : public QObject {
                       const F& factory,
                       Modules* modules,
                       MainWindow* gui,
-                      QThreadPool* threadPool) {
+                      Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
       deleteIfExists(ref);
 
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       QString type = moduleBox->currentText();
-      ref = factory[type](threadPool);
+      ref = factory[type](args...);
 
       qWarning().nospace() << "a new instance of " << Utils::nameOfType<T>()
                            << " with type " << type << " was created: " << ref
@@ -137,20 +142,27 @@ class ModulesPrivate : public QObject {
                      const F& factory,
                      Modules* modules,
                      MainWindow* gui,
-                     QThreadPool* threadPool) {
+                     Args... args) {
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       QString type = moduleBox->currentText();
 
-      build(ref, factory, modules, gui, threadPool);
+      build(ref, factory, modules, gui, args...);
       setToolTip(moduleBox, factory, type);
     }
 
    public:
-    Maker(T*& t_ref, const F& t_factory) : ref(t_ref), factory(t_factory) {
+    Maker(T*& t_ref,
+          const InheritanceFactorySafeMap<T, Args...>& t_factory,
+          Modules* t_modules,
+          MainWindow* t_gui) :
+        ref(t_ref),
+        factory(t_factory),
+        modules(t_modules),
+        gui(t_gui) {
     }
 
-    void
-    operator()(Modules* modules, MainWindow* gui, QThreadPool* threadPool) {
+    template <class... Types>
+    void operator()(Types&&... types) {
       if (factory.empty()) {
         return;
       }
@@ -165,7 +177,7 @@ class ModulesPrivate : public QObject {
                                  factory,
                                  modules,
                                  gui,
-                                 threadPool));
+                                 std::forward<Types>(types)...));
       //
       QObject::connect(modules,
                        &ModulesPrivate::rebuild,
@@ -175,7 +187,7 @@ class ModulesPrivate : public QObject {
                                  factory,
                                  modules,
                                  gui,
-                                 threadPool));
+                                 std::forward<Types>(types)...));
       //
       moduleBox->setComboBoxItems(factory.keys());
     }
