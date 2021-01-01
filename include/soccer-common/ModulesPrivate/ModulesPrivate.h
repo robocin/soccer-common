@@ -4,8 +4,6 @@
 #include "soccer-common/gui/gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
 
-// remains to add IndexedModules
-
 class ModulesPrivate : public QObject {
   Q_OBJECT
 
@@ -14,7 +12,7 @@ class ModulesPrivate : public QObject {
     mutable QMap<int, QTimer*> m_map;
 
    public:
-    explicit Timers(QObject* parent = nullptr) : m_parent(parent) {
+    explicit Timers(QObject* parent) : m_parent(parent) {
     }
 
     ~Timers() {
@@ -32,7 +30,7 @@ class ModulesPrivate : public QObject {
     template <std::size_t I>
     QTimer* hertz() const {
       if (!m_map.contains(I)) {
-        static_assert(0 < I && I <= 600, "fps out of range.");
+        static_assert(0 < I && I <= 600, "out of range.");
         QTimer* timer = new QTimer(m_parent);
         timer->start(1000 / I);
         m_map[I] = timer;
@@ -58,17 +56,18 @@ class ModulesPrivate : public QObject {
   void onPlayPauseButtonPressed(bool isRunning);
 
  protected:
-  template <class T, class... Args>
+  template <class T, class M, class... Args>
   class Maker {
     static_assert(std::is_base_of_v<ModuleBase, T>);
 
+    static_assert(std::is_same_v<Modules, M>);
+    static_assert(std::is_base_of_v<ModulesPrivate, M>);
+
     using F = typename InheritanceFactorySafeMap<T, Args...>::type;
 
+    M* modules;
     T*& ref;
     F factory;
-
-    Modules* modules;
-    MainWindow* gui;
 
     static void deleteIfExists(T* instance) {
       if (instance) {
@@ -78,7 +77,7 @@ class ModulesPrivate : public QObject {
       }
     }
 
-    static void setup(T* instance, Modules* modules) {
+    static void setup(T* instance, M* modules) {
       qWarning() << "performing" << instance << "setup.";
       static_cast<ModuleBase*>(instance)->setup(modules);
     }
@@ -100,15 +99,12 @@ class ModulesPrivate : public QObject {
                        &ModuleBase::receiveUpdateRequests);
     }
 
-    static void build(T*& ref,
-                      const F& factory,
-                      Modules* modules,
-                      MainWindow* gui,
-                      Args... args) {
+    static void build(T*& ref, const F& factory, M* modules, Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
       deleteIfExists(ref);
 
+      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
@@ -138,27 +134,22 @@ class ModulesPrivate : public QObject {
       moduleBox->setToolTip(description.join('\n'));
     }
 
-    static void make(T*& ref,
-                     const F& factory,
-                     Modules* modules,
-                     MainWindow* gui,
-                     Args... args) {
+    static void make(T*& ref, const F& factory, M* modules, Args... args) {
+      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       QString type = moduleBox->currentText();
 
-      build(ref, factory, modules, gui, args...);
+      build(ref, factory, modules, args...);
       setToolTip(moduleBox, factory, type);
     }
 
    public:
-    Maker(T*& t_ref,
-          const InheritanceFactorySafeMap<T, Args...>& t_factory,
-          Modules* t_modules,
-          MainWindow* t_gui) :
-        ref(t_ref),
-        factory(t_factory),
+    Maker(M* t_modules,
+          T*& t_ref,
+          const InheritanceFactorySafeMap<T, Args...>& t_factory) :
         modules(t_modules),
-        gui(t_gui) {
+        ref(t_ref),
+        factory(t_factory) {
     }
 
     template <class... Types>
@@ -167,6 +158,7 @@ class ModulesPrivate : public QObject {
         return;
       }
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
+      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       //
       QObject::connect(moduleBox,
@@ -176,7 +168,6 @@ class ModulesPrivate : public QObject {
                                  std::ref(ref),
                                  factory,
                                  modules,
-                                 gui,
                                  std::forward<Types>(types)...));
       //
       QObject::connect(modules,
@@ -186,7 +177,6 @@ class ModulesPrivate : public QObject {
                                  std::ref(ref),
                                  factory,
                                  modules,
-                                 gui,
                                  std::forward<Types>(types)...));
       //
       moduleBox->setComboBoxItems(factory.keys());
