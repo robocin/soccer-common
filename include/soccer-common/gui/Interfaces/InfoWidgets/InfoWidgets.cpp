@@ -6,7 +6,7 @@
 
 void InfoWidgets::setupInfoWidgets(MainWindow* mainWindow) {
   /* creating scroll area layout */ {
-    auto scrollArea = Factory::scrollAreaForFlowLayout(mainWindow);
+    auto scrollArea = Factory::scrollAreaWithFlowLayout(mainWindow);
     mainWindow->dockWidgetInfoContents()->layout()->addWidget(scrollArea);
     m_layout = scrollArea->widget()->layout();
   }
