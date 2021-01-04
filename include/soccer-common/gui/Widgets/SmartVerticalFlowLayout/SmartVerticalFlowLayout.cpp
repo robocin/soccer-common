@@ -8,6 +8,7 @@ SmartVerticalFlowLayout::SmartVerticalFlowLayout(QWidget* parent) :
     m_maxRowCount(-1),
     m_isLayoutModified(false) {
   setContentsMargins(-1, -1, -1, -1);
+  setSizeConstraint(QLayout::SetNoConstraint);
 }
 
 SmartVerticalFlowLayout::~SmartVerticalFlowLayout() {
