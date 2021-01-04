@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow,
 
                    public InfoWidgets,
                    public ModulesWidgets,
+                   public RobotsWidgets,
                    public VisualizationWidget {
   Q_OBJECT
   friend class InfoWidgets;
@@ -35,7 +36,7 @@ class MainWindow : public QMainWindow,
   QWidget* visualizationWidget();
 
  public:
-  MainWindow(QWidget* parent = nullptr);
+  MainWindow(int maxRobots, QWidget* parent = nullptr);
   ~MainWindow();
 
   void setup(const QString& name, const QString& version, const QString& path);

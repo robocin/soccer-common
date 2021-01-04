@@ -20,15 +20,17 @@ QWidget* MainWindow::visualizationWidget() {
   return ui->visualizationWidget;
 }
 
-MainWindow::MainWindow(QWidget* parent) :
+MainWindow::MainWindow(int maxRobots, QWidget* parent) :
     QMainWindow(parent),
     WidgetSettings(this, nullptr),
+    RobotsWidgets(maxRobots),
     ui(new Ui::MainWindow),
     mainWindowMenuBar(this) {
   /* performing the setup of ui and each interface (the order matters) */ {
     ui->setupUi(this); // first setup.
     setupInfoWidgets(this);
     setupModulesWidgets(this);
+    setupRobotsWidgets(this);
     setupVisualizationWidget(this);
   }
   /* setting dock widget corners */ {
