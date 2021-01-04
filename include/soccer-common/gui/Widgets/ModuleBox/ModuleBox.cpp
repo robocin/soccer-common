@@ -13,6 +13,7 @@ ModuleBox::ModuleBox(const QString& name,
     ui(new Ui::ModuleBox),
     viewAction(Factory::toggleViewAction(name, this)) {
   ui->setupUi(this);
+  setWindowTitle(name);
   ui->moduleGroupBox->setTitle(name);
 
   parametersDialog = new ParametersDialog(name, this);

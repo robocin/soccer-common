@@ -35,11 +35,7 @@ class ModuleBox : public QWidget, public WidgetSettings, public MenuBarOptions {
   void on_comboBox_currentTextChanged(const QString& arg1);
   void on_pushButton_clicked();
 
- private:
-  Ui::ModuleBox* ui;
-  QAction* viewAction;
-  ParametersDialog* parametersDialog;
-
+ protected:
   void writeLocalSettings(QJsonObject& json) override;
   void loadLocalSettings(const QJsonObject& json) override;
 
@@ -47,6 +43,11 @@ class ModuleBox : public QWidget, public WidgetSettings, public MenuBarOptions {
   void loadLocalSettings(const QSettings& settings) override;
 
   void putWidgetActions(MainWindowMenuBar& menubar) override;
+
+ private:
+  Ui::ModuleBox* ui;
+  QAction* viewAction;
+  ParametersDialog* parametersDialog;
 };
 
 #endif // MODULEBOX_H
