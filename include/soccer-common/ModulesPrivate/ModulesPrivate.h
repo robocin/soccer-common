@@ -99,10 +99,8 @@ class ModulesPrivate : public QObject {
     /* connecting updates, (TODO: painting) and building dialog before object
      * build. Trazer pra dentro da classe, se possível.
      */
-    [[deprecated]] inline static void setDefaultConnections(T* ref,
-                                                            MainWindow* gui) {
-      ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
-
+    inline static void
+    setDefaultConnections(T* ref, ModuleBox* moduleBox, MainWindow*) {
       QObject::connect(ref,
                        &ModuleBase::sendParameters,
                        moduleBox->dialog(),
@@ -114,13 +112,15 @@ class ModulesPrivate : public QObject {
                        &ModuleBase::receiveUpdateRequests);
     }
 
-    static void build(T*& ref, const F& factory, M* modules, Args... args) {
+    static void build(T*& ref,
+                      const F& factory,
+                      M* modules,
+                      ModuleBox* moduleBox,
+                      Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
       deleteIfExists(ref);
 
-      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
-      ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
 
@@ -128,7 +128,9 @@ class ModulesPrivate : public QObject {
                            << " with type " << type << " was created: " << ref
                            << ".";
 
-      setDefaultConnections(ref, gui); // ir pra dentro da classe.
+      setDefaultConnections(ref,
+                            moduleBox,
+                            static_cast<ModulesPrivate*>(modules)->gui());
 
       static_cast<ModuleBase*>(ref)->build();
 
@@ -144,7 +146,7 @@ class ModulesPrivate : public QObject {
     }
 
     static void
-    setToolTip(ModuleBox* moduleBox, const F& factory, const QString& type) {
+    setToolTip(const F& factory, const QString& type, ModuleBox* moduleBox) {
       QStringList description;
       description += "• Type: " + type + ";";
       QString info = factory[type].description();
@@ -154,13 +156,24 @@ class ModulesPrivate : public QObject {
       moduleBox->setToolTip(description.join('\n'));
     }
 
-    static void make(T*& ref, const F& factory, M* modules, Args... args) {
-      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
-      ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
+    static void make(T*& ref,
+                     const F& factory,
+                     M* modules,
+                     ModuleBox* moduleBox,
+                     Args... args) {
       QString type = moduleBox->currentText();
 
-      build(ref, factory, modules, args...);
-      setToolTip(moduleBox, factory, type);
+      build(ref, factory, modules, moduleBox, args...);
+      setToolTip(factory, type, moduleBox);
+    }
+
+    static ModuleBox* getModuleBox(MainWindow* gui,
+                                   const std::optional<int>& index) {
+      if (index) {
+        return gui->indexedModuleBox(*index, Utils::nameOfType<T>());
+      } else {
+        return gui->moduleBox(Utils::nameOfType<T>());
+      }
     }
 
     template <class... Types>
@@ -171,7 +184,8 @@ class ModulesPrivate : public QObject {
       }
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
-      ModuleBox* moduleBox = gui->moduleBox(Utils::nameOfType<T>());
+      //
+      ModuleBox* moduleBox = getModuleBox(gui, index);
       //
       QObject::connect(moduleBox,
                        &ModuleBox::onCurrentTextChanged,
@@ -180,6 +194,7 @@ class ModulesPrivate : public QObject {
                                  std::ref(ref),
                                  factory,
                                  modules,
+                                 moduleBox,
                                  std::forward<Types>(types)...));
       //
       QObject::connect(modules,
@@ -189,6 +204,7 @@ class ModulesPrivate : public QObject {
                                  std::ref(ref),
                                  factory,
                                  modules,
+                                 moduleBox,
                                  std::forward<Types>(types)...));
       //
       moduleBox->setComboBoxItems(factory.keys());
@@ -209,12 +225,11 @@ class ModulesPrivate : public QObject {
       exec(std::forward<Types>(types)...);
     }
 
-    template <class R = void, class... Types>
+    template <class R = void, class Int, class... Types>
     std::enable_if_t<std::is_base_of_v<IndexedModuleBase, T>, R> // indexed
-    operator()(int t_index, Types&&...) {
-      index.emplace(t_index);
-      // to do.
-      // exec(t_index, std::forward<Types>(types)...);
+    operator()(Int&& t_index, Types&&... types) {
+      index.emplace(std::forward<Int>(t_index));
+      exec(std::forward<Int>(t_index), std::forward<Types>(types)...);
     }
   };
 
