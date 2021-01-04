@@ -5,9 +5,7 @@
 #include "MenuBarOptions/MenuBarOptions.h"
 #include "InfoWidgets/InfoWidgets.h"
 #include "ModulesWidgets/ModulesWidgets.h"
+#include "RobotsWidgets/RobotsWidgets.h"
 #include "VisualizationWidget/VisualizationWidget.h"
-
-template <class... Args>
-using QWidgetWith = PtrMulticast<QWidget, Args...>;
 
 #endif // INTERFACES_H
