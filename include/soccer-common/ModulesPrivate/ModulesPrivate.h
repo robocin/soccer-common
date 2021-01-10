@@ -32,7 +32,6 @@ class ModulesPrivate : public QObject {
     inline void clear() {
       for (auto it = m_map.begin(); it != m_map.end(); ++it) {
         it.value()->deleteLater();
-        it.value() = nullptr;
       }
       m_map.clear();
     }
@@ -225,11 +224,11 @@ class ModulesPrivate : public QObject {
       exec(std::forward<Types>(types)...);
     }
 
-    template <class R = void, class Int, class... Types>
+    template <class R = void, class... Types>
     std::enable_if_t<std::is_base_of_v<IndexedModuleBase, T>, R> // indexed
-    operator()(Int&& t_index, Types&&... types) {
-      index.emplace(std::forward<Int>(t_index));
-      exec(std::forward<Int>(t_index), std::forward<Types>(types)...);
+    operator()(int moduleIndex, Types&&... types) {
+      index.emplace(moduleIndex);
+      exec(moduleIndex, std::forward<Types>(types)...);
     }
   };
 
