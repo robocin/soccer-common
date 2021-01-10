@@ -56,9 +56,6 @@ MainWindow::~MainWindow() {
 void MainWindow::setup(const QString& name,
                        const QString& version,
                        const QString& path) {
-  /* setting project language to english */ {
-    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
-  }
   /* storing project info to use later */ {
     setupWidgetSettings(name,
                         version,
@@ -261,3 +258,8 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
     menubar["View"].addMenu(menu);
   }
 }
+
+static_block {
+  /* setting project language to english by default. */
+  QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
+};
