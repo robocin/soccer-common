@@ -61,7 +61,6 @@ namespace Color {
   static constexpr const char* Grey = "Grey";
   static constexpr const char* Honeydew = "Honeydew";
   static constexpr const char* HotPink = "HotPink";
-  static constexpr const char* HotPinkAliceBlue = "HotPinkAliceBlue";
   static constexpr const char* IndianRed = "IndianRed";
   static constexpr const char* Indigo = "Indigo";
   static constexpr const char* Ivory = "Ivory";
@@ -135,6 +134,7 @@ namespace Color {
   static constexpr const char* SkyBlue = "SkyBlue";
   static constexpr const char* SlateBlue = "SlateBlue";
   static constexpr const char* SlateGray = "SlateGray";
+  static constexpr const char* SlateGrey = "SlateGrey";
   static constexpr const char* Snow = "Snow";
   static constexpr const char* SpringGreen = "SpringGreen";
   static constexpr const char* SteelBlue = "SteelBlue";
@@ -142,6 +142,7 @@ namespace Color {
   static constexpr const char* Teal = "Teal";
   static constexpr const char* Thistle = "Thistle";
   static constexpr const char* Tomato = "Tomato";
+  static constexpr const char* Transparent = "Transparent";
   static constexpr const char* Turquoise = "Turquoise";
   static constexpr const char* Violet = "Violet";
   static constexpr const char* Wheat = "Wheat";
