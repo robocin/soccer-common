@@ -14,10 +14,6 @@ GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
 GameVisualizer::~GameVisualizer() {
 }
 
-GameVisualizer::Key GameVisualizer::getUniqueKey() const {
-  return Key(this);
-}
-
 void GameVisualizer::setBackgroundColor(QColor color) {
   ScheduleUpdateAtEnd schedule(this);
   shared->backgroundColor = color;
@@ -62,9 +58,16 @@ void GameVisualizer::clearUniqueIntegerKey(int uniqueKey) {
     shared->paintings[i].apply(
         [uniqueKey](
             std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
-          paintings[uniqueKey] = nullptr;
+          if (paintings.find(uniqueKey) != paintings.end()) {
+            paintings[uniqueKey] = nullptr;
+          }
         });
   }
+}
+
+void GameVisualizer::setVisibility(int uniqueKey, bool visibility) {
+  ScheduleUpdateAtEnd schedule(this);
+  shared->visibility->append(QPair(uniqueKey, visibility));
 }
 
 void GameVisualizer::mousePressEvent(QMouseEvent* event) {
@@ -165,7 +168,9 @@ void GameVisualizer::paintGL() {
     setZ(0);
     for (std::size_t i = 0; i < local.paintings.size(); ++i) {
       for (auto& ptr : local.paintings[i]) {
-        ptr.second->run(static_cast<GameVisualizerPainter2D*>(this));
+        if (ptr.second.visibility()) {
+          ptr.second->run(static_cast<GameVisualizerPainter2D*>(this));
+        }
       }
     }
   }
@@ -227,6 +232,16 @@ void GameVisualizer::getUpdates() {
         }
       }
       shared.paintings[i].ref().clear();
+    }
+    {
+      for (auto [key, visibility] : shared.visibility.ref()) {
+        for (std::size_t i = 0; i < local.paintings.size(); ++i) {
+          if (local.paintings[i].find(key) != local.paintings[i].end()) {
+            local.paintings[i][key].setVisibility(visibility);
+          }
+        }
+      }
+      shared.visibility->clear();
     }
   });
 }

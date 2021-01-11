@@ -11,6 +11,8 @@
 class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   Q_OBJECT
 
+  class PaintingPointer;
+
  public:
   explicit GameVisualizer(const QSizeF& defaultSize,
                           QWidget* parent = nullptr,
@@ -19,7 +21,6 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   ~GameVisualizer() override;
 
   class Key;
-  Key getUniqueKey() const;
 
  signals:
   void relativeMousePos(const QPointF& position);
@@ -36,6 +37,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
 
  private slots:
   void clearUniqueIntegerKey(int uniqueKey);
+  void setVisibility(int uniqueKey, bool visibility);
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
@@ -88,6 +90,9 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
     std::array<SetterGetter<std::map<int, std::unique_ptr<Painting>>>,
                MagicEnum::count<Painting::Layers>()>
         paintings{};
+
+    SetterGetter<QVector<QPair<int, bool>>> visibility{};
+
     SetterGetter<QElapsedTimer> stopwatch = Factory::startedElapsedTimer();
 
     SharedOptional<int> maxFrameRate;
@@ -97,7 +102,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   SharedWrapper<Shared, QMutex> shared;
 
   struct Local {
-    std::array<std::map<int, std::unique_ptr<Painting>>,
+    std::array<std::map<int, PaintingPointer>,
                MagicEnum::count<Painting::Layers>()>
         paintings{};
 
@@ -118,27 +123,60 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   };
 };
 
+class GameVisualizer::PaintingPointer : public std::unique_ptr<Painting> {
+  bool m_visibility;
+
+ public:
+  template <class... Args>
+  PaintingPointer(Args&&... args) :
+      std::unique_ptr<Painting>(std::forward<Args>(args)...),
+      m_visibility(true) {
+  }
+
+  inline void setVisibility(bool visibility) {
+    m_visibility = visibility;
+  }
+
+  inline bool visibility() const {
+    return m_visibility;
+  }
+};
+
 class GameVisualizer::Key : public QObject {
   Q_OBJECT
+
  public:
   Q_DISABLE_COPY_MOVE(Key);
 
-  inline Key() : m_key(-1) {
-  }
-  inline Key(const GameVisualizer* gameVisualizer) : Key() {
-    setup(gameVisualizer);
+  inline Key() : m_key(-1), m_visibility(true) {
   }
 
-  inline void setup(const GameVisualizer* gameVisualizer) {
+  inline void setup(QObject* currentModule,
+                    const GameVisualizer* gameVisualizer) {
     if (m_key != -1) {
       qWarning() << "cannot setup twice.";
       return;
+    }
+    if (currentModule) {
+      moveToThread(currentModule->thread());
     }
     m_key = gameVisualizer->getUniqueIntegerKey();
     QObject::connect(this,
                      &GameVisualizer::Key::onKeyDeleted,
                      gameVisualizer,
                      &GameVisualizer::clearUniqueIntegerKey);
+    //
+    QObject::connect(this,
+                     &GameVisualizer::Key::onVisibilityChanged,
+                     gameVisualizer,
+                     &GameVisualizer::setVisibility);
+  }
+
+  inline void setVisibility(bool visibility) {
+    if (m_visibility ^ visibility) {
+      m_visibility = visibility;
+      emit onVisibilityChanged(m_key, m_visibility);
+    }
   }
 
   inline ~Key() {
@@ -151,9 +189,11 @@ class GameVisualizer::Key : public QObject {
 
  signals:
   void onKeyDeleted(int key);
+  void onVisibilityChanged(int key, bool visibility);
 
  private:
   int m_key;
+  bool m_visibility;
 };
 
 #endif // GAMEVISUALIZER_H
