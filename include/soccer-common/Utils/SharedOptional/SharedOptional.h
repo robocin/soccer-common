@@ -52,8 +52,12 @@ class SharedOptional : public std::optional<T> {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(const FunctionPointer& f) {
-    return f(static_cast<std::optional<T>&>(*this));
+    return f(*this);
   }
+
+  // observers:
+  using std::optional<T>::operator->;
+  using std::optional<T>::operator*;
 
   constexpr std::optional<T>& ref() {
     return static_cast<std::optional<T>&>(*this);
@@ -61,8 +65,6 @@ class SharedOptional : public std::optional<T> {
 
  private:
   using std::optional<T>::operator=;
-  using std::optional<T>::operator->;
-  using std::optional<T>::operator*;
   using std::optional<T>::value;
   using std::optional<T>::emplace;
   using std::optional<T>::swap;

@@ -41,6 +41,23 @@ class SetterGetter {
     m_instance = T(std::forward<Args>(args)...);
   }
 
+  // observers:
+  constexpr T* operator->() {
+    return std::addressof(m_instance);
+  }
+
+  constexpr const T* operator->() const {
+    return std::addressof(m_instance);
+  }
+
+  constexpr T& operator*() & {
+    return m_instance;
+  }
+
+  constexpr const T& operator*() const& {
+    return m_instance;
+  }
+
   constexpr T& ref() {
     return m_instance;
   }

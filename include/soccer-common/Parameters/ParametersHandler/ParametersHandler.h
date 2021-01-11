@@ -8,6 +8,8 @@
 #include "soccer-common/Parameters/ParameterType/ParameterType.h"
 
 namespace Parameters {
+  bool isParameterType(const QJsonObject& object);
+
   class UpdateRequest {
     QStringList m_path;
     QString m_value;
@@ -19,31 +21,40 @@ namespace Parameters {
     QString value() const;
   };
 
-  class Handler {
-    ParameterBase* value;
-    std::map<QString, Handler> map;
+  using UpdateRequests = QVector<UpdateRequest>;
 
-    // disable_copy:
-    Handler(const Handler&) = delete;
-    Handler& operator=(const Handler&) = delete;
-
-    // disable_move:
-    Handler(Handler&&) = delete;
-    Handler& operator=(Handler&&) = delete;
-
-    QString dfs() const;
+  class JsonHandler {
+    std::optional<QString> m_value;
+    QMap<QString, JsonHandler> m_map;
 
    public:
+    JsonHandler();
+    ~JsonHandler();
+
+    static JsonHandler fromJsonObject(const QJsonObject& object);
+    void insert_or_assign(const QVector<UpdateRequest>& updates);
+    void insert(const QVector<UpdateRequest>& updates);
+    bool contains(const QStringList& path) const;
+    QVector<UpdateRequest> updates() const;
+    QByteArray toJson() const;
+    QJsonObject toObject() const;
+  };
+
+  class Handler {
+    std::unique_ptr<ParameterBase> value;
+    std::map<QString, Handler> map;
+
+   public:
+    Q_DISABLE_COPY_MOVE(Handler);
+
     Handler();
     ~Handler();
 
-    template <class T>
+    template <
+        class T,
+        class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
     Handler& operator=(T&& p) {
-      static_assert(std::is_base_of_v<ParameterBase, T>);
-      if (value) {
-        delete value;
-      }
-      value = new T(p);
+      value = std::make_unique<T>(std::move(p));
       return *this;
     }
 
@@ -51,9 +62,8 @@ namespace Parameters {
       return map[p];
     }
 
-    QString json() const;
+    QByteArray json() const;
     QJsonObject jsonObject() const;
-
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };
 } // namespace Parameters

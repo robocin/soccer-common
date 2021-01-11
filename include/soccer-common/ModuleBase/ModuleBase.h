@@ -3,7 +3,11 @@
 
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
+#include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
 
+/*!
+ * \brief It will be defined in the executable project.
+ */
 class Modules;
 
 class ModuleBase : public ModulePrivate {
@@ -13,28 +17,27 @@ class ModuleBase : public ModulePrivate {
   explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override;
 
-  void setup(const Modules* modules) {
-    connectModules(modules);
-    buildParameters();
-    init(modules);
-  }
+  void build();
+  void setup(const Modules* modules);
+
+ signals:
+  void sendParameters(const QJsonObject& parameters);
+  void draw(int uniqueIntegerKey,
+            Painting* painting,
+            Painting::Layers layer = Painting::Layers::Middle);
+
+ public slots:
+  virtual void
+  receiveUpdateRequests(const Parameters::UpdateRequests& updates) = 0;
 
  protected:
-  class RunInParallelAtEnd {
-    ModuleBase* m;
-
-   public:
-    inline RunInParallelAtEnd(ModuleBase* self) : m(self) {
-    }
-    inline ~RunInParallelAtEnd() {
-      m->runInParallel();
-    }
-  };
+  virtual void buildParameters();
 
   virtual void connectModules(const Modules* modules);
-  virtual void buildParameters();
   virtual void init(const Modules* modules);
 };
+
+// -------------------------------------------------------------------------- //
 
 class IndexedModuleBase : public ModuleBase {
   Q_OBJECT

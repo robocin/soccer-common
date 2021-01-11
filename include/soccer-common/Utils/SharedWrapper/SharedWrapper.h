@@ -2,8 +2,6 @@
 #define SHAREDWRAPPER_H
 
 #include <mutex>
-#include "SharedOptional/SharedOptional.h"
-#include "SetterGetter/SetterGetter.h"
 
 template <class T, class Mutex, class Locker = std::lock_guard<Mutex>>
 class SharedWrapper {

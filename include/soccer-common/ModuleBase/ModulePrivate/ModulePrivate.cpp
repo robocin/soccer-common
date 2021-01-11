@@ -2,17 +2,22 @@
 #include <mutex>
 
 ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
-    QObject(threadPool),
+    QObject(nullptr),
     threadPool(threadPool) {
   QRunnable::setAutoDelete(false);
 }
 
 ModulePrivate::~ModulePrivate() {
+  if (threadPool) {
+    while (threadPool->tryTake(static_cast<QRunnable*>(this))) {
+      // removing all uninitiated calls.
+    }
+  }
 }
 
 void ModulePrivate::runInParallel() {
   if (threadPool) {
-    threadPool->start(this);
+    threadPool->start(static_cast<QRunnable*>(this));
   }
 }
 

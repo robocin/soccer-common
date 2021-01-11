@@ -9,6 +9,7 @@
 
 class ModulePrivate : public QObject, private QRunnable {
   Q_OBJECT
+
  public:
   explicit ModulePrivate(QThreadPool* threadPool);
   ~ModulePrivate() override;

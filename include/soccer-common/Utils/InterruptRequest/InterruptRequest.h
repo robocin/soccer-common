@@ -3,7 +3,6 @@
 
 #include <atomic>
 #include <csignal>
-#include <iostream>
 #include <functional>
 
 template <int I>
@@ -29,12 +28,11 @@ class InterruptRequest {
     }
   }();
 
-  inline static std::atomic<bool> initialized;
-  inline static std::function<void()> m_function;
-
  public:
   template <class F>
   static void setup(F f) {
+    static std::atomic<bool> initialized = false;
+    static std::function<void()> m_function = nullptr;
     if (initialized) {
       throw std::runtime_error("cannot setup twice.");
     } else {
@@ -42,9 +40,6 @@ class InterruptRequest {
       m_function = f;
     }
     std::signal(I, [](int s) {
-      std::cout << "signal called after interrupt (code: " << s << ")"
-                << std::endl;
-      std::cout << "  message(): " << message() << std::endl << std::endl;
       if (m_function) {
         m_function();
       } else /* natural behavior */ {
