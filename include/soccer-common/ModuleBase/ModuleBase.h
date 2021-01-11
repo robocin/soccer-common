@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
+#include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
 
 /*!
  * \brief It will be defined in the executable project.
@@ -21,11 +22,10 @@ class ModuleBase : public ModulePrivate {
 
  signals:
   void sendParameters(const QJsonObject& parameters);
-  /* TODO: (requires: ModulesPrivate, Gui))
-    void sendPainting(int uniqueIntegerKey,
-                      Painting* painting,
-                      Painting::Layers layer = Painting::Layers::Middle);
-  */
+  void draw(int uniqueIntegerKey,
+            Painting* painting,
+            Painting::Layers layer = Painting::Layers::Middle);
+
  public slots:
   virtual void
   receiveUpdateRequests(const Parameters::UpdateRequests& updates) = 0;

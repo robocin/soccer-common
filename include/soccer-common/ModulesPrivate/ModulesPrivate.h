@@ -99,7 +99,7 @@ class ModulesPrivate : public QObject {
      * build. Trazer pra dentro da classe, se possível.
      */
     inline static void
-    setDefaultConnections(T* ref, ModuleBox* moduleBox, MainWindow*) {
+    setDefaultConnections(T* ref, ModuleBox* moduleBox, MainWindow* gui) {
       QObject::connect(ref,
                        &ModuleBase::sendParameters,
                        moduleBox->dialog(),
@@ -109,6 +109,11 @@ class ModulesPrivate : public QObject {
                        &ParametersDialog::onChangingParameters,
                        ref,
                        &ModuleBase::receiveUpdateRequests);
+
+      QObject::connect(ref,
+                       &ModuleBase::draw,
+                       gui->gameVisualizer(),
+                       &GameVisualizer::draw);
     }
 
     static void build(T*& ref,
