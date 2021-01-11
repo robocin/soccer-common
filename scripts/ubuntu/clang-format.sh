@@ -1,1 +1,1 @@
-apt-get install clang-format
+apt-get install clang-format -y

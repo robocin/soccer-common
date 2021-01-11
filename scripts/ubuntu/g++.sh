@@ -1,1 +1,1 @@
-apt-get install g++
+apt-get install g++ -y
