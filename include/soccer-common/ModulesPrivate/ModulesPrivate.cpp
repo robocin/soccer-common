@@ -2,7 +2,7 @@
 
 ModulesPrivate::ModulesPrivate(MainWindow* gui) :
     m_gui(gui),
-    m_modulesThread(new QThread(this)),
+    m_modulesThread(new QThread(gui)),
     m_timers(m_modulesThread) {
   m_modulesThread->start();
 
@@ -11,10 +11,10 @@ ModulesPrivate::ModulesPrivate(MainWindow* gui) :
                    this,
                    &ModulesPrivate::onPlayPauseButtonPressed);
 
-  QObject::connect(this,
-                   &QObject::destroyed,
+  QObject::connect(gui,
+                   &MainWindow::destroyed,
                    m_modulesThread,
-                   &QObject::deleteLater);
+                   &QThread::quit);
 }
 
 ModulesPrivate::~ModulesPrivate() {
@@ -33,10 +33,10 @@ void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
     emit setup();
     emit impulse();
   } else {
-    qDebug() << "starting rebuild...";
+    qWarning() << "starting rebuild...";
     clear();
     emit rebuild();
-    qDebug() << "finish rebuild.";
+    qWarning() << "finish rebuild.";
   }
 }
 

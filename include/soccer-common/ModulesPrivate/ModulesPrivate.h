@@ -102,9 +102,6 @@ class ModulesPrivate : public QObject {
       static_cast<ModuleBase*>(instance)->setup(modules);
     }
 
-    /* connecting updates, (TODO: painting) and building dialog before object
-     * build. Trazer pra dentro da classe, se possível.
-     */
     inline static void
     setDefaultConnections(T* ref, ModuleBox* moduleBox, MainWindow* gui) {
       QObject::connect(ref,
@@ -115,7 +112,8 @@ class ModulesPrivate : public QObject {
       QObject::connect(moduleBox->dialog(),
                        &ParametersDialog::onChangingParameters,
                        ref,
-                       &ModuleBase::receiveUpdateRequests);
+                       &ModuleBase::receiveUpdateRequests,
+                       Qt::DirectConnection);
 
       QObject::connect(ref,
                        &ModuleBase::draw,
