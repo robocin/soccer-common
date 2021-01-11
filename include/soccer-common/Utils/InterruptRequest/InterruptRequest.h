@@ -28,12 +28,11 @@ class InterruptRequest {
     }
   }();
 
-  inline static std::atomic<bool> initialized;
-  inline static std::function<void()> m_function;
-
  public:
   template <class F>
   static void setup(F f) {
+    static std::atomic<bool> initialized = false;
+    static std::function<void()> m_function = nullptr;
     if (initialized) {
       throw std::runtime_error("cannot setup twice.");
     } else {
