@@ -8,21 +8,22 @@ class ModulesPrivate : public QObject {
   Q_OBJECT
 
   class Timers {
-    QObject* m_parent;
+    QThread* m_thread;
     mutable QMap<int, QTimer*> m_map;
 
     template <std::size_t I>
     inline QTimer* get() const {
       if (!m_map.contains(I)) {
-        QTimer* timer = new QTimer(m_parent);
+        QTimer* timer = new QTimer();
         timer->start(I);
+        timer->moveToThread(m_thread);
         m_map[I] = timer;
       }
       return m_map[I];
     }
 
    public:
-    explicit Timers(QObject* parent) : m_parent(parent) {
+    explicit Timers(QThread* thread) : m_thread(thread) {
     }
 
     ~Timers() {
@@ -48,10 +49,14 @@ class ModulesPrivate : public QObject {
   };
 
   MainWindow* m_gui;
-  std::unique_ptr<Timers> m_timers;
+
+  QThread* m_modulesThread;
+
+  Timers m_timers;
 
  public:
-  ModulesPrivate(MainWindow* gui);
+  explicit ModulesPrivate(MainWindow* gui);
+  ~ModulesPrivate();
 
   MainWindow* gui() const;
   Timers* timers() const;
@@ -66,6 +71,8 @@ class ModulesPrivate : public QObject {
   void onPlayPauseButtonPressed(bool isRunning);
 
  protected:
+  QThread* modulesThread() const;
+
   template <class T, class M, class... Args>
   class Maker {
     static_assert(std::is_base_of_v<ModuleBase, T>);
@@ -113,7 +120,8 @@ class ModulesPrivate : public QObject {
       QObject::connect(ref,
                        &ModuleBase::draw,
                        gui->gameVisualizer(),
-                       &GameVisualizer::draw);
+                       &GameVisualizer::draw,
+                       Qt::DirectConnection);
     }
 
     static void build(T*& ref,
@@ -127,6 +135,8 @@ class ModulesPrivate : public QObject {
 
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
+      static_cast<QObject*>(ref)->moveToThread(
+          static_cast<ModulesPrivate*>(modules)->modulesThread());
 
       qWarning().nospace() << "a new instance of " << Utils::nameOfType<T>()
                            << " with type " << type << " was created: " << ref

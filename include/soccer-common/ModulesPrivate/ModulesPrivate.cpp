@@ -2,11 +2,22 @@
 
 ModulesPrivate::ModulesPrivate(MainWindow* gui) :
     m_gui(gui),
-    m_timers(std::make_unique<Timers>(this)) {
+    m_modulesThread(new QThread(this)),
+    m_timers(m_modulesThread) {
+  m_modulesThread->start();
+
   QObject::connect(gui->playPauseButton(),
                    &PlayPauseWidget::onPushButtonClicked,
                    this,
                    &ModulesPrivate::onPlayPauseButtonPressed);
+
+  QObject::connect(this,
+                   &QObject::destroyed,
+                   m_modulesThread,
+                   &QObject::deleteLater);
+}
+
+ModulesPrivate::~ModulesPrivate() {
 }
 
 MainWindow* ModulesPrivate::gui() const {
@@ -14,7 +25,7 @@ MainWindow* ModulesPrivate::gui() const {
 }
 
 ModulesPrivate::Timers* ModulesPrivate::timers() const {
-  return m_timers.get();
+  return &const_cast<Timers&>(m_timers);
 }
 
 void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
@@ -29,6 +40,10 @@ void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
   }
 }
 
+QThread* ModulesPrivate::modulesThread() const {
+  return m_modulesThread;
+}
+
 void ModulesPrivate::clear() {
-  m_timers->clear();
+  m_timers.clear();
 }

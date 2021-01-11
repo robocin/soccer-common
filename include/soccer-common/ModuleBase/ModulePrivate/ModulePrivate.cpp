@@ -2,7 +2,7 @@
 #include <mutex>
 
 ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
-    QObject(threadPool),
+    QObject(nullptr),
     threadPool(threadPool) {
   QRunnable::setAutoDelete(false);
 }
