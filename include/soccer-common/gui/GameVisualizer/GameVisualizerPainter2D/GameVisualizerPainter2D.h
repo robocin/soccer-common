@@ -4,7 +4,7 @@
 #include "soccer-common/gui/GameVisualizer/GLTextHelper_2_1/GLTextHelper_2_1.h"
 #include <QDebug>
 
-class GameVisualizerPainter2D : public GLTextHelper_2_1 {
+class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   friend class GameVisualizer;
 
   inline Polygon removeOverlappingPoints(const Polygon& polygon) {
@@ -38,6 +38,10 @@ class GameVisualizerPainter2D : public GLTextHelper_2_1 {
       glDeleteLists(*local.circleDisplayListId, 1);
     }
   }
+
+  using GLTextHelper_2_1::drawText;
+  using GLTextHelper_2_1::HAlign;
+  using GLTextHelper_2_1::VAlign;
 
   inline void drawFilledTriangle(const Vertex& a,
                                  const Vertex& b,
