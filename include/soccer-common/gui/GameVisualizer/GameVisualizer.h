@@ -151,14 +151,10 @@ class GameVisualizer::Key : public QObject {
   inline Key() : m_key(-1), m_visibility(true) {
   }
 
-  inline void setup(QObject* currentModule,
-                    const GameVisualizer* gameVisualizer) {
+  inline void setup(const GameVisualizer* gameVisualizer) {
     if (m_key != -1) {
       qWarning() << "cannot setup twice.";
       return;
-    }
-    if (currentModule) {
-      moveToThread(currentModule->thread());
     }
     m_key = gameVisualizer->getUniqueIntegerKey();
     QObject::connect(this,

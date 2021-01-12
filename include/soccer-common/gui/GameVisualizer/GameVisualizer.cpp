@@ -58,9 +58,7 @@ void GameVisualizer::clearUniqueIntegerKey(int uniqueKey) {
     shared->paintings[i].apply(
         [uniqueKey](
             std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
-          if (paintings.find(uniqueKey) != paintings.end()) {
-            paintings[uniqueKey] = nullptr;
-          }
+          paintings[uniqueKey] = nullptr;
         });
   }
 }
