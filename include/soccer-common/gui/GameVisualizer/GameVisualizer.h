@@ -160,12 +160,14 @@ class GameVisualizer::Key : public QObject {
     QObject::connect(this,
                      &GameVisualizer::Key::onKeyDeleted,
                      gameVisualizer,
-                     &GameVisualizer::clearUniqueIntegerKey);
+                     &GameVisualizer::clearUniqueIntegerKey,
+                     Qt::QueuedConnection);
     //
     QObject::connect(this,
                      &GameVisualizer::Key::onVisibilityChanged,
                      gameVisualizer,
-                     &GameVisualizer::setVisibility);
+                     &GameVisualizer::setVisibility,
+                     Qt::QueuedConnection);
   }
 
   inline void setVisibility(bool visibility) {
