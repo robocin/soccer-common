@@ -20,10 +20,13 @@ QWidget* MainWindow::visualizationWidget() {
   return ui->visualizationWidget;
 }
 
-MainWindow::MainWindow(int maxRobots, QWidget* parent) :
+MainWindow::MainWindow(int maxRobots,
+                       QSizeF defaultVisualizerSize,
+                       QWidget* parent) :
     QMainWindow(parent),
     WidgetSettings(this, nullptr),
     RobotsWidgets(maxRobots),
+    VisualizationWidget(defaultVisualizerSize),
     ui(new Ui::MainWindow),
     mainWindowMenuBar(this) {
   /* performing the setup of ui and each interface (the order matters) */ {
