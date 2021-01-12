@@ -20,7 +20,7 @@ void ParametersDialog::build(const QJsonObject& json) {
   m_jsons[m_title].insert(JsonHandler::fromJsonObject(json).updates());
   m_parametersWindow->build((m_widgets.clear(), m_widgets), m_title, json);
   openCurrentFromJsonHandler(m_jsons[m_title]);
-  updateCurrentAndEmit();
+  updateCurrentAndEmit(true);
 }
 
 void ParametersDialog::setCurrentTitle(const QString& title) {
@@ -51,14 +51,14 @@ QString ParametersDialog::getFileName(FileNameType type) {
   }
 }
 
-Parameters::UpdateRequests
-ParametersDialog::getUpdates(bool overwriteBackup) const {
+Parameters::UpdateRequests ParametersDialog::getUpdates(bool overwriteBackup,
+                                                        bool allValues) const {
   using namespace Parameters;
 
   UpdateRequests updates;
   for (auto up : m_widgets) {
     auto input = up->input();
-    if (input->backupValue() != input->currentValue()) {
+    if (allValues || (input->backupValue() != input->currentValue())) {
       updates += UpdateRequest(up->path(), input->currentValue());
       if (overwriteBackup) {
         input->storeCurrent();
@@ -83,9 +83,9 @@ void ParametersDialog::openCurrentFromJsonHandler(
   }
 }
 
-void ParametersDialog::updateCurrentAndEmit() {
+void ParametersDialog::updateCurrentAndEmit(bool allValues) {
   using namespace Parameters;
-  UpdateRequests updates = getUpdates(true);
+  UpdateRequests updates = getUpdates(true, allValues);
   if (!updates.empty()) {
     m_jsons[m_title].insert_or_assign(updates);
     qWarning() << "emitting on changing parameters.";

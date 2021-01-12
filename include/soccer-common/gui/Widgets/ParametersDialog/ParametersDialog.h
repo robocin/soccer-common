@@ -35,10 +35,11 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   enum class FileNameType { Open, Save };
 
   QString getFileName(FileNameType type);
-  Parameters::UpdateRequests getUpdates(bool overwriteBackup) const;
+  Parameters::UpdateRequests getUpdates(bool overwriteBackup,
+                                        bool allValues = false) const;
 
   void openCurrentFromJsonHandler(const Parameters::JsonHandler& json);
-  void updateCurrentAndEmit();
+  void updateCurrentAndEmit(bool allValues = false);
 
   void onOpenButtonClicked() override;
   void onSaveButtonClicked() override;
