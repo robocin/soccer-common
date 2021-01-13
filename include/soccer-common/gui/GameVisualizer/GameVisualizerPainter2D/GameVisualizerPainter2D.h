@@ -7,21 +7,30 @@
 class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   friend class GameVisualizer;
 
-  inline Polygon removeOverlappingPoints(const Polygon& polygon) {
-    if (polygon.size() <= 1) {
-      return polygon;
-    }
-    Polygon poly;
-    poly.reserve(polygon.size());
-    for (int n = polygon.size(), i = 0; i < n; i++) {
-      const Vertex& a = polygon[i];
-      const Vertex& b = polygon[((i + 1) < n) ? (i + 1) : (i - n + 1)];
-      if (a == b) {
-        continue;
+  inline static Polygon removeCollinearPoints(const Polygon& polygon) {
+    if (polygon.size() <= 2) {
+      if (polygon.size() == 2 && (polygon.front() == polygon.back())) {
+        return Polygon({polygon.front()});
+      } else {
+        return polygon;
       }
-      poly += a;
     }
-    return poly;
+    auto areCollinear = [](const Vertex& a, const Vertex& b, const Vertex& c) {
+      return qFuzzyIsNull(Geometry2D::cross(a - b, c - b));
+    };
+    Polygon fixed;
+    for (int n = polygon.size(), i = 0; i < n; ++i) {
+      while (fixed.size() >= 2) {
+        int k = fixed.size();
+        if (areCollinear(fixed[k - 1], fixed[k - 2], polygon[i])) {
+          fixed.pop_back();
+        } else {
+          break;
+        }
+      }
+      fixed += polygon[i];
+    }
+    return fixed;
   }
 
   struct Local {
@@ -76,7 +85,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   inline void
   drawPolygon(Polygon polygon, const QColor& color, qreal thickness) {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
-    polygon = removeOverlappingPoints(polygon);
+    polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
       qWarning() << "at least 3 distinct points.";
       return;
@@ -112,7 +121,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
 
   inline void drawFilledConvexPolygon(Polygon polygon, const QColor& color) {
     ScopedDrawGuard guard(this, GL_POLYGON);
-    polygon = removeOverlappingPoints(polygon);
+    polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
       qWarning() << "at least 3 distinct points.";
       return;
@@ -142,7 +151,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   inline void
   drawPolyline(Polygon polyline, const QColor& color, qreal thickness) {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
-    polyline = removeOverlappingPoints(polyline);
+    polyline = removeCollinearPoints(polyline);
     if (polyline.size() < 2) {
       qWarning() << "at least 2 distinct points.";
       return;
