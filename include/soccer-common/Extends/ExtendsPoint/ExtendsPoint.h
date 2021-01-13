@@ -52,11 +52,11 @@ class Extends<QPoint> : public QPoint {
     return Geometry2D::cross<QPoint>(*this, other);
   }
 
-  decltype(auto) distSquared(const QPoint& other) const {
+  decltype(auto) distSquaredTo(const QPoint& other) const {
     return Geometry2D::distanceSquared<QPoint>(*this, other);
   }
 
-  decltype(auto) dist(const QPoint& other) const {
+  decltype(auto) distTo(const QPoint& other) const {
     return Geometry2D::distance<QPoint>(*this, other);
   }
 
@@ -137,11 +137,11 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::cross<QPointF>(*this, other);
   }
 
-  decltype(auto) distSquared(const QPointF& other) const {
+  decltype(auto) distSquaredTo(const QPointF& other) const {
     return Geometry2D::distanceSquared<QPointF>(*this, other);
   }
 
-  decltype(auto) dist(const QPointF& other) const {
+  decltype(auto) distTo(const QPointF& other) const {
     return Geometry2D::distance<QPointF>(*this, other);
   }
 
