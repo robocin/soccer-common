@@ -28,11 +28,12 @@ void ModulePrivate::wasSkipped() {
 }
 
 void ModulePrivate::parametersUpdate() {
-  Parameters::UpdateRequests updates;
-  while (!spscUpdateRequests.empty()) {
-    spscUpdateRequests.pop(updates);
-    parametersHandler.update(updates);
-  }
+  updateRequests.apply([this](Parameters::UpdateRequests& updateRequests) {
+    if (!updateRequests.empty()) {
+      parametersHandler.update(updateRequests);
+      updateRequests.clear();
+    }
+  });
 }
 
 void ModulePrivate::run() {
