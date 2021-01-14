@@ -27,14 +27,18 @@ class ModuleBase : public ModulePrivate {
             Painting::Layers layer = Painting::Layers::Middle);
 
  public slots:
-  virtual void
-  receiveUpdateRequests(const Parameters::UpdateRequests& updates) = 0;
+  void receiveUpdateRequests(const Parameters::UpdateRequests& updates);
 
  protected:
+  Parameters::Handler& parameters();
   virtual void buildParameters();
 
   virtual void connectModules(const Modules* modules);
   virtual void init(const Modules* modules);
+
+ private:
+  using ModulePrivate::parametersHandler;
+  using ModulePrivate::spscUpdateRequests;
 };
 
 // -------------------------------------------------------------------------- //

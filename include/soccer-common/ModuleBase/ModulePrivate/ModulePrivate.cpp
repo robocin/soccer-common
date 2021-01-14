@@ -21,21 +21,26 @@ void ModulePrivate::runInParallel() {
   }
 }
 
-Parameters::Handler& ModulePrivate::parameters() {
-  return parametersHandler;
+void ModulePrivate::update() {
 }
 
-void ModulePrivate::update() {
+void ModulePrivate::wasSkipped() {
+}
+
+void ModulePrivate::parametersUpdate() {
+  Parameters::UpdateRequests updates;
+  while (!spscUpdateRequests.empty()) {
+    spscUpdateRequests.pop(updates);
+    parametersHandler.update(updates);
+  }
 }
 
 void ModulePrivate::run() {
   if (std::unique_lock locker{execMutex, std::try_to_lock}) {
+    parametersUpdate();
     update();
     exec();
   } else {
     wasSkipped();
   }
-}
-
-void ModulePrivate::wasSkipped() {
 }

@@ -19,6 +19,22 @@ void ModuleBase::setup(const Modules* modules) {
   init(modules);
 }
 
+void ModuleBase::receiveUpdateRequests(
+    const Parameters::UpdateRequests& updates) {
+  if (spscUpdateRequests.write_available() > 0) {
+    spscUpdateRequests.push(updates);
+  } else {
+    // cannot discard any update.
+    Parameters::UpdateRequests top;
+    spscUpdateRequests.pop(top);
+    spscUpdateRequests.push(top + updates);
+  }
+}
+
+Parameters::Handler& ModuleBase::parameters() {
+  return parametersHandler;
+}
+
 void ModuleBase::buildParameters() {
 }
 
