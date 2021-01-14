@@ -293,6 +293,11 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     translateXYScaleAndRotate(origin, radius, 0);
     return callListAndIncrementZ(*local.circleDisplayListId);
   }
+
+  inline QColor backgroundColor() {
+    std::array<qreal, 4> rgba = backgroundColorRgba<qreal>();
+    return QColor::fromRgbF(rgba[0], rgba[1], rgba[2], rgba[3]);
+  }
 };
 
 #endif // GAMEVISUALIZERPAINTER2D_H
