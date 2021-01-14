@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QRunnable>
 #include <QThreadPool>
+#include <boost/lockfree/spsc_queue.hpp>
 #include "soccer-common/Parameters/Parameters.h"
 
 class ModulePrivate : public QObject, private QRunnable {
@@ -18,17 +19,20 @@ class ModulePrivate : public QObject, private QRunnable {
   void runInParallel();
 
  protected:
-  Parameters::Handler& parameters();
+  Parameters::Handler parametersHandler;
+  boost::lockfree::spsc_queue<Parameters::UpdateRequests,
+                              boost::lockfree::capacity<1024>>
+      spscUpdateRequests;
 
   virtual void update();
   virtual void exec() = 0;
   virtual void wasSkipped();
 
  private:
-  Parameters::Handler parametersHandler;
   QThreadPool* threadPool;
   QMutex execMutex;
 
+  void parametersUpdate();
   void run() override final;
 };
 

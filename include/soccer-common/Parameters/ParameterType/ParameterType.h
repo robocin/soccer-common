@@ -44,6 +44,42 @@ namespace Parameters {
   };
 
   template <class T>
+  class ParameterType;
+
+  template <class T>
+  class Arg {
+    friend class ParameterType<T>;
+
+    T m_value;
+    mutable bool m_updated;
+
+    template <class U>
+    void set(U&& value) {
+      m_updated = true;
+      m_value = std::forward<U>(value);
+    }
+
+   public:
+    using type = T;
+
+    template <class... Us>
+    Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
+    }
+
+    T value() const {
+      return m_value;
+    }
+
+    operator T() const {
+      return m_value;
+    }
+
+    bool updated() const {
+      return m_updated ? (m_updated = false, true) : m_updated;
+    }
+  };
+
+  template <class T>
   class ParameterType : public ParameterBase {
     template <class U, class... Us>
     static constexpr bool is_any_of_v =
@@ -56,8 +92,13 @@ namespace Parameters {
                   "unsuported type.");
 
    protected:
-    T& ref;
+    Arg<T>& ref;
     QString about;
+
+    template <class U>
+    void setValue(U&& value) {
+      ref.set(std::forward<U>(value));
+    }
 
    public:
     static std::optional<T> eval(const QString& str) {
@@ -84,11 +125,11 @@ namespace Parameters {
       }
     }
 
-    ParameterType(T& t_ref, const QString& t_about = "") :
+    ParameterType(Arg<T>& t_ref, const QString& t_about = "") :
         ref(t_ref),
         about(t_about) {
       if constexpr (std::is_enum_v<T>) {
-        if (!MagicEnum::contains(ref)) {
+        if (!MagicEnum::contains(ref.value())) {
           throw std::runtime_error("enum value out of range.");
         }
       }
@@ -99,15 +140,15 @@ namespace Parameters {
 
     QString value() const override {
       if constexpr (std::is_enum_v<T>) {
-        return Utils::quoted(MagicEnum::name(ref));
+        return Utils::quoted(MagicEnum::name(ref.value()));
       } else if constexpr (std::is_same_v<T, bool>) {
-        return ref ? "true" : "false";
+        return ref.value() ? "true" : "false";
       } else if constexpr (std::is_floating_point_v<T>) {
-        return QString::number(ref, 'f', 10);
+        return QString::number(ref.value(), 'f', 10);
       } else if constexpr (std::is_arithmetic_v<T>) {
-        return QString::number(ref);
+        return QString::number(ref.value());
       } else if constexpr (std::is_same_v<T, QString>) {
-        return Utils::quoted(ref);
+        return Utils::quoted(ref.value());
       }
     }
 
@@ -129,6 +170,7 @@ namespace Parameters {
 
   template <class T>
   class Text : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     QRegularExpression regex;
@@ -136,7 +178,7 @@ namespace Parameters {
    public:
     using ParameterType<T>::value;
 
-    Text(T& t_ref,
+    Text(Arg<T>& t_ref,
          const QRegularExpression& t_regex = Regex::AnyMatch,
          const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
@@ -163,7 +205,7 @@ namespace Parameters {
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (regex.match(str).hasMatch()) {
-          ref = *op;
+          setValue(*op);
           return true;
         }
       }
@@ -173,6 +215,7 @@ namespace Parameters {
 
   template <class T>
   class SpinBox : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
@@ -181,7 +224,10 @@ namespace Parameters {
 
    public:
     template <class U>
-    SpinBox(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    SpinBox(Arg<T>& t_ref,
+            U t_minValue,
+            U t_maxValue,
+            const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -210,7 +256,7 @@ namespace Parameters {
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
-          ref = *op;
+          setValue(*op);
           return true;
         }
       }
@@ -220,6 +266,7 @@ namespace Parameters {
 
   template <class T>
   class DoubleSpinBox : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     static_assert(std::is_floating_point_v<T>, "unsupported type.");
@@ -229,7 +276,7 @@ namespace Parameters {
 
    public:
     template <class U>
-    DoubleSpinBox(T& t_ref,
+    DoubleSpinBox(Arg<T>& t_ref,
                   U t_minValue,
                   U t_maxValue,
                   int t_precision = 2,
@@ -247,7 +294,7 @@ namespace Parameters {
     }
 
     QString value() const override final {
-      return QString::number(ref, 'f', precision);
+      return QString::number(ref.value(), 'f', precision);
     }
 
     QString inputType() const override final {
@@ -270,7 +317,7 @@ namespace Parameters {
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
-          ref = *op;
+          setValue(*op);
           return true;
         }
       }
@@ -280,6 +327,7 @@ namespace Parameters {
 
   template <class T>
   class Slider : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
@@ -288,7 +336,10 @@ namespace Parameters {
 
    public:
     template <class U>
-    Slider(T& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    Slider(Arg<T>& t_ref,
+           U t_minValue,
+           U t_maxValue,
+           const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -317,7 +368,7 @@ namespace Parameters {
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
-          ref = *op;
+          setValue(*op);
           return true;
         }
       }
@@ -326,11 +377,12 @@ namespace Parameters {
   };
 
   class CheckBox : public ParameterType<bool> {
+    using ParameterType<bool>::setValue;
     using ParameterType<bool>::eval;
     using ParameterType<bool>::ref;
 
    public:
-    CheckBox(bool& t_ref, const QString& t_about = "") :
+    CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
         ParameterType<bool>(t_ref, t_about) {
     }
 
@@ -348,7 +400,7 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
-        ref = *op;
+        setValue(*op);
         return true;
       }
       return false;
@@ -357,12 +409,15 @@ namespace Parameters {
 
   template <class T>
   class ComboBox : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     std::set<T> set;
 
    public:
-    ComboBox(T& t_ref, const QVector<T>& t_set, const QString& t_about = "") :
+    ComboBox(Arg<T>& t_ref,
+             const QVector<T>& t_set,
+             const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         set(t_set.begin(), t_set.end()) {
       if (!((set.size() > 1) && set.find(t_ref) != set.end())) {
@@ -408,7 +463,7 @@ namespace Parameters {
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (set.find(*op) != set.end()) {
-          ref = *op;
+          setValue(*op);
           return true;
         }
       }
@@ -418,12 +473,13 @@ namespace Parameters {
 
   template <class T>
   class MappedComboBox : public ParameterType<T> {
+    using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     boost::bimap<T, QString> bimap;
 
    public:
-    MappedComboBox(T& t_ref,
+    MappedComboBox(Arg<T>& t_ref,
                    const QMap<T, QString>& t_map,
                    const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
@@ -443,7 +499,7 @@ namespace Parameters {
     }
 
     QString value() const override {
-      auto it = bimap.left.find(ParameterType<T>::ref);
+      auto it = bimap.left.find(ParameterType<T>::ref.value());
       if (it == bimap.left.end()) {
         throw std::runtime_error("the value was not found.");
       } else {
@@ -481,7 +537,7 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto it = bimap.right.find(str); it != bimap.right.end()) {
-        ref = bimap.right.find(str)->get_left();
+        setValue(bimap.right.find(str)->get_left());
         return true;
       }
       return false;
