@@ -21,7 +21,7 @@ class ModulePrivate : public QObject, private QRunnable {
  protected:
   Parameters::Handler parametersHandler;
   boost::lockfree::spsc_queue<Parameters::UpdateRequests,
-                              boost::lockfree::capacity<16>>
+                              boost::lockfree::capacity<1024>>
       spscUpdateRequests;
 
   virtual void update();

@@ -24,10 +24,7 @@ void ModuleBase::receiveUpdateRequests(
   if (spscUpdateRequests.write_available() > 0) {
     spscUpdateRequests.push(updates);
   } else {
-    // cannot discard any update.
-    Parameters::UpdateRequests top;
-    spscUpdateRequests.pop(top);
-    spscUpdateRequests.push(top + updates);
+    qFatal("ringbuffer is full.");
   }
 }
 
