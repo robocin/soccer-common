@@ -21,11 +21,7 @@ void ModuleBase::setup(const Modules* modules) {
 
 void ModuleBase::receiveUpdateRequests(
     const Parameters::UpdateRequests& updates) {
-  if (spscUpdateRequests.write_available() > 0) {
-    spscUpdateRequests.push(updates);
-  } else {
-    qFatal("ringbuffer is full.");
-  }
+  updateRequests->append(updates);
 }
 
 Parameters::Handler& ModuleBase::parameters() {

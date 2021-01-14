@@ -38,7 +38,7 @@ class ModuleBase : public ModulePrivate {
 
  private:
   using ModulePrivate::parametersHandler;
-  using ModulePrivate::spscUpdateRequests;
+  using ModulePrivate::updateRequests;
 };
 
 // -------------------------------------------------------------------------- //
