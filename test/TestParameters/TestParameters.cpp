@@ -116,7 +116,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   static constexpr const char* description = "antena de radio do curado";
 
   /* testing QString */ {
-    QString string = "sidney";
+    Arg<QString> string = "sidney";
     auto text = Text(string, Regex::AnyMatch, description);
     QCOMPARE(text.value(), Utils::quoted("sidney"));
     QCOMPARE(text.type(), Utils::nameOfType<QString>());
@@ -132,7 +132,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing integer */ {
-    int integer = 42;
+    Arg<int> integer = 42;
     auto text = Text(integer, Regex::AnyMatch, description);
     QCOMPARE(text.value(), "42");
     QCOMPARE(text.type(), Utils::nameOfType<int>());
@@ -150,7 +150,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing double */ {
-    double real = std::acos(-1.0);
+    Arg<double> real = std::acos(-1.0);
     auto text = Text(real, Regex::AnyMatch, description);
     QCOMPARE(text.value(), QString::number(std::acos(-1.0), 'f', 10));
     QCOMPARE(text.type(), Utils::nameOfType<double>());
@@ -168,7 +168,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing boolean */ {
-    bool boolean = false;
+    Arg<bool> boolean = false;
     auto text = Text(boolean, Regex::AnyMatch, description);
     QCOMPARE(text.value(), "false");
     QCOMPARE(text.type(), Utils::nameOfType<bool>());
@@ -190,7 +190,7 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing QString */ {
-    QString empty;
+    Arg<QString> empty;
     bool error = false;
     try {
       auto text = Text(empty, QRegularExpression(R"_((.+))_"));
@@ -201,7 +201,7 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   }
 
   /* testing double */ {
-    double real = 1.234;
+    Arg<double> real = 1.234;
     bool error = false;
     try {
       auto text = Text(real, QRegularExpression(R"_(([a-z]+))_"));
@@ -218,7 +218,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
   static constexpr const char* description = "dale robocin";
 
   /* testing short */ {
-    short integer = 5;
+    Arg<short> integer = 5;
     auto spinBox = SpinBox(integer, 0, 10, description);
     QCOMPARE(spinBox.value(), "5");
     QCOMPARE(spinBox.type(), Utils::nameOfType<short>());
@@ -236,7 +236,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing int */ {
-    int integer = 10;
+    Arg<int> integer = 10;
     auto spinBox = SpinBox(integer, -10, 20, description);
     QCOMPARE(spinBox.value(), "10");
     QCOMPARE(spinBox.type(), Utils::nameOfType<int>());
@@ -254,7 +254,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing long */ {
-    long integer = 20;
+    Arg<long> integer = 20;
     auto spinBox = SpinBox(integer, -20, 30, description);
     QCOMPARE(spinBox.value(), "20");
     QCOMPARE(spinBox.type(), Utils::nameOfType<long>());
@@ -276,7 +276,7 @@ void TestParameters::test_SpinBox_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing short out of range */ {
-    short integer = 200;
+    Arg<short> integer = 200;
     bool error = false;
     try {
       auto spinBox = SpinBox(integer, 0, 100);
@@ -287,7 +287,7 @@ void TestParameters::test_SpinBox_WithInvalidParameters_ShouldThrowException() {
   }
 
   /* testing int wrong range */ {
-    short integer = 5;
+    Arg<short> integer = 5;
     bool error = false;
     try {
       auto spinBox = SpinBox(integer, 10, -10);
@@ -298,7 +298,7 @@ void TestParameters::test_SpinBox_WithInvalidParameters_ShouldThrowException() {
   }
 
   /* testing long out of range */ {
-    long integer = 10;
+    Arg<long> integer = 10;
     bool error = false;
     try {
       auto spinBox = SpinBox(integer, 500, 1000);
@@ -315,7 +315,7 @@ void TestParameters::test_DoubleSpinBox_WithValidParameters_ShouldConstruct() {
   static constexpr const char* description = "dale robocin";
 
   /* testing float */ {
-    float real = 5;
+    Arg<float> real = 5;
     auto doubleSpinBox = DoubleSpinBox(real, 0, 10, 6, description);
     QCOMPARE(doubleSpinBox.value(), "5.000000");
     QCOMPARE(doubleSpinBox.type(), Utils::nameOfType<float>());
@@ -335,7 +335,7 @@ void TestParameters::test_DoubleSpinBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing double */ {
-    double real = 10;
+    Arg<double> real = 10;
     auto doubleSpinBox = DoubleSpinBox(real, -10, 20, 2, description);
     QCOMPARE(doubleSpinBox.value(), "10.00");
     QCOMPARE(doubleSpinBox.type(), Utils::nameOfType<double>());
@@ -360,7 +360,7 @@ void TestParameters::
   using namespace Parameters;
 
   /* testing float out of range */ {
-    float real = 200;
+    Arg<float> real = 200;
     bool error = false;
     try {
       auto doubleSpinBox = DoubleSpinBox(real, 0, 100);
@@ -371,7 +371,7 @@ void TestParameters::
   }
 
   /* testing int wrong range */ {
-    double real = 5;
+    Arg<double> real = 5;
     bool error = false;
     try {
       auto doubleSpinBox = DoubleSpinBox(real, 10, -10);
@@ -388,7 +388,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
   static constexpr const char* description = "saudades dulle gourmet";
 
   /* testing short */ {
-    short integer = 5;
+    Arg<short> integer = 5;
     auto slider = Slider(integer, 0, 10, description);
     QCOMPARE(slider.value(), "5");
     QCOMPARE(slider.type(), Utils::nameOfType<short>());
@@ -406,7 +406,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing int */ {
-    int integer = 10;
+    Arg<int> integer = 10;
     auto slider = Slider(integer, -10, 20, description);
     QCOMPARE(slider.value(), "10");
     QCOMPARE(slider.type(), Utils::nameOfType<int>());
@@ -424,7 +424,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing long */ {
-    long integer = 20;
+    Arg<long> integer = 20;
     auto slider = Slider(integer, -20, 30, description);
     QCOMPARE(slider.value(), "20");
     QCOMPARE(slider.type(), Utils::nameOfType<long>());
@@ -446,7 +446,7 @@ void TestParameters::test_Slider_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing short out of range */ {
-    short integer = 200;
+    Arg<short> integer = 200;
     bool error = false;
     try {
       auto slider = Slider(integer, 0, 100);
@@ -457,7 +457,7 @@ void TestParameters::test_Slider_WithInvalidParameters_ShouldThrowException() {
   }
 
   /* testing int wrong range */ {
-    short integer = 5;
+    Arg<short> integer = 5;
     bool error = false;
     try {
       auto slider = Slider(integer, 10, -10);
@@ -468,7 +468,7 @@ void TestParameters::test_Slider_WithInvalidParameters_ShouldThrowException() {
   }
 
   /* testing long out of range */ {
-    long integer = 10;
+    Arg<long> integer = 10;
     bool error = false;
     try {
       auto slider = Slider(integer, 500, 1000);
@@ -485,7 +485,7 @@ void TestParameters::test_CheckBox_WithValidParameters_ShouldConstruct() {
   static constexpr const char* description = "imita uma moto plz";
 
   /* testing boolean */ {
-    bool boolean = false;
+    Arg<bool> boolean = false;
     auto checkBox = CheckBox(boolean, description);
     QCOMPARE(checkBox.value(), "false");
     QCOMPARE(checkBox.type(), Utils::nameOfType<bool>());
@@ -508,7 +508,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
   /* testing enum */ {
     using Tp = Args::MyEnum;
 
-    Tp myEnum = Tp::A;
+    Arg<Tp> myEnum = Tp::A;
     auto comboBox = ComboBox(myEnum, {Tp::A, Tp::B, Tp::C}, description);
     QCOMPARE(comboBox.value(), Utils::quoted("A"));
     QCOMPARE(comboBox.type(), Utils::nameOfType<Tp>());
@@ -524,7 +524,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing QString */ {
-    QString string = "G";
+    Arg<QString> string = "G";
     auto comboBox = ComboBox(string, {"G", "H", "I"}, description);
     QCOMPARE(comboBox.value(), Utils::quoted("G"));
     QCOMPARE(comboBox.type(), Utils::nameOfType<QString>());
@@ -540,7 +540,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing int */ {
-    int integer = 11;
+    Arg<int> integer = 11;
     auto comboBox = ComboBox(integer, {11, 12, 13, 14}, description);
     QCOMPARE(comboBox.value(), "11");
     QCOMPARE(comboBox.type(), Utils::nameOfType<int>());
@@ -563,7 +563,7 @@ void TestParameters::
   /* testing enum out of collection */ {
     using Tp = Args::MyEnum;
 
-    Tp myEnum = Tp::A;
+    Arg<Tp> myEnum = Tp::A;
     bool error = false;
     try {
       auto comboBox = ComboBox(myEnum, {Tp::B, Tp::C});
@@ -574,7 +574,7 @@ void TestParameters::
   }
 
   /* testing QString few values */ {
-    QString string = "G";
+    Arg<QString> string = "G";
     bool error = false;
     try {
       auto comboBox = ComboBox(string, {"G"});
@@ -585,7 +585,7 @@ void TestParameters::
   }
 
   /* testing int out of collection */ {
-    int integer = 42;
+    Arg<int> integer = 42;
     bool error = false;
     try {
       auto comboBox = ComboBox(integer, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
@@ -604,7 +604,7 @@ void TestParameters::test_MappedComboBox_WithValidParameters_ShouldConstruct() {
   /* testing enum */ {
     using Tp = Args::MyEnum;
 
-    Tp myEnum = Tp::A;
+    Arg<Tp> myEnum = Tp::A;
     auto mappedComboBox =
         MappedComboBox(myEnum,
                        {{Tp::A, "HAHA"}, {Tp::B, "HEHE"}, {Tp::C, "HIHI"}},
@@ -624,7 +624,7 @@ void TestParameters::test_MappedComboBox_WithValidParameters_ShouldConstruct() {
   }
 
   /* testing int */ {
-    int integer = 11;
+    Arg<int> integer = 11;
     auto mappedComboBox =
         MappedComboBox(integer,
                        {{11, "11onze"}, {12, "12doze"}, {13, "13treze"}},
@@ -651,7 +651,7 @@ void TestParameters::
   /* testing enum out of collection */ {
     using Tp = Args::MyEnum;
 
-    Tp myEnum = Tp::A;
+    Arg<Tp> myEnum = Tp::A;
     bool error = false;
     try {
       auto mappedComboBox =
@@ -663,7 +663,7 @@ void TestParameters::
   }
 
   /* testing QString few values */ {
-    QString string = "G";
+    Arg<QString> string = "G";
     bool error = false;
     try {
       auto mappedComboBox = MappedComboBox(string, {{"G", "GO ROBOCIN"}});
@@ -674,7 +674,7 @@ void TestParameters::
   }
 
   /* testing int out of collection */ {
-    int integer = 42;
+    Arg<int> integer = 42;
     bool error = false;
     try {
       auto mappedComboBox =
@@ -691,18 +691,18 @@ void TestParameters::
   using namespace Parameters;
 
   struct Args {
-    bool boolean = true;
+    Arg<bool> boolean = true;
     enum class Enum : int { A, B, C, D };
-    Enum enumeration = Enum::A;
+    Arg<Enum> enumeration = Enum::A;
 
     enum class Enum2 : int { A, B, C, D };
-    Enum2 enumeration2 = Enum2::A;
-    double nested = 2.1;
+    Arg<Enum2> enumeration2 = Enum2::A;
+    Arg<double> nested = 2.1;
 
     struct FirstLayer {
-      int integer = 10;
-      double real = std::acos(-1.0);
-      QString string = "parameter-type";
+      Arg<int> integer = 10;
+      Arg<double> real = std::acos(-1.0);
+      Arg<QString> string = "parameter-type";
     };
     FirstLayer firstLayer;
   };
