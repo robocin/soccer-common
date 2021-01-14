@@ -15,13 +15,6 @@
 #endif
 
 class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
- protected:
-  qreal m_z;
-
-  struct Const {
-    static constexpr qreal zStep = 0.1;
-  };
-
  public:
   struct Vertex : public QPointF {
     constexpr Vertex() : QPointF() {
@@ -177,6 +170,67 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
 
   GLGameVisualizerCore_2_1();
   ~GLGameVisualizerCore_2_1();
+
+ protected:
+  qreal m_z;
+
+  struct Const {
+    static constexpr qreal zStep = 0.01;
+  };
+
+  template <class T>
+  static constexpr bool dependent_false_v = false;
+
+  template <class T>
+  inline std::array<T, 4> backgroundColorRgba() {
+    std::array<T, 4> rgba;
+    if constexpr (std::is_same_v<T, GLfloat>) {
+      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgba.data());
+    } else if constexpr (std::is_same_v<T, GLdouble>) {
+      glGetDoublev(GL_COLOR_CLEAR_VALUE, rgba.data());
+    } else {
+      static_assert(dependent_false_v<T>);
+    }
+    return rgba;
+  }
+
+ private:
+  template <class T>
+  inline void glColor(T r, T g, T b, T a) {
+    if constexpr (std::is_same_v<T, GLfloat>) {
+      glColor4f(r, g, b, a);
+    } else if constexpr (std::is_same_v<T, GLdouble>) {
+      glColor4d(r, g, b, a);
+    } else {
+      static_assert(dependent_false_v<T>);
+    }
+  }
+
+  template <class T>
+  inline void glTranslate(T x, T y, T z) {
+    if constexpr (std::is_same_v<T, GLfloat>) {
+      glTranslatef(x, y, z);
+    } else if constexpr (std::is_same_v<T, GLdouble>) {
+      glTranslated(x, y, z);
+    } else {
+      static_assert(dependent_false_v<T>);
+    }
+  }
+
+  template <class T>
+  inline void translateXYScaleAndRotateT(const Vertex& pos, T size, T angle) {
+    if constexpr (std::is_same_v<T, GLfloat>) {
+      glTranslatef(pos.x(), pos.y(), 0.0f);
+      glScalef(size, size, 1.0f);
+      glRotatef(angle, 0.0f, 0.0f, 1.0f);
+    } else if constexpr (std::is_same_v<T, GLdouble>) {
+      glTranslated(pos.x(), pos.y(), 0.0);
+      glScaled(size, size, 1.0);
+      glRotated(angle, 0.0, 0.0, 1.0);
+    } else {
+      static_assert(dependent_false_v<T>);
+    }
+  }
 };
 
 #endif // GLGAMEVISUALIZERCORE_2_1_H

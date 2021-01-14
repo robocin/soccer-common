@@ -16,47 +16,30 @@ void GLGameVisualizerCore_2_1::putVertex(const Vertex& v) {
 void GLGameVisualizerCore_2_1::putBackgroundColor(const QColor& color) {
   qreal r, g, b, a;
   color.getRgbF(&r, &g, &b, &a);
-  glClearColor(r, g, b, a);
+  glClearColor(static_cast<GLfloat>(r),
+               static_cast<GLfloat>(g),
+               static_cast<GLfloat>(b),
+               static_cast<GLfloat>(a));
 }
 
 void GLGameVisualizerCore_2_1::putColor(const QColor& color) {
   qreal r, g, b, a;
   color.getRgbF(&r, &g, &b, &a);
-  if constexpr (std::is_same_v<qreal, GLfloat>) {
-    glColor4f(r, g, b, a);
-  } else if constexpr (std::is_same_v<qreal, GLdouble>) {
-    glColor4d(r, g, b, a);
-  }
+  glColor<qreal>(r, g, b, a);
 }
 
 void GLGameVisualizerCore_2_1::translateZ() {
-  if constexpr (std::is_same_v<qreal, GLfloat>) {
-    glTranslatef(0.0f, 0.0f, m_z);
-  } else if constexpr (std::is_same_v<qreal, GLdouble>) {
-    glTranslated(0.0, 0.0, m_z);
-  }
+  glTranslate<qreal>(0.0, 0.0, m_z);
 }
 
 void GLGameVisualizerCore_2_1::translateXY(qreal x, qreal y) {
-  if constexpr (std::is_same_v<qreal, GLfloat>) {
-    glTranslatef(x, y, 0.0f);
-  } else if constexpr (std::is_same_v<qreal, GLdouble>) {
-    glTranslated(x, y, 0.0);
-  }
+  glTranslate<qreal>(x, y, 0.0);
 }
 
 void GLGameVisualizerCore_2_1::translateXYScaleAndRotate(const Vertex& pos,
                                                          qreal size,
                                                          qreal angle) {
-  if constexpr (std::is_same_v<qreal, GLfloat>) {
-    glTranslatef(pos.x(), pos.y(), 0.0f);
-    glScalef(size, size, 1.0f);
-    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-  } else if constexpr (std::is_same_v<qreal, GLdouble>) {
-    glTranslated(pos.x(), pos.y(), 0.0);
-    glScaled(size, size, 1.0);
-    glRotated(angle, 0.0, 0.0, 1.0);
-  }
+  translateXYScaleAndRotateT<qreal>(pos, size, angle);
 }
 
 void GLGameVisualizerCore_2_1::setZ(qreal z) {
