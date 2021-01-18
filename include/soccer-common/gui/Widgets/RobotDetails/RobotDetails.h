@@ -1,5 +1,5 @@
-#ifndef ROBOTWIDGETS_H
-#define ROBOTWIDGETS_H
+#ifndef ROBOTDETAILS_H
+#define ROBOTDETAILS_H
 
 #include <QtCore>
 #include <QtWidgets>
@@ -8,24 +8,26 @@
 #include "soccer-common/gui/Interfaces/Interfaces.h"
 
 namespace Ui {
-  class RobotWidgets;
+  class RobotDetails;
 }
 
-class RobotWidgets : public QWidget,
+class RobotDetails : public QWidget,
                      public WidgetSettings,
                      public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit RobotWidgets(
+  explicit RobotDetails(
+      int index,
       QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
-  ~RobotWidgets();
+  ~RobotDetails();
  public slots:
   void showBatteryCharger(int level);
   void showCapacitorCharger(int level);
+  void showRobotNumber(int number);
 
  private:
-  Ui::RobotWidgets* ui;
+  Ui::RobotDetails* ui;
   QAction* viewAction;
 
   void writeLocalSettings(QSettings& settings) override;
@@ -34,4 +36,4 @@ class RobotWidgets : public QWidget,
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // RobotWidgets_H
+#endif // RobotDetails_H

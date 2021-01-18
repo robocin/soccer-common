@@ -5,7 +5,7 @@ FORMS += \
   $$PWD/ParameterWidget/ParameterWidget.ui \
   $$PWD/ParametersWindow/ParametersWindow.ui \
   $$PWD/PlayPauseWidget/PlayPauseWidget.ui \
-  $$PWD/RobotWidgets/RobotWidgets.ui \
+  $$PWD/RobotDetails/RobotDetails.ui \
   $$PWD/ScoreboardWidget/ScoreboardWidget.ui
 
 HEADERS += \
@@ -17,7 +17,7 @@ HEADERS += \
   $$PWD/ParametersDialog/ParametersDialog.h \
   $$PWD/ParametersWindow/ParametersWindow.h \
   $$PWD/PlayPauseWidget/PlayPauseWidget.h \
-  $$PWD/RobotWidgets/RobotWidgets.h \
+  $$PWD/RobotDetails/RobotDetails.h \
   $$PWD/ScoreboardWidget/ScoreboardWidget.h \
   $$PWD/ScrollAreaForFlowLayout/ScrollAreaForFlowLayout.h \
   $$PWD/SmartVerticalFlowLayout/SmartVerticalFlowLayout.h \
@@ -33,7 +33,7 @@ SOURCES += \
   $$PWD/ParametersDialog/ParametersDialog.cpp \
   $$PWD/ParametersWindow/ParametersWindow.cpp \
   $$PWD/PlayPauseWidget/PlayPauseWidget.cpp \
-  $$PWD/RobotWidgets/RobotWidgets.cpp \
+  $$PWD/RobotDetails/RobotDetails.cpp \
   $$PWD/ScoreboardWidget/ScoreboardWidget.cpp \
   $$PWD/DynamicFontSizeQLabel/DynamicFontSizeQLabel.cpp \
   $$PWD/ScrollAreaForFlowLayout/ScrollAreaForFlowLayout.cpp \

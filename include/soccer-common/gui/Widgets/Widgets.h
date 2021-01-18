@@ -13,5 +13,5 @@
 #include "ParametersDialog/ParametersDialog.h"
 #include "ColorTeamWidget/ColorTeamWidget.h"
 #include "AttackSideWidget/AttackSideWidget.h"
-
+#include "RobotDetails/RobotDetails.h"
 #endif // WIDGETS_H

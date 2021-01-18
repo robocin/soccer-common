@@ -1,33 +1,38 @@
-#include "RobotWidgets.h"
-#include "ui_RobotWidgets.h"
+#include "RobotDetails.h"
+#include "ui_RobotDetails.h"
 
 #include "soccer-common/gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-RobotWidgets::RobotWidgets(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+RobotDetails::RobotDetails(int index,
+                           QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
-    ui(new Ui::RobotWidgets),
+    ui(new Ui::RobotDetails),
     viewAction(Factory::toggleViewAction(this)) {
   ui->setupUi(this);
+  showRobotNumber(index);
 }
 
-RobotWidgets::~RobotWidgets() {
+RobotDetails::~RobotDetails() {
   delete ui;
 }
 
-void RobotWidgets::showBatteryCharger(int level) {
+void RobotDetails::showBatteryCharger(int level) {
   ui->batteryCharger->setValue(level);
 }
-void RobotWidgets::showCapacitorCharger(int level) {
+void RobotDetails::showCapacitorCharger(int level) {
   ui->capacitorCharger->setValue(level);
 }
-void RobotWidgets::writeLocalSettings(QSettings& settings) {
+void RobotDetails::showRobotNumber(int number) {
+  ui->robotNumber->setText(QString::number(number));
+}
+void RobotDetails::writeLocalSettings(QSettings& settings) {
   settings.setValue("batteryCharger", ui->batteryCharger->value());
   settings.setValue("capacitorCharger", ui->capacitorCharger->value());
   settings.setValue("viewAction", viewAction->isChecked());
 }
-void RobotWidgets::loadLocalSettings(const QSettings& settings) {
+void RobotDetails::loadLocalSettings(const QSettings& settings) {
   int batteryLevel = 100;
   int capacitorLevel = 100;
   if (settings.contains("batteryCharger")) {
@@ -47,6 +52,6 @@ void RobotWidgets::loadLocalSettings(const QSettings& settings) {
   showBatteryCharger(batteryLevel);
   showCapacitorCharger(capacitorLevel);
 }
-void RobotWidgets::putWidgetActions(MainWindowMenuBar& menubar) {
+void RobotDetails::putWidgetActions(MainWindowMenuBar& menubar) {
   menubar["View"]["Informations"].addAction(viewAction);
 }
