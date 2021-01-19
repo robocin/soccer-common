@@ -68,4 +68,7 @@ namespace Parameters {
   };
 } // namespace Parameters
 
+Q_DECLARE_METATYPE(Parameters::UpdateRequest);
+Q_DECLARE_METATYPE(Parameters::UpdateRequests);
+
 #endif // PARAMETERSHANDLER_H

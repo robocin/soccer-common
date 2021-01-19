@@ -113,8 +113,7 @@ class ModulesPrivate : public QObject {
       QObject::connect(moduleBox->dialog(),
                        &ParametersDialog::onChangingParameters,
                        ref,
-                       &ModuleBase::receiveUpdateRequests,
-                       Qt::DirectConnection);
+                       &ModuleBase::receiveUpdateRequests);
 
       QObject::connect(ref,
                        &ModuleBase::draw,

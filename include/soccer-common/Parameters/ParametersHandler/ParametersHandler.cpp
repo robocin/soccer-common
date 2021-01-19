@@ -279,3 +279,8 @@ namespace Parameters {
     return ret;
   }
 } // namespace Parameters
+
+static_block {
+  qRegisterMetaType<Parameters::UpdateRequest>();
+  qRegisterMetaType<Parameters::UpdateRequests>();
+};
