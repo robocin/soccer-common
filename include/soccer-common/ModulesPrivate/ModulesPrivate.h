@@ -31,8 +31,9 @@ class ModulesPrivate : public QObject {
     }
 
     inline void clear() {
-      for (auto it = m_map.begin(); it != m_map.end(); ++it) {
-        it.value()->deleteLater();
+      for (auto t : m_map) {
+        QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
+        t->deleteLater();
       }
       m_map.clear();
     }
