@@ -31,8 +31,8 @@ class InheritanceFactorySafeMap {
   mutable std::mutex m_mutex;
 
   template <class U>
-  static T* makeFactory(Args&&... args) {
-    return new U(std::forward<Args>(args)...);
+  static T* makeFactory(Args... args) {
+    return new U(args...);
   }
 
  public:
