@@ -11,6 +11,10 @@ namespace Parameters {
   bool isParameterType(const QJsonObject& object);
 
   class UpdateRequest {
+    friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper<UpdateRequest,
+                                                             true>;
+    UpdateRequest();
+
     QStringList m_path;
     QString m_value;
 

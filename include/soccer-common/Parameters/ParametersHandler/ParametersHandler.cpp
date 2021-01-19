@@ -7,6 +7,9 @@ namespace Parameters {
   }
 
   // UpdateRequest
+  UpdateRequest::UpdateRequest() {
+  }
+
   UpdateRequest::UpdateRequest(const QStringList& path, const QString& value) :
       m_path(path),
       m_value(value) {
