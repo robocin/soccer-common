@@ -51,8 +51,8 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class FunctionPointer>
-  constexpr decltype(auto) apply(const FunctionPointer& f) {
-    return f(*this);
+  constexpr decltype(auto) apply(FunctionPointer&& f) {
+    return std::forward<FunctionPointer>(f)(*this);
   }
 
   // observers:

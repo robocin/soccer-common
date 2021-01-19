@@ -32,8 +32,8 @@ class SetterGetter {
   }
 
   template <class FunctionPointer>
-  constexpr decltype(auto) apply(const FunctionPointer& f) {
-    return f(m_instance);
+  constexpr decltype(auto) apply(FunctionPointer&& f) {
+    return std::forward<FunctionPointer>(f)(m_instance);
   }
 
   template <class... Args>
