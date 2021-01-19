@@ -99,7 +99,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
     SharedOptional<qreal> scale;
     SharedOptional<QColor> backgroundColor;
   };
-  SharedWrapper<Shared, QMutex> shared;
+  SharedWrapper<Shared, std::mutex> shared;
 
   struct Local {
     std::array<std::map<int, PaintingPointer>,

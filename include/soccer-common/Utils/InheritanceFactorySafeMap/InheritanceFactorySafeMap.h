@@ -3,7 +3,6 @@
 
 #include <QMap>
 #include <mutex>
-#include <QMutex>
 #include <functional>
 #include "soccer-common/Utils/StringHelper/StringHelper.h"
 
@@ -28,8 +27,8 @@ class InheritanceFactorySafeMap {
     }
   };
 
-  mutable QMutex m_mutex;
   QMap<Key, Value> m_map;
+  mutable std::mutex m_mutex;
 
   template <class U>
   static T* makeFactory(Args&&... args) {

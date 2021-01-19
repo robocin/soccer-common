@@ -1,7 +1,6 @@
 #ifndef MODULEPRIVATE_H
 #define MODULEPRIVATE_H
 
-#include <QMutex>
 #include <QObject>
 #include <QRunnable>
 #include <QThreadPool>
@@ -19,7 +18,7 @@ class ModulePrivate : public QObject, private QRunnable {
 
  protected:
   Parameters::Handler parametersHandler;
-  SharedWrapper<Parameters::UpdateRequests, QMutex> updateRequests;
+  SharedWrapper<Parameters::UpdateRequests, std::mutex> updateRequests;
 
   virtual void update();
   virtual void exec() = 0;
@@ -27,7 +26,7 @@ class ModulePrivate : public QObject, private QRunnable {
 
  private:
   QThreadPool* threadPool;
-  QMutex execMutex;
+  std::mutex execMutex;
 
   void parametersUpdate();
   void run() override final;
