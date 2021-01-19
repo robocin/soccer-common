@@ -8,16 +8,17 @@ ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
 }
 
 ModulePrivate::~ModulePrivate() {
-  if (threadPool) {
-    while (threadPool->tryTake(static_cast<QRunnable*>(this))) {
+  if (QThreadPool* tp = threadPool) {
+    threadPool = nullptr;
+    while (tp->tryTake(static_cast<QRunnable*>(this))) {
       // removing all uninitiated calls.
     }
   }
 }
 
 void ModulePrivate::runInParallel() {
-  if (threadPool) {
-    threadPool->start(static_cast<QRunnable*>(this));
+  if (QThreadPool* tp = threadPool) {
+    tp->start(static_cast<QRunnable*>(this));
   }
 }
 

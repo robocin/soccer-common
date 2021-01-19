@@ -25,7 +25,7 @@ class ModulePrivate : public QObject, private QRunnable {
   virtual void wasSkipped();
 
  private:
-  QThreadPool* threadPool;
+  std::atomic<QThreadPool*> threadPool;
   std::mutex execMutex;
 
   void parametersUpdate();
