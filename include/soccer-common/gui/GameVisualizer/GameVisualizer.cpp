@@ -222,11 +222,16 @@ void GameVisualizer::getUpdates() {
       local.backgroundColor = shared.backgroundColor.getAndReset();
     }
     for (std::size_t i = 0; i < local.paintings.size(); ++i) {
+      auto& paintings = local.paintings[i];
       for (auto& ptr : shared.paintings[i].ref()) {
         if (ptr.second) {
-          local.paintings[i][ptr.first] = std::move(ptr.second);
+          bool visibilty = (paintings.find(ptr.first) != paintings.end()) ?
+                               paintings[ptr.first].visibility() :
+                               false;
+          paintings[ptr.first] = std::move(ptr.second);
+          paintings[ptr.first].setVisibility(visibilty);
         } else {
-          local.paintings[i].erase(ptr.first);
+          paintings.erase(ptr.first);
         }
       }
       shared.paintings[i].ref().clear();
