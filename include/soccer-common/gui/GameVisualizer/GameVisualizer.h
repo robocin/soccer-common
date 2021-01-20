@@ -148,7 +148,7 @@ class GameVisualizer::Key : public QObject {
  public:
   Q_DISABLE_COPY_MOVE(Key);
 
-  inline Key() : m_key(-1), m_visibility(true) {
+  inline Key() : m_key(-1) {
   }
 
   inline void setup(const GameVisualizer* gameVisualizer) {
@@ -171,10 +171,7 @@ class GameVisualizer::Key : public QObject {
   }
 
   inline void setVisibility(bool visibility) {
-    if (m_visibility ^ visibility) {
-      m_visibility = visibility;
-      emit onVisibilityChanged(m_key, m_visibility);
-    }
+    emit onVisibilityChanged(m_key, visibility);
   }
 
   inline ~Key() {
@@ -191,7 +188,6 @@ class GameVisualizer::Key : public QObject {
 
  private:
   int m_key;
-  bool m_visibility;
 };
 
 #endif // GAMEVISUALIZER_H

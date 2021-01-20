@@ -228,8 +228,9 @@ void GameVisualizer::getUpdates() {
           bool visibilty = (paintings.find(ptr.first) != paintings.end()) ?
                                paintings[ptr.first].visibility() :
                                false;
-          paintings[ptr.first] = std::move(ptr.second);
-          paintings[ptr.first].setVisibility(visibilty);
+          auto it = paintings.insert_or_assign(ptr.first, std::move(ptr.second))
+                        .first;
+          it->second.setVisibility(visibilty);
         } else {
           paintings.erase(ptr.first);
         }
