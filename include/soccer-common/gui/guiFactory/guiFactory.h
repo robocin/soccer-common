@@ -14,16 +14,19 @@ class WidgetSettings;
 class MenuBarOptions;
 
 namespace Factory {
-  QAction* toggleViewAction(const QString& name, QWidget* widget);
+  void connectWithToggleViewAction(QAction* action, QWidget* widget);
+  QAction* toggleViewAction(const QString& name, QWidget* parent);
+  QAction* toggleViewActionAndConnect(const QString& name, QWidget* widget);
 
   template <class Widget>
-  QAction* toggleViewAction(Widget* widget) {
-    return toggleViewAction(Utils::nameOfType<Widget>(),
-                            static_cast<QWidget*>(widget));
+  QAction* toggleViewActionAndConnect(Widget* widget) {
+    return toggleViewActionAndConnect(Utils::nameOfType<Widget>(),
+                                      static_cast<QWidget*>(widget));
   }
 
-  QAction*
-  toggleViewAction(const QString& name, int index, QTabWidget* tabWidget);
+  QAction* toggleViewActionAndConnect(const QString& name,
+                                      int index,
+                                      QTabWidget* tabWidget);
 
   QElapsedTimer startedElapsedTimer();
 

@@ -11,7 +11,7 @@ ModuleBox::ModuleBox(const QString& name,
     WidgetSettings(name, parent),
     MenuBarOptions(parent),
     ui(new Ui::ModuleBox),
-    viewAction(Factory::toggleViewAction(name, this)) {
+    viewAction(Factory::toggleViewActionAndConnect(name, this)) {
   ui->setupUi(this);
   setWindowTitle(name);
   ui->moduleGroupBox->setTitle(name);

@@ -3,13 +3,10 @@
 
 #include "soccer-common/gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-RobotDetails::RobotDetails(int index,
-                           QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+RobotDetails::RobotDetails(int index, QWidgetWith<WidgetSettings> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
-    MenuBarOptions(parent),
-    ui(new Ui::RobotDetails),
-    viewAction(Factory::toggleViewAction(this)) {
+    ui(new Ui::RobotDetails) {
   ui->setupUi(this);
   showRobotNumber(index);
 }
@@ -27,10 +24,13 @@ void RobotDetails::showCapacitorCharger(int level) {
 void RobotDetails::showRobotNumber(int number) {
   ui->robotNumber->setText(QString::number(number));
 }
+
+void RobotDetails::connectBatteryViewAction(QAction* action) {
+  Factory::connectWithToggleViewAction(action, ui->batteyWidget);
+}
 void RobotDetails::writeLocalSettings(QSettings& settings) {
   settings.setValue("batteryCharger", ui->batteryCharger->value());
   settings.setValue("capacitorCharger", ui->capacitorCharger->value());
-  settings.setValue("viewAction", viewAction->isChecked());
 }
 void RobotDetails::loadLocalSettings(const QSettings& settings) {
   int batteryLevel = 100;
@@ -45,13 +45,6 @@ void RobotDetails::loadLocalSettings(const QSettings& settings) {
         settings.value("capacitorCharger").value<QString>();
     capacitorLevel = savedCapacitorCharger.toInt();
   }
-  if (settings.contains("viewAction")) {
-    bool view = settings.value("viewAction").value<bool>();
-    viewAction->setChecked(view);
-  }
   showBatteryCharger(batteryLevel);
   showCapacitorCharger(capacitorLevel);
-}
-void RobotDetails::putWidgetActions(MainWindowMenuBar& menubar) {
-  menubar["View"]["Informations"].addAction(viewAction);
 }

@@ -9,7 +9,7 @@ ScoreboardWidget::ScoreboardWidget(
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
     ui(new Ui::ScoreboardWidget),
-    viewAction(Factory::toggleViewAction(this)) {
+    viewAction(Factory::toggleViewActionAndConnect(this)) {
   ui->setupUi(this);
   ui->labelX->setRatio(0.5);
 }

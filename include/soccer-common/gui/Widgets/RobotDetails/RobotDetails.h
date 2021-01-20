@@ -11,29 +11,28 @@ namespace Ui {
   class RobotDetails;
 }
 
-class RobotDetails : public QWidget,
-                     public WidgetSettings,
-                     public MenuBarOptions {
+class RobotDetails : public QWidget, public WidgetSettings {
   Q_OBJECT
+  friend class RobotsWidgets;
 
  public:
-  explicit RobotDetails(
-      int index,
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit RobotDetails(int index,
+                        QWidgetWith<WidgetSettings> parent = nullptr);
   ~RobotDetails();
  public slots:
   void showBatteryCharger(int level);
   void showCapacitorCharger(int level);
   void showRobotNumber(int number);
 
+  // void ConnectCapacitorViewAction();
+  // void ConnectIrViewAction();
+
  private:
   Ui::RobotDetails* ui;
-  QAction* viewAction;
 
+  void connectBatteryViewAction(QAction* action);
   void writeLocalSettings(QSettings& settings) override;
   void loadLocalSettings(const QSettings& settings) override;
-
-  void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
 #endif // RobotDetails_H

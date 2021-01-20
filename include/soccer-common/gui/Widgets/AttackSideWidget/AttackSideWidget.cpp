@@ -9,7 +9,7 @@ AttackSideWidget::AttackSideWidget(
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
     ui(new Ui::AttackSideWidget),
-    viewAction(Factory::toggleViewAction(this)) {
+    viewAction(Factory::toggleViewActionAndConnect(this)) {
   ui->setupUi(this);
 }
 
