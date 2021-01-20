@@ -15,12 +15,13 @@ struct StaticBlockTag {
   ~StaticBlockTag();
 };
 
-#define TOKEN_PASTING(A, B) TOKEN_PASTING_(A, B)
-#define TOKEN_PASTING_(A, B) A##B
+#define __RC_TOKEN_PASTING(A, B) __RC_TOKEN_PASTING_(A, B)
+#define __RC_TOKEN_PASTING_(A, B) A##B
 
 #define static_block                                                           \
-  inline static const auto& TOKEN_PASTING(                                     \
-      TOKEN_PASTING(TOKEN_PASTING(static_block_tag_, __COUNTER__), _at_line_), \
+  inline static const auto& __RC_TOKEN_PASTING(                                \
+      __RC_TOKEN_PASTING(__RC_TOKEN_PASTING(static_block_tag_, __COUNTER__),   \
+                         _at_line_),                                           \
       __LINE__) = (StaticBlockTag)[]()->void
 
 #endif // STATICBLOCKTAG_H
