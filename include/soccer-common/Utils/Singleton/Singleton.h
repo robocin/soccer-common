@@ -18,6 +18,9 @@ class Singleton {
 };
 
 template <class T>
+using singleton_t = Singleton<T>;
+
+template <class T>
 inline static T& singleton_v = Singleton<T>::instance();
 
 #endif // SINGLETON_H
