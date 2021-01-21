@@ -43,9 +43,9 @@ class SharedWrapper {
   }
 
   template <class FunctionPointer>
-  decltype(auto) apply(const FunctionPointer& f) {
+  decltype(auto) apply(FunctionPointer&& f) {
     Locker locker(mutex);
-    return f(instance);
+    return std::forward<FunctionPointer>(f)(instance);
   }
 
   Proxy operator->() {

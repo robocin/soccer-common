@@ -8,6 +8,8 @@ class ModulesPrivate : public QObject {
   Q_OBJECT
 
   class Timers {
+    friend class ModulesPrivate;
+
     QThread* m_thread;
     mutable QMap<int, QTimer*> m_map;
 
@@ -22,19 +24,22 @@ class ModulesPrivate : public QObject {
       return m_map[I];
     }
 
+    inline void clear() {
+      for (auto t : m_map) {
+        QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(t,
+                                  &QTimer::deleteLater,
+                                  Qt::QueuedConnection);
+      }
+      m_map.clear();
+    }
+
    public:
     explicit Timers(QThread* thread) : m_thread(thread) {
     }
 
     ~Timers() {
       clear();
-    }
-
-    inline void clear() {
-      for (auto it = m_map.begin(); it != m_map.end(); ++it) {
-        it.value()->deleteLater();
-      }
-      m_map.clear();
     }
 
     template <std::size_t I>
@@ -65,6 +70,7 @@ class ModulesPrivate : public QObject {
   void setup();
   void impulse();
 
+  void prepareToDelete();
   void rebuild();
 
  public slots:
@@ -89,12 +95,13 @@ class ModulesPrivate : public QObject {
 
     F factory;
 
-    static void deleteIfExists(T* instance) {
-      if (instance) {
-        qWarning().nospace()
-            << "scheduling the deletion of " << instance << ".";
-        static_cast<QObject*>(instance)->deleteLater();
+    static void
+    disconnectAndDelete(ModuleBase* ref,
+                        QVector<QMetaObject::Connection> connections) {
+      for (QMetaObject::Connection connection : connections) {
+        QObject::disconnect(connection);
       }
+      ref->prepareToDelete();
     }
 
     static void setup(T* instance, M* modules) {
@@ -102,24 +109,32 @@ class ModulesPrivate : public QObject {
       static_cast<ModuleBase*>(instance)->setup(modules);
     }
 
-    inline static void
-    setDefaultConnections(T* ref, ModuleBox* moduleBox, MainWindow* gui) {
-      QObject::connect(ref,
-                       &ModuleBase::sendParameters,
-                       moduleBox->dialog(),
-                       &ParametersDialog::build);
+    inline static QVector<QMetaObject::Connection>
+    setDefaultConnections(T* ref, M* modules, ModuleBox* moduleBox) {
+      QVector<QMetaObject::Connection> connections;
+      /* ModulesPrivate */ {
+        connections += QObject::connect(modules,
+                                        &ModulesPrivate::setup,
+                                        ref,
+                                        std::bind(Maker::setup, ref, modules));
 
-      QObject::connect(moduleBox->dialog(),
-                       &ParametersDialog::onChangingParameters,
-                       ref,
-                       &ModuleBase::receiveUpdateRequests,
-                       Qt::DirectConnection);
+        connections += QObject::connect(modules,
+                                        &ModulesPrivate::impulse,
+                                        ref,
+                                        &ModuleBase::runInParallel);
+      }
+      /* ModuleBox */ {
+        connections += QObject::connect(ref,
+                                        &ModuleBase::sendParameters,
+                                        moduleBox->dialog(),
+                                        &ParametersDialog::build);
 
-      QObject::connect(ref,
-                       &ModuleBase::draw,
-                       gui->gameVisualizer(),
-                       &GameVisualizer::draw,
-                       Qt::DirectConnection);
+        connections += QObject::connect(moduleBox->dialog(),
+                                        &ParametersDialog::onChangingParameters,
+                                        ref,
+                                        &ModuleBase::receiveUpdateRequests);
+      }
+      return connections;
     }
 
     static void build(T*& ref,
@@ -128,8 +143,6 @@ class ModulesPrivate : public QObject {
                       ModuleBox* moduleBox,
                       Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
-
-      deleteIfExists(ref);
 
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
@@ -140,21 +153,13 @@ class ModulesPrivate : public QObject {
                            << " with type " << type << " was created: " << ref
                            << ".";
 
-      setDefaultConnections(ref,
-                            moduleBox,
-                            static_cast<ModulesPrivate*>(modules)->gui());
+      auto connections = setDefaultConnections(ref, modules, moduleBox);
+      QObject::connect(modules,
+                       &ModulesPrivate::prepareToDelete,
+                       ref,
+                       std::bind(Maker::disconnectAndDelete, ref, connections));
 
       static_cast<ModuleBase*>(ref)->build();
-
-      QObject::connect(modules,
-                       &ModulesPrivate::setup,
-                       ref,
-                       std::bind(Maker::setup, ref, modules));
-
-      QObject::connect(modules,
-                       &ModulesPrivate::impulse,
-                       ref,
-                       &ModuleBase::runInParallel);
     }
 
     static void
@@ -246,7 +251,7 @@ class ModulesPrivate : public QObject {
   };
 
  private:
-  void clear();
+  void prepareToDeleteAndDisconnect();
 };
 
 #endif // MODULESPRIVATE_H

@@ -15,16 +15,12 @@ class ModuleBase : public ModulePrivate {
 
  public:
   explicit ModuleBase(QThreadPool* threadPool);
-  ~ModuleBase() override;
 
   void build();
   void setup(const Modules* modules);
 
  signals:
   void sendParameters(const QJsonObject& parameters);
-  void draw(int uniqueIntegerKey,
-            Painting* painting,
-            Painting::Layers layer = Painting::Layers::Middle);
 
  public slots:
   void receiveUpdateRequests(const Parameters::UpdateRequests& updates);

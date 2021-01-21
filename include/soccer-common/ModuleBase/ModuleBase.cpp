@@ -1,12 +1,8 @@
 #include "ModuleBase.h"
 
 ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
-  /* during construction, virtual functions aren't virtual. Because of this, an
-   * extra function is needed, in this case, 'build()'. */
-}
-
-ModuleBase::~ModuleBase() {
-  qWarning().nospace() << "deleting " << this << ".";
+  /* During construction and destruction, virtual functions aren't virtual.
+   * Because of this, an extra function is needed, in this case, 'build()'. */
 }
 
 void ModuleBase::build() {

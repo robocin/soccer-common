@@ -11,6 +11,10 @@ namespace Parameters {
   bool isParameterType(const QJsonObject& object);
 
   class UpdateRequest {
+    friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper<UpdateRequest,
+                                                             true>;
+    UpdateRequest();
+
     QStringList m_path;
     QString m_value;
 
@@ -67,5 +71,8 @@ namespace Parameters {
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
   };
 } // namespace Parameters
+
+Q_DECLARE_METATYPE(Parameters::UpdateRequest);
+Q_DECLARE_METATYPE(Parameters::UpdateRequests);
 
 #endif // PARAMETERSHANDLER_H

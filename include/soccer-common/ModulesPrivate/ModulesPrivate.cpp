@@ -34,7 +34,7 @@ void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
     emit impulse();
   } else {
     qWarning() << "starting rebuild...";
-    clear();
+    prepareToDeleteAndDisconnect();
     emit rebuild();
     qWarning() << "finish rebuild.";
   }
@@ -44,6 +44,8 @@ QThread* ModulesPrivate::modulesThread() const {
   return m_modulesThread;
 }
 
-void ModulesPrivate::clear() {
+void ModulesPrivate::prepareToDeleteAndDisconnect() {
   m_timers.clear();
+  emit prepareToDelete();
+  disconnect(this, &ModulesPrivate::prepareToDelete, nullptr, nullptr);
 }
