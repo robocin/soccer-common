@@ -8,6 +8,8 @@ class ModulesPrivate : public QObject {
   Q_OBJECT
 
   class Timers {
+    friend class ModulesPrivate;
+
     QThread* m_thread;
     mutable QMap<int, QTimer*> m_map;
 
@@ -22,20 +24,22 @@ class ModulesPrivate : public QObject {
       return m_map[I];
     }
 
+    inline void clear() {
+      for (auto t : m_map) {
+        QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(t,
+                                  &QTimer::deleteLater,
+                                  Qt::QueuedConnection);
+      }
+      m_map.clear();
+    }
+
    public:
     explicit Timers(QThread* thread) : m_thread(thread) {
     }
 
     ~Timers() {
       clear();
-    }
-
-    inline void clear() {
-      for (auto t : m_map) {
-        QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
-        t->deleteLater();
-      }
-      m_map.clear();
     }
 
     template <std::size_t I>
@@ -92,7 +96,7 @@ class ModulesPrivate : public QObject {
     F factory;
 
     static void
-    disconnectAndDelete(ModulePrivate* ref,
+    disconnectAndDelete(ModuleBase* ref,
                         QVector<QMetaObject::Connection> connections) {
       for (QMetaObject::Connection connection : connections) {
         QObject::disconnect(connection);
@@ -106,10 +110,7 @@ class ModulesPrivate : public QObject {
     }
 
     inline static QVector<QMetaObject::Connection>
-    setDefaultConnections(T* ref,
-                          M* modules,
-                          ModuleBox* moduleBox,
-                          MainWindow* gui) {
+    setDefaultConnections(T* ref, M* modules, ModuleBox* moduleBox) {
       QVector<QMetaObject::Connection> connections;
       /* ModulesPrivate */ {
         connections += QObject::connect(modules,
@@ -133,13 +134,6 @@ class ModulesPrivate : public QObject {
                                         ref,
                                         &ModuleBase::receiveUpdateRequests);
       }
-      /* GameVisualizer */ {
-        connections += QObject::connect(ref,
-                                        &ModuleBase::draw,
-                                        gui->gameVisualizer(),
-                                        &GameVisualizer::draw,
-                                        Qt::DirectConnection);
-      }
       return connections;
     }
 
@@ -159,10 +153,7 @@ class ModulesPrivate : public QObject {
                            << " with type " << type << " was created: " << ref
                            << ".";
 
-      MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
-
-      auto connections = setDefaultConnections(ref, modules, moduleBox, gui);
-
+      auto connections = setDefaultConnections(ref, modules, moduleBox);
       QObject::connect(modules,
                        &ModulesPrivate::prepareToDelete,
                        ref,
