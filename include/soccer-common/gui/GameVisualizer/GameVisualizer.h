@@ -28,14 +28,14 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   void onKeyRelease(Qt::Key key);
 
  public slots:
-  void setBackgroundColor(QColor color);
-  void setDefaultSize(QSizeF size);
+  void setBackgroundColor(const QColor& color);
+  void setDefaultSize(const QSizeF& size);
   void setMaxFrameRate(qreal frameRate);
 
   void forceDraw();
-  void draw(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
 
  private slots:
+  void draw(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
   void clearUniqueIntegerKey(int uniqueKey);
   void setVisibility(int uniqueKey, bool visibility);
 
@@ -148,15 +148,18 @@ class GameVisualizer::Key : public QObject {
  public:
   Q_DISABLE_COPY_MOVE(Key);
 
-  inline Key() : m_key(-1) {
+  inline Key() : m_key(-1), m_layer(Painting::Layers::Middle) {
   }
 
-  inline void setup(const GameVisualizer* gameVisualizer) {
+  inline void setup(GameVisualizer* gameVisualizer,
+                    Painting::Layers layer = Painting::Layers::Middle) {
     if (m_key != -1) {
       qWarning() << "cannot setup twice.";
       return;
     }
     m_key = gameVisualizer->getUniqueIntegerKey();
+    m_layer = layer;
+    //
     QObject::connect(this,
                      &GameVisualizer::Key::onKeyDeleted,
                      gameVisualizer,
@@ -168,6 +171,24 @@ class GameVisualizer::Key : public QObject {
                      gameVisualizer,
                      &GameVisualizer::setVisibility,
                      Qt::QueuedConnection);
+    //
+    QObject::connect(this,
+                     &GameVisualizer::Key::onPaintingEmmited,
+                     gameVisualizer,
+                     &GameVisualizer::draw,
+                     Qt::DirectConnection);
+  }
+
+  inline void draw(const Painting& painting) {
+    emit onPaintingEmmited(m_key, painting.clone().release(), m_layer);
+  }
+
+  inline void draw(std::unique_ptr<Painting> painting) {
+    emit onPaintingEmmited(m_key, painting.release(), m_layer);
+  }
+
+  inline void draw(std::unique_ptr<Painting>& painting) {
+    emit onPaintingEmmited(m_key, painting->clone().release(), m_layer);
   }
 
   inline void setVisibility(bool visibility) {
@@ -185,9 +206,13 @@ class GameVisualizer::Key : public QObject {
  signals:
   void onKeyDeleted(int key);
   void onVisibilityChanged(int key, bool visibility);
+  void onPaintingEmmited(int uniqueIntegerKey,
+                         Painting* painting,
+                         Painting::Layers layer);
 
  private:
   int m_key;
+  Painting::Layers m_layer;
 };
 
 #endif // GAMEVISUALIZER_H

@@ -14,12 +14,12 @@ GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
 GameVisualizer::~GameVisualizer() {
 }
 
-void GameVisualizer::setBackgroundColor(QColor color) {
+void GameVisualizer::setBackgroundColor(const QColor& color) {
   ScheduleUpdateAtEnd schedule(this);
   shared->backgroundColor = color;
 }
 
-void GameVisualizer::setDefaultSize(QSizeF size) {
+void GameVisualizer::setDefaultSize(const QSizeF& size) {
   ScheduleUpdateAtEnd schedule(this);
   shared->scale = std::max(size.width() / width(), size.height() / height());
 }
@@ -48,7 +48,7 @@ void GameVisualizer::draw(int uniqueIntegerKey,
   shared->paintings[idx].apply(
       [uniqueIntegerKey,
        painting](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
-        paintings[uniqueIntegerKey] = painting->clone();
+        paintings[uniqueIntegerKey] = std::unique_ptr<Painting>(painting);
       });
 }
 
@@ -227,7 +227,7 @@ void GameVisualizer::getUpdates() {
         if (ptr.second) {
           bool visibilty = (paintings.find(ptr.first) != paintings.end()) ?
                                paintings[ptr.first].visibility() :
-                               false;
+                               true;
           auto it = paintings.insert_or_assign(ptr.first, std::move(ptr.second))
                         .first;
           it->second.setVisibility(visibilty);
