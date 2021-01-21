@@ -1,3 +1,37 @@
+# Version: v1.5.0
+
+* [#39](https://github.com/robocin/soccer-common/pull/39): release(v1.4.0): adds 'Parameters::Arg', fixes GameVisualizer
+* [#30](https://github.com/robocin/soccer-common/pull/30): refactor(ModuleBase): adds update method and RunInParallelAtEnd class
+* [#11](https://github.com/robocin/soccer-common/pull/11): feat(Parameters): creates a way to manipulate game parameters
+* [#4](https://github.com/robocin/soccer-common/pull/4): chore(changelog-ci-config.json): includes hotfixes branches
+* [#34](https://github.com/robocin/soccer-common/pull/34): feat(gui): moves from ssl-unification and adapts correctly
+* [#1](https://github.com/robocin/soccer-common/pull/1): release(v0.1.0)
+* [#37](https://github.com/robocin/soccer-common/pull/37): hotfix(v1.3.1): fixes GameVisualization
+* [#40](https://github.com/robocin/soccer-common/pull/40): refactor(ModuleBase): changes from boost::spsc_queue to SharedWrapper
+* [#21](https://github.com/robocin/soccer-common/pull/21): feat(PackageOf): creates the class
+* [#16](https://github.com/robocin/soccer-common/pull/16): refactor(ModuleBase): forward declares Modules as class
+* [#23](https://github.com/robocin/soccer-common/pull/23): chore(template): deletes unused templates
+* [#7](https://github.com/robocin/soccer-common/pull/7): test(*): fixes constructors and destructors declaration
+* [#3](https://github.com/robocin/soccer-common/pull/3): release(v0.1.2)
+* [#12](https://github.com/robocin/soccer-common/pull/12): chore(all): fixes relative includepaths.
+* [#2](https://github.com/robocin/soccer-common/pull/2): chore/changelog-ci-config
+* [#35](https://github.com/robocin/soccer-common/pull/35): release(v1.3.0): fixes scripts, adds gui
+* [#13](https://github.com/robocin/soccer-common/pull/13): release(v0.2.1)
+* [#24](https://github.com/robocin/soccer-common/pull/24): feat(Field): Creates the Field class  
+* [#31](https://github.com/robocin/soccer-common/pull/31): chore(version.pri): adds project path macro and QT += network
+* [#36](https://github.com/robocin/soccer-common/pull/36): bug(GameVisualizer): fixes onKeyDeleted
+* [#28](https://github.com/robocin/soccer-common/pull/28): refactor(ParametersHandler): renames to Handler, changes asserts and adds jsonObject() method
+* [#18](https://github.com/robocin/soccer-common/pull/18): release(v1.1.0)
+* [#6](https://github.com/robocin/soccer-common/pull/6): release(v0.2.0)
+* [#10](https://github.com/robocin/soccer-common/pull/10): refactor(src/Geometry)
+* [#29](https://github.com/robocin/soccer-common/pull/29): refactor(module base): removes AnyVisitor, reduces slots to runInParallel
+* [#14](https://github.com/robocin/soccer-common/pull/14): feat(src/ModuleBase): creates the class and refactors the project structure
+* [#33](https://github.com/robocin/soccer-common/pull/33): [DISCARDED] refactor(ParameterType): fixes update() method
+* [#20](https://github.com/robocin/soccer-common/pull/20): hotfix(v1.1.2): moves index() inside IndexedModuleBase to src file
+* [#17](https://github.com/robocin/soccer-common/pull/17): feat(SharedWrapper): Creates a class that uses the operator-> to guarantee thread-safety
+* [#27](https://github.com/robocin/soccer-common/pull/27): feat(Extends): creates the class and QPoint, QPointF extensions
+
+
 # Version: v1.4.1
 
 * [#23](https://github.com/robocin/soccer-common/pull/23): chore(template): deletes unused templates
