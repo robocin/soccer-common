@@ -17,6 +17,7 @@ class ModulesPrivate : public QObject {
     inline QTimer* get() const {
       if (!m_map.contains(I)) {
         QTimer* timer = new QTimer();
+        timer->setTimerType(Qt::PreciseTimer);
         timer->start(I);
         timer->moveToThread(m_thread);
         m_map[I] = timer;
