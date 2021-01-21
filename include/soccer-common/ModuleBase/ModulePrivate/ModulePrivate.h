@@ -1,6 +1,7 @@
 #ifndef MODULEPRIVATE_H
 #define MODULEPRIVATE_H
 
+#include <QTimer>
 #include <QObject>
 #include <QRunnable>
 #include <QThreadPool>
@@ -11,10 +12,10 @@ class ModulePrivate : public QObject, private QRunnable {
 
  public:
   explicit ModulePrivate(QThreadPool* threadPool);
-  ~ModulePrivate() override;
 
  public slots:
   void runInParallel();
+  void prepareToDelete();
 
  protected:
   Parameters::Handler parametersHandler;
@@ -22,14 +23,15 @@ class ModulePrivate : public QObject, private QRunnable {
 
   virtual void update();
   virtual void exec() = 0;
-  virtual void wasSkipped();
 
  private:
-  std::atomic<QThreadPool*> threadPool;
+  volatile std::atomic<QThreadPool*> threadPool;
   std::mutex execMutex;
 
   void parametersUpdate();
   void run() override final;
+
+  static void waitOrDelete(ModulePrivate* object);
 };
 
 #endif // MODULEPRIVATE_H

@@ -5,10 +5,6 @@ ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
    * extra function is needed, in this case, 'build()'. */
 }
 
-ModuleBase::~ModuleBase() {
-  qWarning().nospace() << "deleting " << this << ".";
-}
-
 void ModuleBase::build() {
   buildParameters();
   emit sendParameters(parameters().jsonObject());

@@ -1,19 +1,9 @@
 #include "ModulePrivate.h"
-#include <mutex>
 
 ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
     QObject(nullptr),
     threadPool(threadPool) {
   QRunnable::setAutoDelete(false);
-}
-
-ModulePrivate::~ModulePrivate() {
-  if (QThreadPool* tp = threadPool) {
-    threadPool = nullptr;
-    while (tp->tryTake(static_cast<QRunnable*>(this))) {
-      // removing all uninitiated calls.
-    }
-  }
 }
 
 void ModulePrivate::runInParallel() {
@@ -22,19 +12,26 @@ void ModulePrivate::runInParallel() {
   }
 }
 
+void ModulePrivate::prepareToDelete() {
+  qWarning().nospace() << "scheduling the deletion of " << this << ".";
+  disconnect(); // disconnecting outgoing connections.
+  using namespace std::chrono_literals;
+  QTimer::singleShot(1s, this, std::bind(ModulePrivate::waitOrDelete, this));
+}
+
 void ModulePrivate::update() {
 }
 
-void ModulePrivate::wasSkipped() {
-}
-
 void ModulePrivate::parametersUpdate() {
-  updateRequests.apply([this](Parameters::UpdateRequests& updateRequests) {
-    if (!updateRequests.empty()) {
-      parametersHandler.update(updateRequests);
-      updateRequests.clear();
-    }
-  });
+  Parameters::UpdateRequests updates =
+      updateRequests.apply([](Parameters::UpdateRequests& updateRequests) {
+        Parameters::UpdateRequests updates = updateRequests;
+        updateRequests.clear();
+        return updates;
+      });
+  if (!updates.empty()) {
+    parametersHandler.update(updates);
+  }
 }
 
 void ModulePrivate::run() {
@@ -42,7 +39,24 @@ void ModulePrivate::run() {
     parametersUpdate();
     update();
     exec();
+  }
+}
+
+void ModulePrivate::waitOrDelete(ModulePrivate* object) {
+  using namespace std::chrono_literals;
+  if (std::unique_lock locker{object->execMutex, std::try_to_lock}) {
+    if (QThreadPool* tp = object->threadPool) {
+      // will avoid put this instance inside threadPool again.
+      object->threadPool.store(nullptr, std::memory_order_release);
+      while (tp->tryTake(static_cast<QRunnable*>(object))) {
+        qWarning() << "removing all" << object << "uninitiated calls.";
+        // removing all uninitiated calls.
+      }
+    }
+    QTimer::singleShot(1s, object, &ModulePrivate::deleteLater);
   } else {
-    wasSkipped();
+    QTimer::singleShot(1s,
+                       object,
+                       std::bind(ModulePrivate::waitOrDelete, object));
   }
 }
