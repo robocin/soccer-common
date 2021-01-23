@@ -78,3 +78,6 @@ target_wrapper.*
 # Binaries
 # --------
 /bin
+
+# clion build folder
+/cmake-build-test/

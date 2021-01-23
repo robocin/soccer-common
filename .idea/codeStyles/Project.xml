@@ -3,5 +3,12 @@
     <clangFormatSettings>
       <option name="ENABLED" value="true" />
     </clangFormatSettings>
+    <codeStyleSettings language="CMake">
+      <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
   </code_scheme>
 </component>
