@@ -17,9 +17,9 @@ include(version.cmake)
 project(${ROBOCIN_PROJECT_NAME} VERSION ${ROBOCIN_PROJECT_VERSION} LANGUAGES CXX)
 
 if(${PROJECT_TYPE} STREQUAL ${ROBOCIN_APP})
-    add_subdirectory(${ROBOCIN_APP} bin)
+    add_subdirectory(${ROBOCIN_APP} ${CMAKE_SOURCE_DIR}/bin)
 else()
-    add_subdirectory(${ROBOCIN_LIB} lib)
+    add_subdirectory(${ROBOCIN_LIB} ${CMAKE_SOURCE_DIR}/lib)
 endif()
 
-add_subdirectory(test bin/test)
+add_subdirectory(test ${CMAKE_SOURCE_DIR}/bin/test)
