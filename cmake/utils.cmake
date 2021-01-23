@@ -1,0 +1,6 @@
+macro(ADD_QT5_LIBRARIES QT_VERSION TARGET_NAME)
+  foreach(LIBRARY_NAME ${ARGN})
+    find_package(Qt5 ${QT_VERSION} COMPONENTS ${LIBRARY_NAME} REQUIRED)
+    target_link_libraries(${TARGET_NAME} PRIVATE Qt5::${LIBRARY_NAME})
+  endforeach()
+endmacro()
