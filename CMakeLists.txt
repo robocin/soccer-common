@@ -11,13 +11,15 @@ if(NOT DEFINED PROJECT_TYPE)
 endif()
 
 # Version defines and project name.
-include(${CMAKE_CURRENT_SOURCE_DIR}/version.cmake)
+include(version.cmake)
 
 # Configuring project with given name.
 project(${ROBOCIN_PROJECT_NAME} VERSION ${ROBOCIN_PROJECT_VERSION} LANGUAGES CXX)
 
 if(${PROJECT_TYPE} STREQUAL ${ROBOCIN_APP})
-    add_subdirectory(${ROBOCIN_APP} ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+    add_subdirectory(${ROBOCIN_APP} bin)
 else()
-    add_subdirectory(${ROBOCIN_LIB} ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+    add_subdirectory(${ROBOCIN_LIB} lib)
 endif()
+
+add_subdirectory(test bin/test)
