@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.13)
 
 include(../version.cmake)
 include(../cmake/utils.cmake)
@@ -142,5 +142,14 @@ set(SOURCE_FILES
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
 
-include_directories(../libs/magic_enum/include)
-ADD_QT5_LIBRARIES(5.15 ${PROJECT_NAME} Widgets Core Gui OpenGL Concurrent Network)
+ROBOCIN_ADD_PROJECT_DEFINITIONS(soccer-common)
+
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS})
+
+target_link_libraries(soccer-common PUBLIC ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
+
+target_include_directories(${PROJECT_NAME} PUBLIC ../libs/magic_enum/include)
+ROBOCIN_ADD_QT5_LIBRARIES(5.15 ${PROJECT_NAME} Widgets Core Gui OpenGL Concurrent Network)
