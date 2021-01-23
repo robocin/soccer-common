@@ -80,5 +80,5 @@ target_wrapper.*
 /bin
 /lib
 
-# clion build folder
-/cmake-build-test/
+# build folder
+/build
