@@ -10,7 +10,7 @@ ColorTeamWidget::ColorTeamWidget(
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
     ui(new Ui::ColorTeamWidget),
-    viewAction(Factory::toggleViewAction(this)) {
+    viewAction(Factory::toggleViewActionAndConnect(this)) {
   ui->setupUi(this);
 }
 
@@ -18,15 +18,18 @@ ColorTeamWidget::~ColorTeamWidget() {
   delete ui;
 }
 
-void ColorTeamWidget::setColor(QColor color) {
-  int r, g, b;
-  color.getRgb(&r, &g, &b);
-  ui->Color->setText(QString::number(r) + " " + QString::number(g) + " " +
-                     QString::number(b));
+void ColorTeamWidget::setColor(QString color) {
+  QColor cor(color);
+  QGraphicsScene* scene;
+  scene = new QGraphicsScene(this);
+  scene->setBackgroundBrush(cor);
+  ui->colorView->setScene(scene);
+  ui->colorView->setBackgroundBrush(scene->backgroundBrush().color());
 }
 
 void ColorTeamWidget::writeLocalSettings(QSettings& settings) {
-  settings.setValue("teamColor", ui->Color->text());
+  settings.setValue("teamColor",
+                    ui->colorView->backgroundBrush().color().name());
 }
 
 void ColorTeamWidget::loadLocalSettings(const QSettings& settings) {

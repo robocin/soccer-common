@@ -3,6 +3,9 @@
 
 #include <QtCore>
 #include <QtWidgets>
+#include <QGraphicsScene>
+#include <QtSvg/QGraphicsSvgItem>
+#include <QtSvg/QSvgRenderer>
 #include "soccer-common/gui/guiUtils/guiUtils.h"
 #include "soccer-common/gui/guiFactory/guiFactory.h"
 #include "soccer-common/gui/Interfaces/Interfaces.h"
@@ -23,9 +26,8 @@ class RobotDetails : public QWidget, public WidgetSettings {
   void showBatteryCharger(int level);
   void showCapacitorCharger(int level);
   void showRobotNumber(int number);
-
-  // void ConnectCapacitorViewAction();
-  // void ConnectIrViewAction();
+  void ConnectCapacitorViewAction(QAction* action);
+  void ConnectIrViewAction(QAction* action);
 
  private:
   Ui::RobotDetails* ui;

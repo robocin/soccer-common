@@ -22,7 +22,21 @@ void RobotDetails::showCapacitorCharger(int level) {
   ui->capacitorCharger->setValue(level);
 }
 void RobotDetails::showRobotNumber(int number) {
-  ui->robotNumber->setText(QString::number(number));
+  QGraphicsScene* scene;
+  scene = new QGraphicsScene(this);
+  ui->robotID->setScene(scene);
+  QGraphicsSvgItem* id = new QGraphicsSvgItem(":/robotID2.svg", scene);
+  id->setParent(scene);
+  scene->addItem(id);
+  scene->setSceneRect((number * 512), 0, 512, 512);
+}
+
+void RobotDetails::ConnectCapacitorViewAction(QAction* action) {
+  Factory::connectWithToggleViewAction(action, ui->capacitorWidget);
+}
+
+void RobotDetails::ConnectIrViewAction(QAction* action) {
+  Factory::connectWithToggleViewAction(action, ui->irTitle);
 }
 
 void RobotDetails::connectBatteryViewAction(QAction* action) {

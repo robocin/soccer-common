@@ -11,7 +11,6 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
   static constexpr const char* robotDetailsLayout = "Details";
 
   class Robot : public WidgetSettings {
-    using RobotDetails = QLabel; // to do: replace with robot widget.
 
     int index;
     QMap<QString, QLayout*>& layouts;
@@ -29,11 +28,7 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
         layouts(layouts),
         mainWindow(mainWindow) {
       /* build robotWidget */ {
-        robotDetails = new QLabel(mainWindow);
-        robotDetails->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        robotDetails->setText(
-            "to do: " + QString("Robot %1").arg(index, 2, 10, QChar('0')) +
-            " details.");
+        robotDetails = new RobotDetails(index, mainWindow);
         layouts[robotDetailsLayout]->addWidget(robotDetails);
       }
     }
@@ -56,10 +51,8 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
 
    protected:
     void writeLocalSettings(QSettings&) override {
-      // to do: robotWidget visual setings.
     }
     void loadLocalSettings(const QSettings&) override {
-      // to do: robotWidget visual setings.
     }
   };
 
@@ -81,8 +74,19 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
       m_tabWidget->addTab(widget, robotDetailsLayout);
       m_layouts[robotDetailsLayout] = layout;
     }
+    QAction* batteryAction = Factory::toggleViewAction("Battery", mainWindow);
+    QAction* capacitorAction =
+        Factory::toggleViewAction("Capacitor", mainWindow);
+    QAction* irAction = Factory::toggleViewAction("Infrared", mainWindow);
+    m_menu->addAction(batteryAction);
+    m_menu->addAction(capacitorAction);
+    m_menu->addAction(irAction);
     for (int i = 0; i < maxRobots; ++i) {
-      m_robots.push_back(new Robot(i, m_layouts, mainWindow));
+      Robot* robot = new Robot(i, m_layouts, mainWindow);
+      m_robots.push_back(robot);
+      robot->details()->connectBatteryViewAction(batteryAction);
+      robot->details()->ConnectCapacitorViewAction(capacitorAction);
+      robot->details()->ConnectIrViewAction(irAction);
     }
     mainWindow->dockWidgetRobotsContents()->layout()->addWidget(m_tabWidget);
   }
@@ -94,7 +98,8 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
       int tabId = m_tabWidget->addTab(widget, key);
       m_layouts[key] = layout;
       //
-      m_menu->addAction(Factory::toggleViewAction(key, tabId, m_tabWidget));
+      m_menu->addAction(
+          Factory::toggleViewActionAndConnect(key, tabId, m_tabWidget));
       //
       for (int i = 0; i < m_robots.size(); ++i) {
         m_robots[i]->moduleBox(key);

@@ -27,7 +27,7 @@ class ColorTeamWidget : public QWidget,
       QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~ColorTeamWidget();
  public slots:
-  void setColor(QColor color);
+  void setColor(QString color);
 
  private:
   Ui::ColorTeamWidget* ui;

@@ -38,3 +38,6 @@ SOURCES += \
   $$PWD/DynamicFontSizeQLabel/DynamicFontSizeQLabel.cpp \
   $$PWD/ScrollAreaForFlowLayout/ScrollAreaForFlowLayout.cpp \
   $$PWD/SmartVerticalFlowLayout/SmartVerticalFlowLayout.cpp
+
+RESOURCES += \
+    $$PWD/resource.qrc

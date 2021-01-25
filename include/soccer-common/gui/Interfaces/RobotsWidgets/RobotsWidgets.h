@@ -7,11 +7,13 @@
 
 class ModuleBox;
 class MainWindow;
+class robotDetails;
 
 class RobotsWidgets {
   int m_maxRobots;
   class TabsWidget;
   TabsWidget* tabsWidget;
+  robotDetails* m_robotDetails;
 
  protected:
   void setupRobotsWidgets(MainWindow* mainWindow);

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>robotID2.svg</file>
+    </qresource>
+</RCC>
