@@ -1,5 +1,5 @@
-#ifndef GLTESSELLATORHELPER_2_1_H
-#define GLTESSELLATORHELPER_2_1_H
+#ifndef SOCCER_COMMON_GLTESSELLATORHELPER_2_1_H
+#define SOCCER_COMMON_GLTESSELLATORHELPER_2_1_H
 
 #include "soccer-common/gui/GameVisualizer/GLGameVisualizerCore_2_1/GLGameVisualizerCore_2_1.h"
 
@@ -92,4 +92,4 @@ class GLTessellatorHelper_2_1 : public GLGameVisualizerCore_2_1 {
   ~GLTessellatorHelper_2_1();
 };
 
-#endif // GLTESSELLATORHELPER_2_1_H
+#endif // SOCCER_COMMON_GLTESSELLATORHELPER_2_1_H

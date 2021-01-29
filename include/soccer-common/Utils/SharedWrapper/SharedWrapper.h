@@ -1,5 +1,5 @@
-#ifndef SHAREDWRAPPER_H
-#define SHAREDWRAPPER_H
+#ifndef SOCCER_COMMON_SHAREDWRAPPER_H
+#define SOCCER_COMMON_SHAREDWRAPPER_H
 
 #include <mutex>
 
@@ -91,4 +91,4 @@ class SharedWrapper {
   T instance;
 };
 
-#endif // SHAREDWRAPPER_H
+#endif // SOCCER_COMMON_SHAREDWRAPPER_H

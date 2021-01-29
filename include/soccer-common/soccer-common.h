@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_H
-#define SOCCER_COMMON_H
+#ifndef SOCCER_COMMON_SOCCER_COMMON_H
+#define SOCCER_COMMON_SOCCER_COMMON_H
 
 #include "Geometry/Geometry.h"
 #include "MagicEnum/MagicEnum.h"
@@ -12,4 +12,4 @@
 #include "ModulesPrivate/ModulesPrivate.h"
 #include "gui/gui.h"
 
-#endif // SOCCER_COMMON_H
+#endif // SOCCER_COMMON_SOCCER_COMMON_H

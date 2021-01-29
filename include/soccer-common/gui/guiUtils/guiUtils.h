@@ -1,5 +1,5 @@
-#ifndef GUIUTILS_H
-#define GUIUTILS_H
+#ifndef SOCCER_COMMON_GUIUTILS_H
+#define SOCCER_COMMON_GUIUTILS_H
 
 #include <QtCore>
 #include <QtWidgets>
@@ -14,4 +14,4 @@ namespace Markdown {
   }
 } // namespace Markdown
 
-#endif // GUIUTILS_H
+#endif // SOCCER_COMMON_GUIUTILS_H

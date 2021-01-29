@@ -1,5 +1,5 @@
-#ifndef INFOWIDGETS_H
-#define INFOWIDGETS_H
+#ifndef SOCCER_COMMON_INFOWIDGETS_H
+#define SOCCER_COMMON_INFOWIDGETS_H
 
 #include <QScrollArea>
 
@@ -26,4 +26,4 @@ class InfoWidgets {
   ColorTeamWidget* colorTeam() const;
 };
 
-#endif // INFOWIDGETS_H
+#endif // SOCCER_COMMON_INFOWIDGETS_H

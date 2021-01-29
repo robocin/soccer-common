@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef SOCCER_COMMON_GEOMETRY_H
+#define SOCCER_COMMON_GEOMETRY_H
 
 #include <QPoint>
 #include <QPolygon>
@@ -169,4 +169,4 @@ namespace Geometry3D {
 #undef RC_T_TEMPLATE
 #undef RC_PT_T_TEMPLATE
 
-#endif // GEOMETRY_H
+#endif // SOCCER_COMMON_GEOMETRY_H

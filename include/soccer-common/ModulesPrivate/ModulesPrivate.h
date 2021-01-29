@@ -1,5 +1,5 @@
-#ifndef MODULESPRIVATE_H
-#define MODULESPRIVATE_H
+#ifndef SOCCER_COMMON_MODULESPRIVATE_H
+#define SOCCER_COMMON_MODULESPRIVATE_H
 
 #include "soccer-common/gui/gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
@@ -255,4 +255,4 @@ class ModulesPrivate : public QObject {
   void prepareToDeleteAndDisconnect();
 };
 
-#endif // MODULESPRIVATE_H
+#endif // SOCCER_COMMON_MODULESPRIVATE_H

@@ -1,5 +1,5 @@
-#ifndef WIDGETSETTINGS_H
-#define WIDGETSETTINGS_H
+#ifndef SOCCER_COMMON_WIDGETSETTINGS_H
+#define SOCCER_COMMON_WIDGETSETTINGS_H
 
 #include <QtCore>
 #include <QtWidgets>
@@ -52,4 +52,4 @@ class WidgetSettings {
   }
 };
 
-#endif // WIDGETSETTINGS_H
+#endif // SOCCER_COMMON_WIDGETSETTINGS_H

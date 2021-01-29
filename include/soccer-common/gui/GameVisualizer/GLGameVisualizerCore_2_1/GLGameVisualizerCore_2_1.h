@@ -1,5 +1,5 @@
-#ifndef GLGAMEVISUALIZERCORE_2_1_H
-#define GLGAMEVISUALIZERCORE_2_1_H
+#ifndef SOCCER_COMMON_GLGAMEVISUALIZERCORE_2_1_H
+#define SOCCER_COMMON_GLGAMEVISUALIZERCORE_2_1_H
 
 #include <QColor>
 #include <QPointF>
@@ -233,4 +233,4 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
   }
 };
 
-#endif // GLGAMEVISUALIZERCORE_2_1_H
+#endif // SOCCER_COMMON_GLGAMEVISUALIZERCORE_2_1_H

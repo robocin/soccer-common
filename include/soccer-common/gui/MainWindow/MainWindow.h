@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef SOCCER_COMMON_MAINWINDOW_H
+#define SOCCER_COMMON_MAINWINDOW_H
 
 #include <QMainWindow>
 #include "soccer-common/gui/Widgets/Widgets.h"
@@ -60,4 +60,4 @@ class MainWindow : public QMainWindow,
 
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
-#endif // MAINWINDOW_H
+#endif // SOCCER_COMMON_MAINWINDOW_H

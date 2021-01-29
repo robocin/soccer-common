@@ -1,5 +1,5 @@
-#ifndef FIELD_H
-#define FIELD_H
+#ifndef SOCCER_COMMON_FIELD_H
+#define SOCCER_COMMON_FIELD_H
 
 #include <QtCore>
 
@@ -20,4 +20,4 @@ class Field {
   qreal goalDepth() const;
 };
 
-#endif // FIELD_H
+#endif // SOCCER_COMMON_FIELD_H

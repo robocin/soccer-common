@@ -1,5 +1,5 @@
-#ifndef EXTENDSIMPL_H
-#define EXTENDSIMPL_H
+#ifndef SOCCER_COMMON_EXTENDSIMPL_H
+#define SOCCER_COMMON_EXTENDSIMPL_H
 
 #include <utility>
 
@@ -19,4 +19,4 @@ constexpr decltype(auto) extends(const T& object) {
   return Extends<T>(object);
 }
 
-#endif // EXTENDSIMPL_H
+#endif // SOCCER_COMMON_EXTENDSIMPL_H

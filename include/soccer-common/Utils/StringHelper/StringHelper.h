@@ -1,5 +1,5 @@
-#ifndef STRINGHELPER_H
-#define STRINGHELPER_H
+#ifndef SOCCER_COMMON_STRINGHELPER_H
+#define SOCCER_COMMON_STRINGHELPER_H
 
 #include <QString>
 
@@ -31,4 +31,4 @@ namespace Utils {
   QString removeQuotes(const QString& str);
 } // namespace Utils
 
-#endif // STRINGHELPER_H
+#endif // SOCCER_COMMON_STRINGHELPER_H

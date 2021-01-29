@@ -1,5 +1,5 @@
-#ifndef INTERFACES_H
-#define INTERFACES_H
+#ifndef SOCCER_COMMON_INTERFACES_H
+#define SOCCER_COMMON_INTERFACES_H
 
 #include "WidgetSettings/WidgetSettings.h"
 #include "MenuBarOptions/MenuBarOptions.h"
@@ -8,4 +8,4 @@
 #include "RobotsWidgets/RobotsWidgets.h"
 #include "VisualizationWidget/VisualizationWidget.h"
 
-#endif // INTERFACES_H
+#endif // SOCCER_COMMON_INTERFACES_H

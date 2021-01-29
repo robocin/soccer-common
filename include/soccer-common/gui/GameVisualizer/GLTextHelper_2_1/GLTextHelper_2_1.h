@@ -1,5 +1,5 @@
-#ifndef GLTEXTHELPER_2_1_H
-#define GLTEXTHELPER_2_1_H
+#ifndef SOCCER_COMMON_GLTEXTHELPER_2_1_H
+#define SOCCER_COMMON_GLTEXTHELPER_2_1_H
 
 #include <cmath>
 #include <QFont>
@@ -239,4 +239,4 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
   };
 };
 
-#endif // GLTEXTHELPER_2_1_H
+#endif // SOCCER_COMMON_GLTEXTHELPER_2_1_H

@@ -1,5 +1,5 @@
-#ifndef MENUBAROPTIONS_H
-#define MENUBAROPTIONS_H
+#ifndef SOCCER_COMMON_MENUBAROPTIONS_H
+#define SOCCER_COMMON_MENUBAROPTIONS_H
 
 #include <QtWidgets>
 
@@ -16,4 +16,4 @@ class MenuBarOptions {
   explicit MenuBarOptions(MenuBarOptions* parent = nullptr);
 };
 
-#endif // MENUBAROPTIONS_H
+#endif // SOCCER_COMMON_MENUBAROPTIONS_H

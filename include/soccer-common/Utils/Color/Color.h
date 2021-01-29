@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef SOCCER_COMMON_COLOR_H
+#define SOCCER_COMMON_COLOR_H
 
 namespace Color {
   static constexpr const char* AliceBlue = "AliceBlue";
@@ -152,4 +152,4 @@ namespace Color {
   static constexpr const char* YellowGreen = "YellowGreen";
 } // namespace Color
 
-#endif // COLOR_H
+#endif // SOCCER_COMMON_COLOR_H

@@ -1,5 +1,5 @@
-#ifndef SCROLLAREAFORFLOWLAYOUT_H
-#define SCROLLAREAFORFLOWLAYOUT_H
+#ifndef SOCCER_COMMON_SCROLLAREAFORFLOWLAYOUT_H
+#define SOCCER_COMMON_SCROLLAREAFORFLOWLAYOUT_H
 
 #include <QtCore>
 #include <QtWidgets>
@@ -10,4 +10,4 @@ class ScrollAreaForFlowLayout : public QScrollArea {
   void resizeEvent(QResizeEvent*) override;
 };
 
-#endif // SCROLLAREAFORFLOWLAYOUT_H
+#endif // SOCCER_COMMON_SCROLLAREAFORFLOWLAYOUT_H

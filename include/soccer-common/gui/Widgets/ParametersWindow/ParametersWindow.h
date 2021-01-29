@@ -1,5 +1,5 @@
-#ifndef PARAMETERSWINDOW_H
-#define PARAMETERSWINDOW_H
+#ifndef SOCCER_COMMON_PARAMETERSWINDOW_H
+#define SOCCER_COMMON_PARAMETERSWINDOW_H
 
 #include <QWidget>
 #include <QJsonObject>
@@ -47,4 +47,4 @@ class ParametersWindow : public QWidget {
                            const QJsonObject& json);
 };
 
-#endif // PARAMETERSWINDOW_H
+#endif // SOCCER_COMMON_PARAMETERSWINDOW_H

@@ -1,5 +1,5 @@
-#ifndef PARAMETERSDIALOG_H
-#define PARAMETERSDIALOG_H
+#ifndef SOCCER_COMMON_PARAMETERSDIALOG_H
+#define SOCCER_COMMON_PARAMETERSDIALOG_H
 
 #include "soccer-common/gui/guiUtils/guiUtils.h"
 #include "soccer-common/gui/guiFactory/guiFactory.h"
@@ -56,4 +56,4 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   void loadLocalSettings(const QJsonObject& json) override;
 };
 
-#endif // PARAMETERSDIALOG_H
+#endif // SOCCER_COMMON_PARAMETERSDIALOG_H

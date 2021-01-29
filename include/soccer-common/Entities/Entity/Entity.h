@@ -1,5 +1,5 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#ifndef SOCCER_COMMON_ENTITY_H
+#define SOCCER_COMMON_ENTITY_H
 
 #include <QPointF>
 
@@ -26,4 +26,4 @@ class Entity : virtual public RawEntity {
   QPointF acceleration() const;
 };
 
-#endif // ENTITY_H
+#endif // SOCCER_COMMON_ENTITY_H

@@ -1,5 +1,5 @@
-#ifndef EXTENDSPOINT_H
-#define EXTENDSPOINT_H
+#ifndef SOCCER_COMMON_EXTENDSPOINT_H
+#define SOCCER_COMMON_EXTENDSPOINT_H
 
 #include "soccer-common/Geometry/Geometry.h"
 #include "soccer-common/Extends/detail/ExtendsImpl.h"
@@ -198,4 +198,4 @@ class Extends<QPointF> : public QPointF {
   }
 };
 
-#endif // EXTENDSPOINT_H
+#endif // SOCCER_COMMON_EXTENDSPOINT_H

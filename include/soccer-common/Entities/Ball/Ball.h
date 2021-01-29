@@ -1,5 +1,5 @@
-#ifndef BALL_H
-#define BALL_H
+#ifndef SOCCER_COMMON_BALL_H
+#define SOCCER_COMMON_BALL_H
 
 #include "soccer-common/Entities/Entity/Entity.h"
 
@@ -15,4 +15,4 @@ class Ball : public Entity, public RawBall {
        const QPointF& acceleration);
 };
 
-#endif // BALL_H
+#endif // SOCCER_COMMON_BALL_H

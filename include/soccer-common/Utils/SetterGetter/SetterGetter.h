@@ -1,5 +1,5 @@
-#ifndef SETTERGETTER_H
-#define SETTERGETTER_H
+#ifndef SOCCER_COMMON_SETTERGETTER_H
+#define SOCCER_COMMON_SETTERGETTER_H
 
 #include <utility>
 
@@ -63,4 +63,4 @@ class SetterGetter {
   }
 };
 
-#endif // SETTERGETTER_H
+#endif // SOCCER_COMMON_SETTERGETTER_H

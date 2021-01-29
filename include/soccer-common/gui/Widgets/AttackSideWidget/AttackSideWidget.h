@@ -1,5 +1,5 @@
-#ifndef ATTACKSIDEWIDGET_H
-#define ATTACKSIDEWIDGET_H
+#ifndef SOCCER_COMMON_ATTACKSIDEWIDGET_H
+#define SOCCER_COMMON_ATTACKSIDEWIDGET_H
 
 #include <QWidget>
 #include <QtWidgets>
@@ -33,4 +33,4 @@ class AttackSideWidget : public QWidget,
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // TEAMSIDE_H
+#endif // SOCCER_COMMON_ATTACKSIDEWIDGET_H

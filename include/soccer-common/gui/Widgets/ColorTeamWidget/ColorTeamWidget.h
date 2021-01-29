@@ -1,5 +1,5 @@
-#ifndef COLORTEAMWIDGET_H
-#define COLORTEAMWIDGET_H
+#ifndef SOCCER_COMMON_COLORTEAMWIDGET_H
+#define SOCCER_COMMON_COLORTEAMWIDGET_H
 
 #include <QWidget>
 #include <QtCore/QSettings>
@@ -38,4 +38,4 @@ class ColorTeamWidget : public QWidget,
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // COLORTEAMWIDGET_H
+#endif // SOCCER_COMMON_COLORTEAMWIDGET_H

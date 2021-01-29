@@ -1,5 +1,5 @@
-#ifndef PARAMETERTYPE_H
-#define PARAMETERTYPE_H
+#ifndef SOCCER_COMMON_PARAMETERTYPE_H
+#define SOCCER_COMMON_PARAMETERTYPE_H
 
 #include <set>
 #include <QString>
@@ -545,4 +545,4 @@ namespace Parameters {
   };
 } // namespace Parameters
 
-#endif // PARAMETERTYPE_H
+#endif // SOCCER_COMMON_PARAMETERTYPE_H

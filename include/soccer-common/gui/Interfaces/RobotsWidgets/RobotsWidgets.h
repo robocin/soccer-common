@@ -1,5 +1,5 @@
-#ifndef ROBOTSWIDGETS_H
-#define ROBOTSWIDGETS_H
+#ifndef SOCCER_COMMON_ROBOTSWIDGETS_H
+#define SOCCER_COMMON_ROBOTSWIDGETS_H
 
 #include <QMap>
 #include <QTabWidget>
@@ -23,4 +23,4 @@ class RobotsWidgets {
   ModuleBox* indexedModuleBox(int index, const QString& key);
 };
 
-#endif // ROBOTSWIDGETS_H
+#endif // SOCCER_COMMON_ROBOTSWIDGETS_H

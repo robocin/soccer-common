@@ -1,5 +1,5 @@
-#ifndef MAINWINDOWMENUBAR_H
-#define MAINWINDOWMENUBAR_H
+#ifndef SOCCER_COMMON_MAINWINDOWMENUBAR_H
+#define SOCCER_COMMON_MAINWINDOWMENUBAR_H
 
 #include <QtWidgets>
 
@@ -37,4 +37,4 @@ class MainWindowMenuBar {
   MappedMenu& operator[](const QString& key);
 };
 
-#endif // MAINWINDOWMENUBAR_H
+#endif // SOCCER_COMMON_MAINWINDOWMENUBAR_H

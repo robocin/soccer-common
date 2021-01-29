@@ -1,5 +1,5 @@
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#ifndef SOCCER_COMMON_SINGLETON_H
+#define SOCCER_COMMON_SINGLETON_H
 
 template <class T>
 class Singleton {
@@ -23,4 +23,4 @@ using singleton_t = Singleton<T>;
 template <class T>
 inline static T& singleton_v = Singleton<T>::instance();
 
-#endif // SINGLETON_H
+#endif // SOCCER_COMMON_SINGLETON_H

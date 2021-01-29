@@ -1,5 +1,5 @@
-#ifndef MAGICENUM_H
-#define MAGICENUM_H
+#ifndef SOCCER_COMMON_MAGICENUM_H
+#define SOCCER_COMMON_MAGICENUM_H
 
 #include <QVector>
 #include <QString>
@@ -97,4 +97,4 @@ namespace MagicEnum {
   }
 }; // namespace MagicEnum
 
-#endif // MAGICENUM_H
+#endif // SOCCER_COMMON_MAGICENUM_H

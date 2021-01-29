@@ -1,5 +1,5 @@
-#ifndef PLAYPAUSEWIDGET_H
-#define PLAYPAUSEWIDGET_H
+#ifndef SOCCER_COMMON_PLAYPAUSEWIDGET_H
+#define SOCCER_COMMON_PLAYPAUSEWIDGET_H
 
 #include <QWidget>
 #include "soccer-common/gui/guiUtils/guiUtils.h"
@@ -41,4 +41,4 @@ class PlayPauseWidget : public QWidget,
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // PLAYPAUSEWIDGET_H
+#endif // SOCCER_COMMON_PLAYPAUSEWIDGET_H

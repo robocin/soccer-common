@@ -1,5 +1,5 @@
-#ifndef SCOREBOARD_H
-#define SCOREBOARD_H
+#ifndef SOCCER_COMMON_SCOREBOARD_H
+#define SOCCER_COMMON_SCOREBOARD_H
 
 #include <QtCore>
 #include <QtWidgets>
@@ -36,4 +36,4 @@ class ScoreboardWidget : public QWidget,
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // SCOREBOARD_H
+#endif // SOCCER_COMMON_SCOREBOARD_H

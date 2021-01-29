@@ -1,5 +1,5 @@
-#ifndef MODULEBASE_H
-#define MODULEBASE_H
+#ifndef SOCCER_COMMON_MODULEBASE_H
+#define SOCCER_COMMON_MODULEBASE_H
 
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
@@ -53,4 +53,4 @@ class IndexedModuleBase : public ModuleBase {
   int m_index;
 };
 
-#endif // MODULEBASE_H
+#endif // SOCCER_COMMON_MODULEBASE_H

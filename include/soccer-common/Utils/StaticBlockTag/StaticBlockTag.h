@@ -1,5 +1,5 @@
-#ifndef STATICBLOCKTAG_H
-#define STATICBLOCKTAG_H
+#ifndef SOCCER_COMMON_STATICBLOCKTAG_H
+#define SOCCER_COMMON_STATICBLOCKTAG_H
 
 #include <functional>
 
@@ -24,4 +24,4 @@ struct StaticBlockTag {
                          _at_line_),                                           \
       __LINE__) = (StaticBlockTag)[]()->void
 
-#endif // STATICBLOCKTAG_H
+#endif // SOCCER_COMMON_STATICBLOCKTAG_H

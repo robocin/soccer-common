@@ -1,5 +1,5 @@
-#ifndef PTRMULTICAST_H
-#define PTRMULTICAST_H
+#ifndef SOCCER_COMMON_PTRMULTICAST_H
+#define SOCCER_COMMON_PTRMULTICAST_H
 
 #include <type_traits>
 
@@ -63,4 +63,4 @@ class PtrMulticast : public PtrCastOperator<Args>... {
   }
 };
 
-#endif // PTRMULTICAST_H
+#endif // SOCCER_COMMON_PTRMULTICAST_H

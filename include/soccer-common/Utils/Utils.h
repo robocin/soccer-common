@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef SOCCER_COMMON_UTILS_H
+#define SOCCER_COMMON_UTILS_H
 
 #include "Color/Color.h"
 #include "StaticBlockTag/StaticBlockTag.h"
@@ -13,4 +13,4 @@
 #include "SetterGetter/SetterGetter.h"
 #include "SharedWrapper/SharedWrapper.h"
 
-#endif // UTILS_H
+#endif // SOCCER_COMMON_UTILS_H

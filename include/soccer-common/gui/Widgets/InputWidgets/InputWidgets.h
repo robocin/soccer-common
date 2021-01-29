@@ -1,5 +1,5 @@
-#ifndef INPUTWIDGETS_H
-#define INPUTWIDGETS_H
+#ifndef SOCCER_COMMON_INPUTWIDGETS_H
+#define SOCCER_COMMON_INPUTWIDGETS_H
 
 #include <QtWidgets>
 
@@ -118,4 +118,4 @@ namespace InputWidgets {
   };
 } // namespace InputWidgets
 
-#endif // INPUTWIDGETS_H
+#endif // SOCCER_COMMON_INPUTWIDGETS_H

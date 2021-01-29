@@ -1,5 +1,5 @@
-#ifndef PARAMETERSHANDLER_H
-#define PARAMETERSHANDLER_H
+#ifndef SOCCER_COMMON_PARAMETERSHANDLER_H
+#define SOCCER_COMMON_PARAMETERSHANDLER_H
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -75,4 +75,4 @@ namespace Parameters {
 Q_DECLARE_METATYPE(Parameters::UpdateRequest);
 Q_DECLARE_METATYPE(Parameters::UpdateRequests);
 
-#endif // PARAMETERSHANDLER_H
+#endif // SOCCER_COMMON_PARAMETERSHANDLER_H

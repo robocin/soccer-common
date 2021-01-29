@@ -1,5 +1,5 @@
-#ifndef ROBOT_H
-#define ROBOT_H
+#ifndef SOCCER_COMMON_ROBOT_H
+#define SOCCER_COMMON_ROBOT_H
 
 #include "soccer-common/Entities/Entity/Entity.h"
 
@@ -23,4 +23,4 @@ class Robot : public Entity, public RawRobot {
         const QPointF& acceleration);
 };
 
-#endif // ROBOT_H
+#endif // SOCCER_COMMON_ROBOT_H

@@ -1,5 +1,5 @@
-#ifndef MODULEBOX_H
-#define MODULEBOX_H
+#ifndef SOCCER_COMMON_MODULEBOX_H
+#define SOCCER_COMMON_MODULEBOX_H
 
 #include <QWidget>
 #include "soccer-common/gui/Interfaces/Interfaces.h"
@@ -50,4 +50,4 @@ class ModuleBox : public QWidget, public WidgetSettings, public MenuBarOptions {
   ParametersDialog* parametersDialog;
 };
 
-#endif // MODULEBOX_H
+#endif // SOCCER_COMMON_MODULEBOX_H

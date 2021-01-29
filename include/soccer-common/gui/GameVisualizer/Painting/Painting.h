@@ -1,5 +1,5 @@
-#ifndef PAINTING_H
-#define PAINTING_H
+#ifndef SOCCER_COMMON_PAINTING_H
+#define SOCCER_COMMON_PAINTING_H
 
 #include <memory>
 #include <functional>
@@ -52,4 +52,4 @@ Painting::create(std::function<void(GameVisualizerPainter2D*)> function) {
   return std::make_unique<Painting::FunctionPainting>(function);
 }
 
-#endif // PAINTING_H
+#endif // SOCCER_COMMON_PAINTING_H

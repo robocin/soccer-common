@@ -1,5 +1,5 @@
-#ifndef MODULESWIDGETS_H
-#define MODULESWIDGETS_H
+#ifndef SOCCER_COMMON_MODULESWIDGETS_H
+#define SOCCER_COMMON_MODULESWIDGETS_H
 
 #include <QMap>
 #include <QString>
@@ -25,4 +25,4 @@ class ModulesWidgets {
   PlayPauseWidget* playPauseButton();
 };
 
-#endif // MODULESWIDGETS_H
+#endif // SOCCER_COMMON_MODULESWIDGETS_H

@@ -1,5 +1,5 @@
-#ifndef INTERRUPTREQUEST_H
-#define INTERRUPTREQUEST_H
+#ifndef SOCCER_COMMON_INTERRUPTREQUEST_H
+#define SOCCER_COMMON_INTERRUPTREQUEST_H
 
 #include <atomic>
 #include <csignal>
@@ -53,4 +53,4 @@ class InterruptRequest {
   }
 };
 
-#endif // INTERRUPTREQUEST_H
+#endif // SOCCER_COMMON_INTERRUPTREQUEST_H

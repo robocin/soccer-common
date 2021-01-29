@@ -1,7 +1,7 @@
-#ifndef PARAMETERS_H
-#define PARAMETERS_H
+#ifndef SOCCER_COMMON_PARAMETERS_H
+#define SOCCER_COMMON_PARAMETERS_H
 
 #include "ParameterType/ParameterType.h"
 #include "ParametersHandler/ParametersHandler.h"
 
-#endif // PARAMETERS_H
+#endif // SOCCER_COMMON_PARAMETERS_H

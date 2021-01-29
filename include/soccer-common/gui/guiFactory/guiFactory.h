@@ -1,5 +1,5 @@
-#ifndef GUIFACTORY_H
-#define GUIFACTORY_H
+#ifndef SOCCER_COMMON_GUIFACTORY_H
+#define SOCCER_COMMON_GUIFACTORY_H
 
 #include <QAction>
 #include <QTabWidget>
@@ -36,4 +36,4 @@ namespace Factory {
           std::nullopt);
 } // namespace Factory
 
-#endif // GUIFACTORY_H
+#endif // SOCCER_COMMON_GUIFACTORY_H

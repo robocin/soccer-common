@@ -1,5 +1,5 @@
-#ifndef WIDGETS_H
-#define WIDGETS_H
+#ifndef SOCCER_COMMON_WIDGETS_H
+#define SOCCER_COMMON_WIDGETS_H
 
 #include "InputWidgets/InputWidgets.h"
 #include "ParametersWindow/ParametersWindow.h"
@@ -14,4 +14,4 @@
 #include "ColorTeamWidget/ColorTeamWidget.h"
 #include "AttackSideWidget/AttackSideWidget.h"
 
-#endif // WIDGETS_H
+#endif // SOCCER_COMMON_WIDGETS_H

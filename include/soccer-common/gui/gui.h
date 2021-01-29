@@ -1,5 +1,5 @@
-#ifndef GUI_H
-#define GUI_H
+#ifndef SOCCER_COMMON_GUI_H
+#define SOCCER_COMMON_GUI_H
 
 #include "guiFactory/guiFactory.h"
 #include "MainWindow/MainWindow.h"
@@ -8,4 +8,4 @@
 #include "Widgets/Widgets.h"
 #include "AbstractWidgets/AbstractWidgets.h"
 
-#endif // GUI_H
+#endif // SOCCER_COMMON_GUI_H

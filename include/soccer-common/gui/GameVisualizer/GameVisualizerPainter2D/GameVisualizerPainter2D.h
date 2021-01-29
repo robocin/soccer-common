@@ -1,5 +1,5 @@
-#ifndef GAMEVISUALIZERPAINTER2D_H
-#define GAMEVISUALIZERPAINTER2D_H
+#ifndef SOCCER_COMMON_GAMEVISUALIZERPAINTER2D_H
+#define SOCCER_COMMON_GAMEVISUALIZERPAINTER2D_H
 
 #include "soccer-common/gui/GameVisualizer/GLTextHelper_2_1/GLTextHelper_2_1.h"
 #include <QDebug>
@@ -300,4 +300,4 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   }
 };
 
-#endif // GAMEVISUALIZERPAINTER2D_H
+#endif // SOCCER_COMMON_GAMEVISUALIZERPAINTER2D_H

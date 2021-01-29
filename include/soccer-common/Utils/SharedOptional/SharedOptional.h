@@ -1,5 +1,5 @@
-#ifndef SHAREDOPTIONAL_H
-#define SHAREDOPTIONAL_H
+#ifndef SOCCER_COMMON_SHAREDOPTIONAL_H
+#define SOCCER_COMMON_SHAREDOPTIONAL_H
 
 #include <optional>
 
@@ -70,4 +70,4 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::swap;
 };
 
-#endif // SHAREDOPTIONAL_H
+#endif // SOCCER_COMMON_SHAREDOPTIONAL_H

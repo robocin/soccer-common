@@ -1,6 +1,6 @@
-#ifndef ABSTRACTWIDGETS_H
-#define ABSTRACTWIDGETS_H
+#ifndef SOCCER_COMMON_ABSTRACTWIDGETS_H
+#define SOCCER_COMMON_ABSTRACTWIDGETS_H
 
 #include "ParametersDialogBase/ParametersDialogBase.h"
 
-#endif // ABSTRACTWIDGETS_H
+#endif // SOCCER_COMMON_ABSTRACTWIDGETS_H

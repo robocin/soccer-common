@@ -1,5 +1,5 @@
-#ifndef DYNAMICFONTSIZEQLABEL_H
-#define DYNAMICFONTSIZEQLABEL_H
+#ifndef SOCCER_COMMON_DYNAMICFONTSIZEQLABEL_H
+#define SOCCER_COMMON_DYNAMICFONTSIZEQLABEL_H
 
 #include <QLabel>
 #include <QColor>
@@ -28,4 +28,4 @@ class DynamicFontSizeQLabel : public QLabel {
   void paintEvent(QPaintEvent* event) override;
 };
 
-#endif // DYNAMICFONTSIZEQLABEL_H
+#endif // SOCCER_COMMON_DYNAMICFONTSIZEQLABEL_H

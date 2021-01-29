@@ -1,5 +1,5 @@
-#ifndef VISUALIZATIONWIDGET_H
-#define VISUALIZATIONWIDGET_H
+#ifndef SOCCER_COMMON_VISUALIZATIONWIDGET_H
+#define SOCCER_COMMON_VISUALIZATIONWIDGET_H
 
 #include <QSizeF>
 #include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
@@ -18,4 +18,4 @@ class VisualizationWidget {
   GameVisualizer* gameVisualizer();
 };
 
-#endif // VISUALIZATIONWIDGET_H
+#endif // SOCCER_COMMON_VISUALIZATIONWIDGET_H
