@@ -57,7 +57,7 @@ class ParameterWidget : public QWidget {
                                            QStringList& details);
 
  private slots:
-  void reciveOnValueChanged();
+  void receiveOnValueChanged();
 };
 
 #endif // SOCCER_COMMON_PARAMETERWIDGET_H

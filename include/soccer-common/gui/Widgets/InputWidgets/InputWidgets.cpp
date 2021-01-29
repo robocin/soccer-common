@@ -13,7 +13,7 @@ InputWidgets::InputMethod::InputMethod(QWidget* parent) : QWidget(parent) {
 InputWidgets::InputMethod::~InputMethod() {
 }
 
-void InputWidgets::InputMethod::reciveOnValueChanged() {
+void InputWidgets::InputMethod::receiveOnValueChanged() {
   emit onValueChanged();
 }
 
@@ -22,7 +22,7 @@ InputWidgets::TextEdit::TextEdit(const QJsonObject& json, QWidget* parent) :
   QObject::connect(&textEdit,
                    &QTextEdit::textChanged,
                    this,
-                   &InputWidgets::TextEdit::reciveOnValueChanged);
+                   &InputWidgets::TextEdit::receiveOnValueChanged);
   inputMethodLayout.addWidget(&textEdit);
   regex.setPattern(json[Detail::Regex].toVariant().toString());
   QString value = json[Detail::Value].toVariant().toString();
@@ -70,7 +70,7 @@ InputWidgets::Slider::Slider(const QJsonObject& json, QWidget* parent) :
   QObject::connect(&slider.slider,
                    &QSlider::valueChanged,
                    this,
-                   &InputWidgets::Slider::reciveOnValueChanged);
+                   &InputWidgets::Slider::receiveOnValueChanged);
   QObject::connect(&slider.slider,
                    &QSlider::valueChanged,
                    &slider.label,
@@ -112,7 +112,7 @@ InputWidgets::SpinBox::SpinBox(const QJsonObject& json, QWidget* parent) :
   QObject::connect(&spinBox,
                    qOverload<int>(&QSpinBox::valueChanged),
                    this,
-                   &InputWidgets::SpinBox::reciveOnValueChanged);
+                   &InputWidgets::SpinBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&spinBox);
   int minValue = json[Detail::MinValue].toInt();
   int maxValue = json[Detail::MaxValue].toInt();
@@ -148,7 +148,7 @@ InputWidgets::DoubleSpinBox::DoubleSpinBox(const QJsonObject& json,
   QObject::connect(&doubleSpinBox,
                    qOverload<double>(&QDoubleSpinBox::valueChanged),
                    this,
-                   &InputWidgets::DoubleSpinBox::reciveOnValueChanged);
+                   &InputWidgets::DoubleSpinBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&doubleSpinBox);
 
   int precision = json[Detail::Precision].toVariant().toInt();
@@ -198,7 +198,7 @@ InputWidgets::CheckBox::CheckBox(const QJsonObject& json, QWidget* parent) :
   QObject::connect(&checkBox,
                    &QCheckBox::stateChanged,
                    this,
-                   &InputWidgets::CheckBox::reciveOnValueChanged);
+                   &InputWidgets::CheckBox::receiveOnValueChanged);
   checkBox.setLayoutDirection(Qt::RightToLeft);
   inputMethodLayout.addWidget(&checkBox);
   checkBox.setCheckState(
@@ -231,7 +231,7 @@ InputWidgets::ComboBox::ComboBox(const QJsonObject& json, QWidget* parent) :
   QObject::connect(&comboBox,
                    &QComboBox::currentTextChanged,
                    this,
-                   &InputWidgets::ComboBox::reciveOnValueChanged);
+                   &InputWidgets::ComboBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&comboBox);
   QString value = json[Detail::Value].toVariant().toString();
   QJsonArray itemsAsJson = json[Detail::Options].toArray();

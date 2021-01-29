@@ -87,7 +87,7 @@ void ParameterWidget::build(QMap<QStringList, ParameterWidget*>& widgets,
   QObject::connect(inputMethod,
                    &InputWidgets::InputMethod::onValueChanged,
                    this,
-                   &ParameterWidget::reciveOnValueChanged);
+                   &ParameterWidget::receiveOnValueChanged);
   QSizePolicy inputMethodSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
   inputMethod->setSizePolicy(inputMethodSizePolicy);
   ui->mainWidgetLayout->addWidget(inputMethod);
@@ -184,6 +184,6 @@ ParameterWidget::buildCheckBox(const QJsonObject& json, QStringList&) {
   return new InputWidgets::CheckBox(json, ui->mainWidget);
 }
 
-void ParameterWidget::reciveOnValueChanged() {
+void ParameterWidget::receiveOnValueChanged() {
   showConditionalOrHide();
 }

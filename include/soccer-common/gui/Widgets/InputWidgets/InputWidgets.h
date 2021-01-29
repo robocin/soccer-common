@@ -20,7 +20,7 @@ namespace InputWidgets {
     virtual void loadBackup() = 0;
 
    protected slots:
-    void reciveOnValueChanged();
+    void receiveOnValueChanged();
 
    signals:
     void onValueChanged();
