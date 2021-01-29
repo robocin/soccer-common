@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-include(../cmake/utils.cmake)
+include(../cmake-common/robocin.cmake)
 
 ROBOCIN_ADD_TEST_SUBDIR(TestGeometry)
 ROBOCIN_ADD_TEST_SUBDIR(TestMagicEnum)

@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/utils.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake-common/robocin.cmake)
 
 ROBOCIN_MAKE_QT_TEST(TestUtils)
 ROBOCIN_LINK_AND_INCLUDE_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/include)
