@@ -38,6 +38,7 @@ Thumbs.db
 *.cbp
 
 # QtCreator generated files
+*.pro.user
 *.pro.user*
 
 # XEmacs temporary files
@@ -75,7 +76,7 @@ Thumbs.db
 # qtcreator unit tests
 target_wrapper.*
 
-# Binaries
+# Binaries' folder
 /bin
 /lib
 
