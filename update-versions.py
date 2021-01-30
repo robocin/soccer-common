@@ -15,17 +15,17 @@ def progress_bar(toolbar_width: int):
 
   sys.stdout.write(']\n')
 
-filename = 'version.pri'
+filename = 'version.cmake'
 
 project_name = 'project-name'
 ver_major    =    'ver-major'
 ver_minor    =    'ver-minor'
 ver_patch    =    'ver-patch'
 
-key_regex = {(project_name, '(\A''PROJECT_NAME\s*=\s*)(.+)'), \
-             (   ver_major, '(\A'   'VER_MAJOR\s*=\s*)(.+)'), \
-             (   ver_minor, '(\A'   'VER_MINOR\s*=\s*)(.+)'), \
-             (   ver_patch, '(\A'   'VER_PATCH\s*=\s*)(.+)')}
+key_regex = {(project_name, '\Aset\((ROBOCIN_PROJECT_NAME\s)(.+)\)'), \
+             (   ver_major, '\Aset\((ROBOCIN_PROJECT_VERSION_MAJOR\s)(.+)\)'), \
+             (   ver_minor, '\Aset\((ROBOCIN_PROJECT_VERSION_MINOR\s)(.+)\)'), \
+             (   ver_patch, '\Aset\((ROBOCIN_PROJECT_VERSION_PATCH\s)(.+)\)')}
 
 value = dict()
 
@@ -126,7 +126,7 @@ with open(filename, 'r+') as file:
           new_value = new_patch
         else:
           continue
-        lines[index] = r.match(line).group(1) + new_value
+        lines[index] = 'set(' + r.match(line).group(1) + new_value + ')'
   file.seek(0)
   file.write('\n'.join(lines) + '\n')
   file.truncate()
