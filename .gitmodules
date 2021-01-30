@@ -2,5 +2,5 @@
 	path = libs/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
 [submodule "cmake-common"]
-	path = cmake-common
+	path = cmake
 	url = https://github.com/robocin/cmake-common.git

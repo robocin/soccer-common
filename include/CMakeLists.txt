@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 include(../version.cmake)
-include(../cmake-common/robocin.cmake)
+include(../cmake/utils.cmake)
 
 project(${ROBOCIN_PROJECT_NAME} VERSION ${ROBOCIN_PROJECT_VERSION} LANGUAGES CXX)
 
