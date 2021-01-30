@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
-#include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
+#include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
 
 /*!
  * \brief It will be defined in the executable project.

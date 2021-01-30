@@ -10,6 +10,6 @@
 #include "Extends/Extends.h"
 #include "Field/Field.h"
 #include "ModulesPrivate/ModulesPrivate.h"
-#include "gui/gui.h"
+#include "Gui/Gui.h"
 
 #endif // SOCCER_COMMON_SOCCER_COMMON_H

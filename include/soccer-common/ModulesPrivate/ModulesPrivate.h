@@ -1,7 +1,7 @@
 #ifndef SOCCER_COMMON_MODULESPRIVATE_H
 #define SOCCER_COMMON_MODULESPRIVATE_H
 
-#include "soccer-common/gui/gui.h"
+#include "soccer-common/Gui/Gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
 
 class ModulesPrivate : public QObject {

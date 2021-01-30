@@ -2,7 +2,7 @@
 #define SOCCER_COMMON_EXTENDSPOINT_H
 
 #include "soccer-common/Geometry/Geometry.h"
-#include "soccer-common/Extends/detail/ExtendsImpl.h"
+#include "soccer-common/Extends/Detail/ExtendsImpl.h"
 
 template <>
 class Extends<QPoint> : public QPoint {
