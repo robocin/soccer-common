@@ -2,6 +2,7 @@
 #include "ui_RobotDetails.h"
 
 #include "soccer-common/gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
+#include <QGraphicsSvgItem>
 
 RobotDetails::RobotDetails(int index, QWidgetWith<WidgetSettings> parent) :
     QWidget(parent),
@@ -25,7 +26,7 @@ void RobotDetails::showRobotNumber(int number) {
   QGraphicsScene* scene;
   scene = new QGraphicsScene(this);
   ui->robotID->setScene(scene);
-  QGraphicsSvgItem* id = new QGraphicsSvgItem(":/robotID2.svg", scene);
+  QGraphicsSvgItem* id = new QGraphicsSvgItem(":/robotID2.svg");
   id->setParent(scene);
   scene->addItem(id);
   scene->setSceneRect((number * 512), 0, 512, 512);

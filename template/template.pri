@@ -12,6 +12,7 @@ QT += widgets
 QT += opengl
 QT += concurrent
 QT += network
+QT += svg
 
 CONFIG += c++17
 
