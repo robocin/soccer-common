@@ -59,16 +59,17 @@ MainWindow::~MainWindow() {
 void MainWindow::setup(const QString& name,
                        const QString& version,
                        const QString& path) {
+  QString projectPath(path.endsWith('/') ? path : path + "/");
   /* storing project info to use later */ {
     setupWidgetSettings(name,
                         version,
-                        path,
-                        path + "/config/local/",
+                        projectPath,
+                        projectPath + "config/local/",
                         QDateTime::currentDateTime().toString("dd.MM.yyyy"),
                         QTime::currentTime().toString("h:m:s"));
     /* creating if don't exists */ {
-      QDir().mkdir(path + "config/local/");
-      QDir().mkdir(path + "config/shared/");
+      QDir().mkdir(projectPath + "config/local/");
+      QDir().mkdir(projectPath + "config/shared/");
     }
   }
   /* setting window title with name and version */ {

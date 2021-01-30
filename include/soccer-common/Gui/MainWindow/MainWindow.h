@@ -2,10 +2,10 @@
 #define SOCCER_COMMON_MAINWINDOW_H
 
 #include <QMainWindow>
-#include "soccer-common/gui/Widgets/Widgets.h"
-#include "soccer-common/gui/guiUtils/guiUtils.h"
-#include "soccer-common/gui/Interfaces/Interfaces.h"
-#include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
+#include "soccer-common/Gui/Widgets/Widgets.h"
+#include "soccer-common/Gui/GuiUtils/GuiUtils.h"
+#include "soccer-common/Gui/Interfaces/Interfaces.h"
+#include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
 #include "MainWindowMenuBar/MainWindowMenuBar.h"
 
 QT_BEGIN_NAMESPACE
