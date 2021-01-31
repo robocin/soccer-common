@@ -5,6 +5,8 @@ include(../cmake/utils.cmake)
 
 project(${ROBOCIN_PROJECT_NAME} VERSION ${ROBOCIN_PROJECT_VERSION} LANGUAGES CXX)
 
+include_directories(${CMAKE_BINARY_DIR})
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -23,3 +25,5 @@ ROBOCIN_LINK_PROJECT_DEFINITIONS(${PROJECT_NAME} $ENV{PWD}/..)
 ROBOCIN_LINK_FUNDAMENTAL_LIBRARIES(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../libs/magic_enum/include)
+
+ROBOCIN_DOXYGEN_CUSTOM_TARGET(soccer-common-docs-generator ../)
