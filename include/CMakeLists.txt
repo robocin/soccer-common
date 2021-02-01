@@ -26,4 +26,4 @@ ROBOCIN_LINK_FUNDAMENTAL_LIBRARIES(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../libs/magic_enum/include)
 
-ROBOCIN_DOXYGEN_CUSTOM_TARGET(soccer-common-docs-generator ../)
+ROBOCIN_DOXYGEN_CUSTOM_TARGET(${PROJECT_NAME}-documentation ../)
