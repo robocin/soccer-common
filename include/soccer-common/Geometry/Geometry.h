@@ -17,9 +17,9 @@
   #define M_PI 3.14159265358979323846
 #endif
 
-static constexpr qreal PI = M_PI;
-
 namespace Geometry {
+  static constexpr qreal PI = M_PI;
+
   RC_T_TEMPLATE qreal radiansToDegrees(T radians) {
     return radians * (180.0 / PI);
   }
@@ -28,6 +28,8 @@ namespace Geometry {
     return (degrees * PI) / 180.0;
   }
 } // namespace Geometry
+
+using Geometry::PI;
 
 namespace Geometry2D {
   using namespace Geometry;
@@ -92,7 +94,7 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE PT resize(const PT& p, qreal t) {
     static_assert(std::is_floating_point_v<T>);
-    return p / length(p) * t;
+    return static_cast<PT>(p / length(p) * t);
   }
 
   RC_PT_T_TEMPLATE PT normalize(const PT& p) {
