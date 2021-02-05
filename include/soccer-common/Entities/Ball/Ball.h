@@ -5,7 +5,7 @@
 
 class RawBall : virtual public RawEntity {
  public:
-  RawBall(const QPointF& position);
+  explicit RawBall(const QPointF& position);
 };
 
 class Ball : public Entity, public RawBall {

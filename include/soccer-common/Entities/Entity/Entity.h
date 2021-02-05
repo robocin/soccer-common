@@ -7,10 +7,10 @@ class RawEntity {
   QPointF m_position;
 
  public:
-  RawEntity(const QPointF& position);
+  explicit RawEntity(const QPointF& position);
 
-  QPointF position() const;
-  operator QPointF() const;
+  const QPointF& position() const;
+  operator const QPointF&() const;
 };
 
 class Entity : virtual public RawEntity {
@@ -22,8 +22,8 @@ class Entity : virtual public RawEntity {
          const QPointF& velocity,
          const QPointF& acceleration);
 
-  QPointF velocity() const;
-  QPointF acceleration() const;
+  const QPointF& velocity() const;
+  const QPointF& acceleration() const;
 };
 
 #endif // SOCCER_COMMON_ENTITY_H
