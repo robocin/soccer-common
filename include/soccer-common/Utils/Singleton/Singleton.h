@@ -3,7 +3,7 @@
 
 template <class T>
 class Singleton {
-  Singleton();
+  Singleton() = default;
 
  public:
   Singleton(const Singleton&) = delete;
@@ -18,9 +18,9 @@ class Singleton {
 };
 
 template <class T>
-using singleton_t = Singleton<T>;
+using singleton_t [[maybe_unused]] = Singleton<T>;
 
 template <class T>
-inline static T& singleton_v = Singleton<T>::instance();
+[[maybe_unused]] inline static T& singleton_v = Singleton<T>::instance();
 
 #endif // SOCCER_COMMON_SINGLETON_H
