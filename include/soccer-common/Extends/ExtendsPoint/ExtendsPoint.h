@@ -11,24 +11,23 @@ class Extends<QPoint> : public QPoint {
   Extends(Args&&... args) : QPoint(std::forward<Args>(args)...) {
   }
 
-  decltype(auto) operator<(const Extends<QPoint>& other) const {
+  inline bool operator<(const Extends<QPoint>& other) const {
     using Geometry2D::operator<;
     return static_cast<const QPoint&>(*this) <
            static_cast<const QPoint&>(other);
   }
 
-  decltype(auto) operator<(const QPoint& other) const {
+  inline bool operator<(const QPoint& other) const {
     using Geometry2D::operator<;
     return static_cast<const QPoint&>(*this) < other;
   }
 
-  friend decltype(auto) operator<(const QPoint& lhs,
-                                  const Extends<QPoint>& rhs) {
+  friend inline bool operator<(const QPoint& lhs, const Extends<QPoint>& rhs) {
     using Geometry2D::operator<;
     return lhs < static_cast<const QPoint&>(rhs);
   }
 
-  decltype(auto) operator[](int i) {
+  inline int& operator[](int i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -36,7 +35,7 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  decltype(auto) operator[](int i) const {
+  inline int operator[](int i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -44,49 +43,51 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  decltype(auto) dot(const QPoint& other) const {
+  int dot(const QPoint& other) const {
     return Geometry2D::dot<QPoint>(*this, other);
   }
 
-  decltype(auto) cross(const QPoint& other) const {
+  int cross(const QPoint& other) const {
     return Geometry2D::cross<QPoint>(*this, other);
   }
 
-  decltype(auto) distSquaredTo(const QPoint& other) const {
+  int distSquaredTo(const QPoint& other) const {
     return Geometry2D::distanceSquared<QPoint>(*this, other);
   }
 
-  decltype(auto) distTo(const QPoint& other) const {
+  qreal distTo(const QPoint& other) const {
     return Geometry2D::distance<QPoint>(*this, other);
   }
 
-  decltype(auto) rotateCW90() {
+  void rotateCW90() {
     *this = Geometry2D::rotateCW90(*this);
   }
 
-  decltype(auto) rotatedCW90() const {
-    return Extends<QPoint>(Geometry2D::rotateCW90(*this));
+  Extends<QPoint> rotatedCW90() const {
+    return Geometry2D::rotateCW90(*this);
   }
 
-  decltype(auto) rotateCCW90() {
+  void rotateCCW90() {
     *this = Geometry2D::rotateCCW90(*this);
   }
 
-  decltype(auto) rotatedCCW90() const {
-    return Extends<QPoint>(Geometry2D::rotateCCW90(*this));
+  Extends<QPoint> rotatedCCW90() const {
+    return Geometry2D::rotateCCW90(*this);
   }
 
-  decltype(auto) angle() const {
+  qreal angle() const {
     return Geometry2D::angle(*this);
   }
 
-  decltype(auto) angleTo(const QPoint& other) const {
+  qreal angleTo(const QPoint& other) const {
     return Geometry2D::angleBetween<QPoint>(*this, other);
   }
 
-  decltype(auto) length() const {
+  qreal length() const {
     return Geometry2D::length(*this);
   }
+
+  using QPoint::manhattanLength;
 };
 
 template <>
@@ -96,24 +97,24 @@ class Extends<QPointF> : public QPointF {
   Extends(Args&&... args) : QPointF(std::forward<Args>(args)...) {
   }
 
-  decltype(auto) operator<(const Extends<QPointF>& other) const {
+  inline bool operator<(const Extends<QPointF>& other) const {
     using Geometry2D::operator<;
     return static_cast<const QPointF&>(*this) <
            static_cast<const QPointF&>(other);
   }
 
-  decltype(auto) operator<(const QPointF& other) const {
+  inline bool operator<(const QPointF& other) const {
     using Geometry2D::operator<;
     return static_cast<const QPointF&>(*this) < other;
   }
 
-  friend decltype(auto) operator<(const QPointF& lhs,
-                                  const Extends<QPointF>& rhs) {
+  friend inline bool operator<(const QPointF& lhs,
+                               const Extends<QPointF>& rhs) {
     using Geometry2D::operator<;
     return lhs < static_cast<const QPointF&>(rhs);
   }
 
-  decltype(auto) operator[](int i) {
+  inline qreal& operator[](int i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -121,7 +122,7 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  decltype(auto) operator[](int i) const {
+  inline qreal operator[](int i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -129,72 +130,74 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  decltype(auto) dot(const QPointF& other) const {
+  qreal dot(const QPointF& other) const {
     return Geometry2D::dot<QPointF>(*this, other);
   }
 
-  decltype(auto) cross(const QPointF& other) const {
+  qreal cross(const QPointF& other) const {
     return Geometry2D::cross<QPointF>(*this, other);
   }
 
-  decltype(auto) distSquaredTo(const QPointF& other) const {
+  qreal distSquaredTo(const QPointF& other) const {
     return Geometry2D::distanceSquared<QPointF>(*this, other);
   }
 
-  decltype(auto) distTo(const QPointF& other) const {
+  qreal distTo(const QPointF& other) const {
     return Geometry2D::distance<QPointF>(*this, other);
   }
 
-  decltype(auto) rotateCW90() {
+  void rotateCW90() {
     *this = Geometry2D::rotateCW90(*this);
   }
 
-  decltype(auto) rotatedCW90() const {
-    return Extends<QPointF>(Geometry2D::rotateCW90(*this));
+  Extends<QPointF> rotatedCW90() const {
+    return Geometry2D::rotateCW90(*this);
   }
 
-  decltype(auto) rotateCCW90() {
+  void rotateCCW90() {
     *this = Geometry2D::rotateCCW90(*this);
   }
 
-  decltype(auto) rotatedCCW90() const {
-    return Extends<QPointF>(Geometry2D::rotateCCW90(*this));
+  Extends<QPointF> rotatedCCW90() const {
+    return Geometry2D::rotateCCW90(*this);
   }
 
-  decltype(auto) rotateCCW(qreal t) {
+  void rotateCCW(qreal t) {
     *this = Geometry2D::rotateCCW(*this, t);
   }
 
-  decltype(auto) rotatedCCW(qreal t) const {
-    return Extends<QPointF>(Geometry2D::rotateCCW(*this, t));
+  Extends<QPointF> rotatedCCW(qreal t) const {
+    return Geometry2D::rotateCCW(*this, t);
   }
 
-  decltype(auto) angle() const {
+  qreal angle() const {
     return Geometry2D::angle(*this);
   }
 
-  decltype(auto) angleTo(const QPointF& other) const {
+  qreal angleTo(const QPointF& other) const {
     return Geometry2D::angleBetween<QPointF>(*this, other);
   }
 
-  decltype(auto) length() const {
+  qreal length() const {
     return Geometry2D::length(*this);
   }
 
-  decltype(auto) resize(qreal t) {
+  using QPointF::manhattanLength;
+
+  void resize(qreal t) {
     *this = Geometry2D::resize(*this, t);
   }
 
-  decltype(auto) resized(qreal t) const {
-    return Extends<QPointF>(Geometry2D::resize(*this, t));
+  Extends<QPointF> resized(qreal t) const {
+    return Geometry2D::resize(*this, t);
   }
 
-  decltype(auto) normalize() {
+  void normalize() {
     *this = Geometry2D::normalize(*this);
   }
 
-  decltype(auto) normalized() const {
-    return Extends<QPointF>(Geometry2D::normalize(*this));
+  Extends<QPointF> normalized() const {
+    return Geometry2D::normalize(*this);
   }
 };
 
