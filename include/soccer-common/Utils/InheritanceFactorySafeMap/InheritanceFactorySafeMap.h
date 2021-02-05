@@ -4,6 +4,7 @@
 #include <QMap>
 #include <mutex>
 #include <functional>
+#include <utility>
 #include "soccer-common/Utils/StringHelper/StringHelper.h"
 
 template <class T, class... Args>
@@ -13,13 +14,12 @@ class InheritanceFactorySafeMap {
     QString m_description;
 
    public:
-    Value() {
-    }
+    Value() = default;
 
     template <class F>
-    Value(F&& f, const QString& description) :
+    Value(F&& f, QString description) :
         std::function<T*(Args...)>(std::forward<F>(f)),
-        m_description(description) {
+        m_description(std::move(description)) {
     }
 
     QString description() const {
@@ -39,10 +39,11 @@ class InheritanceFactorySafeMap {
   using type = QMap<Key, Value>;
 
   template <class U>
-  void insert(const QString& description) {
+  void insert(QString description) {
     static_assert(std::is_base_of_v<T, U>);
     std::lock_guard locker(m_mutex);
-    m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, description));
+    m_map.insert(Utils::nameOfType<U>(),
+                 Value(makeFactory<U>, std::move(description)));
   }
 
   int size() const {
@@ -65,7 +66,7 @@ class InheritanceFactorySafeMap {
     return m_map;
   }
 
-  operator QMap<Key, Value>() const {
+  explicit operator QMap<Key, Value>() const {
     std::lock_guard locker(m_mutex);
     return m_map;
   }
