@@ -4,7 +4,7 @@
 
 namespace Factory {
   QAction* toggleViewAction(const QString& name, QWidget* widget) {
-    QAction* action = new QAction(widget);
+    auto* action = new QAction(widget);
     action->setText(name);
     action->setCheckable(true);
     action->setChecked(not widget->isVisible());
@@ -16,7 +16,7 @@ namespace Factory {
 
   QAction*
   toggleViewAction(const QString& name, int index, QTabWidget* tabWidget) {
-    QAction* action = new QAction(tabWidget);
+    auto* action = new QAction(tabWidget);
     action->setText(name);
     action->setCheckable(true);
     action->setChecked(not tabWidget->tabBar()->isTabVisible(index));
@@ -36,8 +36,8 @@ namespace Factory {
   }
 
   ScrollAreaForFlowLayout* scrollAreaWithFlowLayout(QWidget* parent) {
-    ScrollAreaForFlowLayout* scrollArea = new ScrollAreaForFlowLayout(parent);
-    SmartVerticalFlowLayout* layout = new SmartVerticalFlowLayout(scrollArea);
+    auto* scrollArea = new ScrollAreaForFlowLayout(parent);
+    auto* layout = new SmartVerticalFlowLayout(scrollArea);
     scrollArea->setWidget(new QWidget(scrollArea));
     scrollArea->widget()->setLayout(layout);
     return scrollArea;

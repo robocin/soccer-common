@@ -40,9 +40,6 @@ IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
     m_index(index) {
 }
 
-IndexedModuleBase::~IndexedModuleBase() {
-}
-
 int IndexedModuleBase::index() const {
   return m_index;
 }

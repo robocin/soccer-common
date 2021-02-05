@@ -130,13 +130,12 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
     std::map<QChar, std::unique_ptr<Glyph>> m_glyphs;
 
    public:
-    inline Glyphs(GLTextHelper_2_1* f) : m_f(f) {
+    inline explicit Glyphs(GLTextHelper_2_1* f) : m_f(f) {
       Q_ASSERT(f != nullptr);
       m_font.setPixelSize(Const::fontRenderSize);
     }
 
-    inline ~Glyphs() {
-    }
+    inline ~Glyphs() = default;
 
     inline void setFont(const QFont& font) {
       m_font = font;
@@ -166,7 +165,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
   enum class VAlign : int { Bottom, Median, Middle, Top };
 
   GLTextHelper_2_1();
-  ~GLTextHelper_2_1();
+  ~GLTextHelper_2_1() override = default;
 
   inline void drawText(const QString& text,
                        const Vertex& position,

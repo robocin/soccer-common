@@ -13,16 +13,16 @@ namespace Parameters {
   class UpdateRequest {
     friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper<UpdateRequest,
                                                              true>;
-    UpdateRequest();
+    UpdateRequest() = default;
 
     QStringList m_path;
     QString m_value;
 
    public:
-    UpdateRequest(const QStringList& path, const QString& value);
+    UpdateRequest(QStringList path, QString value);
 
-    QStringList path() const;
-    QString value() const;
+    const QStringList& path() const;
+    const QString& value() const;
   };
 
   using UpdateRequests = QVector<UpdateRequest>;
@@ -32,8 +32,8 @@ namespace Parameters {
     QMap<QString, JsonHandler> m_map;
 
    public:
-    JsonHandler();
-    ~JsonHandler();
+    JsonHandler() = default;
+    ~JsonHandler() = default;
 
     static JsonHandler fromJsonObject(const QJsonObject& object);
     void insert_or_assign(const QVector<UpdateRequest>& updates);
@@ -51,14 +51,14 @@ namespace Parameters {
    public:
     Q_DISABLE_COPY_MOVE(Handler);
 
-    Handler();
-    ~Handler();
+    Handler() = default;
+    ~Handler() = default;
 
     template <
         class T,
         class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
     Handler& operator=(T&& p) {
-      value = std::make_unique<T>(std::move(p));
+      value = std::make_unique<T>(std::forward<T>(p));
       return *this;
     }
 

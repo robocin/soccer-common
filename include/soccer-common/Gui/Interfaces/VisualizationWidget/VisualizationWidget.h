@@ -8,7 +8,7 @@ class MainWindow;
 
 class VisualizationWidget {
   QSizeF m_defaultSize;
-  GameVisualizer* m_gameVisualizer;
+  GameVisualizer* m_gameVisualizer{};
 
  protected:
   void setupVisualizationWidget(MainWindow* mainWindow);

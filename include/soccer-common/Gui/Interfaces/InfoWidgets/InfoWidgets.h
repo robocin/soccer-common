@@ -10,16 +10,16 @@ class AttackSideWidget;
 class ColorTeamWidget;
 
 class InfoWidgets {
-  QLayout* m_layout;
-  ScoreboardWidget* m_scoreboard;
-  AttackSideWidget* m_attackSide;
-  ColorTeamWidget* m_colorTeam;
+  QLayout* m_layout{};
+  ScoreboardWidget* m_scoreboard{};
+  AttackSideWidget* m_attackSide{};
+  ColorTeamWidget* m_colorTeam{};
 
  protected:
   void setupInfoWidgets(MainWindow* mainWindow);
 
  public:
-  explicit InfoWidgets();
+  explicit InfoWidgets() = default;
 
   ScoreboardWidget* scoreboard() const;
   AttackSideWidget* attackSide() const;

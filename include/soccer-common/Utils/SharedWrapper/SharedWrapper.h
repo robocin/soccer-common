@@ -11,11 +11,11 @@ class SharedWrapper {
 
  public:
   template <class... Args>
-  SharedWrapper(Args&&... args) : instance(std::forward<Args>(args)...) {
+  explicit SharedWrapper(Args&&... args) :
+      instance(std::forward<Args>(args)...) {
   }
 
-  ~SharedWrapper() {
-  }
+  ~SharedWrapper() = default;
 
   // disable_copy:
   SharedWrapper(const SharedWrapper&) = delete;
@@ -52,7 +52,7 @@ class SharedWrapper {
     return Proxy(instance, mutex, tag);
   }
 
-  const Proxy operator->() const {
+  Proxy operator->() const {
     return Proxy(instance, mutex, tag);
   }
 
@@ -67,8 +67,7 @@ class SharedWrapper {
         locker(mutex) {
     }
 
-    ~Proxy() {
-    }
+    ~Proxy() = default;
 
     // disable_copy:
     Proxy(const Proxy&) = delete;

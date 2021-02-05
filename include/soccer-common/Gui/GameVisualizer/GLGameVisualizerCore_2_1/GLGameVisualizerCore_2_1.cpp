@@ -5,14 +5,6 @@ void GLGameVisualizerCore_2_1::callListAndIncrementZ(GLuint id) {
   m_z += Const::zStep;
 }
 
-void GLGameVisualizerCore_2_1::putVertex(const Vertex& v) {
-  if constexpr (std::is_same_v<qreal, GLfloat>) {
-    glVertex3f(v.x(), v.y(), m_z);
-  } else if constexpr (std::is_same_v<qreal, GLdouble>) {
-    glVertex3d(v.x(), v.y(), m_z);
-  }
-}
-
 void GLGameVisualizerCore_2_1::putBackgroundColor(const QColor& color) {
   qreal r, g, b, a;
   color.getRgbF(&r, &g, &b, &a);
@@ -47,7 +39,4 @@ void GLGameVisualizerCore_2_1::setZ(qreal z) {
 }
 
 GLGameVisualizerCore_2_1::GLGameVisualizerCore_2_1() : m_z(0) {
-}
-
-GLGameVisualizerCore_2_1::~GLGameVisualizerCore_2_1() {
 }

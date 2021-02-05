@@ -97,7 +97,7 @@ namespace Color {
   static constexpr const char* MediumSlateBlue = "MediumSlateBlue";
   static constexpr const char* MediumSpringGreen = "MediumSpringGreen";
   static constexpr const char* MediumTurquoise = "MediumTurquoise";
-  static constexpr const char* MediumVioletred = "MediumVioletred";
+  static constexpr const char* MediumVioletRed = "MediumVioletRed";
   static constexpr const char* MidnightBlue = "MidnightBlue";
   static constexpr const char* MintCream = "MintCream";
   static constexpr const char* MistyRose = "MistyRose";

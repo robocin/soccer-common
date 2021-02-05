@@ -15,6 +15,7 @@ class ModuleBase : public ModulePrivate {
 
  public:
   explicit ModuleBase(QThreadPool* threadPool);
+  ~ModuleBase() override = default;
 
   void build();
   void setup(const Modules* modules);
@@ -44,7 +45,7 @@ class IndexedModuleBase : public ModuleBase {
 
  public:
   explicit IndexedModuleBase(int index, QThreadPool* threadPool);
-  ~IndexedModuleBase() override;
+  ~IndexedModuleBase() override = default;
 
  protected:
   int index() const;

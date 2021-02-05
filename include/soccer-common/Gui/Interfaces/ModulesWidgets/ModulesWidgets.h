@@ -19,7 +19,7 @@ class ModulesWidgets {
   void setupModulesWidgets(MainWindow* mainWindow);
 
  public:
-  explicit ModulesWidgets();
+  ModulesWidgets() = default;
 
   ModuleBox* moduleBox(const QString& key);
   PlayPauseWidget* playPauseButton();

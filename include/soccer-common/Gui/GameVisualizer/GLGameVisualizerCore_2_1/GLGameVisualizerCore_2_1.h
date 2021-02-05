@@ -71,7 +71,7 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
         QVector<Vertex>(polygon.begin(), polygon.end()) {
     }
 
-    inline operator QPolygonF() const {
+    inline explicit operator QPolygonF() const {
       QPolygonF ret;
       ret.reserve(size());
       for (auto vertex : *this) {
@@ -87,7 +87,7 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(PushPopGuard);
 
-    inline PushPopGuard(GLGameVisualizerCore_2_1* t_f) : f(t_f) {
+    inline explicit PushPopGuard(GLGameVisualizerCore_2_1* t_f) : f(t_f) {
       Q_ASSERT(f != nullptr);
       f->glPushMatrix();
       f->glLoadIdentity();
@@ -134,7 +134,7 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(DisplayListGuard);
 
-    inline DisplayListGuard(QOpenGLFunctions_2_1* t_f) :
+    inline explicit DisplayListGuard(QOpenGLFunctions_2_1* t_f) :
         f(t_f),
         m_key(f->glGenLists(1)) {
       Q_ASSERT(f != nullptr);
@@ -152,7 +152,14 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
 
   void callListAndIncrementZ(GLuint id);
 
-  void putVertex(const Vertex& v);
+  template <class T = qreal>
+  void putVertex(const Vertex& v) {
+    if constexpr (std::is_same_v<T, GLfloat>) {
+      glVertex3f(v.x(), v.y(), m_z);
+    } else if constexpr (std::is_same_v<T, GLdouble>) {
+      glVertex3d(v.x(), v.y(), m_z);
+    }
+  }
 
   template <class... Args>
   void putVertices(const Args&... args) {
@@ -169,7 +176,7 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
   void setZ(qreal z);
 
   GLGameVisualizerCore_2_1();
-  ~GLGameVisualizerCore_2_1();
+  ~GLGameVisualizerCore_2_1() override = default;
 
  protected:
   qreal m_z;

@@ -1,5 +1,7 @@
 #include "ParametersHandler.h"
 
+#include <utility>
+
 namespace Parameters {
   bool isParameterType(const QJsonObject& object) {
     return object.contains(Detail::Value) && !object[Detail::Value].isNull() &&
@@ -7,29 +9,20 @@ namespace Parameters {
   }
 
   // UpdateRequest
-  UpdateRequest::UpdateRequest() {
+  UpdateRequest::UpdateRequest(QStringList path, QString value) :
+      m_path(std::move(path)),
+      m_value(std::move(value)) {
   }
 
-  UpdateRequest::UpdateRequest(const QStringList& path, const QString& value) :
-      m_path(path),
-      m_value(value) {
-  }
-
-  QStringList UpdateRequest::path() const {
+  const QStringList& UpdateRequest::path() const {
     return m_path;
   }
 
-  QString UpdateRequest::value() const {
+  const QString& UpdateRequest::value() const {
     return m_value;
   }
 
   // JsonHandler
-  JsonHandler::JsonHandler() {
-  }
-
-  JsonHandler::~JsonHandler() {
-  }
-
   JsonHandler JsonHandler::fromJsonObject(const QJsonObject& object) {
     std::function<void(JsonHandler&, const QJsonObject&)> f =
         [&](JsonHandler& handler, const QJsonObject& object) {
@@ -151,12 +144,6 @@ namespace Parameters {
   }
 
   // Handler
-  Handler::Handler() {
-  }
-
-  Handler::~Handler() {
-  }
-
   QByteArray Handler::json() const {
     if (!value && map.empty()) {
       return "{}";
@@ -260,18 +247,16 @@ namespace Parameters {
     for (const auto& up : updates) {
       auto path = up.path();
       Handler* ptr = this;
-      bool notFound = false;
-      for (auto key : path) {
+      bool found = true;
+      for (const auto& key : path) {
         if (ptr->map.find(key) != ptr->map.end()) {
           ptr = &(ptr->map[key]);
         } else {
-          notFound = true;
+          found = false;
           break;
         }
       }
-      if (notFound) {
-        ret += up;
-      } else if (ptr->value) {
+      if (found && ptr->value) {
         if (!ptr->value->update(up.value())) {
           ret += up;
         }

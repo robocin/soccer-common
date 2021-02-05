@@ -18,9 +18,6 @@ void ModulesWidgets::setupModulesWidgets(MainWindow* mainWindow) {
   }
 }
 
-ModulesWidgets::ModulesWidgets() {
-}
-
 ModuleBox* ModulesWidgets::moduleBox(const QString& key) {
   if (!m_modules.contains(key)) {
     auto moduleBox = Factory::moduleBox(key, m_mainWindow);

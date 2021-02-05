@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <boost/bimap.hpp>
 #include <QRegularExpression>
+#include <utility>
 #include "soccer-common/Utils/Utils.h"
 #include "soccer-common/MagicEnum/MagicEnum.h"
 
@@ -51,7 +52,7 @@ namespace Parameters {
     friend class ParameterType<T>;
 
     T m_value;
-    mutable bool m_updated;
+    mutable bool m_updated{};
 
     template <class U>
     void set(U&& value) {
@@ -65,6 +66,14 @@ namespace Parameters {
     template <class... Us>
     Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
     }
+
+    // disable_copy:
+    Arg(const Arg&) = delete;
+    Arg& operator=(const Arg&) = delete;
+
+    // disable_move:
+    Arg(Arg&&) = delete;
+    Arg& operator=(Arg&&) = delete;
 
     T value() const {
       return m_value;
@@ -89,7 +98,7 @@ namespace Parameters {
                       (std::is_arithmetic_v<T> &&
                        !(is_any_of_v<T, char, long double>) ) ||
                       std::is_same_v<T, QString>,
-                  "unsuported type.");
+                  "unsupported type.");
 
    protected:
     Arg<T>& ref;
@@ -105,8 +114,8 @@ namespace Parameters {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (str == "0" || str == "1" || str == "true" || str == "false") {
-          return std::make_optional<T>(str == "1" || str == "true");
+        if (QVariant(str).canConvert<bool>()) {
+          return std::make_optional<T>(QVariant(str).toBool());
         } else {
           return std::nullopt;
         }
@@ -125,9 +134,9 @@ namespace Parameters {
       }
     }
 
-    ParameterType(Arg<T>& t_ref, const QString& t_about = "") :
+    explicit ParameterType(Arg<T>& t_ref, QString t_about = "") :
         ref(t_ref),
-        about(t_about) {
+        about(std::move(t_about)) {
       if constexpr (std::is_enum_v<T>) {
         if (!MagicEnum::contains(ref.value())) {
           throw std::runtime_error("enum value out of range.");
@@ -135,8 +144,7 @@ namespace Parameters {
       }
     }
 
-    ~ParameterType() override {
-    }
+    ~ParameterType() override = default;
 
     QString value() const override {
       if constexpr (std::is_enum_v<T>) {
@@ -178,9 +186,9 @@ namespace Parameters {
    public:
     using ParameterType<T>::value;
 
-    Text(Arg<T>& t_ref,
-         const QRegularExpression& t_regex = Regex::AnyMatch,
-         const QString& t_about = "") :
+    explicit Text(Arg<T>& t_ref,
+                  const QRegularExpression& t_regex = Regex::AnyMatch,
+                  const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         regex(t_regex) {
       if (!regex.match(Utils::removeQuotes(static_cast<QString>(value())))
@@ -382,7 +390,7 @@ namespace Parameters {
     using ParameterType<bool>::ref;
 
    public:
-    CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
+    explicit CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
         ParameterType<bool>(t_ref, t_about) {
     }
 

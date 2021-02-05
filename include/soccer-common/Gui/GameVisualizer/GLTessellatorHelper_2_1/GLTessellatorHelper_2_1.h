@@ -19,8 +19,8 @@ class GLTessellatorHelper_2_1 : public GLGameVisualizerCore_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(TessScopedDrawGuard);
 
-    inline TessScopedDrawGuard(GLTessellatorHelper_2_1* t_f,
-                               bool t_isDisplayListCall = false) :
+    inline explicit TessScopedDrawGuard(GLTessellatorHelper_2_1* t_f,
+                                        bool t_isDisplayListCall = false) :
         f(t_f),
         m_tess(gluNewTess()),
         isDisplayListCall(t_isDisplayListCall),
@@ -61,7 +61,7 @@ class GLTessellatorHelper_2_1 : public GLGameVisualizerCore_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(TessContourGuard);
 
-    inline TessContourGuard(GLUtesselator* _tess) : tess(_tess) {
+    inline explicit TessContourGuard(GLUtesselator* t_tess) : tess(t_tess) {
       Q_ASSERT(tess != nullptr);
       gluTessBeginContour(tess);
     }
@@ -76,7 +76,7 @@ class GLTessellatorHelper_2_1 : public GLGameVisualizerCore_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(TessPolygonGuard);
 
-    inline TessPolygonGuard(GLUtesselator* _tess) : tess(_tess) {
+    inline explicit TessPolygonGuard(GLUtesselator* t_tess) : tess(t_tess) {
       Q_ASSERT(tess != nullptr);
       gluTessBeginPolygon(tess, nullptr);
     }
@@ -88,8 +88,8 @@ class GLTessellatorHelper_2_1 : public GLGameVisualizerCore_2_1 {
   std::array<GLdouble, 3> makeTessVertex(qreal x, qreal y);
   std::array<GLdouble, 3> makeTessVertex(const Vertex& v);
 
-  GLTessellatorHelper_2_1();
-  ~GLTessellatorHelper_2_1();
+  GLTessellatorHelper_2_1() = default;
+  ~GLTessellatorHelper_2_1() override = default;
 };
 
 #endif // SOCCER_COMMON_GLTESSELLATORHELPER_2_1_H

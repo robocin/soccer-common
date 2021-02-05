@@ -39,10 +39,9 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   Local local;
 
  public:
-  inline GameVisualizerPainter2D() {
-  }
+  inline GameVisualizerPainter2D() = default;
 
-  inline ~GameVisualizerPainter2D() {
+  inline ~GameVisualizerPainter2D() override {
     if (local.circleDisplayListId) {
       glDeleteLists(*local.circleDisplayListId, 1);
     }
@@ -134,6 +133,11 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
 
   inline void drawFilledPolygon(Polygon polygon, const QColor& color) {
     TessScopedDrawGuard guard(this);
+    polygon = removeCollinearPoints(polygon);
+    if (polygon.size() < 3) {
+      qWarning() << "at least 3 distinct points.";
+      return;
+    }
     putColor(color);
     QVector<std::array<GLdouble, 3>> vertices;
     vertices.reserve(polygon.size());
@@ -207,7 +211,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
 
   inline void drawArc(const Vertex& origin,
                       qreal innerRadius,
-                      qreal outterRadius,
+                      qreal outerRadius,
                       qreal theta1,
                       qreal theta2,
                       const QColor& color) {
@@ -216,19 +220,19 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
       qWarning() << "inner radius must be positive.";
       return;
     }
-    if (outterRadius <= 0) {
+    if (outerRadius <= 0) {
       qWarning() << "outter radius must be positive.";
       return;
     }
-    if (innerRadius >= outterRadius) {
-      qWarning() << "inner radius must be less than outter radius.";
+    if (innerRadius >= outerRadius) {
+      qWarning() << "inner radius must be less than outer radius.";
       return;
     }
     putColor(color);
-    qreal dTheta = 1.0 / outterRadius;
+    qreal dTheta = 1.0 / outerRadius;
     for (qreal theta = theta1; theta < theta2 + dTheta; theta += dTheta) {
       qreal cos = std::cos(theta), sin = std::sin(theta);
-      putVertices(origin + outterRadius * Vertex(cos, sin),
+      putVertices(origin + outerRadius * Vertex(cos, sin),
                   origin + innerRadius * Vertex(cos, sin));
     }
   }

@@ -18,7 +18,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
                           QWidget* parent = nullptr,
                           Qt::WindowFlags f = Qt::WindowFlags());
 
-  ~GameVisualizer() override;
+  ~GameVisualizer() override = default;
 
   class Key;
 
@@ -128,7 +128,7 @@ class GameVisualizer::PaintingPointer : public std::unique_ptr<Painting> {
 
  public:
   template <class... Args>
-  PaintingPointer(Args&&... args) :
+  explicit PaintingPointer(Args&&... args) :
       std::unique_ptr<Painting>(std::forward<Args>(args)...),
       m_visibility(true) {
   }
@@ -157,7 +157,7 @@ class GameVisualizer::Key : public QObject {
       qWarning() << "cannot setup twice.";
       return;
     }
-    m_key = gameVisualizer->getUniqueIntegerKey();
+    m_key = GameVisualizer::getUniqueIntegerKey();
     m_layer = layer;
     //
     QObject::connect(this,
@@ -173,40 +173,40 @@ class GameVisualizer::Key : public QObject {
                      Qt::QueuedConnection);
     //
     QObject::connect(this,
-                     &GameVisualizer::Key::onPaintingEmmited,
+                     &GameVisualizer::Key::onPaintingEmitted,
                      gameVisualizer,
                      &GameVisualizer::draw,
                      Qt::DirectConnection);
   }
 
   inline void draw(const Painting& painting) {
-    emit onPaintingEmmited(m_key, painting.clone().release(), m_layer);
+    emit onPaintingEmitted(m_key, painting.clone().release(), m_layer);
   }
 
-  inline void draw(std::unique_ptr<Painting> painting) {
-    emit onPaintingEmmited(m_key, painting.release(), m_layer);
+  inline void draw(std::unique_ptr<Painting>&& painting) {
+    emit onPaintingEmitted(m_key, painting.release(), m_layer);
   }
 
   inline void draw(std::unique_ptr<Painting>& painting) {
-    emit onPaintingEmmited(m_key, painting->clone().release(), m_layer);
+    emit onPaintingEmitted(m_key, painting->clone().release(), m_layer);
   }
 
   inline void setVisibility(bool visibility) {
     emit onVisibilityChanged(m_key, visibility);
   }
 
-  inline ~Key() {
+  inline ~Key() override {
     emit onKeyDeleted(m_key);
   }
 
-  inline operator int() const {
+  inline explicit operator int() const {
     return m_key;
   }
 
  signals:
   void onKeyDeleted(int key);
   void onVisibilityChanged(int key, bool visibility);
-  void onPaintingEmmited(int uniqueIntegerKey,
+  void onPaintingEmitted(int uniqueIntegerKey,
                          Painting* painting,
                          Painting::Layers layer);
 

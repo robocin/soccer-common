@@ -11,9 +11,6 @@ GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
   /* allows keyboard */ { setFocusPolicy(Qt::StrongFocus); }
 }
 
-GameVisualizer::~GameVisualizer() {
-}
-
 void GameVisualizer::setBackgroundColor(const QColor& color) {
   ScheduleUpdateAtEnd schedule(this);
   shared->backgroundColor = color;
@@ -102,7 +99,7 @@ void GameVisualizer::mouseMoveEvent(QMouseEvent* event) {
     if (leftButton) {
       local.viewOffset.rx() -= local.scale * (event->x() - local.mouse.x());
       local.viewOffset.ry() += local.scale * (event->y() - local.mouse.y());
-    } else if (midButton) {
+    } else {
       qreal zoomRatio = (event->y() - local.mouse.y()) / 500.0;
       local.scale *= (1.0 + zoomRatio);
     }
@@ -164,8 +161,8 @@ void GameVisualizer::paintGL() {
   prepareToPaint();
   /* drawing here. */ {
     setZ(0);
-    for (std::size_t i = 0; i < local.paintings.size(); ++i) {
-      for (auto& ptr : local.paintings[i]) {
+    for (auto& painting : local.paintings) {
+      for (auto& ptr : painting) {
         if (ptr.second.visibility()) {
           ptr.second->run(static_cast<GameVisualizerPainter2D*>(this));
         }
@@ -211,41 +208,43 @@ void GameVisualizer::recomputeProjection() {
 }
 
 void GameVisualizer::getUpdates() {
-  shared.apply([this](Shared& shared) -> void {
-    if (shared.maxFrameRate) {
-      local.maxFrameRate = shared.maxFrameRate.getAndReset();
+  shared.apply([this](Shared& object) -> void {
+    if (object.maxFrameRate) {
+      local.maxFrameRate = object.maxFrameRate.getAndReset();
     }
-    if (shared.scale) {
-      local.scale = shared.scale.getAndReset();
+    if (object.scale) {
+      local.scale = object.scale.getAndReset();
     }
-    if (shared.backgroundColor) {
-      local.backgroundColor = shared.backgroundColor.getAndReset();
+    if (object.backgroundColor) {
+      local.backgroundColor = object.backgroundColor.getAndReset();
     }
     for (std::size_t i = 0; i < local.paintings.size(); ++i) {
       auto& paintings = local.paintings[i];
-      for (auto& ptr : shared.paintings[i].ref()) {
+      for (auto& ptr : object.paintings[i].ref()) {
         if (ptr.second) {
-          bool visibilty = (paintings.find(ptr.first) != paintings.end()) ?
-                               paintings[ptr.first].visibility() :
-                               true;
-          auto it = paintings.insert_or_assign(ptr.first, std::move(ptr.second))
+          bool visibility = !(paintings.find(ptr.first) != paintings.end()) ||
+                            paintings[ptr.first].visibility();
+          auto it = paintings
+                        .insert_or_assign(
+                            ptr.first,
+                            static_cast<PaintingPointer>(std::move(ptr.second)))
                         .first;
-          it->second.setVisibility(visibilty);
+          it->second.setVisibility(visibility);
         } else {
           paintings.erase(ptr.first);
         }
       }
-      shared.paintings[i].ref().clear();
+      object.paintings[i].ref().clear();
     }
     {
-      for (auto [key, visibility] : shared.visibility.ref()) {
-        for (std::size_t i = 0; i < local.paintings.size(); ++i) {
-          if (local.paintings[i].find(key) != local.paintings[i].end()) {
-            local.paintings[i][key].setVisibility(visibility);
+      for (auto [key, visibility] : object.visibility.ref()) {
+        for (auto& painting : local.paintings) {
+          if (painting.find(key) != painting.end()) {
+            painting[key].setVisibility(visibility);
           }
         }
       }
-      shared.visibility->clear();
+      object.visibility->clear();
     }
   });
 }

@@ -19,7 +19,7 @@ class ScoreboardWidget : public QWidget,
  public:
   explicit ScoreboardWidget(
       QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
-  ~ScoreboardWidget();
+  ~ScoreboardWidget() override;
 
  public slots:
   void setFirstTeamColor(const QColor& color);

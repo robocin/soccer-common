@@ -96,8 +96,8 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
       //
       m_menu->addAction(Factory::toggleViewAction(key, tabId, m_tabWidget));
       //
-      for (int i = 0; i < m_robots.size(); ++i) {
-        m_robots[i]->moduleBox(key);
+      for (auto& m_robot : m_robots) {
+        m_robot->moduleBox(key);
       }
     }
     return m_robots[pos]->moduleBox(key);

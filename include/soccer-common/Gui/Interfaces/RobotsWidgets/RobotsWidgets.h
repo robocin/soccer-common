@@ -11,7 +11,7 @@ class MainWindow;
 class RobotsWidgets {
   int m_maxRobots;
   class TabsWidget;
-  TabsWidget* tabsWidget;
+  TabsWidget* tabsWidget{};
 
  protected:
   void setupRobotsWidgets(MainWindow* mainWindow);

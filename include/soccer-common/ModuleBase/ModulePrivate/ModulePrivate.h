@@ -29,7 +29,7 @@ class ModulePrivate : public QObject, private QRunnable {
   std::mutex execMutex;
 
   void parametersUpdate();
-  void run() override final;
+  void run() final;
 
   static void waitOrDelete(ModulePrivate* object);
 };

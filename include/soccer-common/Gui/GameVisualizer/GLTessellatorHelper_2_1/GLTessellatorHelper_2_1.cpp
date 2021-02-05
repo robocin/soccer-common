@@ -10,7 +10,7 @@ void GLTessellatorHelper_2_1::tessEndCB() {
 }
 
 void GLTessellatorHelper_2_1::tessVertexCB(const GLvoid* data) {
-  const GLdouble* ptr = (const GLdouble*) data;
+  const auto* ptr = (const GLdouble*) data;
   ::glVertex3dv(ptr);
 }
 
@@ -28,10 +28,4 @@ std::array<GLdouble, 3> GLTessellatorHelper_2_1::makeTessVertex(qreal x,
 std::array<GLdouble, 3>
 GLTessellatorHelper_2_1::makeTessVertex(const Vertex& v) {
   return makeTessVertex(v.x(), v.y());
-}
-
-GLTessellatorHelper_2_1::GLTessellatorHelper_2_1() {
-}
-
-GLTessellatorHelper_2_1::~GLTessellatorHelper_2_1() {
 }

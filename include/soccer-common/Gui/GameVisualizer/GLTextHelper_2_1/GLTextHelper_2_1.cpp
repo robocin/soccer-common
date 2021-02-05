@@ -42,9 +42,6 @@ void GLTextHelper_2_1::putChar(const QChar& ch) {
 GLTextHelper_2_1::GLTextHelper_2_1() : glyphs(this) {
 }
 
-GLTextHelper_2_1::~GLTextHelper_2_1() {
-}
-
 void GLTextHelper_2_1::setFont(const QFont& font) {
   glyphs.setFont(font);
 }

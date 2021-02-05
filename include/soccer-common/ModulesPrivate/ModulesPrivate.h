@@ -16,7 +16,7 @@ class ModulesPrivate : public QObject {
     template <std::size_t I>
     inline QTimer* get() const {
       if (!m_map.contains(I)) {
-        QTimer* timer = new QTimer();
+        auto* timer = new QTimer();
         timer->setTimerType(Qt::PreciseTimer);
         timer->start(I);
         timer->moveToThread(m_thread);
@@ -98,8 +98,8 @@ class ModulesPrivate : public QObject {
 
     static void
     disconnectAndDelete(ModuleBase* ref,
-                        QVector<QMetaObject::Connection> connections) {
-      for (QMetaObject::Connection connection : connections) {
+                        const QVector<QMetaObject::Connection>& connections) {
+      for (const QMetaObject::Connection& connection : connections) {
         QObject::disconnect(connection);
       }
       ref->prepareToDelete();

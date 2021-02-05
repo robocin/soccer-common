@@ -25,9 +25,6 @@ void InfoWidgets::setupInfoWidgets(MainWindow* mainWindow) {
   }
 }
 
-InfoWidgets::InfoWidgets() {
-}
-
 ScoreboardWidget* InfoWidgets::scoreboard() const {
   return m_scoreboard;
 }

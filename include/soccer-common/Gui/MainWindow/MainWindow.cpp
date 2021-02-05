@@ -166,23 +166,23 @@ void MainWindow::writeLocalSettings(QSettings& settings) {
 }
 
 void MainWindow::loadLocalSettings(const QSettings& settings) {
-  QByteArray geometryValue = settings.value("geometry").value<QByteArray>();
+  auto geometryValue = settings.value("geometry").value<QByteArray>();
   restoreGeometry(geometryValue);
 
-  QByteArray windowState = settings.value("windowState").value<QByteArray>();
+  auto windowState = settings.value("windowState").value<QByteArray>();
   restoreState(windowState);
 }
 
 void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
   /* file exit */ {
-    QAction* exit = new QAction("Exit", &menubar["File"]);
+    auto* exit = new QAction("Exit", &menubar["File"]);
     exit->setShortcuts({QKeySequence("Ctrl+C"), QKeySequence("Ctrl+Q")});
     QObject::connect(exit, &QAction::triggered, this, &MainWindow::close);
     menubar["File"].addAction(exit);
   }
 
   /* save config */ {
-    QAction* save = new QAction("Save", &menubar["File"]);
+    auto* save = new QAction("Save", &menubar["File"]);
     save->setShortcut(QKeySequence("Ctrl+S"));
     QObject::connect(save, &QAction::triggered, this, [this]() {
       saveEventAndLog();
@@ -191,7 +191,7 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
   }
 
   /* save as config */ {
-    QAction* saveAs = new QAction("Save As...", &menubar["File"]);
+    auto* saveAs = new QAction("Save As...", &menubar["File"]);
     saveAs->setShortcut(QKeySequence("Ctrl+Shift+S"));
     QDir().mkdir(localConfigPath() + "custom/");
     QObject::connect(saveAs, &QAction::triggered, this, [this]() {
@@ -211,7 +211,7 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
   }
 
   /* open config */ {
-    QAction* open = new QAction("Open...", &menubar["File"]);
+    auto* open = new QAction("Open...", &menubar["File"]);
     open->setShortcut(QKeySequence("Ctrl+O"));
     /* enabled only when the game is paused. */ {
       open->setEnabled(!playPauseButton()->isClicked());
@@ -245,7 +245,7 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
   }
 
   /* view fullscreen */ {
-    QAction* fullscreen = new QAction("Fullscreen", &menubar["View"]);
+    auto* fullscreen = new QAction("Fullscreen", &menubar["View"]);
     fullscreen->setShortcut(QKeySequence("Ctrl+Shift+F11"));
     QObject::connect(fullscreen, &QAction::triggered, this, [this]() {
       isFullScreen() ? showNormal() : showFullScreen();
@@ -255,7 +255,7 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
   }
 
   /* view dockwidgets */ {
-    QMenu* menu = new QMenu("DockWidgets", &menubar["View"]);
+    auto* menu = new QMenu("DockWidgets", &menubar["View"]);
     menu->addAction(ui->dockWidgetInfo->toggleViewAction());
     menu->addAction(ui->dockWidgetRobots->toggleViewAction());
     menu->addAction(ui->dockWidgetModules->toggleViewAction());
