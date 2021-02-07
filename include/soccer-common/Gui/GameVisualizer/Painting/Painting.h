@@ -17,8 +17,8 @@ class Painting {
   virtual void run(GameVisualizerPainter2D* f) = 0;
   virtual std::unique_ptr<Painting> clone() const = 0;
 
-  static std::unique_ptr<Painting>
-  create(std::function<void(GameVisualizerPainter2D*)> function);
+  template <class F>
+  static std::unique_ptr<Painting> create(F&& function);
 };
 
 enum class Painting::Layers : int {
@@ -33,8 +33,8 @@ class Painting::FunctionPainting : public Painting {
   std::function<void(GameVisualizerPainter2D*)> m_function;
 
  public:
-  inline FunctionPainting(
-      std::function<void(GameVisualizerPainter2D*)> function) :
+  template <class F>
+  inline explicit FunctionPainting(F function) :
       m_function(std::move(function)) {
   }
 
@@ -47,9 +47,9 @@ class Painting::FunctionPainting : public Painting {
   }
 };
 
-inline std::unique_ptr<Painting>
-Painting::create(std::function<void(GameVisualizerPainter2D*)> function) {
-  return std::make_unique<Painting::FunctionPainting>(function);
+template <class F>
+inline std::unique_ptr<Painting> Painting::create(F&& function) {
+  return std::make_unique<FunctionPainting>(std::forward<F>(function));
 }
 
 #endif // SOCCER_COMMON_PAINTING_H

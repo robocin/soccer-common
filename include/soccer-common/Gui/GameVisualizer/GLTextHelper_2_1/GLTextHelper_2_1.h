@@ -63,7 +63,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
       polygons = painterPath.toSubpathPolygons();
       bool isEmptyPolygon = polygons.empty();
 
-      if (isEmptyPolygon) { // simulate blank chars with undescore size.
+      if (isEmptyPolygon) { // simulate blank chars with underscore size.
         painterPath.addText(0, 0, font, QChar('_'));
         polygons = painterPath.toSubpathPolygons();
       }
