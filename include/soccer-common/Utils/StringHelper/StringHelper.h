@@ -23,7 +23,7 @@ namespace Utils {
   }
 
   template <class T>
-  QString nameOfTypeFromValue(const T&) {
+  QString nameOfType(T&&) {
     return nameOfType<T>();
   }
 
