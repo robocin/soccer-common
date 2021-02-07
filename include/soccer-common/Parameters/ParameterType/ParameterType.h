@@ -114,8 +114,8 @@ namespace Parameters {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (QVariant(str).canConvert<bool>()) {
-          return std::make_optional<T>(QVariant(str).toBool());
+        if (auto var = QVariant(str); var.canConvert<bool>()) {
+          return std::make_optional<T>(var.toBool());
         } else {
           return std::nullopt;
         }

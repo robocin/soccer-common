@@ -14,8 +14,8 @@ template <class T>
 Extends(const T&) -> Extends<T>;
 
 template <class T>
-[[maybe_unused]] constexpr Extends<T> extends(T&& object) {
-  return Extends<T>(std::forward<T>(object));
+[[maybe_unused]] constexpr Extends<T> extends(T object) {
+  return Extends<T>(std::move(object));
 }
 
 template <class T, class... Args>
