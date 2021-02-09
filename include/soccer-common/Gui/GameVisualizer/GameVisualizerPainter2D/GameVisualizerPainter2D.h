@@ -30,6 +30,9 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
       }
       fixed += polygon[i];
     }
+    while (fixed.size() > 1 && (fixed.front() == fixed.back())) {
+      fixed.pop_back();
+    }
     return fixed;
   }
 
