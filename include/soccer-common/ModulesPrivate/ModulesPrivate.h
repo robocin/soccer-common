@@ -62,7 +62,7 @@ class ModulesPrivate : public QObject {
 
  public:
   explicit ModulesPrivate(MainWindow* gui);
-  ~ModulesPrivate();
+  ~ModulesPrivate() override = default;
 
   MainWindow* gui() const;
   Timers* timers() const;

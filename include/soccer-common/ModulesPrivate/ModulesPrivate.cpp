@@ -17,9 +17,6 @@ ModulesPrivate::ModulesPrivate(MainWindow* gui) :
                    &QThread::quit);
 }
 
-ModulesPrivate::~ModulesPrivate() {
-}
-
 MainWindow* ModulesPrivate::gui() const {
   return m_gui;
 }
