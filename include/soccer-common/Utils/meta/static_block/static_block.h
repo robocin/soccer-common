@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_STATICBLOCKTAG_H
-#define SOCCER_COMMON_STATICBLOCKTAG_H
+#ifndef SOCCER_COMMON_STATIC_BLOCK_H
+#define SOCCER_COMMON_STATIC_BLOCK_H
 
 #include <functional>
 
@@ -29,4 +29,4 @@ struct [[nodiscard]] [[maybe_unused]] static_block_tag {
           _at_line_),                                                          \
       __LINE__) = (static_block_tag)[]()->void
 
-#endif // SOCCER_COMMON_STATICBLOCKTAG_H
+#endif // SOCCER_COMMON_STATIC_BLOCK_H
