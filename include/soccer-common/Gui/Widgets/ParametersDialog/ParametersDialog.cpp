@@ -71,7 +71,7 @@ Parameters::UpdateRequests ParametersDialog::getUpdates(bool overwriteBackup,
 void ParametersDialog::openCurrentFromJsonHandler(
     const Parameters::JsonHandler& json) {
   auto updates = json.updates();
-  for (auto up : updates) {
+  for (const auto& up : updates) {
     auto it = m_widgets.find(up.path());
     if (it != m_widgets.end()) {
       if (up.value() != it.value()->input()->currentValue()) {
@@ -88,8 +88,12 @@ void ParametersDialog::updateCurrentAndEmit(bool allValues) {
   UpdateRequests updates = getUpdates(true, allValues);
   if (!updates.empty()) {
     m_jsons[m_title].insert_or_assign(updates);
-    qWarning() << "emitting on changing parameters.";
+    qWarning() << "emitting on changing parameters:";
+    for (const auto& up : updates) {
+      qWarning().nospace() << up.path() << " with value: " << up.value() << ".";
+    }
     emit onChangingParameters(updates);
+    qWarning() << "all changed parameters were emitted.";
   }
 }
 
