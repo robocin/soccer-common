@@ -154,9 +154,13 @@ void ParametersDialog::onCancelButtonClicked() {
   hide();
 }
 
-void ParametersDialog::onOkButtonClicked() {
+void ParametersDialog::onApplyButtonClicked() {
   qWarning().nospace() << "saving changes from " << m_title << ".";
   updateCurrentAndEmit();
+}
+
+void ParametersDialog::onOkButtonClicked() {
+  onApplyButtonClicked();
   hide();
 }
 

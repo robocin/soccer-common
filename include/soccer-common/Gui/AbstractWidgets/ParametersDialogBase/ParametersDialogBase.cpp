@@ -26,5 +26,7 @@ void ParametersDialogBase::on_buttonBox_clicked(QAbstractButton* button) {
     onCancelButtonClicked();
   } else if (button == ui->buttonBox->button(QDialogButtonBox::Ok)) {
     onOkButtonClicked();
+  } else if (button == ui->buttonBox->button(QDialogButtonBox::Apply)) {
+    onApplyButtonClicked();
   }
 }

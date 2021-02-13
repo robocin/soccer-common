@@ -26,6 +26,7 @@ class ParametersDialogBase : public QWidget {
   virtual void onSaveButtonClicked() = 0;
   virtual void onCancelButtonClicked() = 0;
   virtual void onOkButtonClicked() = 0;
+  virtual void onApplyButtonClicked() = 0;
 
  private slots:
   void on_buttonBox_clicked(QAbstractButton* button);

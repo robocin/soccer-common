@@ -19,7 +19,7 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   QMap<QStringList, ParameterWidget*> m_widgets;
 
  public:
-  ParametersDialog(
+  explicit ParametersDialog(
       const QString& title,
       QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~ParametersDialog() override;
@@ -47,6 +47,7 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   void closeEvent(QCloseEvent*) override;
   void onCancelButtonClicked() override;
 
+  void onApplyButtonClicked() override;
   void onOkButtonClicked() override;
 
   void writeLocalSettings(QSettings& settings) override;
