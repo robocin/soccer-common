@@ -12,8 +12,8 @@ class Painting {
  public:
   enum class Layers;
 
-  Painting();
-  virtual ~Painting();
+  Painting() = default;
+  virtual ~Painting() = default;
   virtual void run(GameVisualizerPainter2D* f) = 0;
   virtual std::unique_ptr<Painting> clone() const = 0;
 
