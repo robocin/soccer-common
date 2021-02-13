@@ -4,7 +4,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 
-#include <iostream>
 #include <optional>
 
 /*!
