@@ -87,13 +87,13 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   };
 
   struct Shared {
-    std::array<SetterGetter<std::map<int, std::unique_ptr<Painting>>>,
+    std::array<SharedValue<std::map<int, std::unique_ptr<Painting>>>,
                MagicEnum::count<Painting::Layers>()>
         paintings{};
 
-    SetterGetter<QVector<QPair<int, bool>>> visibility{};
+    SharedValue<QVector<QPair<int, bool>>> visibility{};
 
-    SetterGetter<QElapsedTimer> stopwatch = Factory::startedElapsedTimer();
+    SharedValue<QElapsedTimer> stopwatch = Factory::startedElapsedTimer();
 
     SharedOptional<int> maxFrameRate;
     SharedOptional<qreal> scale;
