@@ -13,8 +13,8 @@
 #define RC_META_PACKAGE(type) class [[nodiscard]] [[maybe_unused]] type
 
 /*!
- * @brief declares a private type with varname, and its own public set/get
- * methods
+ * @brief declares a private type with name 'varname', default_value
+ * initialized, and its own public set/get methods
  */
 #define RC_VAR(type, varname)                                                  \
  public:                                                                       \
@@ -27,11 +27,11 @@
   }                                                                            \
                                                                                \
  private:                                                                      \
-  type m_##varname
+  type m_##varname = {}
 
 /*!
- * @brief declares a private type with varname, default value, and its own
- * public set/get methods
+ * @brief declares a private type with name 'varname', given default value, and
+ * its own public set/get methods
  */
 #define RC_VARVAL(type, varname, default_value)                                \
  public:                                                                       \
