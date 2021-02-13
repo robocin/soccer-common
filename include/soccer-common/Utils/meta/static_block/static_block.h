@@ -3,20 +3,20 @@
 
 #include <functional>
 
-struct StaticBlockTag {
+struct [[nodiscard]] [[maybe_unused]] static_block_tag {
   template <class Functor>
-  inline explicit StaticBlockTag(Functor&& f) {
+  inline explicit static_block_tag(Functor&& f) {
     std::forward<Functor>(f)();
   }
-  ~StaticBlockTag() = default;
+  ~static_block_tag() = default;
 
   // disable_copy:
-  StaticBlockTag(const StaticBlockTag&) = delete;
-  StaticBlockTag& operator=(const StaticBlockTag&) = delete;
+  static_block_tag(const static_block_tag&) = delete;
+  static_block_tag& operator=(const static_block_tag&) = delete;
 
   // disable_move:
-  StaticBlockTag(StaticBlockTag&&) = delete;
-  StaticBlockTag& operator=(StaticBlockTag&&) = delete;
+  static_block_tag(static_block_tag&&) = delete;
+  static_block_tag& operator=(static_block_tag&&) = delete;
 };
 
 #define __RC_TOKEN_PASTING__(A, B) __RC_TOKEN_PASTING_IMPL__(A, B)
@@ -27,6 +27,6 @@ struct StaticBlockTag {
       __RC_TOKEN_PASTING__(                                                    \
           __RC_TOKEN_PASTING__(static_block_tag_, __COUNTER__),                \
           _at_line_),                                                          \
-      __LINE__) = (StaticBlockTag)[]()->void
+      __LINE__) = (static_block_tag)[]()->void
 
 #endif // SOCCER_COMMON_STATICBLOCKTAG_H

@@ -1,8 +1,8 @@
 #ifndef SOCCER_COMMON_UTILS_H
 #define SOCCER_COMMON_UTILS_H
 
+#include "meta/meta.h"
 #include "Color/Color.h"
-#include "StaticBlockTag/StaticBlockTag.h"
 #include "InheritanceFactorySafeMap/InheritanceFactorySafeMap.h"
 #include "StringHelper/StringHelper.h"
 #include "PtrMulticast/PtrMulticast.h"
