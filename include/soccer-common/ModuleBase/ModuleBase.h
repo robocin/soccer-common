@@ -47,7 +47,6 @@ class IndexedModuleBase : public ModuleBase {
   explicit IndexedModuleBase(int index, QThreadPool* threadPool);
   ~IndexedModuleBase() override = default;
 
- protected:
   int index() const;
 
  private:

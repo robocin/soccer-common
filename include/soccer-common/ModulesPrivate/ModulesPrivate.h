@@ -49,7 +49,7 @@ class ModulesPrivate : public QObject {
       return get<1000 / I>();
     }
 
-    inline QTimer* asap() const {
+    [[maybe_unused]] inline QTimer* asap() const {
       return get<0>();
     }
   };
@@ -90,10 +90,7 @@ class ModulesPrivate : public QObject {
     using F = typename InheritanceFactorySafeMap<T, Args...>::type;
 
     M* modules;
-
     T*& ref;
-    std::optional<int> index; // can be indexed, or not.
-
     F factory;
 
     static void
@@ -150,9 +147,17 @@ class ModulesPrivate : public QObject {
       static_cast<QObject*>(ref)->moveToThread(
           static_cast<ModulesPrivate*>(modules)->modulesThread());
 
-      qWarning().nospace() << "a new instance of " << Utils::nameOfType<T>()
-                           << " with type " << type << " was created: " << ref
-                           << ".";
+      QString detail;
+      if constexpr (std::is_base_of_v<IndexedModuleBase, T>) {
+        int index = static_cast<IndexedModuleBase*>(ref)->index();
+        detail += QString(" (index '%1')").arg(index);
+      }
+
+      qWarning().nospace().noquote()
+          << "a new instance of " << Utils::nameOfType<T>() << detail
+          << " with type "
+          << "\"" << type << "\""
+          << " was created: " << ref << ".";
 
       auto connections = setDefaultConnections(ref, modules, moduleBox);
       QObject::connect(modules,
@@ -185,13 +190,16 @@ class ModulesPrivate : public QObject {
       setToolTip(factory, type, moduleBox);
     }
 
-    static ModuleBox* getModuleBox(MainWindow* gui,
-                                   const std::optional<int>& index) {
-      if (index) {
-        return gui->indexedModuleBox(*index, Utils::nameOfType<T>());
-      } else {
-        return gui->moduleBox(Utils::nameOfType<T>());
-      }
+    template <class... Types>
+    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui,
+                                                    Types&&...) {
+      return gui->moduleBox(Utils::nameOfType<T>());
+    }
+
+    template <class... Types>
+    [[maybe_unused]] static ModuleBox*
+    getModuleBox(MainWindow* gui, int index, Types&&...) {
+      return gui->indexedModuleBox(index, Utils::nameOfType<T>());
     }
 
     template <class... Types>
@@ -203,7 +211,7 @@ class ModulesPrivate : public QObject {
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       //
-      ModuleBox* moduleBox = getModuleBox(gui, index);
+      ModuleBox* moduleBox = getModuleBox(gui, std::forward<Types>(types)...);
       //
       QObject::connect(moduleBox,
                        &ModuleBox::onCurrentTextChanged,
@@ -237,17 +245,9 @@ class ModulesPrivate : public QObject {
         factory(t_factory) {
     }
 
-    template <class R = void, class... Types>
-    std::enable_if_t<!std::is_base_of_v<IndexedModuleBase, T>, R> // !indexed
-    operator()(Types&&... types) {
+    template <class... Types>
+    void operator()(Types&&... types) {
       exec(std::forward<Types>(types)...);
-    }
-
-    template <class R = void, class... Types>
-    std::enable_if_t<std::is_base_of_v<IndexedModuleBase, T>, R> // indexed
-    operator()(int moduleIndex, Types&&... types) {
-      index.emplace(moduleIndex);
-      exec(moduleIndex, std::forward<Types>(types)...);
     }
   };
 
