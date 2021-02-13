@@ -25,6 +25,10 @@ class SharedOptional : public std::optional<T> {
     return std::optional<T>::value();
   }
 
+  constexpr T value() const {
+    return std::optional<T>::value();
+  }
+
   constexpr T get() const {
     return std::optional<T>::value();
   }

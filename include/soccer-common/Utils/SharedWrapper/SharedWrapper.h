@@ -25,6 +25,10 @@ class SharedWrapper {
   SharedWrapper(SharedWrapper&&) = delete;
   SharedWrapper& operator=(SharedWrapper&&) = delete;
 
+  T value() const {
+    return instance;
+  }
+
   T get() const {
     Locker locker(mutex);
     return instance;

@@ -22,6 +22,10 @@ class SharedValue {
     return m_instance;
   }
 
+  constexpr T value() const {
+    return m_instance;
+  }
+
   constexpr T get() const {
     return m_instance;
   }
