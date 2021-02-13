@@ -22,11 +22,13 @@ struct [[nodiscard]] [[maybe_unused]] static_block_tag {
 #define __RC_TOKEN_PASTING__(A, B) __RC_TOKEN_PASTING_IMPL__(A, B)
 #define __RC_TOKEN_PASTING_IMPL__(A, B) A##B
 
-#define static_block                                                           \
+#define __static_block_declaration__                                           \
   inline static const auto __RC_TOKEN_PASTING__(                               \
       __RC_TOKEN_PASTING__(                                                    \
           __RC_TOKEN_PASTING__(static_block_tag_, __COUNTER__),                \
           _at_line_),                                                          \
       __LINE__) = (static_block_tag)[]()->void
+
+#define static_block __static_block_declaration__ // NOLINT(cert-err58-cpp)
 
 #endif // SOCCER_COMMON_STATIC_BLOCK_H
