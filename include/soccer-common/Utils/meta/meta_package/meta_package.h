@@ -7,8 +7,8 @@
 #include <optional>
 
 /*!
- * @brief This macro advertises and helps to create a package (setter/getter
- * class) using only metaprogramming
+ * @brief This macro advertises and helps to create a package
+ * (setter-builder/getter class) using only metaprogramming
  */
 #define RC_META_PACKAGE(type) class [[nodiscard]] [[maybe_unused]] type
 
@@ -18,16 +18,16 @@
  */
 #define RC_VAR(type, varname)                                                  \
  public:                                                                       \
-  inline auto set##varname(const type& t##varname)->decltype(*this)& {         \
-    m##varname = t##varname;                                                   \
+  inline auto varname(const type& varname)->decltype(*this)& {                 \
+    m_##varname = varname;                                                     \
     return *this;                                                              \
   }                                                                            \
-  inline const type& get##varname() const {                                    \
-    return m##varname;                                                         \
+  inline const type& varname() const {                                         \
+    return m_##varname;                                                        \
   }                                                                            \
                                                                                \
  private:                                                                      \
-  type m##varname
+  type m_##varname
 
 /*!
  * @brief declares a private type with varname, default value, and its own
@@ -35,16 +35,16 @@
  */
 #define RC_VARVAL(type, varname, default_value)                                \
  public:                                                                       \
-  inline auto set##varname(const type& t##varname)->decltype(*this)& {         \
-    m##varname = t##varname;                                                   \
+  inline auto varname(const type& varname)->decltype(*this)& {                 \
+    m_##varname = varname;                                                     \
     return *this;                                                              \
   }                                                                            \
-  inline const type& get##varname() const {                                    \
-    return m##varname;                                                         \
+  inline const type& varname() const {                                         \
+    return m_##varname;                                                        \
   }                                                                            \
                                                                                \
  private:                                                                      \
-  type m##varname = {default_value}
+  type m_##varname = {default_value}
 
 /*!
  * @brief declares a private type with varname and its own public set/get
@@ -55,20 +55,20 @@
  */
 #define RC_VAROPT(type, varname)                                               \
  public:                                                                       \
-  inline auto set##varname(const type& t##varname)->decltype(*this)& {         \
-    m##varname = t##varname;                                                   \
+  inline auto varname(const type& varname)->decltype(*this)& {                 \
+    m_##varname = varname;                                                     \
     return *this;                                                              \
   }                                                                            \
-  inline const type& get##varname() const {                                    \
+  inline const type& varname() const {                                         \
     try {                                                                      \
-      return m##varname.value();                                               \
+      return m_##varname.value();                                              \
     } catch (const std::bad_optional_access&) {                                \
       throw;                                                                   \
     }                                                                          \
   }                                                                            \
                                                                                \
  private:                                                                      \
-  std::optional<type> m##varname
+  std::optional<type> m_##varname
 
 #pragma clang diagnostic pop
 
