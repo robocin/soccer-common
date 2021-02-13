@@ -1,15 +1,15 @@
-#ifndef SOCCER_COMMON_SETTERGETTER_H
-#define SOCCER_COMMON_SETTERGETTER_H
+#ifndef SOCCER_COMMON_SHAREDVALUE_H
+#define SOCCER_COMMON_SHAREDVALUE_H
 
 #include <utility>
 
 template <class T>
-class SetterGetter {
+class SharedValue {
   T m_instance;
 
  public:
   template <class... Args>
-  constexpr SetterGetter(Args&&... args) :
+  constexpr SharedValue(Args&&... args) :
       m_instance(std::forward<Args>(args)...) {
   }
 
@@ -63,4 +63,4 @@ class SetterGetter {
   }
 };
 
-#endif // SOCCER_COMMON_SETTERGETTER_H
+#endif // SOCCER_COMMON_SHAREDVALUE_H

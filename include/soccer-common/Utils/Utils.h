@@ -10,7 +10,7 @@
 #include "Regex/Regex.h"
 #include "Singleton/Singleton.h"
 #include "SharedOptional/SharedOptional.h"
-#include "SetterGetter/SetterGetter.h"
+#include "SharedValue/SharedValue.h"
 #include "SharedWrapper/SharedWrapper.h"
 
 #endif // SOCCER_COMMON_UTILS_H
