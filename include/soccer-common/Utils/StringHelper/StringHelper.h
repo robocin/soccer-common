@@ -10,11 +10,27 @@ namespace Utils {
     constexpr std::size_t size = sizeof(__PRETTY_FUNCTION__) - 1;
     QString ret;
 #if defined(__clang__)
-    for (std::size_t i = 33; i < size - 1; ++i) {
+    {
+      constexpr std::string_view lhs(
+          "Extends<QString> Utils::nameOfType() [T = ");
+      constexpr std::string_view rhs(
+          __PRETTY_FUNCTION__,
+          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      static_assert(lhs == rhs, "function name is not as expected.");
+    }
+    for (std::size_t i = 42; i < size - 1; ++i) {
       ret += __PRETTY_FUNCTION__[i];
     }
 #elif defined(__GNUC__)
-    for (std::size_t i = 38; i < size - 1; ++i) {
+    {
+      constexpr std::string_view lhs(
+          "Extends<QString> Utils::nameOfType() [with T = ");
+      constexpr std::string_view rhs(
+          __PRETTY_FUNCTION__,
+          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      static_assert(lhs == rhs, "function name is not as expected.");
+    }
+    for (std::size_t i = 47; i < size - 1; ++i) {
       ret += __PRETTY_FUNCTION__[i];
     }
 #else
@@ -29,11 +45,27 @@ namespace Utils {
     QString ret;
     ret += "[";
 #if defined(__clang__)
-    for (std::size_t i = 36; i < size - 2; ++i) {
+    {
+      constexpr std::string_view lhs(
+          "Extends<QString> Utils::nameOfTypes() [Ts = ");
+      constexpr std::string_view rhs(
+          __PRETTY_FUNCTION__,
+          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      static_assert(lhs == rhs, "function name is not as expected.");
+    }
+    for (std::size_t i = 45; i < size - 2; ++i) {
       ret += __PRETTY_FUNCTION__[i];
     }
 #elif defined(__GNUC__)
-    for (std::size_t i = 41; i < size - 2; ++i) {
+    {
+      constexpr std::string_view lhs(
+          "Extends<QString> Utils::nameOfTypes() [with Ts = ");
+      constexpr std::string_view rhs(
+          __PRETTY_FUNCTION__,
+          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      static_assert(lhs == rhs, "function name is not as expected.");
+    }
+    for (std::size_t i = 50; i < size - 2; ++i) {
       ret += __PRETTY_FUNCTION__[i];
     }
 #else
