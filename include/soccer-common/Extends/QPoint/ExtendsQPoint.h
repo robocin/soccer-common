@@ -1,8 +1,13 @@
 #ifndef SOCCER_COMMON_EXTENDSPOINT_H
 #define SOCCER_COMMON_EXTENDSPOINT_H
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+#pragma ide diagnostic ignored "modernize-use-nodiscard"
+#pragma ide diagnostic ignored "google-explicit-constructor"
+
 #include "soccer-common/Geometry/Geometry.h"
-#include "soccer-common/Extends/Detail/ExtendsImpl.h"
+#include "soccer-common/Extends/Detail/ExtendsDetail.h"
 
 template <>
 class Extends<QPoint> : public QPoint {
@@ -200,5 +205,7 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::normalize(*this);
   }
 };
+
+#pragma clang diagnostic pop
 
 #endif // SOCCER_COMMON_EXTENDSPOINT_H
