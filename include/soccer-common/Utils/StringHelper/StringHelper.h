@@ -22,9 +22,34 @@ namespace Utils {
     return ret;
   }
 
+  template <class... Ts>
+  QString nameOfTypes() {
+    constexpr std::size_t size = sizeof(__PRETTY_FUNCTION__) - 1;
+    QString ret;
+    ret += "[";
+#if defined(__clang__)
+    for (std::size_t i = 36; i < size - 2; ++i) {
+      ret += __PRETTY_FUNCTION__[i];
+    }
+#elif defined(__GNUC__)
+    for (std::size_t i = 41; i < size - 2; ++i) {
+      ret += __PRETTY_FUNCTION__[i];
+    }
+#else
+  #error the chosen compiler is not allowed.
+#endif
+    ret += "]";
+    return ret;
+  }
+
   template <class T>
   QString nameOfType(T&&) {
     return nameOfType<T>();
+  }
+
+  template <class... Ts>
+  QString nameOfTypes(Ts&&...) {
+    return nameOfTypes<Ts...>();
   }
 
   QString quoted(const QString& str);
