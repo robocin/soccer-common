@@ -34,6 +34,29 @@ void TestUtils::test_nameOfType_WithGivenType_ShouldWork() {
   QCOMPARE((Utils::nameOfType<pair<int, int>>()), "std::pair<int, int>");
 }
 
+void TestUtils::test_nameOfTypes_WithGivenTypes_ShouldWork() {
+  {
+    QString nameOfTypes = Utils::nameOfTypes<int, double, char, QString>();
+    QCOMPARE(nameOfTypes, "[int, double, char, QString]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes<>();
+    QCOMPARE(nameOfTypes, "[]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes<integer>();
+    QCOMPARE(nameOfTypes, "[int]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes<const real>();
+    QCOMPARE(nameOfTypes, "[const double]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes<QString*>();
+    QCOMPARE(nameOfTypes, "[QString*]");
+  }
+}
+
 void TestUtils::test_nameOfType_WithGivenTypeFromValue_ShouldWork() {
   QCOMPARE(Utils::nameOfType(integer()), "int");
   QCOMPARE(Utils::nameOfType(real()), "double");
@@ -56,6 +79,31 @@ void TestUtils::test_nameOfType_WithGivenTypeFromValue_ShouldWork() {
 
   const QString* cstrPtr{};
   QCOMPARE(Utils::nameOfType(cstrPtr), "const QString*&");
+}
+
+void TestUtils::test_nameOfTypes_WithGivenTypesFromValues_ShouldWork() {
+  {
+    QString nameOfTypes =
+        Utils::nameOfTypes(integer(), real(), char(), QString());
+    QCOMPARE(nameOfTypes, "[int, double, char, QString]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes();
+    QCOMPARE(nameOfTypes, "[]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes(integer());
+    QCOMPARE(nameOfTypes, "[int]");
+  }
+  {
+    const real& value = 0.0;
+    QString nameOfTypes = Utils::nameOfTypes(value);
+    QCOMPARE(nameOfTypes, "[const double&]");
+  }
+  {
+    QString nameOfTypes = Utils::nameOfTypes((QString*) (nullptr));
+    QCOMPARE(nameOfTypes, "[QString*]");
+  }
 }
 
 QTEST_MAIN(TestUtils)
