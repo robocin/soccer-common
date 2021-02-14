@@ -2,10 +2,11 @@
 #define SOCCER_COMMON_STRINGHELPER_H
 
 #include <QString>
+#include "soccer-common/Extends/QString/ExtendsQString.h"
 
 namespace Utils {
   template <class T>
-  QString nameOfType() {
+  Extends<QString> nameOfType() {
     constexpr std::size_t size = sizeof(__PRETTY_FUNCTION__) - 1;
     QString ret;
 #if defined(__clang__)
@@ -23,7 +24,7 @@ namespace Utils {
   }
 
   template <class... Ts>
-  QString nameOfTypes() {
+  Extends<QString> nameOfTypes() {
     constexpr std::size_t size = sizeof(__PRETTY_FUNCTION__) - 1;
     QString ret;
     ret += "[";
@@ -43,17 +44,17 @@ namespace Utils {
   }
 
   template <class T>
-  QString nameOfType(T&&) {
+  Extends<QString> nameOfType(T&&) {
     return nameOfType<T>();
   }
 
   template <class... Ts>
-  QString nameOfTypes(Ts&&...) {
+  Extends<QString> nameOfTypes(Ts&&...) {
     return nameOfTypes<Ts...>();
   }
 
-  QString quoted(const QString& str);
-  QString removeQuotes(const QString& str);
+  Extends<QString> quoted(const QString& str);
+  Extends<QString> removeQuotes(const QString& str);
 } // namespace Utils
 
 #endif // SOCCER_COMMON_STRINGHELPER_H
