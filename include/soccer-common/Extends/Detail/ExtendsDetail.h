@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_EXTENDSIMPL_H
-#define SOCCER_COMMON_EXTENDSIMPL_H
+#ifndef SOCCER_COMMON_EXTENDSDETAIL_H
+#define SOCCER_COMMON_EXTENDSDETAIL_H
 
 #include <utility>
 
@@ -23,4 +23,4 @@ template <class T, class... Args>
   return Extends<T>(std::forward<Args>(args)...);
 }
 
-#endif // SOCCER_COMMON_EXTENDSIMPL_H
+#endif // SOCCER_COMMON_EXTENDSDETAIL_H
