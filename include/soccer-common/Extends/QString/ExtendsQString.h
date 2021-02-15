@@ -19,6 +19,8 @@ class Extends<QString> : public QString {
   template <class... Args>
   Extends(Args&&... args) : QString(std::forward<Args>(args)...) {
   }
+  Extends(const std::string& str) : QString(QString::fromStdString(str)) {
+  }
 
   operator std::string() const {
     return toStdString();
