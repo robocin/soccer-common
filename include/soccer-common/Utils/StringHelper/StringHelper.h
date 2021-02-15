@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_STRINGHELPER_H
 
 #include <QString>
+#include <variant>
 #include "soccer-common/Extends/QString/ExtendsQString.h"
 
 namespace Utils {
@@ -83,6 +84,15 @@ namespace Utils {
   template <class... Ts>
   Extends<QString> nameOfTypes(Ts&&...) {
     return nameOfTypes<Ts...>();
+  }
+
+  template <class T>
+  Extends<QString> nameOfCurrentType(T&& variant) {
+    return std::visit(
+        [](auto&& value) {
+          return Utils::nameOfType(value);
+        },
+        std::forward<T>(variant));
   }
 
   Extends<QString> quoted(const QString& str);
