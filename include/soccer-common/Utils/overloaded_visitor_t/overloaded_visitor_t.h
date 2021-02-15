@@ -16,12 +16,19 @@ namespace detail {
           std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>;
 
   template <class F>
-  static decltype(auto) make_functor(F&& f) {
+  decltype(auto) make_functor(F&& f) {
     if constexpr (is_function_pointer_v<F>) {
       return std::function(std::forward<F>(f));
     } else {
       return std::forward<F>(f);
     }
+  }
+
+  template <class T, class... Ts>
+  Extends<QString> overloaded_visitor_rte_message() {
+    auto type = Utils::nameOfType<T>();
+    auto functors = Utils::nameOfTypes<Ts...>();
+    return type + " is not invocable by " + functors + ".";
   }
 } // namespace detail
 
@@ -52,9 +59,8 @@ class [[maybe_unused]] overloaded_visitor_t : public Ts... {
   template <class T>
   std::enable_if_t<!(std::is_invocable_v<Ts, T> || ...), result_type>
   operator()(T&&) const {
-    std::string type = Utils::nameOfType<T>();
-    std::string functors = Utils::nameOfTypes<Ts...>();
-    throw std::runtime_error(type + " is not invocable by " + functors + ".");
+    using detail::overloaded_visitor_rte_message;
+    throw std::runtime_error(overloaded_visitor_rte_message<T, Ts...>());
   }
 };
 
@@ -65,9 +71,8 @@ class [[maybe_unused]] overloaded_visitor_t<> {
 
   template <class T>
   void operator()(T&&) const {
-    std::string type = Utils::nameOfType<T>();
-    std::string functors = Utils::nameOfTypes<>();
-    throw std::runtime_error(type + " is not invocable by " + functors + ".");
+    using detail::overloaded_visitor_rte_message;
+    throw std::runtime_error(overloaded_visitor_rte_message<T>());
   }
 };
 
