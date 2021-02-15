@@ -75,11 +75,11 @@ namespace Parameters {
     Arg(Arg&&) = delete;
     Arg& operator=(Arg&&) = delete;
 
-    T value() const {
+    const T& value() const {
       return m_value;
     }
 
-    operator T() const {
+    operator const T&() const { // NOLINT(google-explicit-constructor)
       return m_value;
     }
 
