@@ -2,8 +2,8 @@
 // Created by jose-cruz on 14/02/2021.
 //
 
-#ifndef VSS_UNIFICATION_EXTENDSQSTRING_H
-#define VSS_UNIFICATION_EXTENDSQSTRING_H
+#ifndef SOCCER_COMMON_EXTENDSQSTRING_H
+#define SOCCER_COMMON_EXTENDSQSTRING_H
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
@@ -27,4 +27,4 @@ class Extends<QString> : public QString {
 
 #pragma clang diagnostic pop
 
-#endif // VSS_UNIFICATION_EXTENDSQSTRING_H
+#endif // SOCCER_COMMON_EXTENDSQSTRING_H
