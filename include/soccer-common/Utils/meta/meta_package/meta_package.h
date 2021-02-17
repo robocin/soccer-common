@@ -72,4 +72,4 @@
 
 #pragma clang diagnostic pop
 
-#endif // SSL_UNIFICATION_META_PACKAGE_H
+#endif // SOCCER_COMMON_META_PACKAGE_H
