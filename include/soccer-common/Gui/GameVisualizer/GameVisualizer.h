@@ -179,6 +179,10 @@ class GameVisualizer::Key : public QObject {
                      Qt::DirectConnection);
   }
 
+  inline void draw(Painting&& painting) {
+    emit onPaintingEmitted(m_key, painting.clone().release(), m_layer);
+  }
+
   inline void draw(const Painting& painting) {
     emit onPaintingEmitted(m_key, painting.clone().release(), m_layer);
   }
@@ -187,8 +191,19 @@ class GameVisualizer::Key : public QObject {
     emit onPaintingEmitted(m_key, painting.release(), m_layer);
   }
 
-  inline void draw(std::unique_ptr<Painting>& painting) {
+  inline void draw(const std::unique_ptr<Painting>& painting) {
     emit onPaintingEmitted(m_key, painting->clone().release(), m_layer);
+  }
+
+  template <class Functor>
+  inline std::enable_if_t<
+      std::is_constructible_v<std::function<void(GameVisualizerPainter2D*)>,
+                              Functor>>
+  draw(Functor&& functor) {
+    emit onPaintingEmitted(
+        m_key,
+        Painting::create(std::forward<Functor>(functor)).release(),
+        m_layer);
   }
 
   inline void setVisibility(bool visibility) {
