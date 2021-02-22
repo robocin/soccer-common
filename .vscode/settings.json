@@ -1,0 +1,12 @@
+{
+  "cmake.configureOnOpen": true,
+  "cmake.configureSettings": {
+    "CMAKE_PREFIX_PATH": [
+      "${env:HOME}/Qt/5.15.1/gcc_64"
+    ]
+  },
+  "files.associations": {
+    "qtcore": "cpp",
+    "qttest": "cpp"
+  }
+}

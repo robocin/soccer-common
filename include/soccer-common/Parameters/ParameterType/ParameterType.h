@@ -1,11 +1,12 @@
-#ifndef PARAMETERTYPE_H
-#define PARAMETERTYPE_H
+#ifndef SOCCER_COMMON_PARAMETERTYPE_H
+#define SOCCER_COMMON_PARAMETERTYPE_H
 
 #include <set>
 #include <QString>
 #include <QTextStream>
 #include <boost/bimap.hpp>
 #include <QRegularExpression>
+#include <utility>
 #include "soccer-common/Utils/Utils.h"
 #include "soccer-common/MagicEnum/MagicEnum.h"
 
@@ -51,7 +52,7 @@ namespace Parameters {
     friend class ParameterType<T>;
 
     T m_value;
-    mutable bool m_updated;
+    mutable bool m_updated{};
 
     template <class U>
     void set(U&& value) {
@@ -66,11 +67,19 @@ namespace Parameters {
     Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
     }
 
-    T value() const {
+    // disable_copy:
+    Arg(const Arg&) = delete;
+    Arg& operator=(const Arg&) = delete;
+
+    // disable_move:
+    Arg(Arg&&) = delete;
+    Arg& operator=(Arg&&) = delete;
+
+    const T& value() const {
       return m_value;
     }
 
-    operator T() const {
+    operator const T&() const { // NOLINT(google-explicit-constructor)
       return m_value;
     }
 
@@ -82,14 +91,12 @@ namespace Parameters {
   template <class T>
   class ParameterType : public ParameterBase {
     template <class U, class... Us>
-    static constexpr bool is_any_of_v =
-        std::disjunction_v<std::is_same<U, Us>...>;
+    static constexpr bool is_any_of_v = std::disjunction_v<std::is_same<U, Us>...>;
 
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> &&
-                       !(is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> && !(is_any_of_v<T, char, long double>) ) ||
                       std::is_same_v<T, QString>,
-                  "unsuported type.");
+                  "unsupported type.");
 
    protected:
     Arg<T>& ref;
@@ -105,8 +112,8 @@ namespace Parameters {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (str == "0" || str == "1" || str == "true" || str == "false") {
-          return std::make_optional<T>(str == "1" || str == "true");
+        if (auto var = QVariant(str); var.canConvert<bool>()) {
+          return std::make_optional<T>(var.toBool());
         } else {
           return std::nullopt;
         }
@@ -125,9 +132,9 @@ namespace Parameters {
       }
     }
 
-    ParameterType(Arg<T>& t_ref, const QString& t_about = "") :
+    explicit ParameterType(Arg<T>& t_ref, QString t_about = "") :
         ref(t_ref),
-        about(t_about) {
+        about(std::move(t_about)) {
       if constexpr (std::is_enum_v<T>) {
         if (!MagicEnum::contains(ref.value())) {
           throw std::runtime_error("enum value out of range.");
@@ -135,8 +142,7 @@ namespace Parameters {
       }
     }
 
-    ~ParameterType() override {
-    }
+    ~ParameterType() override = default;
 
     QString value() const override {
       if constexpr (std::is_enum_v<T>) {
@@ -178,13 +184,12 @@ namespace Parameters {
    public:
     using ParameterType<T>::value;
 
-    Text(Arg<T>& t_ref,
-         const QRegularExpression& t_regex = Regex::AnyMatch,
-         const QString& t_about = "") :
+    explicit Text(Arg<T>& t_ref,
+                  const QRegularExpression& t_regex = Regex::AnyMatch,
+                  const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         regex(t_regex) {
-      if (!regex.match(Utils::removeQuotes(static_cast<QString>(value())))
-               .hasMatch()) {
+      if (!regex.match(Utils::removeQuotes(static_cast<QString>(value()))).hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
     }
@@ -194,8 +199,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::Regex) + ": " +
-             Utils::quoted(regex.pattern());
+      return Utils::quoted(Detail::Regex) + ": " + Utils::quoted(regex.pattern());
     }
 
     bool isChooseable() const override final {
@@ -224,10 +228,7 @@ namespace Parameters {
 
    public:
     template <class U>
-    SpinBox(Arg<T>& t_ref,
-            U t_minValue,
-            U t_maxValue,
-            const QString& t_about = "") :
+    SpinBox(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -244,8 +245,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue) + ", " +
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
@@ -302,12 +302,10 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue, 'f', precision) + ", " +
-             Utils::quoted(Detail::MaxValue) + ": " +
-             QString::number(maxValue, 'f', precision) + ", " +
-             Utils::quoted(Detail::Precision) + ": " +
-             QString::number(precision);
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue, 'f', precision) +
+             ", " + Utils::quoted(Detail::MaxValue) + ": " +
+             QString::number(maxValue, 'f', precision) + ", " + Utils::quoted(Detail::Precision) +
+             ": " + QString::number(precision);
     }
 
     bool isChooseable() const override final {
@@ -336,10 +334,7 @@ namespace Parameters {
 
    public:
     template <class U>
-    Slider(Arg<T>& t_ref,
-           U t_minValue,
-           U t_maxValue,
-           const QString& t_about = "") :
+    Slider(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -356,8 +351,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue) + ", " +
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
@@ -382,7 +376,7 @@ namespace Parameters {
     using ParameterType<bool>::ref;
 
    public:
-    CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
+    explicit CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
         ParameterType<bool>(t_ref, t_about) {
     }
 
@@ -415,14 +409,11 @@ namespace Parameters {
     std::set<T> set;
 
    public:
-    ComboBox(Arg<T>& t_ref,
-             const QVector<T>& t_set,
-             const QString& t_about = "") :
+    ComboBox(Arg<T>& t_ref, const QVector<T>& t_set, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         set(t_set.begin(), t_set.end()) {
       if (!((set.size() > 1) && set.find(t_ref) != set.end())) {
-        throw std::runtime_error(
-            "the size of set must be greater than 1, and must contain ref.");
+        throw std::runtime_error("the size of set must be greater than 1, and must contain ref.");
       }
     }
 
@@ -479,9 +470,7 @@ namespace Parameters {
     boost::bimap<T, QString> bimap;
 
    public:
-    MappedComboBox(Arg<T>& t_ref,
-                   const QMap<T, QString>& t_map,
-                   const QString& t_about = "") :
+    MappedComboBox(Arg<T>& t_ref, const QMap<T, QString>& t_map, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         bimap([](const QMap<T, QString>& map) {
           boost::bimap<T, QString> ret;
@@ -491,10 +480,8 @@ namespace Parameters {
           return ret;
         }(t_map)) {
       bool contains = bimap.left.find(t_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) &&
-            (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
-        throw std::runtime_error(
-            "the size of map must be greater than 1, and must contain ref.");
+      if (!((bimap.size() > 1) && (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
+        throw std::runtime_error("the size of map must be greater than 1, and must contain ref.");
       }
     }
 
@@ -545,4 +532,4 @@ namespace Parameters {
   };
 } // namespace Parameters
 
-#endif // PARAMETERTYPE_H
+#endif // SOCCER_COMMON_PARAMETERTYPE_H

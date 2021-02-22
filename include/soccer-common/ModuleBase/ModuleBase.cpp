@@ -15,8 +15,7 @@ void ModuleBase::setup(const Modules* modules) {
   init(modules);
 }
 
-void ModuleBase::receiveUpdateRequests(
-    const Parameters::UpdateRequests& updates) {
+void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
   updateRequests->append(updates);
 }
 
@@ -38,9 +37,6 @@ void ModuleBase::init(const Modules*) {
 IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
     ModuleBase(threadPool),
     m_index(index) {
-}
-
-IndexedModuleBase::~IndexedModuleBase() {
 }
 
 int IndexedModuleBase::index() const {

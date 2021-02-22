@@ -1,5 +1,5 @@
-#ifndef INTERRUPTREQUEST_H
-#define INTERRUPTREQUEST_H
+#ifndef SOCCER_COMMON_INTERRUPTREQUEST_H
+#define SOCCER_COMMON_INTERRUPTREQUEST_H
 
 #include <atomic>
 #include <csignal>
@@ -32,16 +32,16 @@ class InterruptRequest {
   template <class F>
   static void setup(F f) {
     static std::atomic<bool> initialized = false;
-    static std::function<void()> m_function = nullptr;
+    static std::function<void()> function = nullptr;
     if (initialized) {
       throw std::runtime_error("cannot setup twice.");
     } else {
       initialized = true;
-      m_function = f;
+      function = f;
     }
     std::signal(I, [](int s) {
-      if (m_function) {
-        m_function();
+      if (function) {
+        function();
       } else /* natural behavior */ {
         std::exit(128 + s);
       }
@@ -53,4 +53,4 @@ class InterruptRequest {
   }
 };
 
-#endif // INTERRUPTREQUEST_H
+#endif // SOCCER_COMMON_INTERRUPTREQUEST_H

@@ -1,9 +1,9 @@
-#ifndef MODULEBASE_H
-#define MODULEBASE_H
+#ifndef SOCCER_COMMON_MODULEBASE_H
+#define SOCCER_COMMON_MODULEBASE_H
 
 #include <QObject>
 #include "ModulePrivate/ModulePrivate.h"
-#include "soccer-common/gui/GameVisualizer/GameVisualizer.h"
+#include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
 
 /*!
  * \brief It will be defined in the executable project.
@@ -15,6 +15,7 @@ class ModuleBase : public ModulePrivate {
 
  public:
   explicit ModuleBase(QThreadPool* threadPool);
+  ~ModuleBase() override = default;
 
   void build();
   void setup(const Modules* modules);
@@ -44,13 +45,12 @@ class IndexedModuleBase : public ModuleBase {
 
  public:
   explicit IndexedModuleBase(int index, QThreadPool* threadPool);
-  ~IndexedModuleBase() override;
+  ~IndexedModuleBase() override = default;
 
- protected:
   int index() const;
 
  private:
   int m_index;
 };
 
-#endif // MODULEBASE_H
+#endif // SOCCER_COMMON_MODULEBASE_H

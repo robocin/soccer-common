@@ -1,5 +1,5 @@
-#ifndef SHAREDWRAPPER_H
-#define SHAREDWRAPPER_H
+#ifndef SOCCER_COMMON_SHAREDWRAPPER_H
+#define SOCCER_COMMON_SHAREDWRAPPER_H
 
 #include <mutex>
 
@@ -11,11 +11,10 @@ class SharedWrapper {
 
  public:
   template <class... Args>
-  SharedWrapper(Args&&... args) : instance(std::forward<Args>(args)...) {
+  explicit SharedWrapper(Args&&... args) : instance(std::forward<Args>(args)...) {
   }
 
-  ~SharedWrapper() {
-  }
+  ~SharedWrapper() = default;
 
   // disable_copy:
   SharedWrapper(const SharedWrapper&) = delete;
@@ -24,6 +23,10 @@ class SharedWrapper {
   // disable_move:
   SharedWrapper(SharedWrapper&&) = delete;
   SharedWrapper& operator=(SharedWrapper&&) = delete;
+
+  T value() const {
+    return instance;
+  }
 
   T get() const {
     Locker locker(mutex);
@@ -52,7 +55,7 @@ class SharedWrapper {
     return Proxy(instance, mutex, tag);
   }
 
-  const Proxy operator->() const {
+  Proxy operator->() const {
     return Proxy(instance, mutex, tag);
   }
 
@@ -67,8 +70,7 @@ class SharedWrapper {
         locker(mutex) {
     }
 
-    ~Proxy() {
-    }
+    ~Proxy() = default;
 
     // disable_copy:
     Proxy(const Proxy&) = delete;
@@ -91,4 +93,4 @@ class SharedWrapper {
   T instance;
 };
 
-#endif // SHAREDWRAPPER_H
+#endif // SOCCER_COMMON_SHAREDWRAPPER_H

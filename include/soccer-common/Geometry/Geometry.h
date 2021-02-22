@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef SOCCER_COMMON_GEOMETRY_H
+#define SOCCER_COMMON_GEOMETRY_H
 
 #include <QPoint>
 #include <QPolygon>
@@ -10,16 +10,15 @@
 
 #define RC_T_TEMPLATE template <class T>
 
-#define RC_PT_T_TEMPLATE                                                       \
-  template <class PT, class T = decltype(std::declval<PT>().x())>
+#define RC_PT_T_TEMPLATE template <class PT, class T = decltype(std::declval<PT>().x())>
 
 #ifndef M_PI
   #define M_PI 3.14159265358979323846
 #endif
 
-static constexpr qreal PI = M_PI;
-
 namespace Geometry {
+  static constexpr qreal PI = M_PI;
+
   RC_T_TEMPLATE qreal radiansToDegrees(T radians) {
     return radians * (180.0 / PI);
   }
@@ -28,6 +27,8 @@ namespace Geometry {
     return (degrees * PI) / 180.0;
   }
 } // namespace Geometry
+
+using Geometry::PI;
 
 namespace Geometry2D {
   using namespace Geometry;
@@ -70,8 +71,7 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE PT rotateCCW(const PT& p, qreal t) {
     static_assert(std::is_floating_point_v<T>);
-    return PT(p.x() * std::cos(t) - p.y() * std::sin(t),
-              p.x() * std::sin(t) + p.y() * std::cos(t));
+    return PT(p.x() * std::cos(t) - p.y() * std::sin(t), p.x() * std::sin(t) + p.y() * std::cos(t));
   }
 
   RC_PT_T_TEMPLATE qreal angle(const PT& p) {
@@ -92,7 +92,7 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE PT resize(const PT& p, qreal t) {
     static_assert(std::is_floating_point_v<T>);
-    return p / length(p) * t;
+    return static_cast<PT>(p / length(p) * t);
   }
 
   RC_PT_T_TEMPLATE PT normalize(const PT& p) {
@@ -145,8 +145,7 @@ namespace Geometry2D {
     if (a == b) {
       throw std::runtime_error("'a' and 'b' doesn't define a line.");
     }
-    return a +
-           (b - a) * dot(b - a, c - a) / static_cast<qreal>(dot(b - a, b - a));
+    return a + (b - a) * dot(b - a, c - a) / static_cast<qreal>(dot(b - a, b - a));
   }
 
   RC_PT_T_TEMPLATE PT projectPointLine(const QLineF& line, const PT& c) {
@@ -169,4 +168,4 @@ namespace Geometry3D {
 #undef RC_T_TEMPLATE
 #undef RC_PT_T_TEMPLATE
 
-#endif // GEOMETRY_H
+#endif // SOCCER_COMMON_GEOMETRY_H

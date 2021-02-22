@@ -1,5 +1,5 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#ifndef SOCCER_COMMON_ENTITY_H
+#define SOCCER_COMMON_ENTITY_H
 
 #include <QPointF>
 
@@ -7,10 +7,10 @@ class RawEntity {
   QPointF m_position;
 
  public:
-  RawEntity(const QPointF& position);
+  explicit RawEntity(const QPointF& position);
 
-  QPointF position() const;
-  operator QPointF() const;
+  const QPointF& position() const;
+  operator const QPointF&() const;
 };
 
 class Entity : virtual public RawEntity {
@@ -18,12 +18,10 @@ class Entity : virtual public RawEntity {
   QPointF m_acceleration;
 
  public:
-  Entity(const QPointF& position,
-         const QPointF& velocity,
-         const QPointF& acceleration);
+  Entity(const QPointF& position, const QPointF& velocity, const QPointF& acceleration);
 
-  QPointF velocity() const;
-  QPointF acceleration() const;
+  const QPointF& velocity() const;
+  const QPointF& acceleration() const;
 };
 
-#endif // ENTITY_H
+#endif // SOCCER_COMMON_ENTITY_H

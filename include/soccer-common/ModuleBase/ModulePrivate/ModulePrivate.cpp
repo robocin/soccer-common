@@ -1,14 +1,14 @@
 #include "ModulePrivate.h"
 
-ModulePrivate::ModulePrivate(QThreadPool* threadPool) :
-    QObject(nullptr),
-    threadPool(threadPool) {
+ModulePrivate::ModulePrivate(QThreadPool* threadPool) : QObject(nullptr), threadPool(threadPool) {
   QRunnable::setAutoDelete(false);
 }
 
 void ModulePrivate::runInParallel() {
   if (QThreadPool* tp = threadPool) {
-    tp->start(static_cast<QRunnable*>(this));
+    if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
+      tp->start(static_cast<QRunnable*>(this));
+    }
   }
 }
 
@@ -16,26 +16,27 @@ void ModulePrivate::prepareToDelete() {
   qWarning().nospace() << "scheduling the deletion of " << this << ".";
   disconnect(); // disconnecting outgoing connections.
   using namespace std::chrono_literals;
-  QTimer::singleShot(1s, this, std::bind(ModulePrivate::waitOrDelete, this));
+  QTimer::singleShot(1s, this, [this] {
+    return ModulePrivate::waitOrDelete(this);
+  });
 }
 
 void ModulePrivate::update() {
 }
 
 void ModulePrivate::parametersUpdate() {
-  Parameters::UpdateRequests updates =
-      updateRequests.apply([](Parameters::UpdateRequests& updateRequests) {
-        Parameters::UpdateRequests updates = updateRequests;
-        updateRequests.clear();
-        return updates;
-      });
+  Parameters::UpdateRequests updates = updateRequests.apply([](Parameters::UpdateRequests& ur) {
+    Parameters::UpdateRequests updates = ur;
+    ur.clear();
+    return updates;
+  });
   if (!updates.empty()) {
     parametersHandler.update(updates);
   }
 }
 
 void ModulePrivate::run() {
-  if (std::unique_lock locker{execMutex, std::try_to_lock}) {
+  if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
     parametersUpdate();
     update();
     exec();
@@ -44,7 +45,7 @@ void ModulePrivate::run() {
 
 void ModulePrivate::waitOrDelete(ModulePrivate* object) {
   using namespace std::chrono_literals;
-  if (std::unique_lock locker{object->execMutex, std::try_to_lock}) {
+  if ([[maybe_unused]] std::unique_lock locker{object->execMutex, std::try_to_lock}) {
     if (QThreadPool* tp = object->threadPool) {
       // will avoid put this instance inside threadPool again.
       object->threadPool.store(nullptr, std::memory_order_release);
@@ -55,8 +56,8 @@ void ModulePrivate::waitOrDelete(ModulePrivate* object) {
     }
     QTimer::singleShot(1s, object, &ModulePrivate::deleteLater);
   } else {
-    QTimer::singleShot(1s,
-                       object,
-                       std::bind(ModulePrivate::waitOrDelete, object));
+    QTimer::singleShot(1s, object, [object] {
+      return ModulePrivate::waitOrDelete(object);
+    });
   }
 }

@@ -1,5 +1,7 @@
 #include "ParametersHandler.h"
 
+#include <utility>
+
 namespace Parameters {
   bool isParameterType(const QJsonObject& object) {
     return object.contains(Detail::Value) && !object[Detail::Value].isNull() &&
@@ -7,44 +9,35 @@ namespace Parameters {
   }
 
   // UpdateRequest
-  UpdateRequest::UpdateRequest() {
+  UpdateRequest::UpdateRequest(QStringList path, QString value) :
+      m_path(std::move(path)),
+      m_value(std::move(value)) {
   }
 
-  UpdateRequest::UpdateRequest(const QStringList& path, const QString& value) :
-      m_path(path),
-      m_value(value) {
-  }
-
-  QStringList UpdateRequest::path() const {
+  const QStringList& UpdateRequest::path() const {
     return m_path;
   }
 
-  QString UpdateRequest::value() const {
+  const QString& UpdateRequest::value() const {
     return m_value;
   }
 
   // JsonHandler
-  JsonHandler::JsonHandler() {
-  }
-
-  JsonHandler::~JsonHandler() {
-  }
-
   JsonHandler JsonHandler::fromJsonObject(const QJsonObject& object) {
-    std::function<void(JsonHandler&, const QJsonObject&)> f =
-        [&](JsonHandler& handler, const QJsonObject& object) {
-          if (isParameterType(object)) {
-            handler.m_value = object[Detail::Value].toVariant().toString();
-            if (object.contains(Detail::Conditional)) {
-              f(handler, object[Detail::Conditional].toObject());
-            }
-          } else {
-            auto keys = object.keys();
-            for (const auto& key : keys) {
-              f(handler.m_map[key], object[key].toObject());
-            }
-          }
-        };
+    std::function<void(JsonHandler&, const QJsonObject&)> f = [&](JsonHandler& handler,
+                                                                  const QJsonObject& object) {
+      if (isParameterType(object)) {
+        handler.m_value = object[Detail::Value].toVariant().toString();
+        if (object.contains(Detail::Conditional)) {
+          f(handler, object[Detail::Conditional].toObject());
+        }
+      } else {
+        auto keys = object.keys();
+        for (const auto& key : keys) {
+          f(handler.m_map[key], object[key].toObject());
+        }
+      }
+    };
     JsonHandler handler;
     f(handler, object);
     return handler;
@@ -95,8 +88,7 @@ namespace Parameters {
           if (handler.m_value) {
             updates += UpdateRequest(path, handler.m_value.value());
           }
-          for (auto it = handler.m_map.begin(); it != handler.m_map.end();
-               ++it) {
+          for (auto it = handler.m_map.begin(); it != handler.m_map.end(); ++it) {
             path.push_back(it.key());
             f(path, it.value());
             path.pop_back();
@@ -109,39 +101,36 @@ namespace Parameters {
 
   QByteArray JsonHandler::toJson() const {
     QString json;
-    std::function<void(const JsonHandler&)> f =
-        [&](const JsonHandler& handler) {
-          json += "{";
-          if (handler.m_value) {
-            json += Utils::quoted(Detail::Value);
-            json += ": ";
-            json += Utils::quoted(handler.m_value.value());
+    std::function<void(const JsonHandler&)> f = [&](const JsonHandler& handler) {
+      json += "{";
+      if (handler.m_value) {
+        json += Utils::quoted(Detail::Value);
+        json += ": ";
+        json += Utils::quoted(handler.m_value.value());
 
-            if (!handler.m_map.isEmpty()) {
-              json += ", ";
-              json += Utils::quoted(Detail::Conditional);
-              json += ": ";
-            }
-          }
-          if (handler.m_value && !handler.m_map.isEmpty()) {
-            json += "{";
-          }
-          for (auto it = handler.m_map.begin(); it != handler.m_map.end();
-               ++it) {
-            json += Utils::quoted(it.key()) + ": ";
-            f(it.value());
-            if (std::next(it) != handler.m_map.end()) {
-              json += ", ";
-            }
-          }
-          if (handler.m_value && !handler.m_map.isEmpty()) {
-            json += "}";
-          }
-          json += "}";
-        };
+        if (!handler.m_map.isEmpty()) {
+          json += ", ";
+          json += Utils::quoted(Detail::Conditional);
+          json += ": ";
+        }
+      }
+      if (handler.m_value && !handler.m_map.isEmpty()) {
+        json += "{";
+      }
+      for (auto it = handler.m_map.begin(); it != handler.m_map.end(); ++it) {
+        json += Utils::quoted(it.key()) + ": ";
+        f(it.value());
+        if (std::next(it) != handler.m_map.end()) {
+          json += ", ";
+        }
+      }
+      if (handler.m_value && !handler.m_map.isEmpty()) {
+        json += "}";
+      }
+      json += "}";
+    };
     f(*this);
-    QByteArray formatted =
-        QJsonDocument::fromJson(json.toUtf8()).toJson(QJsonDocument::Indented);
+    QByteArray formatted = QJsonDocument::fromJson(json.toUtf8()).toJson(QJsonDocument::Indented);
     formatted.replace(QByteArray(4, ' '), QByteArray(2, ' '));
     return formatted;
   }
@@ -151,101 +140,90 @@ namespace Parameters {
   }
 
   // Handler
-  Handler::Handler() {
-  }
-
-  Handler::~Handler() {
-  }
-
   QByteArray Handler::json() const {
     if (!value && map.empty()) {
       return "{}";
     }
     QString ret;
-    std::function<void(const Handler&)> f =
-        [&ret, &f](const Handler& parametersHandler) {
-          if (parametersHandler.value) {
-            ret += "{";
-            //
-            ret += Utils::quoted(Detail::InputType);
-            ret += ": ";
-            ret += Utils::quoted(parametersHandler.value->inputType());
-            ret += ", ";
-            //
-            ret += Utils::quoted(Detail::Type);
-            ret += ": ";
-            ret += Utils::quoted(parametersHandler.value->type());
-            ret += ", ";
-            //
-            ret += Utils::quoted(Detail::Description);
-            ret += ": ";
-            ret += Utils::quoted(parametersHandler.value->description());
-            ret += ", ";
-            //
-            ret += Utils::quoted(Detail::Value);
-            ret += ": ";
-            ret += parametersHandler.value->value();
-            //
-            QString payload = parametersHandler.value->payload();
-            if (!payload.isEmpty()) {
-              ret += ", ";
+    std::function<void(const Handler&)> f = [&ret, &f](const Handler& parametersHandler) {
+      if (parametersHandler.value) {
+        ret += "{";
+        //
+        ret += Utils::quoted(Detail::InputType);
+        ret += ": ";
+        ret += Utils::quoted(parametersHandler.value->inputType());
+        ret += ", ";
+        //
+        ret += Utils::quoted(Detail::Type);
+        ret += ": ";
+        ret += Utils::quoted(parametersHandler.value->type());
+        ret += ", ";
+        //
+        ret += Utils::quoted(Detail::Description);
+        ret += ": ";
+        ret += Utils::quoted(parametersHandler.value->description());
+        ret += ", ";
+        //
+        ret += Utils::quoted(Detail::Value);
+        ret += ": ";
+        ret += parametersHandler.value->value();
+        //
+        QString payload = parametersHandler.value->payload();
+        if (!payload.isEmpty()) {
+          ret += ", ";
+        }
+        ret += payload;
+        //
+      }
+
+      if (!parametersHandler.map.empty()) {
+        if (parametersHandler.value) {
+          Q_ASSERT(parametersHandler.value->isChooseable());
+          if (parametersHandler.value->inputType() == InputType::CheckBox) {
+            for (auto& [key, value] : parametersHandler.map) {
+              Q_ASSERT(key == "true" || key == "false");
             }
-            ret += payload;
-            //
-          }
+          } else if (parametersHandler.value->inputType() == InputType::ComboBox) {
 
-          if (!parametersHandler.map.empty()) {
-            if (parametersHandler.value) {
-              Q_ASSERT(parametersHandler.value->isChooseable());
-              if (parametersHandler.value->inputType() == InputType::CheckBox) {
-                for (auto& [key, value] : parametersHandler.map) {
-                  Q_ASSERT(key == "true" || key == "false");
-                }
-              } else if (parametersHandler.value->inputType() ==
-                         InputType::ComboBox) {
+            const QJsonDocument& doc(
+                QJsonDocument::fromJson(("{" + parametersHandler.value->payload() + "}").toUtf8()));
 
-                const QJsonDocument& doc(QJsonDocument::fromJson(
-                    ("{" + parametersHandler.value->payload() + "}").toUtf8()));
-
-                QSet<QString> keys;
-                {
-                  const QJsonArray& jsonArray =
-                      doc.object()[Detail::Options].toArray();
-                  for (const auto& op : jsonArray) {
-                    keys += op.toVariant().toString();
-                  }
-                }
-                for (auto& [key, value] : parametersHandler.map) {
-                  Q_ASSERT(keys.contains(key));
-                }
-              }
-
-              ret += ", " + Utils::quoted(Detail::Conditional) + ": ";
-            }
-
-            ret += "{";
-
-            for (auto it = parametersHandler.map.begin();
-                 it != parametersHandler.map.end();
-                 ++it) {
-              ret += Utils::quoted(it->first);
-              ret += ": ";
-              f(it->second);
-
-              if (std::next(it) != parametersHandler.map.end()) {
-                ret += ", ";
+            QSet<QString> keys;
+            {
+              const QJsonArray& jsonArray = doc.object()[Detail::Options].toArray();
+              for (const auto& op : jsonArray) {
+                keys += op.toVariant().toString();
               }
             }
-
-            ret += "}";
-          } else {
-            Q_ASSERT(parametersHandler.value);
+            for (auto& [key, value] : parametersHandler.map) {
+              Q_ASSERT(keys.contains(key));
+            }
           }
 
-          if (parametersHandler.value) {
-            ret += "}";
+          ret += ", " + Utils::quoted(Detail::Conditional) + ": ";
+        }
+
+        ret += "{";
+
+        for (auto it = parametersHandler.map.begin(); it != parametersHandler.map.end(); ++it) {
+          ret += Utils::quoted(it->first);
+          ret += ": ";
+          f(it->second);
+
+          if (std::next(it) != parametersHandler.map.end()) {
+            ret += ", ";
           }
-        };
+        }
+
+        ret += "}";
+      } else {
+        Q_ASSERT(parametersHandler.value);
+      }
+
+      if (parametersHandler.value) {
+        ret += "}";
+      }
+    };
     f(*this);
     return ret.toUtf8();
   }
@@ -254,24 +232,21 @@ namespace Parameters {
     return QJsonDocument::fromJson(json()).object();
   }
 
-  QVector<UpdateRequest>
-  Handler::update(const QVector<UpdateRequest>& updates) {
+  QVector<UpdateRequest> Handler::update(const QVector<UpdateRequest>& updates) {
     QVector<UpdateRequest> ret;
     for (const auto& up : updates) {
       auto path = up.path();
       Handler* ptr = this;
-      bool notFound = false;
-      for (auto key : path) {
+      bool found = true;
+      for (const auto& key : path) {
         if (ptr->map.find(key) != ptr->map.end()) {
           ptr = &(ptr->map[key]);
         } else {
-          notFound = true;
+          found = false;
           break;
         }
       }
-      if (notFound) {
-        ret += up;
-      } else if (ptr->value) {
+      if (found && ptr->value) {
         if (!ptr->value->update(up.value())) {
           ret += up;
         }

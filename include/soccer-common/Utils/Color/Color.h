@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef SOCCER_COMMON_COLOR_H
+#define SOCCER_COMMON_COLOR_H
 
 namespace Color {
   static constexpr const char* AliceBlue = "AliceBlue";
@@ -97,7 +97,7 @@ namespace Color {
   static constexpr const char* MediumSlateBlue = "MediumSlateBlue";
   static constexpr const char* MediumSpringGreen = "MediumSpringGreen";
   static constexpr const char* MediumTurquoise = "MediumTurquoise";
-  static constexpr const char* MediumVioletred = "MediumVioletred";
+  static constexpr const char* MediumVioletRed = "MediumVioletRed";
   static constexpr const char* MidnightBlue = "MidnightBlue";
   static constexpr const char* MintCream = "MintCream";
   static constexpr const char* MistyRose = "MistyRose";
@@ -152,4 +152,4 @@ namespace Color {
   static constexpr const char* YellowGreen = "YellowGreen";
 } // namespace Color
 
-#endif // COLOR_H
+#endif // SOCCER_COMMON_COLOR_H

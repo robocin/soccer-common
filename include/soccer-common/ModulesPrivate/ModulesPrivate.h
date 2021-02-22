@@ -1,7 +1,7 @@
-#ifndef MODULESPRIVATE_H
-#define MODULESPRIVATE_H
+#ifndef SOCCER_COMMON_MODULESPRIVATE_H
+#define SOCCER_COMMON_MODULESPRIVATE_H
 
-#include "soccer-common/gui/gui.h"
+#include "soccer-common/Gui/Gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
 
 class ModulesPrivate : public QObject {
@@ -16,7 +16,7 @@ class ModulesPrivate : public QObject {
     template <std::size_t I>
     inline QTimer* get() const {
       if (!m_map.contains(I)) {
-        QTimer* timer = new QTimer();
+        auto* timer = new QTimer();
         timer->setTimerType(Qt::PreciseTimer);
         timer->start(I);
         timer->moveToThread(m_thread);
@@ -28,9 +28,7 @@ class ModulesPrivate : public QObject {
     inline void clear() {
       for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
-        QMetaObject::invokeMethod(t,
-                                  &QTimer::deleteLater,
-                                  Qt::QueuedConnection);
+        QMetaObject::invokeMethod(t, &QTimer::deleteLater, Qt::QueuedConnection);
       }
       m_map.clear();
     }
@@ -49,7 +47,7 @@ class ModulesPrivate : public QObject {
       return get<1000 / I>();
     }
 
-    inline QTimer* asap() const {
+    [[maybe_unused]] inline QTimer* asap() const {
       return get<0>();
     }
   };
@@ -62,7 +60,7 @@ class ModulesPrivate : public QObject {
 
  public:
   explicit ModulesPrivate(MainWindow* gui);
-  ~ModulesPrivate();
+  ~ModulesPrivate() override = default;
 
   MainWindow* gui() const;
   Timers* timers() const;
@@ -90,16 +88,12 @@ class ModulesPrivate : public QObject {
     using F = typename InheritanceFactorySafeMap<T, Args...>::type;
 
     M* modules;
-
     T*& ref;
-    std::optional<int> index; // can be indexed, or not.
-
     F factory;
 
-    static void
-    disconnectAndDelete(ModuleBase* ref,
-                        QVector<QMetaObject::Connection> connections) {
-      for (QMetaObject::Connection connection : connections) {
+    static void disconnectAndDelete(ModuleBase* ref,
+                                    const QVector<QMetaObject::Connection>& connections) {
+      for (const QMetaObject::Connection& connection : connections) {
         QObject::disconnect(connection);
       }
       ref->prepareToDelete();
@@ -119,10 +113,8 @@ class ModulesPrivate : public QObject {
                                         ref,
                                         std::bind(Maker::setup, ref, modules));
 
-        connections += QObject::connect(modules,
-                                        &ModulesPrivate::impulse,
-                                        ref,
-                                        &ModuleBase::runInParallel);
+        connections +=
+            QObject::connect(modules, &ModulesPrivate::impulse, ref, &ModuleBase::runInParallel);
       }
       /* ModuleBox */ {
         connections += QObject::connect(ref,
@@ -138,11 +130,7 @@ class ModulesPrivate : public QObject {
       return connections;
     }
 
-    static void build(T*& ref,
-                      const F& factory,
-                      M* modules,
-                      ModuleBox* moduleBox,
-                      Args... args) {
+    static void build(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
       QString type = moduleBox->currentText();
@@ -150,9 +138,16 @@ class ModulesPrivate : public QObject {
       static_cast<QObject*>(ref)->moveToThread(
           static_cast<ModulesPrivate*>(modules)->modulesThread());
 
-      qWarning().nospace() << "a new instance of " << Utils::nameOfType<T>()
-                           << " with type " << type << " was created: " << ref
-                           << ".";
+      QString detail;
+      if constexpr (std::is_base_of_v<IndexedModuleBase, T>) {
+        int index = static_cast<IndexedModuleBase*>(ref)->index();
+        detail += QString(" (index '%1')").arg(index);
+      }
+
+      qWarning().nospace().noquote()
+          << "a new instance of " << Utils::nameOfType<T>() << detail << " with type "
+          << "\"" << type << "\""
+          << " was created: " << ref << ".";
 
       auto connections = setDefaultConnections(ref, modules, moduleBox);
       QObject::connect(modules,
@@ -163,8 +158,7 @@ class ModulesPrivate : public QObject {
       static_cast<ModuleBase*>(ref)->build();
     }
 
-    static void
-    setToolTip(const F& factory, const QString& type, ModuleBox* moduleBox) {
+    static void setToolTip(const F& factory, const QString& type, ModuleBox* moduleBox) {
       QStringList description;
       description += "• Type: " + type + ";";
       QString info = factory[type].description();
@@ -174,24 +168,21 @@ class ModulesPrivate : public QObject {
       moduleBox->setToolTip(description.join('\n'));
     }
 
-    static void make(T*& ref,
-                     const F& factory,
-                     M* modules,
-                     ModuleBox* moduleBox,
-                     Args... args) {
+    static void make(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       QString type = moduleBox->currentText();
 
       build(ref, factory, modules, moduleBox, args...);
       setToolTip(factory, type, moduleBox);
     }
 
-    static ModuleBox* getModuleBox(MainWindow* gui,
-                                   const std::optional<int>& index) {
-      if (index) {
-        return gui->indexedModuleBox(*index, Utils::nameOfType<T>());
-      } else {
-        return gui->moduleBox(Utils::nameOfType<T>());
-      }
+    template <class... Types>
+    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui, Types&&...) {
+      return gui->moduleBox(Utils::nameOfType<T>());
+    }
+
+    template <class... Types>
+    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui, int index, Types&&...) {
+      return gui->indexedModuleBox(index, Utils::nameOfType<T>());
     }
 
     template <class... Types>
@@ -203,7 +194,7 @@ class ModulesPrivate : public QObject {
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       //
-      ModuleBox* moduleBox = getModuleBox(gui, index);
+      ModuleBox* moduleBox = getModuleBox(gui, std::forward<Types>(types)...);
       //
       QObject::connect(moduleBox,
                        &ModuleBox::onCurrentTextChanged,
@@ -229,25 +220,15 @@ class ModulesPrivate : public QObject {
     }
 
    public:
-    Maker(M* t_modules,
-          T*& t_ref,
-          const InheritanceFactorySafeMap<T, Args...>& t_factory) :
+    Maker(M* t_modules, T*& t_ref, const InheritanceFactorySafeMap<T, Args...>& t_factory) :
         modules(t_modules),
         ref(t_ref),
         factory(t_factory) {
     }
 
-    template <class R = void, class... Types>
-    std::enable_if_t<!std::is_base_of_v<IndexedModuleBase, T>, R> // !indexed
-    operator()(Types&&... types) {
+    template <class... Types>
+    void operator()(Types&&... types) {
       exec(std::forward<Types>(types)...);
-    }
-
-    template <class R = void, class... Types>
-    std::enable_if_t<std::is_base_of_v<IndexedModuleBase, T>, R> // indexed
-    operator()(int moduleIndex, Types&&... types) {
-      index.emplace(moduleIndex);
-      exec(moduleIndex, std::forward<Types>(types)...);
     }
   };
 
@@ -255,4 +236,4 @@ class ModulesPrivate : public QObject {
   void prepareToDeleteAndDisconnect();
 };
 
-#endif // MODULESPRIVATE_H
+#endif // SOCCER_COMMON_MODULESPRIVATE_H

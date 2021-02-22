@@ -1,5 +1,5 @@
-#ifndef ROBOT_H
-#define ROBOT_H
+#ifndef SOCCER_COMMON_ROBOT_H
+#define SOCCER_COMMON_ROBOT_H
 
 #include "soccer-common/Entities/Entity/Entity.h"
 
@@ -15,12 +15,17 @@ class RawRobot : virtual public RawEntity {
 };
 
 class Robot : public Entity, public RawRobot {
+  qreal m_angularVelocity;
+
  public:
   Robot(int id,
         qreal angle,
         const QPointF& position,
         const QPointF& velocity,
-        const QPointF& acceleration);
+        const QPointF& acceleration,
+        qreal angularVelocity);
+
+  qreal angularVelocity() const;
 };
 
-#endif // ROBOT_H
+#endif // SOCCER_COMMON_ROBOT_H

@@ -1,5 +1,5 @@
-#ifndef SHAREDOPTIONAL_H
-#define SHAREDOPTIONAL_H
+#ifndef SOCCER_COMMON_SHAREDOPTIONAL_H
+#define SOCCER_COMMON_SHAREDOPTIONAL_H
 
 #include <optional>
 
@@ -7,8 +7,7 @@ template <class T>
 class SharedOptional : public std::optional<T> {
  public:
   template <class... Args>
-  constexpr SharedOptional(Args&&... args) :
-      std::optional<T>(std::forward<Args>(args)...) {
+  constexpr SharedOptional(Args&&... args) : std::optional<T>(std::forward<Args>(args)...) {
   }
 
   template <class U>
@@ -22,6 +21,10 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::reset;
 
   constexpr operator T() const {
+    return std::optional<T>::value();
+  }
+
+  constexpr T value() const {
     return std::optional<T>::value();
   }
 
@@ -70,4 +73,4 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::swap;
 };
 
-#endif // SHAREDOPTIONAL_H
+#endif // SOCCER_COMMON_SHAREDOPTIONAL_H

@@ -1,5 +1,5 @@
-#ifndef MODULEPRIVATE_H
-#define MODULEPRIVATE_H
+#ifndef SOCCER_COMMON_MODULEPRIVATE_H
+#define SOCCER_COMMON_MODULEPRIVATE_H
 
 #include <QTimer>
 #include <QObject>
@@ -29,9 +29,9 @@ class ModulePrivate : public QObject, private QRunnable {
   std::mutex execMutex;
 
   void parametersUpdate();
-  void run() override final;
+  void run() final;
 
   static void waitOrDelete(ModulePrivate* object);
 };
 
-#endif // MODULEPRIVATE_H
+#endif // SOCCER_COMMON_MODULEPRIVATE_H

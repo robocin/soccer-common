@@ -1,5 +1,5 @@
-#ifndef MAGICENUM_H
-#define MAGICENUM_H
+#ifndef SOCCER_COMMON_MAGICENUM_H
+#define SOCCER_COMMON_MAGICENUM_H
 
 #include <QVector>
 #include <QString>
@@ -9,8 +9,7 @@
 
 namespace MagicEnum {
   template <class E, class BinaryPredicate>
-  constexpr std::optional<std::decay_t<E>> cast(const QString& value,
-                                                const BinaryPredicate& p) {
+  constexpr std::optional<std::decay_t<E>> cast(const QString& value, const BinaryPredicate& p) {
     return magic_enum::enum_cast<E, BinaryPredicate>(value.toUtf8().data(), p);
   }
 
@@ -97,4 +96,4 @@ namespace MagicEnum {
   }
 }; // namespace MagicEnum
 
-#endif // MAGICENUM_H
+#endif // SOCCER_COMMON_MAGICENUM_H

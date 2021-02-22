@@ -1,3 +1,9 @@
-[submodule "libs/magic-enum/magic_enum"]
-	path = libs/magic-enum/magic_enum
+[submodule "libs/magic_enum"]
+	path = libs/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
+[submodule "cmake-common"]
+	path = cmake
+	url = https://github.com/robocin/cmake-common.git
+[submodule "scripts/scripts-ubuntu-common"]
+	path = scripts/ubuntu
+	url = https://github.com/robocin/scripts-ubuntu-common.git
