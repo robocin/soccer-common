@@ -54,10 +54,8 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   using GLTextHelper_2_1::HAlign;
   using GLTextHelper_2_1::VAlign;
 
-  inline void drawFilledTriangle(const Vertex& a,
-                                 const Vertex& b,
-                                 const Vertex& c,
-                                 const QColor& color) {
+  inline void
+  drawFilledTriangle(const Vertex& a, const Vertex& b, const Vertex& c, const QColor& color) {
     ScopedDrawGuard guard(this, GL_TRIANGLES);
     putColor(color);
     putVertices(a, b, c);
@@ -73,19 +71,13 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     putVertices(a, b, c, d);
   }
 
-  inline void drawFilledRectangle(const Vertex& topLeft,
-                                  const Vertex& bottomRight,
-                                  const QColor& color) {
+  inline void
+  drawFilledRectangle(const Vertex& topLeft, const Vertex& bottomRight, const QColor& color) {
     const auto& rect = QRectF(topLeft, bottomRight);
-    drawFilledQuad(rect.topLeft(),
-                   rect.topRight(),
-                   rect.bottomRight(),
-                   rect.bottomLeft(),
-                   color);
+    drawFilledQuad(rect.topLeft(), rect.topRight(), rect.bottomRight(), rect.bottomLeft(), color);
   }
 
-  inline void
-  drawPolygon(Polygon polygon, const QColor& color, qreal thickness) {
+  inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
@@ -155,8 +147,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void
-  drawPolyline(Polygon polyline, const QColor& color, qreal thickness) {
+  inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polyline = removeCollinearPoints(polyline);
     if (polyline.size() < 2) {
@@ -174,9 +165,8 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     /* first vertex */ {
       const Vertex& a = polyline[0];
       const Vertex& b = polyline[1];
-      putVertices(
-          a + Geometry2D::resize(Geometry2D::rotateCW90(b - a), thickness),
-          a + Geometry2D::resize(Geometry2D::rotateCCW90(b - a), thickness));
+      putVertices(a + Geometry2D::resize(Geometry2D::rotateCW90(b - a), thickness),
+                  a + Geometry2D::resize(Geometry2D::rotateCCW90(b - a), thickness));
     }
     for (int i = 1, n = polyline.size(); i < n - 1; ++i) {
       const Vertex& a = polyline[i - 1];
@@ -199,16 +189,12 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     /* last vertex */ {
       const Vertex& a = polyline[polyline.size() - 2];
       const Vertex& b = polyline[polyline.size() - 1];
-      putVertices(
-          b + Geometry2D::resize(Geometry2D::rotateCW90(b - a), thickness),
-          b + Geometry2D::resize(Geometry2D::rotateCCW90(b - a), thickness));
+      putVertices(b + Geometry2D::resize(Geometry2D::rotateCW90(b - a), thickness),
+                  b + Geometry2D::resize(Geometry2D::rotateCCW90(b - a), thickness));
     }
   }
 
-  inline void drawLine(const Vertex& a,
-                       const Vertex& b,
-                       const QColor& color,
-                       qreal thickness) {
+  inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) {
     return drawPolyline({a, b}, color, thickness);
   }
 
@@ -235,23 +221,17 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     qreal dTheta = 1.0 / outerRadius;
     for (qreal theta = theta1; theta < theta2 + dTheta; theta += dTheta) {
       qreal cos = std::cos(theta), sin = std::sin(theta);
-      putVertices(origin + outerRadius * Vertex(cos, sin),
-                  origin + innerRadius * Vertex(cos, sin));
+      putVertices(origin + outerRadius * Vertex(cos, sin), origin + innerRadius * Vertex(cos, sin));
     }
   }
 
-  inline void drawArc(const Vertex& origin,
-                      qreal innerRadius,
-                      qreal outterRadius,
-                      const QColor& color) {
+  inline void
+  drawArc(const Vertex& origin, qreal innerRadius, qreal outterRadius, const QColor& color) {
     drawArc(origin, innerRadius, outterRadius, 0, 2 * PI, color);
   }
 
-  inline void drawSector(const Vertex& origin,
-                         qreal radius,
-                         qreal theta1,
-                         qreal theta2,
-                         const QColor& color) {
+  inline void
+  drawSector(const Vertex& origin, qreal radius, qreal theta1, qreal theta2, const QColor& color) {
     ScopedDrawGuard guard(this, GL_TRIANGLE_FAN);
     if (radius <= 0) {
       qWarning() << "radius must be positive.";
@@ -282,8 +262,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void
-  drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) {
+  inline void drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) {
     if (!local.circleDisplayListId) {
       DisplayListGuard displayGuard(this);
       ScopedDrawGuard guard(this, GL_POLYGON, true);

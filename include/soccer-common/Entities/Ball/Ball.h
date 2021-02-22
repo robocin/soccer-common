@@ -10,9 +10,7 @@ class RawBall : virtual public RawEntity {
 
 class Ball : public Entity, public RawBall {
  public:
-  Ball(const QPointF& position,
-       const QPointF& velocity,
-       const QPointF& acceleration);
+  Ball(const QPointF& position, const QPointF& velocity, const QPointF& acceleration);
 };
 
 #endif // SOCCER_COMMON_BALL_H

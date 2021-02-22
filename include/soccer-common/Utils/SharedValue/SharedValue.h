@@ -9,8 +9,7 @@ class SharedValue {
 
  public:
   template <class... Args>
-  constexpr SharedValue(Args&&... args) :
-      m_instance(std::forward<Args>(args)...) {
+  constexpr SharedValue(Args&&... args) : m_instance(std::forward<Args>(args)...) {
   }
 
   template <class U>

@@ -20,9 +20,7 @@ QWidget* MainWindow::visualizationWidget() {
   return ui->visualizationWidget;
 }
 
-MainWindow::MainWindow(int maxRobots,
-                       QSizeF defaultVisualizerSize,
-                       QWidget* parent) :
+MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* parent) :
     QMainWindow(parent),
     WidgetSettings(this, nullptr),
     RobotsWidgets(maxRobots),
@@ -37,8 +35,7 @@ MainWindow::MainWindow(int maxRobots,
     setupVisualizationWidget(this);
   }
   /* setting dock widget corners */ {
-    auto features = QDockWidget::DockWidgetClosable |
-                    QDockWidget::DockWidgetMovable |
+    auto features = QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable |
                     QDockWidget::DockWidgetFloatable;
 
     ui->dockWidgetInfo->setFeatures(features);
@@ -56,9 +53,7 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::setup(const QString& name,
-                       const QString& version,
-                       const QString& path) {
+void MainWindow::setup(const QString& name, const QString& version, const QString& path) {
   QString projectPath(path.endsWith('/') ? path : path + "/");
   /* storing project info to use later */ {
     setupWidgetSettings(name,
@@ -88,8 +83,7 @@ void MainWindow::setup(const QString& name,
 void MainWindow::saveEventAndLog() {
   saveEvent();
 
-  QString logpath = localConfigPath() + "logs/" + executionDateTime() + "/" +
-                    executionTime() + "/";
+  QString logpath = localConfigPath() + "logs/" + executionDateTime() + "/" + executionTime() + "/";
   QDir().mkdir(logpath);
 
   saveEvent(logpath);
@@ -108,16 +102,14 @@ void MainWindow::loadEvent(std::optional<QString> optPath) {
     std::unique_ptr<QSettings> settings;
     std::optional<QTemporaryFile> tmpFile;
     if (QDir(path).exists("config.ini")) {
-      settings =
-          std::make_unique<QSettings>(filename + ".ini", QSettings::IniFormat);
+      settings = std::make_unique<QSettings>(filename + ".ini", QSettings::IniFormat);
     } else {
       /* QSettings is not copyable and always requires write file. So, it is
        * necessary to create a temporary file to write, and the use of a
        * std::unique_ptr is to offset the fact that it is not copyable.*/
       tmpFile.emplace();
       Q_ASSERT(tmpFile->open());
-      settings = std::make_unique<QSettings>(tmpFile->fileName(),
-                                             QSettings::IniFormat);
+      settings = std::make_unique<QSettings>(tmpFile->fileName(), QSettings::IniFormat);
       qWarning() << "the file \"config.ini\" has not been opened.";
     }
 
@@ -144,8 +136,8 @@ void MainWindow::saveEvent(std::optional<QString> optPath) {
     QSettings settings(filename + ".ini", QSettings::IniFormat);
     QJsonObject json;
     writeSettings(settings, json);
-    if (QFile file(filename + ".json"); file.open(
-            QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+    if (QFile file(filename + ".json");
+        file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
       file.write(QJsonDocument(json)
                      .toJson(QJsonDocument::Indented)
                      .replace(QByteArray(4, ' '), QByteArray(2, ' ')));
@@ -195,14 +187,12 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
     saveAs->setShortcut(QKeySequence("Ctrl+Shift+S"));
     QDir().mkdir(localConfigPath() + "custom/");
     QObject::connect(saveAs, &QAction::triggered, this, [this]() {
-      QString path =
-          QFileDialog::getExistingDirectory(this,
-                                            "Save config to folder:",
-                                            localConfigPath() + "custom/");
+      QString path = QFileDialog::getExistingDirectory(this,
+                                                       "Save config to folder:",
+                                                       localConfigPath() + "custom/");
       if (!path.isEmpty()) {
         saveEvent(path);
-        qWarning().nospace()
-            << "the configuration has been saved to " << path << ".";
+        qWarning().nospace() << "the configuration has been saved to " << path << ".";
       } else {
         qWarning() << "path is empty.";
       }
@@ -223,16 +213,13 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
                        });
     }
     QObject::connect(open, &QAction::triggered, this, [this]() {
-      QString path =
-          QFileDialog::getExistingDirectory(this,
-                                            "Open config from folder:",
-                                            localConfigPath() + "custom/");
+      QString path = QFileDialog::getExistingDirectory(this,
+                                                       "Open config from folder:",
+                                                       localConfigPath() + "custom/");
       if (!path.isEmpty()) {
-        if (QDir(path).exists("config.ini") ||
-            QDir(path).exists("config.json")) {
+        if (QDir(path).exists("config.ini") || QDir(path).exists("config.json")) {
           loadEvent(path);
-          qWarning().nospace()
-              << "the configuration has been loaded from " << path << ".";
+          qWarning().nospace() << "the configuration has been loaded from " << path << ".";
         } else {
           qWarning() << "the selected folder" << path
                      << "doesn't have the necessary files to load.";

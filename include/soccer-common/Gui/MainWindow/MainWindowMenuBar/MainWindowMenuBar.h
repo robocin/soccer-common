@@ -8,14 +8,12 @@ class MainWindowMenuBar {
     std::map<QString, MappedMenu*> m_map;
 
    public:
-    explicit MappedMenu(const QString& title, QMenuBar* parent) :
-        QMenu(title, parent) {
+    explicit MappedMenu(const QString& title, QMenuBar* parent) : QMenu(title, parent) {
       Q_ASSERT(parent != nullptr);
       parent->addMenu(this);
     }
 
-    explicit MappedMenu(const QString& title, MappedMenu* parent) :
-        QMenu(title, parent) {
+    explicit MappedMenu(const QString& title, MappedMenu* parent) : QMenu(title, parent) {
       Q_ASSERT(parent != nullptr);
       parent->addMenu(this);
     }

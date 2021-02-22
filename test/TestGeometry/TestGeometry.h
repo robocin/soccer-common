@@ -34,10 +34,8 @@ class TestGeometry : public QObject {
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
   void test_2D_length_whenGivenAPoint_shouldWork();
   void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
-  void
-  test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
-  void
-  test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
+  void test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
+  void test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
   void test_2D_isTriangle_whenGivenThreeNumbers_shouldWork();
   void test_2D_signedArea2_whenGivenAPolygon_shouldWork();
   void test_2D_signedArea_whenGivenAPolygon_shouldWork();
@@ -45,9 +43,7 @@ class TestGeometry : public QObject {
   void test_2D_area_whenGivenAPolygon_shouldWork();
   void test_2D_centroid_whenGivenAPolygonOfFloatingPointPoints_shouldWork();
   void test_2D_projectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
-  void
-  test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_reflectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
-  void
-  test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
 };

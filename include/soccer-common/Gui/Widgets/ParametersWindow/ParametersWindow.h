@@ -19,9 +19,8 @@ class ParametersWindow : public QWidget {
   explicit ParametersWindow(QWidget* parent = nullptr);
   ~ParametersWindow();
 
-  void build(QMap<QStringList, ParameterWidget*>& widgets,
-             const QString& name,
-             const QJsonObject& json);
+  void
+  build(QMap<QStringList, ParameterWidget*>& widgets, const QString& name, const QJsonObject& json);
   void store();
   void load();
 

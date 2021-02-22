@@ -20,12 +20,10 @@ void GLTessellatorHelper_2_1::tessErrorCB(GLenum errorCode) {
   qWarning() << "tessErrorCB" << (errorStr);
 }
 
-std::array<GLdouble, 3> GLTessellatorHelper_2_1::makeTessVertex(qreal x,
-                                                                qreal y) {
+std::array<GLdouble, 3> GLTessellatorHelper_2_1::makeTessVertex(qreal x, qreal y) {
   return {x, y, m_z};
 }
 
-std::array<GLdouble, 3>
-GLTessellatorHelper_2_1::makeTessVertex(const Vertex& v) {
+std::array<GLdouble, 3> GLTessellatorHelper_2_1::makeTessVertex(const Vertex& v) {
   return makeTessVertex(v.x(), v.y());
 }

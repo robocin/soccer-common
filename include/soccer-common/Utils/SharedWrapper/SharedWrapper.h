@@ -11,8 +11,7 @@ class SharedWrapper {
 
  public:
   template <class... Args>
-  explicit SharedWrapper(Args&&... args) :
-      instance(std::forward<Args>(args)...) {
+  explicit SharedWrapper(Args&&... args) : instance(std::forward<Args>(args)...) {
   }
 
   ~SharedWrapper() = default;

@@ -10,8 +10,7 @@ DynamicFontSizeQLabel::DynamicFontSizeQLabel(const QString& text,
   setAlignment(Qt::AlignCenter);
 }
 
-DynamicFontSizeQLabel::DynamicFontSizeQLabel(QWidget* parent,
-                                             Qt::WindowFlags f) :
+DynamicFontSizeQLabel::DynamicFontSizeQLabel(QWidget* parent, Qt::WindowFlags f) :
     QLabel(parent, f),
     ratio(1.0) {
   setAlignment(Qt::AlignCenter);
@@ -27,16 +26,14 @@ DynamicFontSizeQLabel::~DynamicFontSizeQLabel() {
 void DynamicFontSizeQLabel::paintEvent(QPaintEvent* event) {
   QFont newFont = font();
   qreal fontSize =
-      std::max<qreal>(minimumFontSize,
-                      ratio * getWidgetMaximumFontSize(this, this->text()));
+      std::max<qreal>(minimumFontSize, ratio * getWidgetMaximumFontSize(this, this->text()));
 
   newFont.setPointSizeF(fontSize);
   setFont(newFont);
   QLabel::paintEvent(event);
 }
 
-qreal DynamicFontSizeQLabel::getWidgetMaximumFontSize(QWidget* widget,
-                                                      QString text) {
+qreal DynamicFontSizeQLabel::getWidgetMaximumFontSize(QWidget* widget, QString text) {
   QFont font = widget->font();
   const QRect widgetRect = widget->contentsRect();
   const qreal widgetWidth = static_cast<qreal>(widgetRect.width());
@@ -56,14 +53,12 @@ qreal DynamicFontSizeQLabel::getWidgetMaximumFontSize(QWidget* widget,
 
   qreal currentHeight = 0;
   qreal currentWidth = 0;
-  if (text.isEmpty() || widgetWidth < minimumFontSize ||
-      widgetHeight < minimumFontSize) {
+  if (text.isEmpty() || widgetWidth < minimumFontSize || widgetHeight < minimumFontSize) {
     return currentSize;
   }
 
   /* Only stop when step is small enough and new size is smaller than QWidget */
-  while ((step > fontPrecision) || (currentHeight > widgetHeight) ||
-         (currentWidth > widgetWidth)) {
+  while ((step > fontPrecision) || (currentHeight > widgetHeight) || (currentWidth > widgetWidth)) {
     /* Keep last tested value */
     lastTestedSize = currentSize;
 
@@ -75,10 +70,10 @@ qreal DynamicFontSizeQLabel::getWidgetMaximumFontSize(QWidget* widget,
     /* Check if widget is QLabel */
     QLabel* label = qobject_cast<QLabel*>(widget);
     if (label) {
-      newFontSizeRect = fm.boundingRect(
-          widgetRect,
-          (label->wordWrap() ? Qt::TextWordWrap : 0) | label->alignment(),
-          text);
+      newFontSizeRect =
+          fm.boundingRect(widgetRect,
+                          (label->wordWrap() ? Qt::TextWordWrap : 0) | label->alignment(),
+                          text);
     } else {
       newFontSizeRect = fm.boundingRect(widgetRect, 0, text);
     }

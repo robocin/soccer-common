@@ -7,8 +7,7 @@ template <class T>
 class SharedOptional : public std::optional<T> {
  public:
   template <class... Args>
-  constexpr SharedOptional(Args&&... args) :
-      std::optional<T>(std::forward<Args>(args)...) {
+  constexpr SharedOptional(Args&&... args) : std::optional<T>(std::forward<Args>(args)...) {
   }
 
   template <class U>

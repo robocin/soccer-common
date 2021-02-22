@@ -91,12 +91,10 @@ namespace Parameters {
   template <class T>
   class ParameterType : public ParameterBase {
     template <class U, class... Us>
-    static constexpr bool is_any_of_v =
-        std::disjunction_v<std::is_same<U, Us>...>;
+    static constexpr bool is_any_of_v = std::disjunction_v<std::is_same<U, Us>...>;
 
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> &&
-                       !(is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> && !(is_any_of_v<T, char, long double>) ) ||
                       std::is_same_v<T, QString>,
                   "unsupported type.");
 
@@ -191,8 +189,7 @@ namespace Parameters {
                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         regex(t_regex) {
-      if (!regex.match(Utils::removeQuotes(static_cast<QString>(value())))
-               .hasMatch()) {
+      if (!regex.match(Utils::removeQuotes(static_cast<QString>(value()))).hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
     }
@@ -202,8 +199,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::Regex) + ": " +
-             Utils::quoted(regex.pattern());
+      return Utils::quoted(Detail::Regex) + ": " + Utils::quoted(regex.pattern());
     }
 
     bool isChooseable() const override final {
@@ -232,10 +228,7 @@ namespace Parameters {
 
    public:
     template <class U>
-    SpinBox(Arg<T>& t_ref,
-            U t_minValue,
-            U t_maxValue,
-            const QString& t_about = "") :
+    SpinBox(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -252,8 +245,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue) + ", " +
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
@@ -310,12 +302,10 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue, 'f', precision) + ", " +
-             Utils::quoted(Detail::MaxValue) + ": " +
-             QString::number(maxValue, 'f', precision) + ", " +
-             Utils::quoted(Detail::Precision) + ": " +
-             QString::number(precision);
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue, 'f', precision) +
+             ", " + Utils::quoted(Detail::MaxValue) + ": " +
+             QString::number(maxValue, 'f', precision) + ", " + Utils::quoted(Detail::Precision) +
+             ": " + QString::number(precision);
     }
 
     bool isChooseable() const override final {
@@ -344,10 +334,7 @@ namespace Parameters {
 
    public:
     template <class U>
-    Slider(Arg<T>& t_ref,
-           U t_minValue,
-           U t_maxValue,
-           const QString& t_about = "") :
+    Slider(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -364,8 +351,7 @@ namespace Parameters {
     }
 
     QString payload() const override final {
-      return Utils::quoted(Detail::MinValue) + ": " +
-             QString::number(minValue) + ", " +
+      return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
@@ -423,14 +409,11 @@ namespace Parameters {
     std::set<T> set;
 
    public:
-    ComboBox(Arg<T>& t_ref,
-             const QVector<T>& t_set,
-             const QString& t_about = "") :
+    ComboBox(Arg<T>& t_ref, const QVector<T>& t_set, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         set(t_set.begin(), t_set.end()) {
       if (!((set.size() > 1) && set.find(t_ref) != set.end())) {
-        throw std::runtime_error(
-            "the size of set must be greater than 1, and must contain ref.");
+        throw std::runtime_error("the size of set must be greater than 1, and must contain ref.");
       }
     }
 
@@ -487,9 +470,7 @@ namespace Parameters {
     boost::bimap<T, QString> bimap;
 
    public:
-    MappedComboBox(Arg<T>& t_ref,
-                   const QMap<T, QString>& t_map,
-                   const QString& t_about = "") :
+    MappedComboBox(Arg<T>& t_ref, const QMap<T, QString>& t_map, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         bimap([](const QMap<T, QString>& map) {
           boost::bimap<T, QString> ret;
@@ -499,10 +480,8 @@ namespace Parameters {
           return ret;
         }(t_map)) {
       bool contains = bimap.left.find(t_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) &&
-            (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
-        throw std::runtime_error(
-            "the size of map must be greater than 1, and must contain ref.");
+      if (!((bimap.size() > 1) && (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
+        throw std::runtime_error("the size of map must be greater than 1, and must contain ref.");
       }
     }
 

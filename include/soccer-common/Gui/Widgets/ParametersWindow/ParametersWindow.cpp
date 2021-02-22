@@ -68,22 +68,20 @@ bool ParametersWindow::showOnly(const QString& name) {
   return found;
 }
 
-void ParametersWindow::addParameterWidget(
-    QMap<QStringList, ParameterWidget*>& widgets,
-    QStringList& currentPath,
-    const QString& name,
-    const QJsonObject& json) {
+void ParametersWindow::addParameterWidget(QMap<QStringList, ParameterWidget*>& widgets,
+                                          QStringList& currentPath,
+                                          const QString& name,
+                                          const QJsonObject& json) {
   ParameterWidget* p = new ParameterWidget(ui->scrollAreaWidgetContents);
   p->setObjectName(name);
   p->build(widgets, currentPath, name, json);
   ui->scrollAreaLayout->addWidget(p);
 }
 
-void ParametersWindow::addParametersWindow(
-    QMap<QStringList, ParameterWidget*>& widgets,
-    QStringList& currentPath,
-    const QString& name,
-    const QJsonObject& json) {
+void ParametersWindow::addParametersWindow(QMap<QStringList, ParameterWidget*>& widgets,
+                                           QStringList& currentPath,
+                                           const QString& name,
+                                           const QJsonObject& json) {
   ParametersWindow* pw = new ParametersWindow(ui->scrollAreaWidgetContents);
   pw->setObjectName(name);
   pw->build(widgets, currentPath, name, json);

@@ -14,36 +14,26 @@ ParameterWidget::ParameterWidget(QWidget* parent) :
     inputMethod(nullptr),
     conditionalParameters(nullptr) {
   ui->setupUi(this);
-  inputMethodBuildMap[InputType::Text] =
-      std::bind(&ParameterWidget::buildTextEdit,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
+  inputMethodBuildMap[InputType::Text] = std::bind(&ParameterWidget::buildTextEdit,
+                                                   this,
+                                                   std::placeholders::_1,
+                                                   std::placeholders::_2);
   inputMethodBuildMap[InputType::Slider] =
-      std::bind(&ParameterWidget::buildSlider,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
+      std::bind(&ParameterWidget::buildSlider, this, std::placeholders::_1, std::placeholders::_2);
   inputMethodBuildMap[InputType::SpinBox] =
-      std::bind(&ParameterWidget::buildSpinBox,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
-  inputMethodBuildMap[InputType::DoubleSpinBox] =
-      std::bind(&ParameterWidget::buildDoubleSpinBox,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
-  inputMethodBuildMap[InputType::ComboBox] =
-      std::bind(&ParameterWidget::buildComboBox,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
-  inputMethodBuildMap[InputType::CheckBox] =
-      std::bind(&ParameterWidget::buildCheckBox,
-                this,
-                std::placeholders::_1,
-                std::placeholders::_2);
+      std::bind(&ParameterWidget::buildSpinBox, this, std::placeholders::_1, std::placeholders::_2);
+  inputMethodBuildMap[InputType::DoubleSpinBox] = std::bind(&ParameterWidget::buildDoubleSpinBox,
+                                                            this,
+                                                            std::placeholders::_1,
+                                                            std::placeholders::_2);
+  inputMethodBuildMap[InputType::ComboBox] = std::bind(&ParameterWidget::buildComboBox,
+                                                       this,
+                                                       std::placeholders::_1,
+                                                       std::placeholders::_2);
+  inputMethodBuildMap[InputType::CheckBox] = std::bind(&ParameterWidget::buildCheckBox,
+                                                       this,
+                                                       std::placeholders::_1,
+                                                       std::placeholders::_2);
 }
 
 ParameterWidget::~ParameterWidget() {
@@ -67,8 +57,7 @@ void ParameterWidget::build(QMap<QStringList, ParameterWidget*>& widgets,
     parameterPath = currentPath;
     widgets.insert(parameterPath, this);
   }
-  QString inputType =
-      "• " + QString(Detail::Type) + ": " + json[Detail::Type].toString() + ";";
+  QString inputType = "• " + QString(Detail::Type) + ": " + json[Detail::Type].toString() + ";";
   QString defaultValue = "• Default" + QString(Detail::Value) + ": " +
                          json[Detail::Value].toVariant().toString() + ";";
   QStringList details;
@@ -76,14 +65,13 @@ void ParameterWidget::build(QMap<QStringList, ParameterWidget*>& widgets,
   ui->label->setText(Markdown::bold(name) + ":");
 
   if (!json[Detail::Description].toString().isEmpty()) {
-    details += "• " + QString(Detail::Description) + ": " +
-               json[Detail::Description].toString() + ";";
+    details +=
+        "• " + QString(Detail::Description) + ": " + json[Detail::Description].toString() + ";";
   }
   details += inputType;
   details += defaultValue;
 
-  inputMethod =
-      inputMethodBuildMap[json[Detail::InputType].toString()](json, details);
+  inputMethod = inputMethodBuildMap[json[Detail::InputType].toString()](json, details);
   QObject::connect(inputMethod,
                    &InputWidgets::InputMethod::onValueChanged,
                    this,
@@ -95,9 +83,8 @@ void ParameterWidget::build(QMap<QStringList, ParameterWidget*>& widgets,
   if (json.contains(Detail::Conditional)) {
     QStringList conditionals = json[Detail::Conditional].toObject().keys();
     conditionals.sort(Qt::CaseInsensitive);
-    details += "• " + QString(Detail::Conditional) +
-               QString(conditionals.size() > 1 ? "s" : "") + ": [" +
-               conditionals.join(", ") + "];";
+    details += "• " + QString(Detail::Conditional) + QString(conditionals.size() > 1 ? "s" : "") +
+               ": [" + conditionals.join(", ") + "];";
     conditionalParameters = new ParametersWindow(ui->conditionalWidget);
     ui->conditionalWidgetLayout->addWidget(conditionalParameters);
     conditionalParameters->build(widgets,
@@ -121,66 +108,62 @@ void ParameterWidget::showConditionalOrHide() {
   }
 }
 
-InputWidgets::InputMethod*
-ParameterWidget::buildTextEdit(const QJsonObject& json, QStringList& details) {
-  QString regex = "• " + QString(Detail::Regex) + ": " +
-                  Utils::quoted(json[Detail::Regex].toString()) + ";";
+InputWidgets::InputMethod* ParameterWidget::buildTextEdit(const QJsonObject& json,
+                                                          QStringList& details) {
+  QString regex =
+      "• " + QString(Detail::Regex) + ": " + Utils::quoted(json[Detail::Regex].toString()) + ";";
   details += regex;
   return new InputWidgets::TextEdit(json, ui->mainWidget);
 }
 
 InputWidgets::InputMethod* ParameterWidget::buildSlider(const QJsonObject& json,
                                                         QStringList& details) {
-  QString minValue = "• " + QString(Detail::MinValue) + ": " +
-                     json[Detail::MinValue].toVariant().toString() + ";";
-  QString maxValue = "• " + QString(Detail::MaxValue) + ": " +
-                     json[Detail::MaxValue].toVariant().toString() + ";";
+  QString minValue =
+      "• " + QString(Detail::MinValue) + ": " + json[Detail::MinValue].toVariant().toString() + ";";
+  QString maxValue =
+      "• " + QString(Detail::MaxValue) + ": " + json[Detail::MaxValue].toVariant().toString() + ";";
   details += minValue;
   details += maxValue;
   return new InputWidgets::Slider(json, ui->mainWidget);
 }
 
-InputWidgets::InputMethod*
-ParameterWidget::buildSpinBox(const QJsonObject& json, QStringList& details) {
-  QString minValue = "• " + QString(Detail::MinValue) + ": " +
-                     json[Detail::MinValue].toVariant().toString() + ";";
-  QString maxValue = "• " + QString(Detail::MaxValue) + ": " +
-                     json[Detail::MaxValue].toVariant().toString() + ";";
+InputWidgets::InputMethod* ParameterWidget::buildSpinBox(const QJsonObject& json,
+                                                         QStringList& details) {
+  QString minValue =
+      "• " + QString(Detail::MinValue) + ": " + json[Detail::MinValue].toVariant().toString() + ";";
+  QString maxValue =
+      "• " + QString(Detail::MaxValue) + ": " + json[Detail::MaxValue].toVariant().toString() + ";";
   details += minValue;
   details += maxValue;
   return new InputWidgets::SpinBox(json, ui->mainWidget);
 }
 
-InputWidgets::InputMethod*
-ParameterWidget::buildDoubleSpinBox(const QJsonObject& json,
-                                    QStringList& details) {
-  QString minValue = "• " + QString(Detail::MinValue) + ": " +
-                     json[Detail::MinValue].toVariant().toString() + ";";
-  QString maxValue = "• " + QString(Detail::MaxValue) + ": " +
-                     json[Detail::MaxValue].toVariant().toString() + ";";
+InputWidgets::InputMethod* ParameterWidget::buildDoubleSpinBox(const QJsonObject& json,
+                                                               QStringList& details) {
+  QString minValue =
+      "• " + QString(Detail::MinValue) + ": " + json[Detail::MinValue].toVariant().toString() + ";";
+  QString maxValue =
+      "• " + QString(Detail::MaxValue) + ": " + json[Detail::MaxValue].toVariant().toString() + ";";
   QString precision = "• " + QString(Detail::Precision) + ": " +
-                      json[Detail::Precision].toVariant().toString() +
-                      " digits;";
+                      json[Detail::Precision].toVariant().toString() + " digits;";
   details += minValue;
   details += maxValue;
   details += precision;
   return new InputWidgets::DoubleSpinBox(json, ui->mainWidget);
 }
 
-InputWidgets::InputMethod*
-ParameterWidget::buildComboBox(const QJsonObject& json, QStringList& details) {
+InputWidgets::InputMethod* ParameterWidget::buildComboBox(const QJsonObject& json,
+                                                          QStringList& details) {
   QJsonArray itemsAsJson = json[Detail::Options].toArray();
   QStringList itemsAsStringList;
   for (const QJsonValue& object : itemsAsJson) {
     itemsAsStringList += object.toVariant().toString();
   }
-  details += "• " + QString(Detail::Options) + ": [" +
-             itemsAsStringList.join(", ") + "];";
+  details += "• " + QString(Detail::Options) + ": [" + itemsAsStringList.join(", ") + "];";
   return new InputWidgets::ComboBox(json, ui->mainWidget);
 }
 
-InputWidgets::InputMethod*
-ParameterWidget::buildCheckBox(const QJsonObject& json, QStringList&) {
+InputWidgets::InputMethod* ParameterWidget::buildCheckBox(const QJsonObject& json, QStringList&) {
   return new InputWidgets::CheckBox(json, ui->mainWidget);
 }
 

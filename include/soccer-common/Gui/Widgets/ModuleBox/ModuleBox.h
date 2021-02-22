@@ -15,9 +15,8 @@ class ModuleBox : public QWidget, public WidgetSettings, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit ModuleBox(
-      const QString& name,
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit ModuleBox(const QString& name,
+                     QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~ModuleBox();
 
   QString currentText() const;

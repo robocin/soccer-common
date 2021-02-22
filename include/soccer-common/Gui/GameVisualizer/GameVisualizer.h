@@ -62,8 +62,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
     GameVisualizer* widget;
 
     bool canUpdate() {
-      if (widget->shared->stopwatch.ref().elapsed() <
-          widget->local.maxFrameRate) {
+      if (widget->shared->stopwatch.ref().elapsed() < widget->local.maxFrameRate) {
         return false;
       }
       widget->shared->stopwatch.ref().start();
@@ -73,8 +72,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
    public:
     Q_DISABLE_COPY_MOVE(ScheduleUpdateAtEnd);
 
-    explicit inline ScheduleUpdateAtEnd(GameVisualizer* t_widget) :
-        widget(t_widget) {
+    explicit inline ScheduleUpdateAtEnd(GameVisualizer* t_widget) : widget(t_widget) {
       Q_ASSERT(t_widget != nullptr);
     }
     inline ~ScheduleUpdateAtEnd() {
@@ -102,9 +100,7 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
   SharedWrapper<Shared, std::mutex> shared;
 
   struct Local {
-    std::array<std::map<int, PaintingPointer>,
-               MagicEnum::count<Painting::Layers>()>
-        paintings{};
+    std::array<std::map<int, PaintingPointer>, MagicEnum::count<Painting::Layers>()> paintings{};
 
     qreal maxFrameRate = 1000.0 / 60.0;
     qreal scale = 5'000;
@@ -197,13 +193,11 @@ class GameVisualizer::Key : public QObject {
 
   template <class Functor>
   inline std::enable_if_t<
-      std::is_constructible_v<std::function<void(GameVisualizerPainter2D*)>,
-                              Functor>>
+      std::is_constructible_v<std::function<void(GameVisualizerPainter2D*)>, Functor>>
   draw(Functor&& functor) {
-    emit onPaintingEmitted(
-        m_key,
-        Painting::create(std::forward<Functor>(functor)).release(),
-        m_layer);
+    emit onPaintingEmitted(m_key,
+                           Painting::create(std::forward<Functor>(functor)).release(),
+                           m_layer);
   }
 
   inline void setVisibility(bool visibility) {
@@ -221,9 +215,7 @@ class GameVisualizer::Key : public QObject {
  signals:
   void onKeyDeleted(int key);
   void onVisibilityChanged(int key, bool visibility);
-  void onPaintingEmitted(int uniqueIntegerKey,
-                         Painting* painting,
-                         Painting::Layers layer);
+  void onPaintingEmitted(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
 
  private:
   int m_key;

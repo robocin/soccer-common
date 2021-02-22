@@ -15,8 +15,7 @@ void ModuleBase::setup(const Modules* modules) {
   init(modules);
 }
 
-void ModuleBase::receiveUpdateRequests(
-    const Parameters::UpdateRequests& updates) {
+void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
   updateRequests->append(updates);
 }
 

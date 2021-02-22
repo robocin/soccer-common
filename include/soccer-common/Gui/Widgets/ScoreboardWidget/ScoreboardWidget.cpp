@@ -3,8 +3,7 @@
 
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-ScoreboardWidget::ScoreboardWidget(
-    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+ScoreboardWidget::ScoreboardWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
@@ -41,10 +40,8 @@ void ScoreboardWidget::writeLocalSettings(QSettings& settings) {
   settings.setValue("firstTeamScore", ui->firstTeamScore->text());
   settings.setValue("secondTeamScore", ui->secondTeamScore->text());
 
-  settings.setValue("firstTeamColor",
-                    ui->firstTeamColor->palette().color(QPalette::Window));
-  settings.setValue("secondTeamColor",
-                    ui->secondTeamColor->palette().color(QPalette::Window));
+  settings.setValue("firstTeamColor", ui->firstTeamColor->palette().color(QPalette::Window));
+  settings.setValue("secondTeamColor", ui->secondTeamColor->palette().color(QPalette::Window));
 
   settings.setValue("viewAction", viewAction->isChecked());
 }

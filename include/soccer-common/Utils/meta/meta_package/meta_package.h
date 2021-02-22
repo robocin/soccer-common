@@ -16,34 +16,34 @@
  * @brief declares a private type with name 'varname', default_value
  * initialized, and its own public set/get methods
  */
-#define RC_VAR(type, varname)                                                  \
- public:                                                                       \
-  inline auto varname(const type& varname)->decltype(*this)& {                 \
-    m_##varname = varname;                                                     \
-    return *this;                                                              \
-  }                                                                            \
-  inline const type& varname() const {                                         \
-    return m_##varname;                                                        \
-  }                                                                            \
-                                                                               \
- private:                                                                      \
+#define RC_VAR(type, varname)                                                                      \
+ public:                                                                                           \
+  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+    m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  inline const type& varname() const {                                                             \
+    return m_##varname;                                                                            \
+  }                                                                                                \
+                                                                                                   \
+ private:                                                                                          \
   type m_##varname = {}
 
 /*!
  * @brief declares a private type with name 'varname', given default value, and
  * its own public set/get methods
  */
-#define RC_VARVAL(type, varname, default_value)                                \
- public:                                                                       \
-  inline auto varname(const type& varname)->decltype(*this)& {                 \
-    m_##varname = varname;                                                     \
-    return *this;                                                              \
-  }                                                                            \
-  inline const type& varname() const {                                         \
-    return m_##varname;                                                        \
-  }                                                                            \
-                                                                               \
- private:                                                                      \
+#define RC_VARVAL(type, varname, default_value)                                                    \
+ public:                                                                                           \
+  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+    m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  inline const type& varname() const {                                                             \
+    return m_##varname;                                                                            \
+  }                                                                                                \
+                                                                                                   \
+ private:                                                                                          \
   type m_##varname = {default_value}
 
 /*!
@@ -53,21 +53,21 @@
  * macro with types that doesn't contains empty constructors or with variables
  * that empty constructor doesn't make sense
  */
-#define RC_VAROPT(type, varname)                                               \
- public:                                                                       \
-  inline auto varname(const type& varname)->decltype(*this)& {                 \
-    m_##varname = varname;                                                     \
-    return *this;                                                              \
-  }                                                                            \
-  inline const type& varname() const {                                         \
-    try {                                                                      \
-      return m_##varname.value();                                              \
-    } catch (const std::bad_optional_access&) {                                \
-      throw;                                                                   \
-    }                                                                          \
-  }                                                                            \
-                                                                               \
- private:                                                                      \
+#define RC_VAROPT(type, varname)                                                                   \
+ public:                                                                                           \
+  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+    m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  inline const type& varname() const {                                                             \
+    try {                                                                                          \
+      return m_##varname.value();                                                                  \
+    } catch (const std::bad_optional_access&) {                                                    \
+      throw;                                                                                       \
+    }                                                                                              \
+  }                                                                                                \
+                                                                                                   \
+ private:                                                                                          \
   std::optional<type> m_##varname
 
 #pragma clang diagnostic pop

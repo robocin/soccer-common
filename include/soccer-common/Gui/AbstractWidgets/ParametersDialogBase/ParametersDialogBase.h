@@ -15,8 +15,7 @@ class ParametersDialogBase : public QWidget {
   Q_OBJECT
 
  public:
-  explicit ParametersDialogBase(const QString& title,
-                                QWidget* parent = nullptr);
+  explicit ParametersDialogBase(const QString& title, QWidget* parent = nullptr);
   ~ParametersDialogBase() override;
 
  protected:

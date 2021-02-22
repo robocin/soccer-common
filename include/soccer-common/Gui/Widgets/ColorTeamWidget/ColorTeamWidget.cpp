@@ -4,8 +4,7 @@
 #include <QtWidgets>
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-ColorTeamWidget::ColorTeamWidget(
-    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+ColorTeamWidget::ColorTeamWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
     MenuBarOptions(parent),
@@ -21,8 +20,7 @@ ColorTeamWidget::~ColorTeamWidget() {
 void ColorTeamWidget::setColor(QColor color) {
   int r, g, b;
   color.getRgb(&r, &g, &b);
-  ui->Color->setText(QString::number(r) + " " + QString::number(g) + " " +
-                     QString::number(b));
+  ui->Color->setText(QString::number(r) + " " + QString::number(g) + " " + QString::number(b));
 }
 
 void ColorTeamWidget::writeLocalSettings(QSettings& settings) {

@@ -156,11 +156,10 @@ void SmartVerticalFlowLayout::doLayout(const QRect& rect) {
 
   int y = effectiveRect.y();
   // update items position
-  QRect layoutGeometry = QRect(
-      0,
-      0,
-      1,
-      1); // width and height msut be positive ! (otherwise, infinite loop)
+  QRect layoutGeometry = QRect(0,
+                               0,
+                               1,
+                               1); // width and height msut be positive ! (otherwise, infinite loop)
   Q_FOREACH (rowItems, structure) {
 
     // reset horizontal position
@@ -217,9 +216,8 @@ void SmartVerticalFlowLayout::doLayout(const QRect& rect) {
       else {
         // getting true width depending on the pourcentage of width taken by the
         // item in the row
-        qreal strecthOptimalWidth = (effectiveRect.width() - hSpaceTot) *
-                                    ((qreal) itemSize.width()) /
-                                    ((qreal) rowWidth);
+        qreal strecthOptimalWidth =
+            (effectiveRect.width() - hSpaceTot) * ((qreal) itemSize.width()) / ((qreal) rowWidth);
 
         itemGeometry = QRect(x, y, qFloor(strecthOptimalWidth), rowHeight);
 

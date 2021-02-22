@@ -18,8 +18,7 @@ class Extends<QPoint> : public QPoint {
 
   inline bool operator<(const Extends<QPoint>& other) const {
     using Geometry2D::operator<;
-    return static_cast<const QPoint&>(*this) <
-           static_cast<const QPoint&>(other);
+    return static_cast<const QPoint&>(*this) < static_cast<const QPoint&>(other);
   }
 
   inline bool operator<(const QPoint& other) const {
@@ -104,8 +103,7 @@ class Extends<QPointF> : public QPointF {
 
   inline bool operator<(const Extends<QPointF>& other) const {
     using Geometry2D::operator<;
-    return static_cast<const QPointF&>(*this) <
-           static_cast<const QPointF&>(other);
+    return static_cast<const QPointF&>(*this) < static_cast<const QPointF&>(other);
   }
 
   inline bool operator<(const QPointF& other) const {
@@ -113,8 +111,7 @@ class Extends<QPointF> : public QPointF {
     return static_cast<const QPointF&>(*this) < other;
   }
 
-  friend inline bool operator<(const QPointF& lhs,
-                               const Extends<QPointF>& rhs) {
+  friend inline bool operator<(const QPointF& lhs, const Extends<QPointF>& rhs) {
     using Geometry2D::operator<;
     return lhs < static_cast<const QPointF&>(rhs);
   }

@@ -1,8 +1,7 @@
 #include "ParametersDialogBase.h"
 #include "ui_ParametersDialogBase.h"
 
-ParametersDialogBase::ParametersDialogBase(const QString& title,
-                                           QWidget* parent) :
+ParametersDialogBase::ParametersDialogBase(const QString& title, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::ParametersDialogBase) {
   ui->setupUi(this);

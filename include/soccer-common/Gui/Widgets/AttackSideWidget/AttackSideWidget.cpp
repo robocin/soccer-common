@@ -3,8 +3,7 @@
 
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-AttackSideWidget::AttackSideWidget(
-    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+AttackSideWidget::AttackSideWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
     MenuBarOptions(parent),

@@ -15,8 +15,7 @@ QT_BEGIN_NAMESPACE
 class Q_WIDGETS_EXPORT SmartVerticalFlowLayout : public QLayout {
   Q_OBJECT
 
-  Q_PROPERTY(
-      int horizontalSpacing READ horizontalSpacing WRITE setHorizontalSpacing)
+  Q_PROPERTY(int horizontalSpacing READ horizontalSpacing WRITE setHorizontalSpacing)
   Q_PROPERTY(int verticalSpacing READ verticalSpacing WRITE setVerticalSpacing)
   Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment)
   Q_PROPERTY(int maxRowCount READ maxRowCount WRITE setMaxRowCount)

@@ -10,9 +10,8 @@ void WidgetSettings::writeSettings(QSettings& settings, QJsonObject& json) {
   // when .toObject() is called, the json object creates a copy. It means that
   // we need to pass copies and after this do assignments to use in a recursive
   // way. To avoid insert empty groups, we only assing if exists some data.
-  QJsonObject currentJson(json.contains(m_groupName) ?
-                              json[m_groupName].toObject() :
-                              QJsonObject());
+  QJsonObject currentJson(json.contains(m_groupName) ? json[m_groupName].toObject() :
+                                                       QJsonObject());
 
   settings.beginGroup(m_groupName);
   writeLocalSettings(settings);
@@ -34,8 +33,7 @@ void WidgetSettings::loadSettings(QSettings& settings, QJsonObject& json) {
     return;
   }
 
-  QJsonObject currentJson(containsQJson ? json[m_groupName].toObject() :
-                                          QJsonObject());
+  QJsonObject currentJson(containsQJson ? json[m_groupName].toObject() : QJsonObject());
 
   settings.beginGroup(m_groupName);
   if (containsQSettings) {
@@ -97,8 +95,7 @@ QString WidgetSettings::executionTime() const {
   return m_executionTime;
 }
 
-WidgetSettings::WidgetSettings(const QString& groupName,
-                               WidgetSettings* parent) :
+WidgetSettings::WidgetSettings(const QString& groupName, WidgetSettings* parent) :
     m_groupName(groupName) {
   if (parent) {
     parent->m_widgets += this;

@@ -9,8 +9,7 @@
 
 namespace MagicEnum {
   template <class E, class BinaryPredicate>
-  constexpr std::optional<std::decay_t<E>> cast(const QString& value,
-                                                const BinaryPredicate& p) {
+  constexpr std::optional<std::decay_t<E>> cast(const QString& value, const BinaryPredicate& p) {
     return magic_enum::enum_cast<E, BinaryPredicate>(value.toUtf8().data(), p);
   }
 

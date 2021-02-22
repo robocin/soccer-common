@@ -1,7 +1,6 @@
 #include "ScrollAreaForFlowLayout.h"
 
-ScrollAreaForFlowLayout::ScrollAreaForFlowLayout(QWidget* parent) :
-    QScrollArea(parent) {
+ScrollAreaForFlowLayout::ScrollAreaForFlowLayout(QWidget* parent) : QScrollArea(parent) {
   setWidgetResizable(true);
   setContentsMargins(-1, -1, -1, -1);
 }
@@ -15,8 +14,7 @@ void ScrollAreaForFlowLayout::resizeEvent(QResizeEvent*) {
       int aw;
       int ah;
       geometry().getRect(&ax, &ay, &aw, &ah);
-      widget()->setGeometry(
-          QRect(ax, ay, std::max(0, aw - (w + 1)), std::max(0, ah - (w + 1))));
+      widget()->setGeometry(QRect(ax, ay, std::max(0, aw - (w + 1)), std::max(0, ah - (w + 1))));
     }
   }
 }

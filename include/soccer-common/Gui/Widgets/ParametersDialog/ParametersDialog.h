@@ -19,9 +19,8 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   QMap<QStringList, ParameterWidget*> m_widgets;
 
  public:
-  explicit ParametersDialog(
-      const QString& title,
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit ParametersDialog(const QString& title,
+                            QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~ParametersDialog() override;
 
  signals:
@@ -35,8 +34,7 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   enum class FileNameType { Open, Save };
 
   QString getFileName(FileNameType type);
-  Parameters::UpdateRequests getUpdates(bool overwriteBackup,
-                                        bool allValues = false) const;
+  Parameters::UpdateRequests getUpdates(bool overwriteBackup, bool allValues = false) const;
 
   void openCurrentFromJsonHandler(const Parameters::JsonHandler& json);
   void updateCurrentAndEmit(bool allValues = false);

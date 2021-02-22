@@ -18,9 +18,7 @@ class Entity : virtual public RawEntity {
   QPointF m_acceleration;
 
  public:
-  Entity(const QPointF& position,
-         const QPointF& velocity,
-         const QPointF& acceleration);
+  Entity(const QPointF& position, const QPointF& velocity, const QPointF& acceleration);
 
   const QPointF& velocity() const;
   const QPointF& acceleration() const;

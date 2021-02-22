@@ -30,9 +30,7 @@ class ParameterWidget : public QWidget {
   Ui::ParameterWidget* ui;
   InputWidgets::InputMethod* inputMethod;
   ParametersWindow* conditionalParameters;
-  QMap<QString,
-       std::function<InputWidgets::InputMethod*(const QJsonObject&,
-                                                QStringList&)>>
+  QMap<QString, std::function<InputWidgets::InputMethod*(const QJsonObject&, QStringList&)>>
       inputMethodBuildMap;
   QStringList parameterPath;
 
@@ -43,18 +41,12 @@ class ParameterWidget : public QWidget {
 
   void showConditionalOrHide();
 
-  InputWidgets::InputMethod* buildTextEdit(const QJsonObject& json,
-                                           QStringList& details);
-  InputWidgets::InputMethod* buildSlider(const QJsonObject& json,
-                                         QStringList& details);
-  InputWidgets::InputMethod* buildSpinBox(const QJsonObject& json,
-                                          QStringList& details);
-  InputWidgets::InputMethod* buildDoubleSpinBox(const QJsonObject& json,
-                                                QStringList& details);
-  InputWidgets::InputMethod* buildComboBox(const QJsonObject& json,
-                                           QStringList& details);
-  InputWidgets::InputMethod* buildCheckBox(const QJsonObject& json,
-                                           QStringList& details);
+  InputWidgets::InputMethod* buildTextEdit(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildSlider(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildSpinBox(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildDoubleSpinBox(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildComboBox(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildCheckBox(const QJsonObject& json, QStringList& details);
 
  private slots:
   void receiveOnValueChanged();

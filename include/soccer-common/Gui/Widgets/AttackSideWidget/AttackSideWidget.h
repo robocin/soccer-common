@@ -11,14 +11,11 @@ namespace Ui {
   class AttackSideWidget;
 }
 
-class AttackSideWidget : public QWidget,
-                         public WidgetSettings,
-                         public MenuBarOptions {
+class AttackSideWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit AttackSideWidget(
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit AttackSideWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~AttackSideWidget();
  public slots:
   void chooseRightSide(bool choose);

@@ -83,8 +83,7 @@ void TestUtils::test_nameOfType_WithGivenTypeFromValue_ShouldWork() {
 
 void TestUtils::test_nameOfTypes_WithGivenTypesFromValues_ShouldWork() {
   {
-    QString nameOfTypes =
-        Utils::nameOfTypes(integer(), real(), char(), QString());
+    QString nameOfTypes = Utils::nameOfTypes(integer(), real(), char(), QString());
     QCOMPARE(nameOfTypes, "[int, double, char, QString]");
   }
   {

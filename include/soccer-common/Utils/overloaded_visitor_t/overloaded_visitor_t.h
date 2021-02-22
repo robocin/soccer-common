@@ -11,9 +11,8 @@
 
 namespace detail {
   template <class F>
-  static constexpr bool is_function_pointer_v =
-      std::is_pointer_v<std::decay_t<F>>&&
-          std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>;
+  static constexpr bool is_function_pointer_v = std::is_pointer_v<std::decay_t<F>>&&
+      std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>;
 
   template <class F>
   decltype(auto) make_functor(F&& f) {
@@ -38,11 +37,9 @@ class [[maybe_unused]] overloaded_visitor_t : public Ts... {
   static constexpr bool are_same_v = (std::is_same<U, Us>::value && ...);
 
   template <class F>
-  using functor_result_t =
-      typename decltype(std::function(std::declval<F>()))::result_type;
+  using functor_result_t = typename decltype(std::function(std::declval<F>()))::result_type;
 
-  static_assert(are_same_v<functor_result_t<Ts>...>,
-                "result types are not the same.");
+  static_assert(are_same_v<functor_result_t<Ts>...>, "result types are not the same.");
 
   template <class U, class...>
   struct front_type {
@@ -57,8 +54,7 @@ class [[maybe_unused]] overloaded_visitor_t : public Ts... {
   using Ts::operator()...;
 
   template <class T>
-  std::enable_if_t<!(std::is_invocable_v<Ts, T> || ...), result_type>
-  operator()(T&&) const {
+  std::enable_if_t<!(std::is_invocable_v<Ts, T> || ...), result_type> operator()(T&&) const {
     using detail::overloaded_visitor_rte_message;
     throw std::runtime_error(overloaded_visitor_rte_message<T, Ts...>());
   }
@@ -78,8 +74,7 @@ class [[maybe_unused]] overloaded_visitor_t<> {
 
 template <class... Functors>
 inline auto make_visitor(Functors&&... functors) {
-  return overloaded_visitor_t(
-      detail::make_functor(std::forward<Functors>(functors))...);
+  return overloaded_visitor_t(detail::make_functor(std::forward<Functors>(functors))...);
 }
 
 #endif // SOCCER_COMMON_OVERLOADED_VISITOR_T_H

@@ -41,8 +41,7 @@ class WidgetSettings {
   QString executionTime() const;
 
  public:
-  explicit WidgetSettings(const QString& groupName,
-                          WidgetSettings* parent = nullptr);
+  explicit WidgetSettings(const QString& groupName, WidgetSettings* parent = nullptr);
 
   template <class T>
   explicit WidgetSettings(const T* widget, WidgetSettings* parent = nullptr) :

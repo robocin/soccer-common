@@ -1,9 +1,8 @@
 #include "ParametersDialog.h"
 #include "soccer-common/Gui/Widgets/Widgets.h"
 
-ParametersDialog::ParametersDialog(
-    const QString& title,
-    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+ParametersDialog::ParametersDialog(const QString& title,
+                                   QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     ParametersDialogBase(title, parent),
     WidgetSettings(this, parent) {
   m_parametersWindow = new ParametersWindow(parent);
@@ -28,22 +27,15 @@ void ParametersDialog::setCurrentTitle(const QString& title) {
 }
 
 QString ParametersDialog::getFileName(FileNameType type) {
-  QString folder =
-      localConfigPath() + "modules/" + windowTitle() + "/" + m_title + "/";
+  QString folder = localConfigPath() + "modules/" + windowTitle() + "/" + m_title + "/";
   QDir().mkpath(folder);
 
   switch (type) {
     case FileNameType::Open: {
-      return QFileDialog::getOpenFileName(this,
-                                          "Open " + m_title + ":",
-                                          folder,
-                                          "Json (*.json)");
+      return QFileDialog::getOpenFileName(this, "Open " + m_title + ":", folder, "Json (*.json)");
     }
     case FileNameType::Save: {
-      return QFileDialog::getSaveFileName(this,
-                                          "Save " + m_title + ":",
-                                          folder,
-                                          "Json (*.json)");
+      return QFileDialog::getSaveFileName(this, "Save " + m_title + ":", folder, "Json (*.json)");
     }
     default: {
       throw std::runtime_error("unknown filename type.");
@@ -68,16 +60,15 @@ Parameters::UpdateRequests ParametersDialog::getUpdates(bool overwriteBackup,
   return updates;
 }
 
-void ParametersDialog::openCurrentFromJsonHandler(
-    const Parameters::JsonHandler& json) {
+void ParametersDialog::openCurrentFromJsonHandler(const Parameters::JsonHandler& json) {
   auto updates = json.updates();
   for (const auto& up : updates) {
     auto it = m_widgets.find(up.path());
     if (it != m_widgets.end()) {
       if (up.value() != it.value()->input()->currentValue()) {
         it.value()->input()->set(up.value());
-        qWarning().nospace() << "trying to load " << up.path()
-                             << " with value: " << up.value() << ".";
+        qWarning().nospace() << "trying to load " << up.path() << " with value: " << up.value()
+                             << ".";
       }
     }
   }
@@ -103,14 +94,13 @@ void ParametersDialog::onOpenButtonClicked() {
   QString jsonFile = getFileName(FileNameType::Open);
   if (!jsonFile.isEmpty()) {
     if (QFile file(jsonFile); file.open(QIODevice::ReadOnly)) {
-      auto jsonHandler = JsonHandler::fromJsonObject(
-          QJsonDocument::fromJson(file.readAll()).object());
+      auto jsonHandler =
+          JsonHandler::fromJsonObject(QJsonDocument::fromJson(file.readAll()).object());
       openCurrentFromJsonHandler(jsonHandler);
       qWarning() << "a configuration of" << m_title << "was loaded.";
       file.close();
     } else {
-      qWarning() << "the file" << jsonFile
-                 << "has not been opened for reading.";
+      qWarning() << "the file" << jsonFile << "has not been opened for reading.";
     }
   } else {
     qWarning() << "path is empty.";
@@ -125,16 +115,15 @@ void ParametersDialog::onSaveButtonClicked() {
     if (!jsonFile.endsWith(".json")) {
       jsonFile += ".json";
     }
-    if (QFile file(jsonFile); file.open(
-            QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+    if (QFile file(jsonFile);
+        file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
       JsonHandler json = m_jsons[m_title];
       json.insert_or_assign(getUpdates(false));
       file.write(json.toJson());
       qWarning() << "a configuration of" << m_title << "has been saved.";
       file.close();
     } else {
-      qWarning() << "the file" << jsonFile
-                 << "has not been opened for writing.";
+      qWarning() << "the file" << jsonFile << "has not been opened for writing.";
     }
   } else {
     qWarning() << "path is empty.";

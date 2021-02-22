@@ -11,10 +11,7 @@ ModulesPrivate::ModulesPrivate(MainWindow* gui) :
                    this,
                    &ModulesPrivate::onPlayPauseButtonPressed);
 
-  QObject::connect(gui,
-                   &MainWindow::destroyed,
-                   m_modulesThread,
-                   &QThread::quit);
+  QObject::connect(gui, &MainWindow::destroyed, m_modulesThread, &QThread::quit);
 }
 
 MainWindow* ModulesPrivate::gui() const {

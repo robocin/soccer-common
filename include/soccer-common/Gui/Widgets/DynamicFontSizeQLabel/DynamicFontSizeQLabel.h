@@ -16,8 +16,7 @@ class DynamicFontSizeQLabel : public QLabel {
                                  QWidget* parent = nullptr,
                                  Qt::WindowFlags f = Qt::WindowFlags());
 
-  explicit DynamicFontSizeQLabel(QWidget* parent = nullptr,
-                                 Qt::WindowFlags f = Qt::WindowFlags());
+  explicit DynamicFontSizeQLabel(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
   void setRatio(qreal ratioValue);
 

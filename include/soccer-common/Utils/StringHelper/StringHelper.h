@@ -12,11 +12,9 @@ namespace Utils {
     QString ret;
 #if defined(__clang__)
     {
-      constexpr std::string_view lhs(
-          "Extends<QString> Utils::nameOfType() [T = ");
-      constexpr std::string_view rhs(
-          __PRETTY_FUNCTION__,
-          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      constexpr std::string_view lhs("Extends<QString> Utils::nameOfType() [T = ");
+      constexpr std::string_view rhs(__PRETTY_FUNCTION__,
+                                     std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
       static_assert(lhs == rhs, "function name is not as expected.");
     }
     for (std::size_t i = 42; i < size - 1; ++i) {
@@ -24,11 +22,9 @@ namespace Utils {
     }
 #elif defined(__GNUC__)
     {
-      constexpr std::string_view lhs(
-          "Extends<QString> Utils::nameOfType() [with T = ");
-      constexpr std::string_view rhs(
-          __PRETTY_FUNCTION__,
-          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      constexpr std::string_view lhs("Extends<QString> Utils::nameOfType() [with T = ");
+      constexpr std::string_view rhs(__PRETTY_FUNCTION__,
+                                     std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
       static_assert(lhs == rhs, "function name is not as expected.");
     }
     for (std::size_t i = 47; i < size - 1; ++i) {
@@ -47,11 +43,9 @@ namespace Utils {
     ret += "[";
 #if defined(__clang__)
     {
-      constexpr std::string_view lhs(
-          "Extends<QString> Utils::nameOfTypes() [Ts = ");
-      constexpr std::string_view rhs(
-          __PRETTY_FUNCTION__,
-          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      constexpr std::string_view lhs("Extends<QString> Utils::nameOfTypes() [Ts = ");
+      constexpr std::string_view rhs(__PRETTY_FUNCTION__,
+                                     std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
       static_assert(lhs == rhs, "function name is not as expected.");
     }
     for (std::size_t i = 45; i < size - 2; ++i) {
@@ -59,11 +53,9 @@ namespace Utils {
     }
 #elif defined(__GNUC__)
     {
-      constexpr std::string_view lhs(
-          "Extends<QString> Utils::nameOfTypes() [with Ts = ");
-      constexpr std::string_view rhs(
-          __PRETTY_FUNCTION__,
-          std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
+      constexpr std::string_view lhs("Extends<QString> Utils::nameOfTypes() [with Ts = ");
+      constexpr std::string_view rhs(__PRETTY_FUNCTION__,
+                                     std::min(sizeof(__PRETTY_FUNCTION__), lhs.size()));
       static_assert(lhs == rhs, "function name is not as expected.");
     }
     for (std::size_t i = 50; i < size - 2; ++i) {

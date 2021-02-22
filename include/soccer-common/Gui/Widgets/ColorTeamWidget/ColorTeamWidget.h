@@ -17,14 +17,11 @@ namespace Ui {
   class ColorTeamWidget;
 }
 
-class ColorTeamWidget : public QWidget,
-                        public WidgetSettings,
-                        public MenuBarOptions {
+class ColorTeamWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit ColorTeamWidget(
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit ColorTeamWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~ColorTeamWidget();
  public slots:
   void setColor(QColor color);

@@ -5,8 +5,7 @@
 #include "soccer-common/Gui/Widgets/ParametersDialog/ParametersDialog.h"
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-ModuleBox::ModuleBox(const QString& name,
-                     QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+ModuleBox::ModuleBox(const QString& name, QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(name, parent),
     MenuBarOptions(parent),
@@ -69,8 +68,7 @@ void ModuleBox::loadLocalSettings(const QJsonObject& json) {
     if (index >= 0) {
       ui->comboBox->setCurrentIndex(index);
     } else {
-      qWarning().nospace() << json["comboBox"].toString()
-                           << " not found inside "
+      qWarning().nospace() << json["comboBox"].toString() << " not found inside "
                            << ui->moduleGroupBox->title() << ".";
     }
   }

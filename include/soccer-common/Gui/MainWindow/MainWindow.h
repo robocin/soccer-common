@@ -36,9 +36,7 @@ class MainWindow : public QMainWindow,
   QWidget* visualizationWidget();
 
  public:
-  MainWindow(int maxRobots,
-             QSizeF defaultVisualizerSize,
-             QWidget* parent = nullptr);
+  MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* parent = nullptr);
   ~MainWindow() override;
 
   void setup(const QString& name, const QString& version, const QString& path);

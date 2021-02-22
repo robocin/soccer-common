@@ -42,8 +42,7 @@ class InheritanceFactorySafeMap {
   void insert(QString description) {
     static_assert(std::is_base_of_v<T, U>);
     std::lock_guard locker(m_mutex);
-    m_map.insert(Utils::nameOfType<U>(),
-                 Value(makeFactory<U>, std::move(description)));
+    m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, std::move(description)));
   }
 
   int size() const {

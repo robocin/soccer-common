@@ -23,17 +23,15 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
 
    public:
     Robot(int index, QMap<QString, QLayout*>& layouts, MainWindow* mainWindow) :
-        WidgetSettings(QString("Robot%1").arg(index, 2, 10, QChar('0')),
-                       mainWindow),
+        WidgetSettings(QString("Robot%1").arg(index, 2, 10, QChar('0')), mainWindow),
         index(index),
         layouts(layouts),
         mainWindow(mainWindow) {
       /* build robotWidget */ {
         robotDetails = new QLabel(mainWindow);
         robotDetails->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        robotDetails->setText(
-            "to do: " + QString("Robot %1").arg(index, 2, 10, QChar('0')) +
-            " details.");
+        robotDetails->setText("to do: " + QString("Robot %1").arg(index, 2, 10, QChar('0')) +
+                              " details.");
         layouts[robotDetailsLayout]->addWidget(robotDetails);
       }
     }
@@ -45,9 +43,7 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
     ModuleBox* moduleBox(const QString& key) {
       if (!modules.contains(key)) {
         auto moduleBox =
-            Factory::moduleBox((key + " %1").arg(index, 2, 10, QChar('0')),
-                               mainWindow,
-                               this);
+            Factory::moduleBox((key + " %1").arg(index, 2, 10, QChar('0')), mainWindow, this);
         layouts[key]->addWidget(moduleBox);
         modules[key] = moduleBox;
       }
@@ -111,8 +107,7 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
 
     auto actions = m_menu->actions();
     for (auto viewAction : actions) {
-      settings.setValue(viewAction->text() + "ViewAction",
-                        viewAction->isChecked());
+      settings.setValue(viewAction->text() + "ViewAction", viewAction->isChecked());
     }
   }
 

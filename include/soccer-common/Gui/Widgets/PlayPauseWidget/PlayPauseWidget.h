@@ -10,14 +10,11 @@ namespace Ui {
   class PlayPauseWidget;
 }
 
-class PlayPauseWidget : public QWidget,
-                        public WidgetSettings,
-                        public MenuBarOptions {
+class PlayPauseWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit PlayPauseWidget(
-      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit PlayPauseWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
   ~PlayPauseWidget();
 
   bool isClicked() const;

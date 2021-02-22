@@ -15,8 +15,7 @@ QMenuBar* MainWindowMenuBar::menuBar() const {
   return m_menuBar;
 }
 
-MainWindowMenuBar::MappedMenu&
-MainWindowMenuBar::operator[](const QString& key) {
+MainWindowMenuBar::MappedMenu& MainWindowMenuBar::operator[](const QString& key) {
   if (m_map.find(key) == m_map.end()) {
     m_map[key] = new MappedMenu(key, m_menuBar);
   }

@@ -112,9 +112,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
     }
 
    public:
-    inline Glyph(GLTessellatorHelper_2_1* f,
-                 const QChar& ch,
-                 const QFont& font) :
+    inline Glyph(GLTessellatorHelper_2_1* f, const QChar& ch, const QFont& font) :
         GlyphBase(makeGlyph(f, ch, font)),
         m_f(f) {
     }
@@ -146,8 +144,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
     inline const GlyphBase& operator[](const QChar& ch) {
       auto it = m_glyphs.find(ch);
       if (it == m_glyphs.end()) {
-        it = m_glyphs.emplace(ch, std::make_unique<Glyph>(m_f, ch, m_font))
-                 .first;
+        it = m_glyphs.emplace(ch, std::make_unique<Glyph>(m_f, ch, m_font)).first;
       }
       return *it->second;
     }
@@ -178,9 +175,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
     PushPopGuard pushPopGuard(this);
     putColor(color);
     translateZ();
-    translateXYScaleAndRotate(position,
-                              size,
-                              Geometry::radiansToDegrees(angle));
+    translateXYScaleAndRotate(position, size, Geometry::radiansToDegrees(angle));
 
     switch (hAlign) {
       case HAlign::Left: {

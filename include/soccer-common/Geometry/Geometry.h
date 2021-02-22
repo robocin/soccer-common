@@ -10,8 +10,7 @@
 
 #define RC_T_TEMPLATE template <class T>
 
-#define RC_PT_T_TEMPLATE                                                       \
-  template <class PT, class T = decltype(std::declval<PT>().x())>
+#define RC_PT_T_TEMPLATE template <class PT, class T = decltype(std::declval<PT>().x())>
 
 #ifndef M_PI
   #define M_PI 3.14159265358979323846
@@ -72,8 +71,7 @@ namespace Geometry2D {
 
   RC_PT_T_TEMPLATE PT rotateCCW(const PT& p, qreal t) {
     static_assert(std::is_floating_point_v<T>);
-    return PT(p.x() * std::cos(t) - p.y() * std::sin(t),
-              p.x() * std::sin(t) + p.y() * std::cos(t));
+    return PT(p.x() * std::cos(t) - p.y() * std::sin(t), p.x() * std::sin(t) + p.y() * std::cos(t));
   }
 
   RC_PT_T_TEMPLATE qreal angle(const PT& p) {
@@ -147,8 +145,7 @@ namespace Geometry2D {
     if (a == b) {
       throw std::runtime_error("'a' and 'b' doesn't define a line.");
     }
-    return a +
-           (b - a) * dot(b - a, c - a) / static_cast<qreal>(dot(b - a, b - a));
+    return a + (b - a) * dot(b - a, c - a) / static_cast<qreal>(dot(b - a, b - a));
   }
 
   RC_PT_T_TEMPLATE PT projectPointLine(const QLineF& line, const PT& c) {

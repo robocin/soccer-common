@@ -28,9 +28,7 @@ class ModulesPrivate : public QObject {
     inline void clear() {
       for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
-        QMetaObject::invokeMethod(t,
-                                  &QTimer::deleteLater,
-                                  Qt::QueuedConnection);
+        QMetaObject::invokeMethod(t, &QTimer::deleteLater, Qt::QueuedConnection);
       }
       m_map.clear();
     }
@@ -93,9 +91,8 @@ class ModulesPrivate : public QObject {
     T*& ref;
     F factory;
 
-    static void
-    disconnectAndDelete(ModuleBase* ref,
-                        const QVector<QMetaObject::Connection>& connections) {
+    static void disconnectAndDelete(ModuleBase* ref,
+                                    const QVector<QMetaObject::Connection>& connections) {
       for (const QMetaObject::Connection& connection : connections) {
         QObject::disconnect(connection);
       }
@@ -116,10 +113,8 @@ class ModulesPrivate : public QObject {
                                         ref,
                                         std::bind(Maker::setup, ref, modules));
 
-        connections += QObject::connect(modules,
-                                        &ModulesPrivate::impulse,
-                                        ref,
-                                        &ModuleBase::runInParallel);
+        connections +=
+            QObject::connect(modules, &ModulesPrivate::impulse, ref, &ModuleBase::runInParallel);
       }
       /* ModuleBox */ {
         connections += QObject::connect(ref,
@@ -135,11 +130,7 @@ class ModulesPrivate : public QObject {
       return connections;
     }
 
-    static void build(T*& ref,
-                      const F& factory,
-                      M* modules,
-                      ModuleBox* moduleBox,
-                      Args... args) {
+    static void build(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
       QString type = moduleBox->currentText();
@@ -154,8 +145,7 @@ class ModulesPrivate : public QObject {
       }
 
       qWarning().nospace().noquote()
-          << "a new instance of " << Utils::nameOfType<T>() << detail
-          << " with type "
+          << "a new instance of " << Utils::nameOfType<T>() << detail << " with type "
           << "\"" << type << "\""
           << " was created: " << ref << ".";
 
@@ -168,8 +158,7 @@ class ModulesPrivate : public QObject {
       static_cast<ModuleBase*>(ref)->build();
     }
 
-    static void
-    setToolTip(const F& factory, const QString& type, ModuleBox* moduleBox) {
+    static void setToolTip(const F& factory, const QString& type, ModuleBox* moduleBox) {
       QStringList description;
       description += "• Type: " + type + ";";
       QString info = factory[type].description();
@@ -179,11 +168,7 @@ class ModulesPrivate : public QObject {
       moduleBox->setToolTip(description.join('\n'));
     }
 
-    static void make(T*& ref,
-                     const F& factory,
-                     M* modules,
-                     ModuleBox* moduleBox,
-                     Args... args) {
+    static void make(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       QString type = moduleBox->currentText();
 
       build(ref, factory, modules, moduleBox, args...);
@@ -191,14 +176,12 @@ class ModulesPrivate : public QObject {
     }
 
     template <class... Types>
-    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui,
-                                                    Types&&...) {
+    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui, Types&&...) {
       return gui->moduleBox(Utils::nameOfType<T>());
     }
 
     template <class... Types>
-    [[maybe_unused]] static ModuleBox*
-    getModuleBox(MainWindow* gui, int index, Types&&...) {
+    [[maybe_unused]] static ModuleBox* getModuleBox(MainWindow* gui, int index, Types&&...) {
       return gui->indexedModuleBox(index, Utils::nameOfType<T>());
     }
 
@@ -237,9 +220,7 @@ class ModulesPrivate : public QObject {
     }
 
    public:
-    Maker(M* t_modules,
-          T*& t_ref,
-          const InheritanceFactorySafeMap<T, Args...>& t_factory) :
+    Maker(M* t_modules, T*& t_ref, const InheritanceFactorySafeMap<T, Args...>& t_factory) :
         modules(t_modules),
         ref(t_ref),
         factory(t_factory) {

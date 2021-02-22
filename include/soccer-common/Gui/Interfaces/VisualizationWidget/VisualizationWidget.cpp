@@ -9,8 +9,7 @@ void VisualizationWidget::setupVisualizationWidget(MainWindow* mainWindow) {
   mainWindow->visualizationWidget()->layout()->addWidget(m_gameVisualizer);
 }
 
-VisualizationWidget::VisualizationWidget(const QSizeF& defaultSize) :
-    m_defaultSize(defaultSize) {
+VisualizationWidget::VisualizationWidget(const QSizeF& defaultSize) : m_defaultSize(defaultSize) {
 }
 
 GameVisualizer* VisualizationWidget::gameVisualizer() {

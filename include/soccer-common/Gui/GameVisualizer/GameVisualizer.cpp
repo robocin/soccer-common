@@ -1,8 +1,6 @@
 #include "GameVisualizer.h"
 
-GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
-                               QWidget* parent,
-                               Qt::WindowFlags f) :
+GameVisualizer::GameVisualizer(const QSizeF& defaultSize, QWidget* parent, Qt::WindowFlags f) :
     QOpenGLWidget(parent, f) {
   setFormat(this);
   setDefaultSize(defaultSize);
@@ -29,9 +27,7 @@ void GameVisualizer::forceDraw() {
   ScheduleUpdateAtEnd schedule(this);
 }
 
-void GameVisualizer::draw(int uniqueIntegerKey,
-                          Painting* painting,
-                          Painting::Layers layer) {
+void GameVisualizer::draw(int uniqueIntegerKey, Painting* painting, Painting::Layers layer) {
   ScheduleUpdateAtEnd schedule(this);
   if (uniqueIntegerKey < 0) {
     qWarning() << "the key was not initialized.";
@@ -43,8 +39,7 @@ void GameVisualizer::draw(int uniqueIntegerKey,
   }
   int idx = static_cast<int>(layer);
   shared->paintings[idx].apply(
-      [uniqueIntegerKey,
-       painting](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
+      [uniqueIntegerKey, painting](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
         paintings[uniqueIntegerKey] = std::unique_ptr<Painting>(painting);
       });
 }
@@ -53,8 +48,7 @@ void GameVisualizer::clearUniqueIntegerKey(int uniqueKey) {
   ScheduleUpdateAtEnd schedule(this);
   for (int i = 0; i < MagicEnum::count<Painting::Layers>(); ++i) {
     shared->paintings[i].apply(
-        [uniqueKey](
-            std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
+        [uniqueKey](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
           paintings[uniqueKey] = nullptr;
         });
   }
@@ -222,13 +216,12 @@ void GameVisualizer::getUpdates() {
       auto& paintings = local.paintings[i];
       for (auto& ptr : object.paintings[i].ref()) {
         if (ptr.second) {
-          bool visibility = !(paintings.find(ptr.first) != paintings.end()) ||
-                            paintings[ptr.first].visibility();
-          auto it = paintings
-                        .insert_or_assign(
-                            ptr.first,
-                            static_cast<PaintingPointer>(std::move(ptr.second)))
-                        .first;
+          bool visibility =
+              !(paintings.find(ptr.first) != paintings.end()) || paintings[ptr.first].visibility();
+          auto it =
+              paintings
+                  .insert_or_assign(ptr.first, static_cast<PaintingPointer>(std::move(ptr.second)))
+                  .first;
           it->second.setVisibility(visibility);
         } else {
           paintings.erase(ptr.first);

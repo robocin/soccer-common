@@ -11,9 +11,7 @@ RawEntity::operator const QPointF&() const {
   return position();
 }
 
-Entity::Entity(const QPointF& position,
-               const QPointF& velocity,
-               const QPointF& acceleration) :
+Entity::Entity(const QPointF& position, const QPointF& velocity, const QPointF& acceleration) :
     RawEntity(position),
     m_velocity(velocity),
     m_acceleration(acceleration) {

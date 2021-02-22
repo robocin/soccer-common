@@ -33,12 +33,10 @@ class PtrCastOperator {
 template <class... Args>
 class PtrMulticast : public PtrCastOperator<Args>... {
   template <class U>
-  static constexpr bool is_any_of_v =
-      std::disjunction_v<std::is_same<U, Args>...>;
+  static constexpr bool is_any_of_v = std::disjunction_v<std::is_same<U, Args>...>;
 
  public:
-  constexpr PtrMulticast(std::nullptr_t ptr = nullptr) :
-      PtrCastOperator<Args>(ptr)... {
+  constexpr PtrMulticast(std::nullptr_t ptr = nullptr) : PtrCastOperator<Args>(ptr)... {
   }
   template <class T>
   constexpr PtrMulticast(T* ptr) : PtrCastOperator<Args>(ptr)... {

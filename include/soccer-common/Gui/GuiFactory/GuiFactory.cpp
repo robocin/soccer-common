@@ -14,18 +14,14 @@ namespace Factory {
     return action;
   }
 
-  QAction*
-  toggleViewAction(const QString& name, int index, QTabWidget* tabWidget) {
+  QAction* toggleViewAction(const QString& name, int index, QTabWidget* tabWidget) {
     auto* action = new QAction(tabWidget);
     action->setText(name);
     action->setCheckable(true);
     action->setChecked(not tabWidget->tabBar()->isTabVisible(index));
-    QObject::connect(action,
-                     &QAction::toggled,
-                     tabWidget,
-                     [index, tabWidget](bool checked) {
-                       tabWidget->tabBar()->setTabVisible(index, checked);
-                     });
+    QObject::connect(action, &QAction::toggled, tabWidget, [index, tabWidget](bool checked) {
+      tabWidget->tabBar()->setTabVisible(index, checked);
+    });
     return action;
   }
 
@@ -43,10 +39,9 @@ namespace Factory {
     return scrollArea;
   }
 
-  ModuleBox* moduleBox(
-      const QString& key,
-      MainWindow* mainWindow,
-      std::optional<QWidgetWith<WidgetSettings, MenuBarOptions>> optParent) {
+  ModuleBox* moduleBox(const QString& key,
+                       MainWindow* mainWindow,
+                       std::optional<QWidgetWith<WidgetSettings, MenuBarOptions>> optParent) {
     auto parent = optParent.value_or(mainWindow);
     auto moduleBox = new ModuleBox(key, parent);
     auto playPauseButton = mainWindow->playPauseButton();

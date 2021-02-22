@@ -134,9 +134,7 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
    public:
     Q_DISABLE_COPY_MOVE(DisplayListGuard);
 
-    inline explicit DisplayListGuard(QOpenGLFunctions_2_1* t_f) :
-        f(t_f),
-        m_key(f->glGenLists(1)) {
+    inline explicit DisplayListGuard(QOpenGLFunctions_2_1* t_f) : f(t_f), m_key(f->glGenLists(1)) {
       Q_ASSERT(f != nullptr);
       f->glNewList(m_key, GL_COMPILE);
     }

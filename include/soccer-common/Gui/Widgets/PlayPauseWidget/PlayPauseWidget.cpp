@@ -4,8 +4,7 @@
 #include <QDebug>
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-PlayPauseWidget::PlayPauseWidget(
-    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+PlayPauseWidget::PlayPauseWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
     QWidget(parent),
     WidgetSettings(this, parent),
     MenuBarOptions(parent),

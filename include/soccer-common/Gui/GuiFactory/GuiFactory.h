@@ -18,22 +18,19 @@ namespace Factory {
 
   template <class Widget>
   QAction* toggleViewAction(Widget* widget) {
-    return toggleViewAction(Utils::nameOfType<Widget>(),
-                            static_cast<QWidget*>(widget));
+    return toggleViewAction(Utils::nameOfType<Widget>(), static_cast<QWidget*>(widget));
   }
 
-  QAction*
-  toggleViewAction(const QString& name, int index, QTabWidget* tabWidget);
+  QAction* toggleViewAction(const QString& name, int index, QTabWidget* tabWidget);
 
   QElapsedTimer startedElapsedTimer();
 
   ScrollAreaForFlowLayout* scrollAreaWithFlowLayout(QWidget* parent);
 
-  ModuleBox* moduleBox(
-      const QString& key,
-      MainWindow* mainWindow,
-      std::optional<QWidgetWith<WidgetSettings, MenuBarOptions>> optParent =
-          std::nullopt);
+  ModuleBox*
+  moduleBox(const QString& key,
+            MainWindow* mainWindow,
+            std::optional<QWidgetWith<WidgetSettings, MenuBarOptions>> optParent = std::nullopt);
 } // namespace Factory
 
 #endif // SOCCER_COMMON_GUIFACTORY_H

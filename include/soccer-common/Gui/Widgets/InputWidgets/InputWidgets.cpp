@@ -17,8 +17,7 @@ void InputWidgets::InputMethod::receiveOnValueChanged() {
   emit onValueChanged();
 }
 
-InputWidgets::TextEdit::TextEdit(const QJsonObject& json, QWidget* parent) :
-    InputMethod(parent) {
+InputWidgets::TextEdit::TextEdit(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   QObject::connect(&textEdit,
                    &QTextEdit::textChanged,
                    this,
@@ -52,8 +51,8 @@ void InputWidgets::TextEdit::storeCurrent() {
   if (regex.match(value).hasMatch()) {
     backup = textEdit.toPlainText();
   } else {
-    qWarning() << "the current value" << value
-               << "doesn't match, loading backup" << backup << "instead.";
+    qWarning() << "the current value" << value << "doesn't match, loading backup" << backup
+               << "instead.";
     loadBackup();
   }
 }
@@ -63,20 +62,16 @@ void InputWidgets::TextEdit::loadBackup() {
   textEdit.setAlignment(Qt::AlignCenter);
 }
 
-InputWidgets::Slider::Slider(const QJsonObject& json, QWidget* parent) :
-    InputMethod(parent) {
+InputWidgets::Slider::Slider(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   slider.slider.setOrientation(Qt::Horizontal);
   slider.label.setAlignment(Qt::AlignCenter);
   QObject::connect(&slider.slider,
                    &QSlider::valueChanged,
                    this,
                    &InputWidgets::Slider::receiveOnValueChanged);
-  QObject::connect(&slider.slider,
-                   &QSlider::valueChanged,
-                   &slider.label,
-                   [&](int value) {
-                     slider.label.setText(QString::number(value));
-                   });
+  QObject::connect(&slider.slider, &QSlider::valueChanged, &slider.label, [&](int value) {
+    slider.label.setText(QString::number(value));
+  });
   inputMethodLayout.addWidget(&slider.slider);
   inputMethodLayout.addWidget(&slider.label);
   int minValue = json[Detail::MinValue].toInt();
@@ -107,8 +102,7 @@ void InputWidgets::Slider::loadBackup() {
   slider.slider.setValue(backup.toInt());
 }
 
-InputWidgets::SpinBox::SpinBox(const QJsonObject& json, QWidget* parent) :
-    InputMethod(parent) {
+InputWidgets::SpinBox::SpinBox(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   QObject::connect(&spinBox,
                    qOverload<int>(&QSpinBox::valueChanged),
                    this,
@@ -142,8 +136,7 @@ void InputWidgets::SpinBox::loadBackup() {
   spinBox.setValue(backup.toInt());
 }
 
-InputWidgets::DoubleSpinBox::DoubleSpinBox(const QJsonObject& json,
-                                           QWidget* parent) :
+InputWidgets::DoubleSpinBox::DoubleSpinBox(const QJsonObject& json, QWidget* parent) :
     InputMethod(parent) {
   QObject::connect(&doubleSpinBox,
                    qOverload<double>(&QDoubleSpinBox::valueChanged),
@@ -188,21 +181,18 @@ Qt::CheckState InputWidgets::CheckBox::checkStateFromBoolean(bool value) const {
   return value ? Qt::CheckState::Checked : Qt::CheckState::Unchecked;
 }
 
-bool InputWidgets::CheckBox::booleanFromCheckState(
-    Qt::CheckState checkState) const {
+bool InputWidgets::CheckBox::booleanFromCheckState(Qt::CheckState checkState) const {
   return checkState == Qt::CheckState::Checked;
 }
 
-InputWidgets::CheckBox::CheckBox(const QJsonObject& json, QWidget* parent) :
-    InputMethod(parent) {
+InputWidgets::CheckBox::CheckBox(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   QObject::connect(&checkBox,
                    &QCheckBox::stateChanged,
                    this,
                    &InputWidgets::CheckBox::receiveOnValueChanged);
   checkBox.setLayoutDirection(Qt::RightToLeft);
   inputMethodLayout.addWidget(&checkBox);
-  checkBox.setCheckState(
-      checkStateFromBoolean(json[Detail::Value].toVariant().toBool()));
+  checkBox.setCheckState(checkStateFromBoolean(json[Detail::Value].toVariant().toBool()));
   backup = booleanFromCheckState(checkBox.checkState());
 }
 
@@ -226,8 +216,7 @@ void InputWidgets::CheckBox::loadBackup() {
   checkBox.setCheckState(checkStateFromBoolean(backup));
 }
 
-InputWidgets::ComboBox::ComboBox(const QJsonObject& json, QWidget* parent) :
-    InputMethod(parent) {
+InputWidgets::ComboBox::ComboBox(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   QObject::connect(&comboBox,
                    &QComboBox::currentTextChanged,
                    this,

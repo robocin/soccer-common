@@ -11,8 +11,7 @@ namespace Parameters {
   bool isParameterType(const QJsonObject& object);
 
   class UpdateRequest {
-    friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper<UpdateRequest,
-                                                             true>;
+    friend struct QtMetaTypePrivate::QMetaTypeFunctionHelper<UpdateRequest, true>;
     UpdateRequest() = default;
 
     QStringList m_path;
@@ -54,9 +53,7 @@ namespace Parameters {
     Handler() = default;
     ~Handler() = default;
 
-    template <
-        class T,
-        class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
+    template <class T, class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
     Handler& operator=(T&& p) {
       value = std::make_unique<T>(std::forward<T>(p));
       return *this;
