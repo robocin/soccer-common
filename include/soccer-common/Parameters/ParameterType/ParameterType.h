@@ -95,7 +95,7 @@ namespace Parameters {
 
     static_assert(std::is_enum_v<T> ||
                       (std::is_arithmetic_v<T> && !(is_any_of_v<T, char, long double>) ) ||
-                      std::is_same_v<T, QString>,
+                      std::is_base_of_v<T, QString>,
                   "unsupported type.");
 
    protected:
