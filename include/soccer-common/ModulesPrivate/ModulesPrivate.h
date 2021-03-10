@@ -133,6 +133,10 @@ class ModulesPrivate : public QObject {
     static void build(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
+      if (auto oldRef = ref) {
+        ModuleBase::waitOrDelete(oldRef);
+      }
+
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
       static_cast<QObject*>(ref)->moveToThread(
@@ -170,9 +174,8 @@ class ModulesPrivate : public QObject {
 
     static void make(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       QString type = moduleBox->currentText();
-
-      build(ref, factory, modules, moduleBox, args...);
       setToolTip(factory, type, moduleBox);
+      build(ref, factory, modules, moduleBox, args...);
     }
 
     template <class... Types>
@@ -187,11 +190,6 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     inline void exec(Types&&... types) {
-      if (factory.empty()) {
-        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
-        return;
-      }
-      qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       //
       ModuleBox* moduleBox = getModuleBox(gui, std::forward<Types>(types)...);
@@ -228,6 +226,11 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     void operator()(Types&&... types) {
+      if (factory.empty()) {
+        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
+        return;
+      }
+      qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       exec(std::forward<Types>(types)...);
     }
   };
