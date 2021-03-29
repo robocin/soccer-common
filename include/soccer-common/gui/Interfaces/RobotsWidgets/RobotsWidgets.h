@@ -16,7 +16,7 @@ class RobotsWidgets {
   robotDetails* m_robotDetails;
 
  protected:
-  void setupRobotsWidgets(MainWindow* mainWindow);
+  void setupRobotsWidgets(MainWindow* mainWindow, const QString &robotsPatternPath);
 
  public:
   explicit RobotsWidgets(int maxRobots = 11);

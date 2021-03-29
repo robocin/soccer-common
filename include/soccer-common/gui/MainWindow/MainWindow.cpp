@@ -21,6 +21,7 @@ QWidget* MainWindow::visualizationWidget() {
 }
 
 MainWindow::MainWindow(int maxRobots,
+                      const QString &robotsPatternPath,
                        QSizeF defaultVisualizerSize,
                        QWidget* parent) :
     QMainWindow(parent),
@@ -33,7 +34,7 @@ MainWindow::MainWindow(int maxRobots,
     ui->setupUi(this); // first setup.
     setupInfoWidgets(this);
     setupModulesWidgets(this);
-    setupRobotsWidgets(this);
+    setupRobotsWidgets(this, robotsPatternPath);
     setupVisualizationWidget(this);
   }
   /* setting dock widget corners */ {

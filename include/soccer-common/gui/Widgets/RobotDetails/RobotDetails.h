@@ -18,17 +18,21 @@ class RobotDetails : public QWidget, public WidgetSettings {
   Q_OBJECT
   friend class RobotsWidgets;
 
+  int index;
+  QString robotsPatternPath;
+
  public:
-  explicit RobotDetails(int index,
+  explicit RobotDetails(int index, const QString &robotsPatternPath,
                         QWidgetWith<WidgetSettings> parent = nullptr);
   ~RobotDetails();
  public slots:
   void showBatteryCharger(int level);
   void showCapacitorCharger(int level);
   void showRobotNumber(int number);
+  void statusInfraRed(bool isOn);
+  void showRobotPattern(int number, const QString &robotsPatternPath, QString color);
   void ConnectCapacitorViewAction(QAction* action);
   void ConnectIrViewAction(QAction* action);
-
  private:
   Ui::RobotDetails* ui;
 

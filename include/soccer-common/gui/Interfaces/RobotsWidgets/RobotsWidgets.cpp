@@ -21,14 +21,15 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
     QMap<QString, ModuleBox*> modules;
 
    public:
-    Robot(int index, QMap<QString, QLayout*>& layouts, MainWindow* mainWindow) :
+    Robot(int index, const QString &robotsPatternPath, QMap<QString, QLayout*>& layouts, MainWindow* mainWindow) :
         WidgetSettings(QString("Robot%1").arg(index, 2, 10, QChar('0')),
                        mainWindow),
         index(index),
+        //robotsPatternPath(robotsPatternPath),
         layouts(layouts),
         mainWindow(mainWindow) {
       /* build robotWidget */ {
-        robotDetails = new RobotDetails(index, mainWindow);
+        robotDetails = new RobotDetails(index, robotsPatternPath, mainWindow);
         layouts[robotDetailsLayout]->addWidget(robotDetails);
       }
     }
@@ -63,7 +64,7 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
   QMap<QString, QLayout*> m_layouts;
 
  public:
-  TabsWidget(int maxRobots, MainWindow* mainWindow) :
+  TabsWidget(int maxRobots, const QString &robotsPatternPath, MainWindow* mainWindow) :
       WidgetSettings(Utils::nameOfType<RobotsWidgets>(), mainWindow),
       MenuBarOptions(mainWindow),
       m_menu(new QMenu("Robots", mainWindow)),
@@ -82,7 +83,7 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
     m_menu->addAction(capacitorAction);
     m_menu->addAction(irAction);
     for (int i = 0; i < maxRobots; ++i) {
-      Robot* robot = new Robot(i, m_layouts, mainWindow);
+      Robot* robot = new Robot(i, robotsPatternPath, m_layouts, mainWindow);
       m_robots.push_back(robot);
       robot->details()->connectBatteryViewAction(batteryAction);
       robot->details()->ConnectCapacitorViewAction(capacitorAction);
@@ -142,8 +143,9 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
   }
 };
 
-void RobotsWidgets::setupRobotsWidgets(MainWindow* mainWindow) {
-  tabsWidget = new TabsWidget(m_maxRobots, mainWindow);
+// mudar no '.h'
+void RobotsWidgets::setupRobotsWidgets(MainWindow* mainWindow, const QString &robotsPatternPath) {
+  tabsWidget = new TabsWidget(m_maxRobots, robotsPatternPath, mainWindow);
 }
 
 RobotsWidgets::RobotsWidgets(int maxRobots) : m_maxRobots(maxRobots) {

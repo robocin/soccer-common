@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>robotID2.svg</file>
+        <file>robotID.png</file>
+        <file>robotpattenrn.png</file>
+        <file>led_on.png</file>
+        <file>led_off.png</file>
     </qresource>
 </RCC>

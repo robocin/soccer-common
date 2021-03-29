@@ -5,6 +5,7 @@
 #include "MagicEnum/MagicEnum.h"
 #include "Utils/Utils.h"
 #include "ModuleBase/ModuleBase.h"
+#include "TrackedPackageBase/TrackedPackageBase.h"
 #include "Entities/Entities.h"
 #include "Parameters/Parameters.h"
 #include "Extends/Extends.h"
