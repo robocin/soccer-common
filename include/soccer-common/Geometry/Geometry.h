@@ -21,13 +21,31 @@
 namespace Geometry {
   static constexpr qreal PI = M_PI;
 
+  namespace Detail {
+    /*!
+     * @tparam T arithmetic type.
+     * @return Returns true if T is float and the absolute value of f is within 0.00001f of 0.0.
+     * @return Returns true if T is double and the absolute value of d is within 0.000000000001 of
+     * 0.0.
+     * @return Returns true if T is an integer type and equals to 0.
+     */
+    template <class T>
+    inline constexpr bool isNull(const T& value) noexcept {
+      if constexpr (std::is_floating_point_v<T>) {
+        return qFuzzyIsNull(value);
+      } else {
+        return value == 0;
+      }
+    }
+  } // namespace Detail
+
   /*!
    * @tparam T floating point type.
    * @param radians the value in radians.
    * @return This function converts the radians in T to degrees.
    */
   RC_T_TEMPLATE T radiansToDegrees(T radians) {
-    return radians * (static_cast<T>(180.0) / static_cast<T>(PI));
+    return radians * (static_cast<T>(180) / static_cast<T>(PI));
   }
 
   /*!
@@ -36,7 +54,7 @@ namespace Geometry {
    * @return This function converts the degrees in T to radians.
    */
   RC_T_TEMPLATE T degreesToRadians(T degrees) {
-    return (degrees * static_cast<T>(PI)) / static_cast<T>(180.0);
+    return (degrees * static_cast<T>(PI)) / static_cast<T>(180);
   }
 } // namespace Geometry
 
@@ -279,7 +297,7 @@ namespace Geometry2D {
    * @return Returns the value of the signed area.
    */
   RC_PT_T_TEMPLATE auto signedArea(const QVector<PT>& polygon) {
-    return signedArea2<PT, T>(polygon) / 2.0;
+    return signedArea2<PT, T>(polygon) / static_cast<T>(2);
   }
 
   /*!
@@ -297,7 +315,7 @@ namespace Geometry2D {
    * @return Returns the value of the area.
    */
   RC_PT_T_TEMPLATE auto area(const QVector<PT>& polygon) {
-    return area2<PT, T>(polygon) / static_cast<T>(2.0);
+    return area2<PT, T>(polygon) / static_cast<T>(2);
   }
 
   /*!
@@ -355,7 +373,7 @@ namespace Geometry2D {
    * @note assuming a != b.
    */
   RC_PT_T_TEMPLATE constexpr PT reflectPointLine(const PT& a, const PT& b, const PT& c) {
-    return 2.0 * projectPointLine<PT, T>(a, b, c) - c;
+    return static_cast<T>(2) * projectPointLine<PT, T>(a, b, c) - c;
   }
 
   /*!
@@ -382,7 +400,7 @@ namespace Geometry2D {
       throw std::runtime_error("'a' and 'b' doesn't define a line.");
     }
     T r = dot<PT, T>(b - a, b - a);
-    if (qFuzzyIsNull(r)) {
+    if (Detail::isNull(r)) {
       return a;
     }
     r = dot<PT, T>(c - a, b - a) / r;
@@ -414,11 +432,7 @@ namespace Geometry2D {
    */
   RC_PT_T_TEMPLATE constexpr bool
   linesParallel(const PT& a, const PT& b, const PT& c, const PT& d) {
-    if constexpr (std::is_floating_point_v<T>) {
-      return qFuzzyIsNull(cross<PT, T>(b - a, c - d));
-    } else {
-      return cross<PT, T>(b - a, c - d) == 0;
-    }
+    return Detail::isNull(cross<PT, T>(b - a, c - d));
   }
 
   /*!
@@ -442,20 +456,11 @@ namespace Geometry2D {
     if (!linesParallel<PT, T>(a, b, c, d)) {
       return false;
     }
-    if constexpr (std::is_floating_point_v<T>) {
-      if (!qFuzzyIsNull(cross<PT, T>(a - b, a - c))) {
-        return false;
-      }
-      if (!qFuzzyIsNull(cross<PT, T>(c - d, c - a))) {
-        return false;
-      }
-    } else {
-      if (cross<PT, T>(a - b, a - c) != 0) {
-        return false;
-      }
-      if (cross<PT, T>(c - d, c - a) != 0) {
-        return false;
-      }
+    if (!Detail::isNull(cross<PT, T>(a - b, a - c))) {
+      return false;
+    }
+    if (!Detail::isNull(cross<PT, T>(c - d, c - a))) {
+      return false;
     }
     return true;
   }
@@ -479,10 +484,10 @@ namespace Geometry2D {
   RC_PT_T_TEMPLATE constexpr bool
   segmentsIntersect(const PT& a, const PT& b, const PT& c, const PT& d) {
     if (linesCollinear<PT, T>(a, b, c, d)) {
-      if (qFuzzyIsNull(distanceSquared<PT, T>(a, c)) ||
-          qFuzzyIsNull(distanceSquared<PT, T>(a, d)) ||
-          qFuzzyIsNull(distanceSquared<PT, T>(b, c)) ||
-          qFuzzyIsNull(distanceSquared<PT, T>(b, d))) {
+      if (Detail::isNull(distanceSquared<PT, T>(a, c)) ||
+          Detail::isNull(distanceSquared<PT, T>(a, d)) ||
+          Detail::isNull(distanceSquared<PT, T>(b, c)) ||
+          Detail::isNull(distanceSquared<PT, T>(b, d))) {
         return true;
       }
       if (dot<PT, T>(c - a, c - b) > 0 && dot<PT, T>(d - a, d - b) > 0 &&
@@ -546,7 +551,7 @@ namespace Geometry2D {
   RC_PT_T_TEMPLATE bool pointOnPolygon(const QVector<PT>& polygon, const PT& p) {
     for (int i = 0; i < polygon.size(); ++i) {
       if (PT proj = projectPointSegment<PT, T>(polygon[i], polygon[(i + 1) % polygon.size()], p);
-          qFuzzyIsNull(distanceSquared<PT, T>(proj, p))) {
+          Detail::isNull(distanceSquared<PT, T>(proj, p))) {
         return true;
       }
     }
