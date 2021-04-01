@@ -31,6 +31,10 @@ class Extends<QPoint> : public QPoint {
     return lhs < static_cast<const QPoint&>(rhs);
   }
 
+  void transpose() {
+    *this = transposed();
+  }
+
   inline int& operator[](int i) {
     switch (i) {
       case 0: return rx();
@@ -87,6 +91,10 @@ class Extends<QPoint> : public QPoint {
     return Geometry2D::angleBetween<QPoint>(*this, other);
   }
 
+  int lengthSquared() const {
+    return Geometry2D::lengthSquared(*this);
+  }
+
   qreal length() const {
     return Geometry2D::length(*this);
   }
@@ -114,6 +122,10 @@ class Extends<QPointF> : public QPointF {
   friend inline bool operator<(const QPointF& lhs, const Extends<QPointF>& rhs) {
     using Geometry2D::operator<;
     return lhs < static_cast<const QPointF&>(rhs);
+  }
+
+  void transpose() {
+    *this = transposed();
   }
 
   inline qreal& operator[](int i) {
@@ -178,6 +190,10 @@ class Extends<QPointF> : public QPointF {
 
   qreal angleTo(const QPointF& other) const {
     return Geometry2D::angleBetween<QPointF>(*this, other);
+  }
+
+  qreal lengthSquared() const {
+    return Geometry2D::lengthSquared(*this);
   }
 
   qreal length() const {
