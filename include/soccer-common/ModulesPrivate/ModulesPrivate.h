@@ -28,6 +28,8 @@ class ModulesPrivate : public QObject {
     inline void clear() {
       for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
+      }
+      for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::deleteLater, Qt::QueuedConnection);
       }
       m_map.clear();
@@ -78,7 +80,8 @@ class ModulesPrivate : public QObject {
  protected:
   QThread* modulesThread() const;
 
-  template <class T, class M, class... Args>
+ private:
+  template <class M, class T, class... Args>
   class Maker {
     static_assert(std::is_base_of_v<ModuleBase, T>);
 
@@ -234,6 +237,23 @@ class ModulesPrivate : public QObject {
       exec(std::forward<Types>(types)...);
     }
   };
+
+ protected:
+  template <class M, class T, class F, class... Types>
+  void makeModule(M* modules, T*& ref, const F& factory, Types&&... types) {
+    Q_ASSERT(ref == nullptr);
+    Maker(modules, ref, factory)(std::forward<Types>(types)...);
+  }
+
+  template <class M, class T, class F, class... Types>
+  void makeModule(M* modules, QVector<T*>& vect, const F& factory, Types&&... types) {
+    Q_ASSERT(vect.empty());
+    int n = static_cast<ModulesPrivate*>(modules)->gui()->maxRobots();
+    vect.resize(n);
+    for (int i = 0; i < n; ++i) {
+      Maker(modules, vect[i], factory)(i, std::forward<Types>(types)...);
+    }
+  }
 
  private:
   void prepareToDeleteAndDisconnect();
