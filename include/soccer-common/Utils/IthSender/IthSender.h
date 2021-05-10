@@ -7,17 +7,17 @@
 
 #include <QObject>
 
-template <class Sender, std::size_t N = 25>
+template <class Sender>
 class IthSender {
   QObject* m_parent{};
-  std::array<Sender*, N> m_sender{};
+  QHash<int, Sender*> m_sender{};
 
  public:
   explicit IthSender(QObject* parent) : m_parent(parent) {
   }
 
   inline Sender* ithSender(int i) {
-    auto& sender = m_sender.at(static_cast<std::size_t>(i));
+    auto& sender = m_sender[i];
     return (!sender) ? (sender = new Sender(m_parent)) : sender;
   }
 };
