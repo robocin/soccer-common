@@ -15,7 +15,7 @@ namespace MagicEnum {
 
   template <class E, class T>
   constexpr std::optional<std::decay_t<E>> cast(const T& value) {
-    if constexpr (std::is_same_v<T, QString>) {
+    if constexpr (std::is_base_of_v<QString, T>) {
       return magic_enum::enum_cast<E>(value.toUtf8().data());
     } else {
       return magic_enum::enum_cast<E>(value);
