@@ -71,10 +71,6 @@ namespace Parameters {
     Arg(const Arg&) = delete;
     Arg& operator=(const Arg&) = delete;
 
-    // disable_move:
-    Arg(Arg&&) = delete;
-    Arg& operator=(Arg&&) = delete;
-
     const T& value() const {
       return m_value;
     }
