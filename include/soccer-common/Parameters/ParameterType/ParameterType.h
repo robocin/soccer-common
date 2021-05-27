@@ -123,7 +123,7 @@ namespace Parameters {
         } else {
           return std::nullopt;
         }
-      } else if constexpr (std::is_same_v<T, QString>) {
+      } else if constexpr (std::is_base_of_v<QString, T>) {
         return std::make_optional<T>(str);
       }
     }
@@ -149,7 +149,7 @@ namespace Parameters {
         return QString::number(ref.value(), 'f', 10);
       } else if constexpr (std::is_arithmetic_v<T>) {
         return QString::number(ref.value());
-      } else if constexpr (std::is_same_v<T, QString>) {
+      } else if constexpr (std::is_base_of_v<QString, T>) {
         return Utils::quoted(ref.value());
       }
     }
@@ -428,7 +428,7 @@ namespace Parameters {
 
       for (auto it = set.begin(); it != set.end(); ++it) {
         const T& value = *it;
-        if constexpr (std::is_same_v<T, QString>) {
+        if constexpr (std::is_base_of_v<QString, T>) {
           stream << Utils::quoted(value);
         } else if constexpr (std::is_enum_v<T>) {
           stream << Utils::quoted(MagicEnum::name(value));
