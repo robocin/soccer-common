@@ -13,6 +13,8 @@ class ModulePrivate : public QObject, private QRunnable {
  public:
   explicit ModulePrivate(QThreadPool* threadPool);
 
+  static void waitOrDelete(ModulePrivate* object);
+
  public slots:
   void runInParallel();
   void prepareToDelete();
@@ -30,8 +32,6 @@ class ModulePrivate : public QObject, private QRunnable {
 
   void parametersUpdate();
   void run() final;
-
-  static void waitOrDelete(ModulePrivate* object);
 };
 
 #endif // SOCCER_COMMON_MODULEPRIVATE_H

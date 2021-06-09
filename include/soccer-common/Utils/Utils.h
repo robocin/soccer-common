@@ -13,5 +13,6 @@
 #include "SharedValue/SharedValue.h"
 #include "SharedWrapper/SharedWrapper.h"
 #include "overloaded_visitor_t/overloaded_visitor_t.h"
+#include "IthSender/IthSender.h"
 
 #endif // SOCCER_COMMON_UTILS_H

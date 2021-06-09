@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <csignal>
+#include <stdexcept>
 #include <functional>
 
 template <int I>

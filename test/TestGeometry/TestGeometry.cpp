@@ -242,6 +242,13 @@ void TestGeometry::test_2D_angleBetween_whenGivenTwoPoints_shouldWork() {
   }
 }
 
+void TestGeometry::test_2D_lengthSquared_whenGivenAPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QCOMPARE(lengthSquared(QPoint(40, 30)), 2500);
+  QCOMPARE(lengthSquared(QPointF(40.0, 30.0)), 2500.0);
+}
+
 void TestGeometry::test_2D_length_whenGivenAPoint_shouldWork() {
   using namespace Geometry2D;
 
@@ -428,6 +435,119 @@ void TestGeometry::test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint
     QCOMPARE(reflectPointLine(line, c), d);
     QCOMPARE(reflectPointLine(line, d), c);
   }
+}
+
+void TestGeometry::test_2D_projectPointSegment_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  QCOMPARE(projectPointSegment(QPointF(-5, -2), QPointF(10, 4), QPointF(3, 7)), QPointF(5, 2));
+  QCOMPARE(projectPointSegment(QPointF(7.5, 3), QPointF(10, 4), QPointF(3, 7)), QPointF(7.5, 3));
+  QCOMPARE(projectPointSegment(QPointF(-5, -2), QPointF(2.5, 1), QPointF(3, 7)), QPointF(2.5, 1));
+}
+
+void TestGeometry::test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  QCOMPARE(projectPointSegment(QLineF(-5, -2, 10, 4), QPointF(3, 7)), QPointF(5, 2));
+  QCOMPARE(projectPointSegment(QLineF(7.5, 3, 10, 4), QPointF(3, 7)), QPointF(7.5, 3));
+  QCOMPARE(projectPointSegment(QLineF(-5, -2, 2.5, 1), QPointF(3, 7)), QPointF(2.5, 1));
+}
+
+void TestGeometry::test_2D_linesParallel_whenGivenFourPoints_shouldWork() {
+  using namespace Geometry2D;
+  /* integer points. */ {
+    QVERIFY(linesParallel(QPoint(1, 1), QPoint(3, 5), QPoint(2, 1), QPoint(4, 5)));
+    QVERIFY(!linesParallel(QPoint(1, 1), QPoint(3, 5), QPoint(2, 0), QPoint(4, 5)));
+    QVERIFY(linesParallel(QPoint(1, 1), QPoint(3, 5), QPoint(5, 9), QPoint(7, 13)));
+  }
+  /* floating point points. */ {
+    QVERIFY(linesParallel(QPointF(1, 1), QPointF(3, 5), QPointF(2, 1), QPointF(4, 5)));
+    QVERIFY(!linesParallel(QPointF(1, 1), QPointF(3, 5), QPointF(2, 0), QPointF(4, 5)));
+    QVERIFY(linesParallel(QPointF(1, 1), QPointF(3, 5), QPointF(5, 9), QPointF(7, 13)));
+  }
+}
+
+void TestGeometry::test_2D_linesParallel_whenGivenTwoLines_shouldWork() {
+  using namespace Geometry2D;
+  QVERIFY(linesParallel(QLineF(1, 1, 3, 5), QLineF(2, 1, 4, 5)));
+  QVERIFY(!linesParallel(QLineF(1, 1, 3, 5), QLineF(2, 0, 4, 5)));
+  QVERIFY(linesParallel(QLineF(1, 1, 3, 5), QLineF(5, 9, 7, 13)));
+}
+
+void TestGeometry::test_2D_linesCollinear_whenGivenFourPoints_shouldWork() {
+  using namespace Geometry2D;
+  /* integer points. */ {
+    QVERIFY(!linesCollinear(QPoint(1, 1), QPoint(3, 5), QPoint(2, 1), QPoint(4, 5)));
+    QVERIFY(!linesCollinear(QPoint(1, 1), QPoint(3, 5), QPoint(2, 0), QPoint(4, 5)));
+    QVERIFY(linesCollinear(QPoint(1, 1), QPoint(3, 5), QPoint(5, 9), QPoint(7, 13)));
+  }
+  /* floating point points. */ {
+    QVERIFY(!linesCollinear(QPointF(1, 1) / 2.0,
+                            QPointF(3, 5) / 2.0,
+                            QPointF(2, 1) / 2.0,
+                            QPointF(4, 5) / 2.0));
+    QVERIFY(!linesCollinear(QPointF(1, 1) / 2.0,
+                            QPointF(3, 5) / 2.0,
+                            QPointF(2, 0) / 2.0,
+                            QPointF(4, 5) / 2.0));
+    QVERIFY(linesCollinear(QPointF(1, 1) / 2.0,
+                           QPointF(3, 5) / 2.0,
+                           QPointF(5, 9) / 2.0,
+                           QPointF(7, 13) / 2.0));
+  }
+}
+
+void TestGeometry::test_2D_linesCollinear_whenGivenTwoLines_shouldWork() {
+  using namespace Geometry2D;
+  QVERIFY(!linesCollinear(QLineF(1, 1, 3, 5), QLineF(2, 1, 4, 5)));
+  QVERIFY(!linesCollinear(QLineF(1, 1, 3, 5), QLineF(2, 0, 4, 5)));
+  QVERIFY(linesCollinear(QLineF(1, 1, 3, 5), QLineF(5, 9, 7, 13)));
+}
+
+void TestGeometry::test_2D_segmentsIntersect_whenGivenFourFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+
+  QVERIFY(segmentsIntersect(QPointF(0, 0), QPointF(2, 4), QPointF(3, 1), QPointF(-1, 3)));
+  QVERIFY(segmentsIntersect(QPointF(0, 0), QPointF(2, 4), QPointF(4, 3), QPointF(0, 5)));
+  QVERIFY(segmentsIntersect(QPointF(0, 0), QPointF(2, 4), QPointF(2, -1), QPointF(-2, 1)));
+  QVERIFY(!segmentsIntersect(QPointF(0, 0), QPointF(2, 4), QPointF(5, 5), QPointF(1, 7)));
+}
+
+void TestGeometry::test_2D_segmentsIntersect_whenGivenTwoLines_shouldWork() {
+  using namespace Geometry2D;
+
+  QVERIFY(segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(3, 1, -1, 3)));
+  QVERIFY(segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(4, 3, 0, 5)));
+  QVERIFY(segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(2, -1, -2, 1)));
+  QVERIFY(!segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(5, 5, 1, 7)));
+}
+
+void TestGeometry::test_2D_pointInPolygon_whenGivenAPolygonAndAPoint_shouldWork() {
+  using namespace Geometry2D;
+  QPolygonF poly;
+  poly += (QPointF(0, 0));
+  poly << (QPointF(5, 0));
+  poly.push_back(QPointF(5, 5));
+  poly.append(QPointF(0, 5));
+
+  QVERIFY(pointInPolygon(poly, QPointF(2, 2)));
+  QVERIFY(pointInPolygon(poly, QPointF(2, 0)));
+  QVERIFY(pointInPolygon(poly, QPointF(0, 2)));
+  QVERIFY(!pointInPolygon(poly, QPointF(5, 2)));
+  QVERIFY(!pointInPolygon(poly, QPointF(2, 5)));
+}
+
+void TestGeometry::test_2D_pointOnPolygon_whenGivenAPolygonAndAPoint_shouldWork() {
+  using namespace Geometry2D;
+  QPolygonF poly;
+  poly += (QPointF(0, 0));
+  poly << (QPointF(5, 0));
+  poly.push_back(QPointF(5, 5));
+  poly.append(QPointF(0, 5));
+
+  QVERIFY(!pointOnPolygon(poly, QPointF(2, 2)));
+  QVERIFY(pointOnPolygon(poly, QPointF(2, 0)));
+  QVERIFY(pointOnPolygon(poly, QPointF(0, 2)));
+  QVERIFY(pointOnPolygon(poly, QPointF(5, 2)));
+  QVERIFY(pointOnPolygon(poly, QPointF(2, 5)));
 }
 
 QTEST_MAIN(TestGeometry)

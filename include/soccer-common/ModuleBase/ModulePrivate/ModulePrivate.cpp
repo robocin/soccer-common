@@ -45,6 +45,9 @@ void ModulePrivate::run() {
 
 void ModulePrivate::waitOrDelete(ModulePrivate* object) {
   using namespace std::chrono_literals;
+  if (!object) {
+    return;
+  }
   if ([[maybe_unused]] std::unique_lock locker{object->execMutex, std::try_to_lock}) {
     if (QThreadPool* tp = object->threadPool) {
       // will avoid put this instance inside threadPool again.

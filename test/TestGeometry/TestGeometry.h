@@ -32,6 +32,7 @@ class TestGeometry : public QObject {
   void test_2D_rotateCCW_whenGivenAFloatingPointPoint_shouldWork();
   void test_2D_angle_whenGivenAPoint_shouldWork();
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
+  void test_2D_lengthSquared_whenGivenAPoint_shouldWork();
   void test_2D_length_whenGivenAPoint_shouldWork();
   void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
   void test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
@@ -46,4 +47,14 @@ class TestGeometry : public QObject {
   void test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_reflectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_projectPointSegment_whenGivenThreeFloatingPointPoints_shouldWork();
+  void test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_linesParallel_whenGivenFourPoints_shouldWork();
+  void test_2D_linesParallel_whenGivenTwoLines_shouldWork();
+  void test_2D_linesCollinear_whenGivenFourPoints_shouldWork();
+  void test_2D_linesCollinear_whenGivenTwoLines_shouldWork();
+  void test_2D_segmentsIntersect_whenGivenFourFloatingPointPoints_shouldWork();
+  void test_2D_segmentsIntersect_whenGivenTwoLines_shouldWork();
+  void test_2D_pointInPolygon_whenGivenAPolygonAndAPoint_shouldWork();
+  void test_2D_pointOnPolygon_whenGivenAPolygonAndAPoint_shouldWork();
 };

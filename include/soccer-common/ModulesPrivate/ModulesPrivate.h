@@ -28,6 +28,8 @@ class ModulesPrivate : public QObject {
     inline void clear() {
       for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::stop, Qt::QueuedConnection);
+      }
+      for (auto t : m_map) {
         QMetaObject::invokeMethod(t, &QTimer::deleteLater, Qt::QueuedConnection);
       }
       m_map.clear();
@@ -78,7 +80,8 @@ class ModulesPrivate : public QObject {
  protected:
   QThread* modulesThread() const;
 
-  template <class T, class M, class... Args>
+ private:
+  template <class M, class T, class... Args>
   class Maker {
     static_assert(std::is_base_of_v<ModuleBase, T>);
 
@@ -133,6 +136,10 @@ class ModulesPrivate : public QObject {
     static void build(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
 
+      if (auto oldRef = ref) {
+        ModuleBase::waitOrDelete(oldRef);
+      }
+
       QString type = moduleBox->currentText();
       ref = factory[type](args...);
       static_cast<QObject*>(ref)->moveToThread(
@@ -170,9 +177,8 @@ class ModulesPrivate : public QObject {
 
     static void make(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
       QString type = moduleBox->currentText();
-
-      build(ref, factory, modules, moduleBox, args...);
       setToolTip(factory, type, moduleBox);
+      build(ref, factory, modules, moduleBox, args...);
     }
 
     template <class... Types>
@@ -187,11 +193,6 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     inline void exec(Types&&... types) {
-      if (factory.empty()) {
-        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
-        return;
-      }
-      qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       MainWindow* gui = static_cast<ModulesPrivate*>(modules)->gui();
       //
       ModuleBox* moduleBox = getModuleBox(gui, std::forward<Types>(types)...);
@@ -228,9 +229,31 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     void operator()(Types&&... types) {
+      if (factory.empty()) {
+        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
+        return;
+      }
+      qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       exec(std::forward<Types>(types)...);
     }
   };
+
+ protected:
+  template <class M, class T, class F, class... Types>
+  void makeModule(M* modules, T*& ref, const F& factory, Types&&... types) {
+    Q_ASSERT(ref == nullptr);
+    Maker(modules, ref, factory)(std::forward<Types>(types)...);
+  }
+
+  template <class M, class T, class F, class... Types>
+  void makeModule(M* modules, QVector<T*>& vect, const F& factory, Types&&... types) {
+    Q_ASSERT(vect.empty());
+    int n = static_cast<ModulesPrivate*>(modules)->gui()->maxRobots();
+    vect.resize(n);
+    for (int i = 0; i < n; ++i) {
+      Maker(modules, vect[i], factory)(i, std::forward<Types>(types)...);
+    }
+  }
 
  private:
   void prepareToDeleteAndDisconnect();
