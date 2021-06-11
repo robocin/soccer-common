@@ -160,6 +160,38 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::distance<QPointF>(*this, other);
   }
 
+  qreal distToLine(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::distancePointLine<QPointF>(a, b, *this);
+  }
+
+  qreal distToLine(const QLineF& line) const {
+    return Geometry2D::distancePointLine<QPointF>(line, *this);
+  }
+
+  qreal distToSegment(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::distancePointSegment<QPointF>(a, b, *this);
+  }
+
+  qreal distToSegment(const QLineF& line) const {
+    return Geometry2D::distancePointSegment<QPointF>(line, *this);
+  }
+
+  Extends<QPointF> projectedOntoLine(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::projectPointLine<QPointF>(a, b, *this);
+  }
+
+  Extends<QPointF> projectedOntoLine(const QLineF& line) const {
+    return Geometry2D::projectPointLine<QPointF>(line.p1(), line.p2(), *this);
+  }
+
+  Extends<QPointF> projectedOntoSegment(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::projectPointSegment<QPointF>(a, b, *this);
+  }
+
+  Extends<QPointF> projectedOntoSegment(const QLineF& line) const {
+    return Geometry2D::projectPointSegment<QPointF>(line.p1(), line.p2(), *this);
+  }
+
   void rotateCW90() {
     *this = Geometry2D::rotateCW90(*this);
   }

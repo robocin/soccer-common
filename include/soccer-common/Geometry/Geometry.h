@@ -357,12 +357,35 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line line and point c.
+   * @param line line and point c.
    * @return Projects the point c onto line.
-   * @note assuming a != b.
+   * @note assuming line.p1() != line.p2().
    */
   RC_PT_T_TEMPLATE constexpr PT projectPointLine(const QLineF& line, const PT& c) {
     return projectPointLine<PT, T>(line.p1(), line.p2(), c);
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam T Equals to the type returned by '.x()' by default.
+   * @param line line and point c.
+   * @return return the distance between the point c and his projection onto line defined by a and
+   * b.
+   * @note assuming a != b.
+   */
+  RC_PT_T_TEMPLATE constexpr auto distancePointLine(const PT& a, const PT& b, const PT& c) {
+    return distance<PT, T>(c, projectPointLine<PT, T>(a, b, c));
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam T Equals to the type returned by '.x()' by default.
+   * @param line line and point c.
+   * @return return the distance between the point c and his projection onto line.
+   * @note assuming line.p1() != line.p2().
+   */
+  RC_PT_T_TEMPLATE constexpr auto distancePointLine(const QLineF& line, const PT& c) {
+    return distance<PT, T>(c, projectPointLine<PT, T>(line.p1(), line.p2(), c));
   }
 
   /*!
@@ -379,9 +402,9 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line line and point c.
+   * @param line line and point c.
    * @return Reflects the point c onto line.
-   * @note assuming a != b.
+   * @note assuming line.p1() != line.p2().
    */
   RC_PT_T_TEMPLATE constexpr PT reflectPointLine(const QLineF& line, const PT& c) {
     return reflectPointLine<PT, T>(line.p1(), line.p2(), c);
@@ -416,12 +439,35 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line line and point c.
+   * @param line line and point c.
    * @return Projects the point c onto segment line.
-   * @note assuming a != b.
+   * @note assuming line.p1() != line.p2().
    */
   RC_PT_T_TEMPLATE constexpr PT projectPointSegment(const QLineF& line, const PT& c) {
     return projectPointSegment<PT, T>(line.p1(), line.p2(), c);
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam T Equals to the type returned by '.x()' by default.
+   * @param line line and point c.
+   * @return return the distance between the point c and his projection onto segment defined by a
+   * and b.
+   * @note assuming a != b.
+   */
+  RC_PT_T_TEMPLATE constexpr auto distancePointSegment(const PT& a, const PT& b, const PT& c) {
+    return distance<PT, T>(c, projectPointSegment<PT, T>(a, b, c));
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam T Equals to the type returned by '.x()' by default.
+   * @param line line and point c.
+   * @return return the distance between the point c and his projection onto segment.
+   * @note assuming line.p1() != line.p2().
+   */
+  RC_PT_T_TEMPLATE constexpr auto distancePointSegment(const QLineF& line, const PT& c) {
+    return distance<PT, T>(c, projectPointSegment<PT, T>(line.p1(), line.p2(), c));
   }
 
   /*!
