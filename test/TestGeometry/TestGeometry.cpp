@@ -399,6 +399,36 @@ void TestGeometry::test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint
   }
 }
 
+void TestGeometry::test_2D_distancePointLine_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QPointF a(0, 0), b(2, 2), c(2, 0), d(0, 2);
+    QCOMPARE(distancePointLine(a, b, c), std::sqrt(2));
+    QCOMPARE(distancePointLine(a, b, d), std::sqrt(2));
+  }
+
+  {
+    QPointF a(0, 0), b(2, 2), c(1, 1);
+    QCOMPARE(distancePointLine(a, b, c), 0.0);
+  }
+}
+
+void TestGeometry::test_2D_distancePointLine_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(2, 0), d(0, 2);
+    QCOMPARE(distancePointLine(line, c), std::sqrt(2));
+    QCOMPARE(distancePointLine(line, d), std::sqrt(2));
+  }
+
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(1, 1);
+    QCOMPARE(distancePointLine(line, c), 0.0);
+  }
+}
+
 void TestGeometry::test_2D_reflectPointLine_whenGivenThreeFloatingPointPoints_shouldWork() {
   using namespace Geometry2D;
   {
@@ -449,6 +479,36 @@ void TestGeometry::test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPo
   QCOMPARE(projectPointSegment(QLineF(-5, -2, 10, 4), QPointF(3, 7)), QPointF(5, 2));
   QCOMPARE(projectPointSegment(QLineF(7.5, 3, 10, 4), QPointF(3, 7)), QPointF(7.5, 3));
   QCOMPARE(projectPointSegment(QLineF(-5, -2, 2.5, 1), QPointF(3, 7)), QPointF(2.5, 1));
+}
+
+void TestGeometry::test_2D_distancePointSegment_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QPointF a(0, 0), b(2, 2), c(2, 0), d(0, 2);
+    QCOMPARE(distancePointSegment(a, b, c), std::sqrt(2));
+    QCOMPARE(distancePointSegment(a, b, d), std::sqrt(2));
+  }
+
+  {
+    QPointF a(0, 0), b(2, 2), c(1, 1);
+    QCOMPARE(distancePointSegment(a, b, c), 0.0);
+  }
+}
+
+void TestGeometry::test_2D_distancePointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(2, 0), d(0, 2);
+    QCOMPARE(distancePointSegment(line, c), std::sqrt(2));
+    QCOMPARE(distancePointSegment(line, d), std::sqrt(2));
+  }
+
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(1, 1);
+    QCOMPARE(distancePointSegment(line, c), 0.0);
+  }
 }
 
 void TestGeometry::test_2D_linesParallel_whenGivenFourPoints_shouldWork() {

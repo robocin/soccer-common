@@ -45,10 +45,14 @@ class TestGeometry : public QObject {
   void test_2D_centroid_whenGivenAPolygonOfFloatingPointPoints_shouldWork();
   void test_2D_projectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_distancePointLine_whenGivenThreeFloatingPointPoints_shouldWork();
+  void test_2D_distancePointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_reflectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_projectPointSegment_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_distancePointSegment_whenGivenThreeFloatingPointPoints_shouldWork();
+  void test_2D_distancePointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_linesParallel_whenGivenFourPoints_shouldWork();
   void test_2D_linesParallel_whenGivenTwoLines_shouldWork();
   void test_2D_linesCollinear_whenGivenFourPoints_shouldWork();
