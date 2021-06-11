@@ -38,17 +38,27 @@ class SharedOptional : public std::optional<T> {
     return ret;
   }
 
-  template <class U>
-  bool extract_to(U& other) {
+  bool extract_to(T& other) {
     if (has_value()) {
-      other = static_cast<U>(getAndReset());
+      other = getAndReset();
       return true;
     }
     return false;
   }
 
-  template <class U>
-  bool extractTo(U& other) {
+  bool extractTo(T& other) {
+    return extract_to(other);
+  }
+
+  bool extract_to(std::optional<T>& other) {
+    if (has_value()) {
+      other = getAndReset();
+      return true;
+    }
+    return false;
+  }
+
+  bool extractTo(std::optional<T>& other) {
     return extract_to(other);
   }
 
