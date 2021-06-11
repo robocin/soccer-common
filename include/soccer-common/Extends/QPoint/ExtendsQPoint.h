@@ -100,6 +100,10 @@ class Extends<QPoint> : public QPoint {
   }
 
   using QPoint::manhattanLength;
+
+  bool isInPolygon(const QVector<QPoint>& polygon) const {
+    return Geometry2D::pointInPolygon<QPoint>(polygon, *this);
+  }
 };
 
 template <>
@@ -248,6 +252,14 @@ class Extends<QPointF> : public QPointF {
 
   Extends<QPointF> normalized() const {
     return Geometry2D::normalize(*this);
+  }
+
+  bool isInPolygon(const QVector<QPointF>& polygon) const {
+    return Geometry2D::pointInPolygon<QPointF>(polygon, *this);
+  }
+
+  bool isOnPolygon(const QVector<QPointF>& polygon) const {
+    return Geometry2D::pointOnPolygon<QPointF>(polygon, *this);
   }
 };
 
