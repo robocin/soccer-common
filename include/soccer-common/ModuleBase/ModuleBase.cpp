@@ -13,10 +13,18 @@ void ModuleBase::build() {
 void ModuleBase::setup(const Modules* modules) {
   connectModules(modules);
   init(modules);
+  connect(this,
+          &ModuleBase::onReceiveUpdateRequests,
+          this,
+          &ModulePrivate::runInParallel,
+          Qt::DirectConnection);
 }
 
 void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
   updateRequests->append(updates);
+  if (!updateRequests->empty()) {
+    emit onReceiveUpdateRequests();
+  }
 }
 
 Parameters::Handler& ModuleBase::parameters() {

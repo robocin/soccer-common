@@ -21,6 +21,7 @@ class ModuleBase : public ModulePrivate {
   void setup(const Modules* modules);
 
  signals:
+  void onReceiveUpdateRequests();
   void sendParameters(const QJsonObject& parameters);
 
  public slots:
