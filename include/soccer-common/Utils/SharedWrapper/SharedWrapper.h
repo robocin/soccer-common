@@ -25,6 +25,7 @@ class SharedWrapper {
   SharedWrapper& operator=(SharedWrapper&&) = delete;
 
   T value() const {
+    Locker locker(mutex);
     return instance;
   }
 
@@ -36,7 +37,7 @@ class SharedWrapper {
   template <class U>
   void set(U&& value) {
     Locker locker(mutex);
-    instance = value;
+    instance = std::forward<U>(value);
   }
 
   template <class... Args>
