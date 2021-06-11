@@ -39,6 +39,20 @@ class SharedOptional : public std::optional<T> {
   }
 
   template <class U>
+  bool extract_to(U& other) {
+    if (has_value()) {
+      other = static_cast<U>(getAndReset());
+      return true;
+    }
+    return false;
+  }
+
+  template <class U>
+  bool extractTo(U& other) {
+    return extract_to(other);
+  }
+
+  template <class U>
   constexpr decltype(auto) getOrElse(U&& value) const {
     return std::optional<T>::value_or(std::forward<U>(value));
   }
