@@ -357,7 +357,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param line, c line and point c.
    * @return Projects the point c onto line.
    * @note assuming line.p1() != line.p2().
    */
@@ -368,7 +368,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param a, b, c line through (a, b) and point c.
    * @return return the distance between the point c and his projection onto line defined by a and
    * b.
    * @note assuming a != b.
@@ -380,7 +380,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param line, c line and point c.
    * @return return the distance between the point c and his projection onto line.
    * @note assuming line.p1() != line.p2().
    */
@@ -402,7 +402,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param line, c line and point c.
    * @return Reflects the point c onto line.
    * @note assuming line.p1() != line.p2().
    */
@@ -439,7 +439,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param line, c line and point c.
    * @return Projects the point c onto segment line.
    * @note assuming line.p1() != line.p2().
    */
@@ -450,7 +450,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param a, b, c line through (a, b) and point c.
    * @return return the distance between the point c and his projection onto segment defined by a
    * and b.
    * @note assuming a != b.
@@ -462,7 +462,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @tparam T Equals to the type returned by '.x()' by default.
-   * @param line line and point c.
+   * @param line, c line and point c.
    * @return return the distance between the point c and his projection onto segment.
    * @note assuming line.p1() != line.p2().
    */
