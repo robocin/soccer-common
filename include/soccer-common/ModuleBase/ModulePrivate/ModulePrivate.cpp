@@ -5,8 +5,8 @@ ModulePrivate::ModulePrivate(QThreadPool* threadPool) : QObject(nullptr), thread
 }
 
 void ModulePrivate::runInParallel() {
-  if (QThreadPool* tp = threadPool) {
-    if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
+  if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
+    if (QThreadPool* tp = threadPool) {
       tp->start(static_cast<QRunnable*>(this));
     }
   }
