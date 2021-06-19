@@ -3,21 +3,23 @@
 
 #include <QtCore>
 
-class Field {
- private:
-  qreal m_length;
-  qreal m_width;
+namespace Common {
+  class Field {
+   private:
+    qreal m_length;
+    qreal m_width;
 
-  qreal m_goalWidth;
-  qreal m_goalDepth;
+    qreal m_goalWidth;
+    qreal m_goalDepth;
 
- public:
-  Field(qreal length, qreal width, qreal goalWidth, qreal goalDepth);
+   public:
+    Field(qreal length, qreal width, qreal goalWidth, qreal goalDepth);
 
-  qreal length() const;
-  qreal width() const;
-  qreal goalWidth() const;
-  qreal goalDepth() const;
-};
+    qreal length() const;
+    qreal width() const;
+    qreal goalWidth() const;
+    qreal goalDepth() const;
+  };
+} // namespace Common
 
 #endif // SOCCER_COMMON_FIELD_H
