@@ -17,7 +17,7 @@ class RobotsWidgets {
   void setupRobotsWidgets(MainWindow* mainWindow);
 
  public:
-  explicit RobotsWidgets(int maxRobots = 11);
+  explicit RobotsWidgets(int maxRobots);
 
   int maxRobots() const;
   ModuleBox* indexedModuleBox(int index, const QString& key);
