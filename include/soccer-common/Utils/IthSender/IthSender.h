@@ -6,19 +6,21 @@
 #define SOCCER_COMMON_ITHSENDER_H
 
 #include <QObject>
+#include <array>
 
-template <class Sender>
+template <class Sender, size_t N = 22>
 class IthSender {
-  QObject* m_parent{};
-  QHash<int, Sender*> m_sender{};
+  std::array<Sender*, N> m_senders{};
 
  public:
-  explicit IthSender(QObject* parent) : m_parent(parent) {
+  explicit IthSender(QObject* parent) {
+    for (auto&& sender : m_senders) {
+      sender = new Sender(parent);
+    }
   }
 
-  inline Sender* ithSender(int i) {
-    auto& sender = m_sender[i];
-    return (!sender) ? (sender = new Sender(m_parent)) : sender;
+  inline Sender* ithSender(int i) const {
+    return m_senders.at(i);
   }
 };
 
