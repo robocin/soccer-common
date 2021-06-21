@@ -46,6 +46,9 @@ class TestParameters : public QObject {
   void test_MappedComboBox_WithValidParameters_ShouldConstruct();
   void test_MappedComboBox_WithInvalidParameters_ShouldThrowException();
 
+  void test_PushButton_WithValidParameters_ShouldConstruct();
+  void test_PushButton_WithInvalidParameters_ShouldThrowException();
+
   // handler:
   void test_ParametersHandler_WithValidParametersShouldConstruct();
 };

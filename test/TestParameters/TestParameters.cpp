@@ -39,14 +39,14 @@ void TestParameters::test_ParameterType_eval_WithInvalidParameters_ShouldReturnN
   }
 
   /* boolean */ {
-    QCOMPARE(ParameterType<bool>::eval("zero"), std::nullopt);
-    QCOMPARE(ParameterType<bool>::eval("one"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("zero"), true);
+    QCOMPARE(ParameterType<bool>::eval("one"), true);
 
-    QCOMPARE(ParameterType<bool>::eval("-0"), std::nullopt);
-    QCOMPARE(ParameterType<bool>::eval("-1"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("-0"), true);
+    QCOMPARE(ParameterType<bool>::eval("-1"), true);
 
-    QCOMPARE(ParameterType<bool>::eval("FALSE"), std::nullopt);
-    QCOMPARE(ParameterType<bool>::eval("TRUE"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("FALSE"), false);
+    QCOMPARE(ParameterType<bool>::eval("TRUE"), true);
   }
 
   /* arithmetic types */ {
@@ -175,7 +175,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
 
     QCOMPARE(text.update("true"), true);
     QCOMPARE(boolean, true);
-    QCOMPARE(text.update("VALOR_FALSO"), false);
+    QCOMPARE(text.update("VALOR_FALSO"), true);
     QCOMPARE(boolean, true);
   }
 }
@@ -356,11 +356,33 @@ void TestParameters::test_DoubleSpinBox_WithInvalidParameters_ShouldThrowExcepti
     QVERIFY(error);
   }
 
-  /* testing int wrong range */ {
+  /* testing double wrong range */ {
     Arg<double> real = 5;
     bool error = false;
     try {
       auto doubleSpinBox = DoubleSpinBox(real, 10, -10);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing float precision out of range */ {
+    Arg<float> real = 50;
+    bool error = false;
+    try {
+      auto doubleSpinBox = DoubleSpinBox(real, 0, 100, -1);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double precision out of range */ {
+    Arg<double> real = 50;
+    bool error = false;
+    try {
+      auto doubleSpinBox = DoubleSpinBox(real, 0, 100, 20);
     } catch (...) {
       error = true;
     }
@@ -478,7 +500,7 @@ void TestParameters::test_CheckBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(checkBox.isChooseable(), true);
     QCOMPARE(checkBox.update("true"), true);
     QCOMPARE(boolean, true);
-    QCOMPARE(checkBox.update("ANY_VALUE"), false);
+    QCOMPARE(checkBox.update("ANY_VALUE"), true);
     QCOMPARE(boolean, true);
   }
 }
@@ -654,6 +676,53 @@ void TestParameters::test_MappedComboBox_WithInvalidParameters_ShouldThrowExcept
     }
     QVERIFY(error);
   }
+}
+
+void TestParameters::test_PushButton_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  QObject object;
+  bool verify = false;
+  auto lambda = [&verify]() {
+    verify = true;
+  };
+  QString description = "empty lambda";
+  auto pushButton = Parameters::PushButton(&object, lambda, description);
+
+  std::function<void()> function = *reinterpret_cast<std::function<void()>*>(
+      Utils::removeQuotes(pushButton.value()).toULongLong());
+  function();
+  QVERIFY(verify);
+  QCOMPARE(pushButton.type(), Utils::nameOfType(lambda));
+  QCOMPARE(pushButton.inputType(), InputType::PushButton);
+  QCOMPARE(pushButton.description(), description);
+  QCOMPARE(pushButton.payload(),
+           Utils::quoted(Detail::Parent) + ": " +
+               Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&object))));
+  QCOMPARE(pushButton.isChooseable(), false);
+  QCOMPARE(pushButton.update("false"), false);
+  QCOMPARE(pushButton.update("true"), false);
+  QCOMPARE(pushButton.update("abcd"), false);
+  QCOMPARE(pushButton.update("3.14"), false);
+  QCOMPARE(pushButton.update("123"), false);
+  QCOMPARE(pushButton.update("[] () { return; }"), false);
+}
+
+void TestParameters::test_PushButton_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+
+  bool verify = false;
+  auto lambda = [&verify]() {
+    verify = true;
+  };
+  QString description = "empty lambda";
+  bool error = false;
+  try {
+    auto pushButton = Parameters::PushButton(nullptr, lambda, description);
+  } catch (...) {
+    error = true;
+  }
+  QVERIFY(error);
 }
 
 void TestParameters::test_ParametersHandler_WithValidParametersShouldConstruct() {
