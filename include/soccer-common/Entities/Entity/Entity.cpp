@@ -1,26 +1,63 @@
 #include "Entity.h"
+#include "soccer-common/Geometry/Geometry.h"
 
-RawEntity::RawEntity(const QPointF& position) : m_position(position) {
-}
+using Geometry2D::operator<;
 
-const QPointF& RawEntity::position() const {
-  return m_position;
-}
+namespace Common {
+  RawEntity::RawEntity(const QPointF& position) : m_position(position) {
+  }
 
-RawEntity::operator const QPointF&() const {
-  return position();
-}
+  const QPointF& RawEntity::position() const {
+    return m_position;
+  }
 
-Entity::Entity(const QPointF& position, const QPointF& velocity, const QPointF& acceleration) :
-    RawEntity(position),
-    m_velocity(velocity),
-    m_acceleration(acceleration) {
-}
+  RawEntity::operator const QPointF&() const {
+    return position();
+  }
 
-const QPointF& Entity::velocity() const {
-  return m_velocity;
-}
+  bool RawEntity::operator<(const RawEntity& other) const {
+    return m_position < other.m_position;
+  }
 
-const QPointF& Entity::acceleration() const {
-  return m_acceleration;
-}
+  bool RawEntity::operator==(const RawEntity& other) const {
+    return m_position == other.m_position;
+  }
+
+  bool RawEntity::operator!=(const RawEntity& other) const {
+    return !(other == *this);
+  }
+
+  // ------------------------------------------------------------------------ //
+
+  Entity::Entity(const RawEntity& rawEntity, const QPointF& velocity, const QPointF& acceleration) :
+      RawEntity(rawEntity),
+      m_velocity(velocity),
+      m_acceleration(acceleration) {
+  }
+
+  Entity::Entity(const QPointF& position, const QPointF& velocity, const QPointF& acceleration) :
+      Entity(RawEntity(position), velocity, acceleration) {
+  }
+
+  const QPointF& Entity::velocity() const {
+    return m_velocity;
+  }
+
+  const QPointF& Entity::acceleration() const {
+    return m_acceleration;
+  }
+
+  bool Entity::operator<(const Entity& other) const {
+    return std::tie(m_position, m_velocity, m_acceleration) <
+           std::tie(other.m_position, other.m_velocity, other.m_acceleration);
+  }
+
+  bool Entity::operator==(const Entity& other) const {
+    return std::tie(m_position, m_velocity, m_acceleration) ==
+           std::tie(other.m_position, other.m_velocity, other.m_acceleration);
+  }
+
+  bool Entity::operator!=(const Entity& other) const {
+    return !(other == *this);
+  }
+} // namespace Common

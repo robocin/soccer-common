@@ -3,29 +3,49 @@
 
 #include "soccer-common/Entities/Entity/Entity.h"
 
-class RawRobot : virtual public RawEntity {
-  int m_id;
-  qreal m_angle;
+namespace Common {
+  class RawRobot : virtual public RawEntity {
+   protected:
+    int m_id;
+    qreal m_angle;
 
- public:
-  RawRobot(int id, qreal angle, const QPointF& position);
+   public:
+    RawRobot(int id, qreal angle, const RawEntity& rawEntity);
+    RawRobot(int id, qreal angle, const QPointF& position);
 
-  int id() const;
-  qreal angle() const;
-};
+    using RawEntity::position;
+    using RawEntity::operator const QPointF&;
 
-class Robot : public Entity, public RawRobot {
-  qreal m_angularVelocity;
+    int id() const;
+    qreal angle() const;
 
- public:
-  Robot(int id,
-        qreal angle,
-        const QPointF& position,
-        const QPointF& velocity,
-        const QPointF& acceleration,
-        qreal angularVelocity);
+    bool operator<(const RawRobot& other) const;
+    bool operator==(const RawRobot& other) const;
+    bool operator!=(const RawRobot& other) const;
+  };
 
-  qreal angularVelocity() const;
-};
+  class Robot : public Entity, public RawRobot {
+   protected:
+   public:
+    Robot(int id, qreal angle, const Entity& entity);
+    Robot(const RawRobot& rawRobot, const QPointF& velocity, const QPointF& acceleration);
+    Robot(int id,
+          qreal angle,
+          const QPointF& position,
+          const QPointF& velocity,
+          const QPointF& acceleration);
+
+    using RawRobot::id;
+    using RawRobot::angle;
+    using Entity::position;
+    using Entity::operator const QPointF&;
+    using Entity::velocity;
+    using Entity::acceleration;
+
+    bool operator<(const Robot& other) const;
+    bool operator==(const Robot& other) const;
+    bool operator!=(const Robot& other) const;
+  };
+} // namespace Common
 
 #endif // SOCCER_COMMON_ROBOT_H
