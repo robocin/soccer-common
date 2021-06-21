@@ -47,6 +47,7 @@ class ParameterWidget : public QWidget {
   InputWidgets::InputMethod* buildDoubleSpinBox(const QJsonObject& json, QStringList& details);
   InputWidgets::InputMethod* buildComboBox(const QJsonObject& json, QStringList& details);
   InputWidgets::InputMethod* buildCheckBox(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildPushButton(const QJsonObject& json, QStringList& details);
 
  private slots:
   void receiveOnValueChanged();

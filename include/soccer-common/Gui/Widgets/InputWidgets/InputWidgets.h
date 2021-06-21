@@ -13,6 +13,8 @@ namespace InputWidgets {
     explicit InputMethod(QWidget* parent);
     virtual ~InputMethod();
 
+    virtual bool isPushButton();
+
     virtual void set(const QString& value) = 0;
     virtual QString backupValue() const = 0;
     virtual QString currentValue() const = 0;
@@ -109,6 +111,21 @@ namespace InputWidgets {
 
    public:
     explicit ComboBox(const QJsonObject& json, QWidget* parent);
+
+    void set(const QString& value) override;
+    QString backupValue() const override;
+    QString currentValue() const override;
+    void storeCurrent() override;
+    void loadBackup() override;
+  };
+
+  class PushButton : public InputMethod {
+    QPushButton pushButton;
+
+   public:
+    explicit PushButton(const QJsonObject& json, QWidget* parent);
+
+    bool isPushButton() override;
 
     void set(const QString& value) override;
     QString backupValue() const override;

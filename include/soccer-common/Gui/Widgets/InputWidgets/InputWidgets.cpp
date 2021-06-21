@@ -13,6 +13,10 @@ InputWidgets::InputMethod::InputMethod(QWidget* parent) : QWidget(parent) {
 InputWidgets::InputMethod::~InputMethod() {
 }
 
+bool InputWidgets::InputMethod::isPushButton() {
+  return false;
+}
+
 void InputWidgets::InputMethod::receiveOnValueChanged() {
   emit onValueChanged();
 }
@@ -146,6 +150,7 @@ InputWidgets::DoubleSpinBox::DoubleSpinBox(const QJsonObject& json, QWidget* par
 
   int precision = json[Detail::Precision].toVariant().toInt();
   doubleSpinBox.setDecimals(precision);
+  doubleSpinBox.setSingleStep(std::pow(10, -precision));
 
   double minValue = json[Detail::MinValue].toDouble();
   double maxValue = json[Detail::MaxValue].toDouble();
@@ -255,4 +260,38 @@ void InputWidgets::ComboBox::storeCurrent() {
 
 void InputWidgets::ComboBox::loadBackup() {
   comboBox.setCurrentText(backup);
+}
+
+InputWidgets::PushButton::PushButton(const QJsonObject& json, QWidget* parent) :
+    InputMethod(parent) {
+  qulonglong address = json[Detail::Value].toVariant().toULongLong();
+  auto pointer = reinterpret_cast<std::function<void()>*>(address);
+  std::function<void()> function = *pointer;
+
+  address = json[Detail::Parent].toVariant().toULongLong();
+  auto receiver = reinterpret_cast<QObject*>(address);
+
+  QObject::connect(&pushButton, &QPushButton::clicked, receiver, function);
+  inputMethodLayout.addWidget(&pushButton);
+}
+
+bool InputWidgets::PushButton::isPushButton() {
+  return true;
+}
+
+void InputWidgets::PushButton::set(const QString&) {
+}
+
+QString InputWidgets::PushButton::backupValue() const {
+  return "";
+}
+
+QString InputWidgets::PushButton::currentValue() const {
+  return "";
+}
+
+void InputWidgets::PushButton::storeCurrent() {
+}
+
+void InputWidgets::PushButton::loadBackup() {
 }
