@@ -18,6 +18,7 @@ namespace Parameters {
     static constexpr const char* DoubleSpinBox = "DoubleSpinBox";
     static constexpr const char* ComboBox = "ComboBox";
     static constexpr const char* CheckBox = "CheckBox";
+    static constexpr const char* PushButton = "PushButton";
   } // namespace InputType
 
   namespace Detail {
@@ -31,10 +32,11 @@ namespace Parameters {
     static constexpr const char* Options = "Options";
     static constexpr const char* Regex = "Regex";
     static constexpr const char* Conditional = "Conditional";
+    static constexpr const char* Parent = "Parent";
   } // namespace Detail
 
   struct ParameterBase {
-    virtual ~ParameterBase();
+    virtual ~ParameterBase() = default;
     virtual QString value() const = 0;
     virtual QString inputType() const = 0;
     virtual QString type() const = 0;
@@ -146,7 +148,7 @@ namespace Parameters {
       } else if constexpr (std::is_same_v<T, bool>) {
         return ref.value() ? "true" : "false";
       } else if constexpr (std::is_floating_point_v<T>) {
-        return QString::number(ref.value(), 'f', 10);
+        return QString::number(ref.value(), 'f', 15);
       } else if constexpr (std::is_arithmetic_v<T>) {
         return QString::number(ref.value());
       } else if constexpr (std::is_base_of_v<QString, T>) {
@@ -283,6 +285,9 @@ namespace Parameters {
       }
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
+      }
+      if (!(0 <= t_precision && t_precision <= 15)) {
+        throw std::runtime_error("SpinBox precision value out of range.");
       }
       minValue = static_cast<T>(t_minValue);
       maxValue = static_cast<T>(t_maxValue);
@@ -523,6 +528,53 @@ namespace Parameters {
         setValue(bimap.right.find(str)->get_left());
         return true;
       }
+      return false;
+    }
+  };
+
+  class PushButton : public ParameterBase {
+    QString m_type;
+    QString m_about;
+    qulonglong m_parent;
+    std::function<void()> m_function;
+
+   public:
+    template <class FunctionPointer>
+    explicit PushButton(QObject* t_parent, FunctionPointer&& t_f, QString t_about = "") :
+        m_type(Utils::nameOfType<FunctionPointer>()),
+        m_parent(reinterpret_cast<qulonglong>(t_parent)),
+        m_function(std::forward<FunctionPointer>(t_f)),
+        m_about(std::move(t_about)) {
+      if (!t_parent) {
+        throw std::runtime_error("t_parent must be a valid pointer.");
+      }
+    }
+
+    QString value() const override final {
+      return Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&m_function)));
+    }
+
+    QString inputType() const override final {
+      return InputType::PushButton;
+    }
+
+    QString type() const override final {
+      return m_type;
+    }
+
+    QString description() const override final {
+      return m_about;
+    }
+
+    QString payload() const override final {
+      return Utils::quoted(Detail::Parent) + ": " + Utils::quoted(QString::number(m_parent));
+    }
+
+    bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString&) override final {
       return false;
     }
   };
