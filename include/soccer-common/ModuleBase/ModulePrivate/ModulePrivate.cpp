@@ -4,14 +4,6 @@ ModulePrivate::ModulePrivate(QThreadPool* threadPool) : QObject(nullptr), thread
   QRunnable::setAutoDelete(false);
 }
 
-void ModulePrivate::runInParallel() {
-  if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
-    if (QThreadPool* tp = threadPool) {
-      tp->start(static_cast<QRunnable*>(this));
-    }
-  }
-}
-
 void ModulePrivate::prepareToDelete() {
   qWarning().nospace() << "scheduling the deletion of " << this << ".";
   disconnect(); // disconnecting outgoing connections.
@@ -62,5 +54,13 @@ void ModulePrivate::waitOrDelete(ModulePrivate* object) {
     QTimer::singleShot(1s, object, [object] {
       return ModulePrivate::waitOrDelete(object);
     });
+  }
+}
+
+void ModulePrivate::tryStart() {
+  if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
+    if (QThreadPool* tp = threadPool) {
+      tp->start(static_cast<QRunnable*>(this));
+    }
   }
 }

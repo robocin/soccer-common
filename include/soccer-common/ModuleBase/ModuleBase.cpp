@@ -18,6 +18,7 @@ void ModuleBase::setup(const Modules* modules) {
           this,
           &ModulePrivate::runInParallel,
           Qt::DirectConnection);
+  connect(this, &ModulePrivate::runInParallel, this, &ModuleBase::tryStart);
 }
 
 void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
