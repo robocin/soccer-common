@@ -56,13 +56,13 @@ void GameVisualizer::clearUniqueIntegerKey(int uniqueKey) {
 
 void GameVisualizer::setVisibility(int uniqueKey, bool visibility) {
   ScheduleUpdateAtEnd schedule(this);
-  shared->visibility->append(QPair(uniqueKey, visibility));
+  shared->visibility->emplace_back(uniqueKey, visibility);
 }
 
 void GameVisualizer::mousePressEvent(QMouseEvent* event) {
   ScheduleUpdateAtEnd schedule(this);
   bool leftButton = event->buttons().testFlag(Qt::LeftButton);
-  bool midButton = event->buttons().testFlag(Qt::MidButton);
+  bool midButton = event->buttons().testFlag(Qt::MiddleButton);
   bool rightButton = event->buttons().testFlag(Qt::RightButton);
 
   if (leftButton || midButton) {
@@ -75,8 +75,8 @@ void GameVisualizer::mousePressEvent(QMouseEvent* event) {
     local.mouse = event->pos();
   } else if (rightButton) {
     auto center = frameGeometry().center();
-    local.viewOffset.rx() += local.scale * (event->x() - center.x());
-    local.viewOffset.ry() -= local.scale * (event->y() - center.y());
+    local.viewOffset.rx() += local.scale * (event->position().x() - center.x());
+    local.viewOffset.ry() -= local.scale * (event->position().y() - center.y());
   }
 }
 
@@ -87,22 +87,22 @@ void GameVisualizer::mouseReleaseEvent(QMouseEvent*) {
 
 void GameVisualizer::mouseMoveEvent(QMouseEvent* event) {
   bool leftButton = event->buttons().testFlag(Qt::LeftButton);
-  bool midButton = event->buttons().testFlag(Qt::MidButton);
+  bool midButton = event->buttons().testFlag(Qt::MiddleButton);
   if (leftButton || midButton) {
     ScheduleUpdateAtEnd schedule(this);
     if (leftButton) {
-      local.viewOffset.rx() -= local.scale * (event->x() - local.mouse.x());
-      local.viewOffset.ry() += local.scale * (event->y() - local.mouse.y());
+      local.viewOffset.rx() -= local.scale * (event->position().x() - local.mouse.x());
+      local.viewOffset.ry() += local.scale * (event->position().y() - local.mouse.y());
     } else {
-      qreal zoomRatio = (event->y() - local.mouse.y()) / 500.0;
+      qreal zoomRatio = (event->position().y() - local.mouse.y()) / 500.0;
       local.scale *= (1.0 + zoomRatio);
     }
     local.mouse = event->pos();
   }
   auto center = frameGeometry().center();
   auto relativePos = local.viewOffset;
-  relativePos.rx() += local.scale * (event->x() - center.x());
-  relativePos.ry() -= local.scale * (event->y() - center.y());
+  relativePos.rx() += local.scale * (event->position().x() - center.x());
+  relativePos.ry() -= local.scale * (event->position().y() - center.y());
   emit relativeMousePos(relativePos);
 }
 
@@ -169,7 +169,7 @@ void GameVisualizer::setFormat(QOpenGLWidget* widget) {
   QSurfaceFormat format;
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-  format.setColorSpace(QSurfaceFormat::DefaultColorSpace);
+  format.setColorSpace(QColorSpace(QColorSpace::SRgb));
   format.setVersion(2, 1);
   widget->setFormat(format);
 }

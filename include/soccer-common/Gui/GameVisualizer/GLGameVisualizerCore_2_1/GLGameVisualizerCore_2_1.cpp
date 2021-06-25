@@ -6,7 +6,7 @@ void GLGameVisualizerCore_2_1::callListAndIncrementZ(GLuint id) {
 }
 
 void GLGameVisualizerCore_2_1::putBackgroundColor(const QColor& color) {
-  qreal r, g, b, a;
+  GLfloat r, g, b, a;
   color.getRgbF(&r, &g, &b, &a);
   glClearColor(static_cast<GLfloat>(r),
                static_cast<GLfloat>(g),
@@ -15,7 +15,7 @@ void GLGameVisualizerCore_2_1::putBackgroundColor(const QColor& color) {
 }
 
 void GLGameVisualizerCore_2_1::putColor(const QColor& color) {
-  qreal r, g, b, a;
+  GLfloat r, g, b, a;
   color.getRgbF(&r, &g, &b, &a);
   glColor<qreal>(r, g, b, a);
 }

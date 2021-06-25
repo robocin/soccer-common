@@ -296,7 +296,7 @@ void TestGeometry::test_2D_signedArea2_whenGivenAPolygon_shouldWork() {
   QCOMPARE(signedArea2(rpoly1), 200);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(signedArea2(poly2), -60.0);
 
   QPolygonF rpoly2(poly2);
@@ -314,7 +314,7 @@ void TestGeometry::test_2D_signedArea_whenGivenAPolygon_shouldWork() {
   QCOMPARE(signedArea(rpoly1), 100);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(signedArea(poly2), -30.0);
 
   QPolygonF rpoly2(poly2);
@@ -332,7 +332,7 @@ void TestGeometry::test_2D_area2_whenGivenAPolygon_shouldWork() {
   QCOMPARE(area2(rpoly1), 200);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(area2(poly2), 60.0);
 
   QPolygonF rpoly2(poly2);
@@ -350,7 +350,7 @@ void TestGeometry::test_2D_area_whenGivenAPolygon_shouldWork() {
   QCOMPARE(area(rpoly1), 100);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(area(poly2), 30.0);
 
   QPolygonF rpoly2(poly2);
@@ -360,12 +360,12 @@ void TestGeometry::test_2D_area_whenGivenAPolygon_shouldWork() {
 
 void TestGeometry::test_2D_centroid_whenGivenAPolygonOfFloatingPointPoints_shouldWork() {
   using namespace Geometry2D;
-  QPolygonF poly1{QVector{QPointF(1, 0), QPointF(2, 0), QPointF(0, 3)}};
+  QPolygonF poly1{QVector<QPointF>{QPointF(1, 0), QPointF(2, 0), QPointF(0, 3)}};
 
   QCOMPARE(centroid(poly1), QPointF(1, 1));
 
   QPolygonF poly2 =
-      QVector({QPointF(1, 0), QPointF(2, 1), QPointF(0, 3), QPointF(-1, 2), QPointF(-2, -1)});
+      QVector<QPointF>({QPointF(1, 0), QPointF(2, 1), QPointF(0, 3), QPointF(-1, 2), QPointF(-2, -1)});
   QCOMPARE(centroid(poly2), QPointF(-0.08 - 1.0 / 300.0, 0.91 + 2.0 / 300.0));
 }
 

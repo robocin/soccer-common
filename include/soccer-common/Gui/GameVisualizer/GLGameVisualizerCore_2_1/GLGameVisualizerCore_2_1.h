@@ -30,9 +30,6 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
     constexpr Vertex(const QVector3D& v) : QPointF(v.x(), v.y()) {
     }
     template <class U, class V>
-    constexpr Vertex(const QPair<U, V>& p) : QPointF(p.first, p.second) {
-    }
-    template <class U, class V>
     constexpr Vertex(const std::pair<U, V>& p) : QPointF(p.first, p.second) {
     }
 
@@ -56,10 +53,6 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
         QVector<Vertex>(polygon.begin(), polygon.end()) {
     }
     inline Polygon(const QVector<QVector3D>& polygon) :
-        QVector<Vertex>(polygon.begin(), polygon.end()) {
-    }
-    template <class U, class V>
-    inline Polygon(const QVector<QPair<U, V>>& polygon) :
         QVector<Vertex>(polygon.begin(), polygon.end()) {
     }
     template <class U, class V>
