@@ -11,7 +11,7 @@ namespace InputWidgets {
 
    public:
     explicit InputMethod(QWidget* parent);
-    virtual ~InputMethod();
+    virtual ~InputMethod() = default;
 
     virtual bool isPushButton();
 
@@ -92,8 +92,8 @@ namespace InputWidgets {
     QCheckBox checkBox;
     bool backup;
 
-    Qt::CheckState checkStateFromBoolean(bool value) const;
-    bool booleanFromCheckState(Qt::CheckState checkState) const;
+    static Qt::CheckState checkStateFromBoolean(bool value);
+    static bool booleanFromCheckState(Qt::CheckState checkState);
 
    public:
     explicit CheckBox(const QJsonObject& json, QWidget* parent);

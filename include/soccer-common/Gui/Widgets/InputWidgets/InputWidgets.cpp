@@ -10,9 +10,6 @@ InputWidgets::InputMethod::InputMethod(QWidget* parent) : QWidget(parent) {
   inputMethodLayout.setContentsMargins(0, 0, 0, 0);
 }
 
-InputWidgets::InputMethod::~InputMethod() {
-}
-
 bool InputWidgets::InputMethod::isPushButton() {
   return false;
 }
@@ -182,11 +179,11 @@ void InputWidgets::DoubleSpinBox::loadBackup() {
   doubleSpinBox.setValue(backup.toDouble());
 }
 
-Qt::CheckState InputWidgets::CheckBox::checkStateFromBoolean(bool value) const {
+Qt::CheckState InputWidgets::CheckBox::checkStateFromBoolean(bool value) {
   return value ? Qt::CheckState::Checked : Qt::CheckState::Unchecked;
 }
 
-bool InputWidgets::CheckBox::booleanFromCheckState(Qt::CheckState checkState) const {
+bool InputWidgets::CheckBox::booleanFromCheckState(Qt::CheckState checkState) {
   return checkState == Qt::CheckState::Checked;
 }
 
@@ -231,7 +228,7 @@ InputWidgets::ComboBox::ComboBox(const QJsonObject& json, QWidget* parent) : Inp
   QJsonArray itemsAsJson = json[Detail::Options].toArray();
   QStringList itemsAsStringList;
 
-  for (const QJsonValue& object : itemsAsJson) {
+  for (auto&& object : itemsAsJson) {
     itemsAsStringList += object.toVariant().toString();
   }
 
