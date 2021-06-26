@@ -1,7 +1,12 @@
 #include "GameVisualizer.h"
+#include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-GameVisualizer::GameVisualizer(const QSizeF& defaultSize, QWidget* parent, Qt::WindowFlags f) :
-    QOpenGLWidget(parent, f) {
+GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
+                               QWidgetWith<WidgetSettings, MenuBarOptions> parent,
+                               Qt::WindowFlags f) :
+    QOpenGLWidget(parent, f),
+    WidgetSettings(this, parent),
+    MenuBarOptions(parent) {
   setFormat(this);
   setDefaultSize(defaultSize);
 
@@ -240,4 +245,28 @@ void GameVisualizer::getUpdates() {
       object.visibility->clear();
     }
   });
+}
+
+void GameVisualizer::putWidgetActions(MainWindowMenuBar& menubar) {
+  /* open config */ {
+    auto* changeBackgroundColor = new QAction("Background Color...", &menubar["Visualization"]);
+    QObject::connect(changeBackgroundColor, &QAction::triggered, this, [this]() {
+      QColor color = QColorDialog::getColor(Color::Green, this, "Background Color:");
+      if (color.isValid()) {
+        setBackgroundColor(color);
+      }
+    });
+    menubar["Visualization"].addAction(changeBackgroundColor);
+  }
+}
+
+void GameVisualizer::writeLocalSettings(QSettings& settings) {
+  settings.setValue("backgroundColor", local.backgroundColor);
+}
+
+void GameVisualizer::loadLocalSettings(const QSettings& settings) {
+  if (settings.contains("backgroundColor")) {
+    auto backgroundColor = settings.value("backgroundColor").value<QColor>();
+    setBackgroundColor(backgroundColor);
+  }
 }

@@ -8,14 +8,24 @@
 #include "GameVisualizerPainter2D/GameVisualizerPainter2D.h"
 #include "soccer-common/MagicEnum/MagicEnum.h"
 
-class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
+#include "soccer-common/Gui/Interfaces/MenuBarOptions/MenuBarOptions.h"
+#include "soccer-common/Gui/Interfaces/WidgetSettings/WidgetSettings.h"
+
+class GameVisualizer : public QOpenGLWidget,
+                       protected GameVisualizerPainter2D,
+                       public WidgetSettings,
+                       public MenuBarOptions {
   Q_OBJECT
+ protected:
+  void putWidgetActions(MainWindowMenuBar& menubar) override;
+  void writeLocalSettings(QSettings& settings) override;
+  void loadLocalSettings(const QSettings& settings) override;
 
   class PaintingPointer;
 
  public:
   explicit GameVisualizer(const QSizeF& defaultSize,
-                          QWidget* parent = nullptr,
+                          QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr,
                           Qt::WindowFlags f = Qt::WindowFlags());
 
   ~GameVisualizer() override = default;
@@ -62,7 +72,8 @@ class GameVisualizer : public QOpenGLWidget, protected GameVisualizerPainter2D {
     GameVisualizer* widget;
 
     bool canUpdate() {
-      if (widget->shared->stopwatch.ref().elapsed() < widget->local.maxFrameRate) {
+      if (static_cast<double>(widget->shared->stopwatch.ref().elapsed()) <
+          widget->local.maxFrameRate) {
         return false;
       }
       widget->shared->stopwatch.ref().start();
