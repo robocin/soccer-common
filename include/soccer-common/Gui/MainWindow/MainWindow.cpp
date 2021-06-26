@@ -47,6 +47,12 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
   }
+  /* Mouse position on status bar */ {
+    connect(gameVisualizer(), &GameVisualizer::relativeMousePos, this, [this](const QPointF& pos) {
+      statusBar()->showMessage(
+          QString("Cursor: [X = %1, Y = %2]").arg(pos.x(), 5, 'f', 2).arg(pos.y(), 5, 'f', 2));
+    });
+  }
 }
 
 MainWindow::~MainWindow() {
@@ -238,6 +244,11 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
       isFullScreen() ? showNormal() : showFullScreen();
     });
     menubar["View"].addAction(fullscreen);
+    menubar["View"].addSeparator();
+  }
+
+  /* status bar */ {
+    menubar["View"].addAction(Factory::toggleViewAction("Status Bar", statusBar()));
     menubar["View"].addSeparator();
   }
 
