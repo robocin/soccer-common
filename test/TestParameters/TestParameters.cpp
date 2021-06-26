@@ -148,7 +148,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   /* testing double */ {
     Arg<double> real = std::acos(-1.0);
     auto text = Text(real, Regex::AnyMatch, description);
-    QCOMPARE(text.value(), QString::number(std::acos(-1.0), 'f', 10));
+    QCOMPARE(text.value(), QString::number(std::acos(-1.0), 'f', 15));
     QCOMPARE(text.type(), Utils::nameOfType<double>());
     QCOMPARE(text.inputType(), InputType::Text);
     QCOMPARE(text.description(), description);
