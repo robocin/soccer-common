@@ -49,13 +49,13 @@ namespace Geometry {
   }
 
   /*!
-   * @tparam T non floating point type.
+   * @tparam T integral point type.
    * @param radians the value in radians.
    * @return This function converts the radians in T to degrees and returns in double.
    */
   template <class T>
-  constexpr std::enable_if_t<!std::is_floating_point_v<T>, T> radiansToDegrees(T radians) {
-    return radiansToDegrees<double>(radians);
+  constexpr std::enable_if_t<std::is_integral_v<T>, double> radiansToDegrees(T radians) {
+    return radiansToDegrees(static_cast<double>(radians));
   }
 
   /*!
@@ -69,13 +69,13 @@ namespace Geometry {
   }
 
   /*!
-   * @tparam T non floating point type.
+   * @tparam T integral point type.
    * @param degrees the value in degrees.
    * @return This function converts the degrees in T to radians and returns in double.
    */
   template <class T>
-  constexpr std::enable_if_t<!std::is_floating_point_v<T>, T> degreesToRadians(T degrees) {
-    return degreesToRadians<double>(degrees);
+  constexpr std::enable_if_t<std::is_integral_v<T>, double> degreesToRadians(T degrees) {
+    return degreesToRadians(static_cast<double>(degrees));
   }
 } // namespace Geometry
 
