@@ -211,8 +211,8 @@ class GameVisualizer::Key : public QObject {
                            m_layer);
   }
 
-  inline void setVisibility(bool visibility) {
-    emit onVisibilityChanged(m_key, visibility);
+  inline void setVisibility(bool isVisible) {
+    emit onVisibilityChanged(m_key, isVisible);
   }
 
   inline ~Key() override {
