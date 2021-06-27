@@ -12,8 +12,11 @@
 template <>
 class Extends<QPoint> : public QPoint {
  public:
-  template <class... Args>
-  constexpr Extends(Args&&... args) : QPoint(std::forward<Args>(args)...) {
+  constexpr Extends() noexcept : QPoint() {
+  }
+  constexpr Extends(const QPoint& p) noexcept : QPoint(p) {
+  }
+  constexpr Extends(int xpos, int ypos) noexcept : QPoint(xpos, ypos) {
   }
 
   constexpr bool operator<(const Extends<QPoint>& other) const {
@@ -109,8 +112,13 @@ class Extends<QPoint> : public QPoint {
 template <>
 class Extends<QPointF> : public QPointF {
  public:
-  template <class... Args>
-  constexpr Extends(Args&&... args) : QPointF(std::forward<Args>(args)...) {
+  constexpr Extends() noexcept : QPointF() {
+  }
+  constexpr Extends(const QPoint& p) noexcept : QPointF(p) {
+  }
+  constexpr Extends(const QPointF& p) noexcept : QPointF(p) {
+  }
+  constexpr Extends(qreal xpos, qreal ypos) noexcept : QPointF(xpos, ypos) {
   }
 
   constexpr bool operator<(const Extends<QPointF>& other) const {
