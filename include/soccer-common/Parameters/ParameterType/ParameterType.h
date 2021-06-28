@@ -110,8 +110,9 @@ namespace Parameters {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (auto var = QVariant(str); var.canConvert<bool>()) {
-          return std::make_optional<T>(var.toBool());
+        static const QStringList options = {"0", "1", "false", "true"};
+        if (options.contains(str, Qt::CaseInsensitive)) {
+          return std::make_optional<T>(str == "1" || str.toLower() == "true");
         } else {
           return std::nullopt;
         }
