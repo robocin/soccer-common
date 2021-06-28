@@ -39,14 +39,14 @@ void TestParameters::test_ParameterType_eval_WithInvalidParameters_ShouldReturnN
   }
 
   /* boolean */ {
-    QCOMPARE(ParameterType<bool>::eval("zero"), true);
-    QCOMPARE(ParameterType<bool>::eval("one"), true);
+    QCOMPARE(ParameterType<bool>::eval("zero"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("one"), std::nullopt);
 
-    QCOMPARE(ParameterType<bool>::eval("-0"), true);
-    QCOMPARE(ParameterType<bool>::eval("-1"), true);
+    QCOMPARE(ParameterType<bool>::eval("-0"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("-1"), std::nullopt);
 
-    QCOMPARE(ParameterType<bool>::eval("FALSE"), false);
-    QCOMPARE(ParameterType<bool>::eval("TRUE"), true);
+    QCOMPARE(ParameterType<bool>::eval("FALSE1"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("TRUE2"), std::nullopt);
   }
 
   /* arithmetic types */ {
@@ -175,7 +175,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
 
     QCOMPARE(text.update("true"), true);
     QCOMPARE(boolean, true);
-    QCOMPARE(text.update("VALOR_FALSO"), true);
+    QCOMPARE(text.update("VALOR_FALSO"), false);
     QCOMPARE(boolean, true);
   }
 }
@@ -500,7 +500,7 @@ void TestParameters::test_CheckBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(checkBox.isChooseable(), true);
     QCOMPARE(checkBox.update("true"), true);
     QCOMPARE(boolean, true);
-    QCOMPARE(checkBox.update("ANY_VALUE"), true);
+    QCOMPARE(checkBox.update("ANY_VALUE"), false);
     QCOMPARE(boolean, true);
   }
 }
