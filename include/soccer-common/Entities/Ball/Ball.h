@@ -4,37 +4,64 @@
 #include "soccer-common/Entities/Entity/Entity.h"
 
 namespace Common {
-  class RawBall : virtual public RawEntity {
+  template <class PT>
+  class RawBall : virtual public RawEntity<PT> {
    protected:
    public:
-    explicit RawBall(const RawEntity& rawEntity);
-    explicit RawBall(const QPointF& position);
+    constexpr explicit RawBall(const RawEntity<PT>& rawEntity) : RawEntity<PT>(rawEntity) {
+    }
 
-    using RawEntity::position;
-    using RawEntity::operator const QPointF&;
+    constexpr explicit RawBall(const PT& position) : RawBall(RawEntity(position)) {
+    }
 
-    bool operator<(const RawBall& other) const;
-    bool operator==(const RawBall& other) const;
-    bool operator!=(const RawBall& other) const;
+    using RawEntity<PT>::position;
+    using RawEntity<PT>::operator const PT&;
+
+    constexpr bool operator<(const RawBall& other) const {
+      return static_cast<const RawEntity<PT>&>(*this) < static_cast<const RawEntity<PT>&>(other);
+    }
+    constexpr bool operator==(const RawBall& other) const {
+      return static_cast<const RawEntity<PT>&>(*this) == static_cast<const RawEntity<PT>&>(other);
+    }
+    constexpr bool operator!=(const RawBall& other) const {
+      return !(other == *this);
+    }
   };
 
-  // ------------------------------------------------------------------------ //
+  // -------------------------------------------------------------------------------------------- //
 
-  class Ball : public Entity, public RawBall {
+  template <class PT>
+  class Ball : public Entity<PT>, public RawBall<PT> {
    protected:
    public:
-    explicit Ball(const Entity& entity);
-    Ball(const QPointF& position, const QPointF& velocity, const QPointF& acceleration);
-    Ball(const RawBall& rawBall, const QPointF& velocity, const QPointF& acceleration);
+    constexpr explicit Ball(const Entity<PT>& entity) :
+        RawEntity<PT>(entity.position()),
+        Entity<PT>(entity),
+        RawBall<PT>(entity.position()) {
+    }
 
-    using Entity::position;
-    using Entity::operator const QPointF&;
-    using Entity::velocity;
-    using Entity::acceleration;
+    constexpr Ball(const RawBall<PT>& rawBall, const PT& velocity, const PT& acceleration) :
+        Ball(Entity(rawBall.position(), velocity, acceleration)) {
+    }
 
-    bool operator<(const Ball& other) const;
-    bool operator==(const Ball& other) const;
-    bool operator!=(const Ball& other) const;
+    constexpr Ball(const PT& position, const PT& velocity, const PT& acceleration) :
+        Ball(Entity(position, velocity, acceleration)) {
+    }
+
+    using Entity<PT>::position;
+    using Entity<PT>::operator const PT&;
+    using Entity<PT>::velocity;
+    using Entity<PT>::acceleration;
+
+    constexpr bool operator<(const Ball& other) const {
+      return static_cast<const Entity<PT>&>(*this) < static_cast<const Entity<PT>&>(other);
+    }
+    constexpr bool operator==(const Ball& other) const {
+      return static_cast<const Entity<PT>&>(*this) == static_cast<const Entity<PT>&>(other);
+    }
+    constexpr bool operator!=(const Ball& other) const {
+      return !(other == *this);
+    }
   };
 } // namespace Common
 

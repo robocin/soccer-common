@@ -4,47 +4,93 @@
 #include "soccer-common/Entities/Entity/Entity.h"
 
 namespace Common {
-  class RawRobot : virtual public RawEntity {
+  template <class PT>
+  class RawRobot : virtual public RawEntity<PT> {
    protected:
-    int m_id;
-    qreal m_angle;
+    using RawEntity<PT>::m_position;
+    int m_id{};
+    float m_angle{};
 
    public:
-    RawRobot(int id, qreal angle, const RawEntity& rawEntity);
-    RawRobot(int id, qreal angle, const QPointF& position);
+    constexpr RawRobot(int id, float angle, const RawEntity<PT>& rawEntity) :
+        RawEntity<PT>(rawEntity),
+        m_id(id),
+        m_angle(angle) {
+    }
+    constexpr RawRobot(int id, float angle, const PT& position) :
+        RawRobot(id, angle, RawEntity(position)) {
+    }
 
-    using RawEntity::position;
-    using RawEntity::operator const QPointF&;
+    using RawEntity<PT>::position;
+    using RawEntity<PT>::operator const PT&;
 
-    int id() const;
-    qreal angle() const;
+    [[nodiscard]] constexpr int id() const {
+      return m_id;
+    }
 
-    bool operator<(const RawRobot& other) const;
-    bool operator==(const RawRobot& other) const;
-    bool operator!=(const RawRobot& other) const;
+    [[nodiscard]] constexpr float angle() const {
+      return m_angle;
+    }
+
+    constexpr bool operator<(const RawRobot& other) const {
+      return std::tie(m_id, m_angle, static_cast<const RawEntity<PT>&>(*this)) <
+             std::tie(other.m_id, other.m_angle, static_cast<const RawEntity<PT>&>(other));
+    }
+    constexpr bool operator==(const RawRobot& other) const {
+      return std::tie(m_id, m_angle, static_cast<const RawEntity<PT>&>(*this)) ==
+             std::tie(other.m_id, other.m_angle, static_cast<const RawEntity<PT>&>(other));
+    }
+    constexpr bool operator!=(const RawRobot& other) const {
+      return !(other == *this);
+    }
   };
 
-  class Robot : public Entity, public RawRobot {
+  // -------------------------------------------------------------------------------------------- //
+
+  template <class PT>
+  class Robot : public Entity<PT>, public RawRobot<PT> {
    protected:
+    using RawRobot<PT>::m_id;
+    using RawRobot<PT>::m_angle;
+
    public:
-    Robot(int id, qreal angle, const Entity& entity);
-    Robot(const RawRobot& rawRobot, const QPointF& velocity, const QPointF& acceleration);
-    Robot(int id,
-          qreal angle,
-          const QPointF& position,
-          const QPointF& velocity,
-          const QPointF& acceleration);
+    constexpr Robot(int id, float angle, const Entity<PT>& entity) :
+        RawEntity<PT>(entity.position()),
+        Entity<PT>(entity),
+        RawRobot<PT>(id, angle, entity.position()) {
+    }
+    constexpr Robot(const RawRobot<PT>& rawRobot, const PT& velocity, const PT& acceleration) :
+        Robot(rawRobot.id(),
+              rawRobot.angle(),
+              Entity(rawRobot.position(), velocity, acceleration)) {
+    }
+    constexpr Robot(int id,
+                    float angle,
+                    const PT& position,
+                    const PT& velocity,
+                    const PT& acceleration) :
+        Robot(id, angle, Entity(position, velocity, acceleration)) {
+    }
 
-    using RawRobot::id;
-    using RawRobot::angle;
-    using Entity::position;
-    using Entity::operator const QPointF&;
-    using Entity::velocity;
-    using Entity::acceleration;
+    using RawRobot<PT>::id;
+    using RawRobot<PT>::angle;
 
-    bool operator<(const Robot& other) const;
-    bool operator==(const Robot& other) const;
-    bool operator!=(const Robot& other) const;
+    using Entity<PT>::position;
+    using Entity<PT>::operator const PT&;
+    using Entity<PT>::velocity;
+    using Entity<PT>::acceleration;
+
+    constexpr bool operator<(const Robot& other) const {
+      return std::tie(m_id, m_angle, static_cast<const Entity<PT>&>(*this)) <
+             std::tie(other.m_id, other.m_angle, static_cast<const Entity<PT>&>(other));
+    }
+    constexpr bool operator==(const Robot& other) const {
+      return std::tie(m_id, m_angle, static_cast<const Entity<PT>&>(*this)) ==
+             std::tie(other.m_id, other.m_angle, static_cast<const Entity<PT>&>(other));
+    }
+    constexpr bool operator!=(const Robot& other) const {
+      return !(other == *this);
+    }
   };
 } // namespace Common
 
