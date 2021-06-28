@@ -1,24 +1,36 @@
 #ifndef SOCCER_COMMON_FIELD_H
 #define SOCCER_COMMON_FIELD_H
 
-#include <QtCore>
-
 namespace Common {
+  template <class T>
   class Field {
    private:
-    qreal m_length;
-    qreal m_width;
+    T m_length;
+    T m_width;
 
-    qreal m_goalWidth;
-    qreal m_goalDepth;
+    T m_goalWidth;
+    T m_goalDepth;
 
    public:
-    Field(qreal length, qreal width, qreal goalWidth, qreal goalDepth);
+    constexpr Field(const T& length, const T& width, const T& goalWidth, const T& goalDepth) :
+        m_length(length),
+        m_width(width),
+        m_goalWidth(goalWidth),
+        m_goalDepth(goalDepth) {
+    }
 
-    qreal length() const;
-    qreal width() const;
-    qreal goalWidth() const;
-    qreal goalDepth() const;
+    constexpr T length() const {
+      return m_length;
+    }
+    constexpr T width() const {
+      return m_width;
+    }
+    constexpr T goalWidth() const {
+      return m_goalWidth;
+    }
+    constexpr T goalDepth() const {
+      return m_goalDepth;
+    }
   };
 } // namespace Common
 
