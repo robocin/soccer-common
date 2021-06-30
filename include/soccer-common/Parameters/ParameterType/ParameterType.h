@@ -201,7 +201,11 @@ namespace Parameters {
     bool isChooseable() const override final {
       return false;
     }
-
+    /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (regex.match(str).hasMatch()) {
@@ -235,20 +239,33 @@ namespace Parameters {
       minValue = static_cast<T>(t_minValue);
       maxValue = static_cast<T>(t_maxValue);
     }
-
+    /*!
+    * @return Returns the input Type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::SpinBox;
     }
-
+    /*!
+    * @return Returns the min value and the max value.
+    * 
+    */
     QString payload() const override final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return false;
     }
-
+    /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
@@ -288,11 +305,17 @@ namespace Parameters {
       maxValue = static_cast<T>(t_maxValue);
       precision = t_precision;
     }
-
+    /*!
+    * @return Returns the value and the precision.
+    * 
+    */
     QString value() const override final {
       return QString::number(ref.value(), 'f', precision);
     }
-
+    /*!
+    * @return Returns the input type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::DoubleSpinBox;
     }
@@ -303,11 +326,18 @@ namespace Parameters {
              QString::number(maxValue, 'f', precision) + ", " + Utils::quoted(Detail::Precision) +
              ": " + QString::number(precision);
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return false;
     }
-
+    /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
@@ -341,7 +371,10 @@ namespace Parameters {
       minValue = static_cast<T>(t_minValue);
       maxValue = static_cast<T>(t_maxValue);
     }
-
+    /*!
+    * @return Returns the input type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::Slider;
     }
@@ -350,11 +383,18 @@ namespace Parameters {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return false;
     }
-
+    /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
@@ -375,7 +415,10 @@ namespace Parameters {
     explicit CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
         ParameterType<bool>(t_ref, t_about) {
     }
-
+    /*!
+    * @return Returns the input type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::CheckBox;
     }
@@ -383,11 +426,18 @@ namespace Parameters {
     QString payload() const override final {
       return "";
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return true;
     }
-
+  /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         setValue(*op);
@@ -412,11 +462,17 @@ namespace Parameters {
         throw std::runtime_error("the size of set must be greater than 1, and must contain ref.");
       }
     }
-
+    /*!
+    * @return Returns the name of type.
+    * 
+    */
     QString type() const override final {
       return Utils::nameOfType<T>();
     }
-
+    /*!
+    * @return Returns the input type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::ComboBox;
     }
@@ -442,11 +498,18 @@ namespace Parameters {
       options = "[" + options + "]";
       return Utils::quoted(Detail::Options) + ": " + options;
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return true;
     }
-
+    /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
         if (set.find(*op) != set.end()) {
@@ -480,7 +543,10 @@ namespace Parameters {
         throw std::runtime_error("the size of map must be greater than 1, and must contain ref.");
       }
     }
-
+  /*!
+   * @return Return the value if find it, else has a Runtime Error.
+   * 
+   */
     QString value() const override {
       auto it = bimap.left.find(ParameterType<T>::ref.value());
       if (it == bimap.left.end()) {
@@ -489,15 +555,23 @@ namespace Parameters {
         return Utils::quoted(it->second);
       }
     }
-
+    /*!
+    * @return Returns the input type.
+    * 
+    */
     QString inputType() const override final {
       return InputType::ComboBox;
     }
-
+   /*!
+    * @return Returns "mapped" with the variable type.
+    * 
+    */
     QString type() const override final {
       return "mapped(" + Utils::nameOfType<T>() + ")";
     }
-
+   /*!
+    * @param options 
+    */
     QString payload() const override final {
       QString options;
       QTextStream stream(&options);
@@ -513,11 +587,18 @@ namespace Parameters {
       options = "[" + options + "]";
       return Utils::quoted(Detail::Options) + ": " + options;
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    * 
+    */
     bool isChooseable() const override final {
       return true;
     }
-
+   /*!
+    * @tparam str Qstring type.
+    * @return Return true if find the str and updated this, else return false.
+    * 
+    */
     bool update(const QString& str) override final {
       if (auto it = bimap.right.find(str); it != bimap.right.end()) {
         setValue(bimap.right.find(str)->get_left());
