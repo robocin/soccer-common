@@ -189,7 +189,9 @@ namespace Parameters {
         throw std::runtime_error("Text regex doesn't match.");
       }
     }
-
+    /*!
+    * @return Returns the input type.
+    */
     QString inputType() const override final {
       return InputType::Text;
     }
@@ -197,7 +199,9 @@ namespace Parameters {
     QString payload() const override final {
       return Utils::quoted(Detail::Regex) + ": " + Utils::quoted(regex.pattern());
     }
-
+    /*!
+    * @return Returns if is Chooseable.
+    */
     bool isChooseable() const override final {
       return false;
     }
@@ -319,7 +323,9 @@ namespace Parameters {
     QString inputType() const override final {
       return InputType::DoubleSpinBox;
     }
-
+    /*!
+    * @return Returns the min value with the precision and the max value with the precision
+    */
     QString payload() const override final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue, 'f', precision) +
              ", " + Utils::quoted(Detail::MaxValue) + ": " +
@@ -378,7 +384,9 @@ namespace Parameters {
     QString inputType() const override final {
       return InputType::Slider;
     }
-
+    /*!
+    * @return Returns the min value and the max value.
+    */
     QString payload() const override final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
