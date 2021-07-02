@@ -5,10 +5,10 @@
 #include <QVector2D>
 #include <QPolygon>
 #include <QLine>
-#include <QtGlobal>
-#include <cmath>
 #include <cassert>
 #include <type_traits>
+
+#include "soccer-common/Math/Math.h"
 
 #ifndef M_PI
   #define M_PI 3.14159265358979323846
@@ -19,24 +19,6 @@ class Extends;
 
 namespace Geometry {
   static constexpr qreal PI = M_PI;
-
-  namespace Detail {
-    /*!
-     * @tparam T arithmetic type.
-     * @return Returns true if T is float and the absolute value of f is within 0.00001f of 0.0.
-     * @return Returns true if T is double and the absolute value of d is within 0.000000000001 of
-     * 0.0.
-     * @return Returns true if T is an integer type and equals to 0.
-     */
-    template <class T>
-    inline constexpr bool isNull(const T& value) noexcept {
-      if constexpr (std::is_floating_point_v<T>) {
-        return qFuzzyIsNull(value);
-      } else {
-        return value == 0;
-      }
-    }
-  } // namespace Detail
 
   /*!
    * @tparam T floating point type.
@@ -76,6 +58,22 @@ namespace Geometry {
   template <class T>
   constexpr std::enable_if_t<std::is_integral_v<T>, double> degreesToRadians(T degrees) {
     return degreesToRadians(static_cast<double>(degrees));
+  }
+
+  /*!
+   * @param lhs, rhs floating point values in radians.
+   * @return Returns the signed smallest angle difference in radians.
+   */
+  template <class T>
+  constexpr std::enable_if_t<std::is_floating_point_v<T>, T> smallestAngleDiff(const T& lhs,
+                                                                               const T& rhs) {
+    T angle = Math::modularize<T>(rhs - lhs, static_cast<T>(2) * PI);
+    if (angle >= PI) {
+      return angle - static_cast<T>(2) * PI;
+    } else if (angle < -PI) {
+      return angle + static_cast<T>(2) * PI;
+    }
+    return angle;
   }
 } // namespace Geometry
 
@@ -295,13 +293,24 @@ namespace Geometry2D {
    * @return Returns a copy of p resized to 1.
    */
   template <class PT>
-  constexpr PT normalize(const PT& p) {
+  constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT> normalize(const PT& p) {
     return resize<PT>(p, static_cast<CoordType<PT>>(1));
   }
 
   /*!
+   * @tparam PT Requires '.x()' and '.y()' members (they must be integral).
+   * @tparam T type of the value to normalize.
+   * @param p, t the vector and the value to normalize.
+   * @return Returns a copy of p integer normalized.
+   */
+  template <class PT>
+  constexpr std::enable_if_t<std::is_integral_v<CoordType<PT>>, PT> normalize(const PT& p) {
+    return p / std::gcd(std::abs(p.x()), std::abs(p.y()));
+  }
+
+  /*!
    * @param a, c, d positive sides of any triangle.
-   * @return Return if the sides can form a valid triangle.
+   * @return Returns if the sides can form a valid triangle.
    */
   template <class T>
   constexpr bool isTriangle(T a, T b, T c) {
@@ -365,7 +374,7 @@ namespace Geometry2D {
   std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT>
   centroid(const QVector<PT>& polygon) {
     PT ret(0, 0);
-    const auto& scale = 6.0 * signedArea<PT>(polygon);
+    const auto& scale = static_cast<CoordType<PT>>(6) * signedArea<PT>(polygon);
 
     for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
       ret += (polygon[h] + polygon[i]) * cross<PT>(polygon[h], polygon[i]);
@@ -403,7 +412,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param a, b, c line through (a, b) and point c.
-   * @return return the distance between the point c and his projection onto line defined by a and
+   * @return Returns the distance between the point c and his projection onto line defined by a and
    * b.
    * @note assuming a != b.
    */
@@ -415,7 +424,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param line, c line and point c.
-   * @return return the distance between the point c and his projection onto line.
+   * @return Returns the distance between the point c and his projection onto line.
    * @note assuming line.p1() != line.p2().
    */
   template <class PT>
@@ -458,7 +467,7 @@ namespace Geometry2D {
       throw std::runtime_error("'a' and 'b' doesn't define a line.");
     }
     CoordType<PT> r = dot<PT>(b - a, b - a);
-    if (Detail::isNull(r)) {
+    if (Math::isNull(r)) {
       return a;
     }
     r = dot<PT>(c - a, b - a) / r;
@@ -485,7 +494,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param a, b, c line through (a, b) and point c.
-   * @return return the distance between the point c and his projection onto segment defined by a
+   * @return Returns the distance between the point c and his projection onto segment defined by a
    * and b.
    * @note assuming a != b.
    */
@@ -497,7 +506,7 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param line, c line and point c.
-   * @return return the distance between the point c and his projection onto segment.
+   * @return Returns the distance between the point c and his projection onto segment.
    * @note assuming line.p1() != line.p2().
    */
   template <class PT>
@@ -512,7 +521,7 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr bool linesParallel(const PT& a, const PT& b, const PT& c, const PT& d) {
-    return Detail::isNull(cross<PT>(b - a, c - d));
+    return Math::isNull(cross<PT>(b - a, c - d));
   }
 
   /*!
@@ -534,10 +543,10 @@ namespace Geometry2D {
     if (!linesParallel<PT>(a, b, c, d)) {
       return false;
     }
-    if (!Detail::isNull(cross<PT>(a - b, a - c))) {
+    if (!Math::isNull(cross<PT>(a - b, a - c))) {
       return false;
     }
-    if (!Detail::isNull(cross<PT>(c - d, c - a))) {
+    if (!Math::isNull(cross<PT>(c - d, c - a))) {
       return false;
     }
     return true;
@@ -560,8 +569,8 @@ namespace Geometry2D {
   template <class PT>
   constexpr bool segmentsIntersect(const PT& a, const PT& b, const PT& c, const PT& d) {
     if (linesCollinear<PT>(a, b, c, d)) {
-      if (Detail::isNull(distanceSquared<PT>(a, c)) || Detail::isNull(distanceSquared<PT>(a, d)) ||
-          Detail::isNull(distanceSquared<PT>(b, c)) || Detail::isNull(distanceSquared<PT>(b, d))) {
+      if (Math::isNull(distanceSquared<PT>(a, c)) || Math::isNull(distanceSquared<PT>(a, d)) ||
+          Math::isNull(distanceSquared<PT>(b, c)) || Math::isNull(distanceSquared<PT>(b, d))) {
         return true;
       }
       if (dot<PT>(c - a, c - b) > 0 && dot<PT>(d - a, d - b) > 0 && dot<PT>(c - b, d - b) > 0) {
@@ -589,13 +598,120 @@ namespace Geometry2D {
 
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
+   * @param a, b, c, d lines (a, b) and (c, d).
+   * @return Returns the intersection point between the two lines (if exists).
+   * @note implementation is based on Graphics Gems III's "Faster Line Segment Intersection"
+   */
+  template <class PT>
+  constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, std::optional<PT>>
+  linesIntersection(const PT& a, const PT& b, const PT& c, const PT& d) {
+    const PT ba = b - a;
+    const PT cd = c - d;
+    const PT ac = a - c;
+    const CoordType<PT> denominator = cross<PT>(cd, ba);
+    if (Math::isNull(denominator)) {
+      return std::nullopt;
+    }
+    const CoordType<PT> reciprocal = static_cast<CoordType<PT>>(1) / denominator;
+    const CoordType<PT> na = cross<PT>(ac, cd) * reciprocal;
+    return a + ba * na;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param lhs, rhs lines.
+   * @return Returns the intersection point between the two lines (if exists).
+   * @note implementation is based on Graphics Gems III's "Faster Line Segment Intersection"
+   */
+  constexpr auto linesIntersection(const QLineF& lhs, const QLineF& rhs) {
+    return linesIntersection<QPointF>(lhs.p1(), lhs.p2(), rhs.p1(), rhs.p2());
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param a, b, c, d lines (a, b) and (c, d).
+   * @return Returns the intersection point between the two segments (if exists).
+   * @note implementation is based on Graphics Gems III's "Faster Line Segment Intersection"
+   */
+  template <class PT>
+  constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, std::optional<PT>>
+  segmentsIntersection(const PT& a, const PT& b, const PT& c, const PT& d) {
+    const PT ba = b - a;
+    const PT cd = c - d;
+    const PT ac = a - c;
+    const CoordType<PT> denominator = cross<PT>(cd, ba);
+    if (Math::isNull(denominator)) {
+      return std::nullopt;
+    }
+    const CoordType<PT> reciprocal = static_cast<CoordType<PT>>(1) / denominator;
+    const CoordType<PT> na = cross<PT>(ac, cd) * reciprocal;
+    if (!(0 <= na && na <= 1)) {
+      return std::nullopt;
+    }
+    const CoordType<PT> nb = cross<PT>(ba, ac) * reciprocal;
+    if (!(0 <= nb && nb <= 1)) {
+      return std::nullopt;
+    }
+    return a + ba * na;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param lhs, rhs lines.
+   * @return Returns the intersection point between the two segments (if exists).
+   * @note implementation is based on Graphics Gems III's "Faster Line Segment Intersection"
+   */
+  constexpr auto segmentsIntersection(const QLineF& lhs, const QLineF& rhs) {
+    return segmentsIntersection<QPointF>(lhs.p1(), lhs.p2(), rhs.p1(), rhs.p2());
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param polygon the given polygon.
+   * @param unsorted determines if it's necessary to sort with respect to x-coordinates (with
+   * respect to y-coordinates in case of a tie in x-coordinates).
+   * @return Returns the convex hull of the given points using the Andrew's Monotone Chain
+   * Algorithm.
+   */
+  template <class PT>
+  QVector<PT> convexHull(QVector<PT> polygon, bool unsorted = true) {
+    if (unsorted) {
+      std::sort(polygon.begin(), polygon.end(), [](const PT& lhs, const PT& rhs) {
+        return std::pair(lhs.x(), lhs.y()) < std::pair(rhs.x(), rhs.y());
+      });
+    }
+    polygon.resize(std::unique(polygon.begin(), polygon.end()) - polygon.begin());
+    if (polygon.size() <= 1) {
+      return polygon;
+    }
+    QVector<PT> ans(polygon.size() + polygon.size() + 1);
+    int s = 0;
+    int n = static_cast<int>(polygon.size());
+    for (int i = 0; i < n; ++i) {
+      while (s > 1 && cross<PT>(polygon[i] - ans[s - 2], ans[s - 1] - ans[s - 2]) >= 0) {
+        --s;
+      }
+      ans[s++] = polygon[i];
+    }
+    for (int i = n - 2, t = s + 1; i >= 0; --i) {
+      while (s >= t && cross<PT>(polygon[i] - ans[s - 2], ans[s - 1] - ans[s - 2]) >= 0) {
+        --s;
+      }
+      ans[s++] = polygon[i];
+    }
+    ans.resize(s - 1);
+    return ans;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
    * @return Determines if point is in a possibly non-convex polygon (by William Randolph Franklin);
    * returns 1 for strictly interior points, 0 for strictly exterior points, and 0 or 1 for the
    * remaining points.
    * @note It's possible to convert this into an *exact* test using integer arithmetic by taking
    * care of the division appropriately (making sure to deal with signs properly) and then by
    * writing exact tests for checking point on polygon boundary.
-   * @note Be careful: Because of this, this function allows integer types.
+   * @note Be careful: Because of this, this function allows integer point types.
    */
   template <class PT>
   bool pointInPolygon(const QVector<PT>& polygon, const PT& p) {
@@ -621,7 +737,7 @@ namespace Geometry2D {
   bool pointOnPolygon(const QVector<PT>& polygon, const PT& p) {
     for (int i = 0; i < polygon.size(); ++i) {
       if (PT proj = projectPointSegment<PT>(polygon[i], polygon[(i + 1) % polygon.size()], p);
-          Detail::isNull(distanceSquared<PT>(proj, p))) {
+          Math::isNull(distanceSquared<PT>(proj, p))) {
         return true;
       }
     }
