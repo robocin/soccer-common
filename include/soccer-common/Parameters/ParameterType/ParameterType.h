@@ -65,6 +65,9 @@ namespace Parameters {
    public:
     using type = T;
 
+    // disable_empty_constructor:
+    Arg() = delete;
+
     template <class... Us>
     Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
     }
