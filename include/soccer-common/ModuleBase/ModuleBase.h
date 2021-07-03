@@ -24,6 +24,11 @@ class ModuleBase : public ModulePrivate {
   void onReceiveUpdateRequests();
   void sendParameters(const QJsonObject& parameters);
 
+  /* interface */ signals:
+  void setInterfaceScoreboard(int first, int second);
+  void setInterfaceTeamColor(const QColor& firstColor, const QColor& secondColor);
+  void setInterfaceAttackSide(bool isRight);
+
  public slots:
   void receiveUpdateRequests(const Parameters::UpdateRequests& updates);
 
