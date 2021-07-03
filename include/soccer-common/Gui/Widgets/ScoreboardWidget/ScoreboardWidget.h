@@ -11,24 +11,20 @@ namespace Ui {
   class ScoreboardWidget;
 }
 
-class ScoreboardWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
+class ScoreboardWidget : public QWidget, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit ScoreboardWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit ScoreboardWidget(QWidgetWith<MenuBarOptions> parent = nullptr);
   ~ScoreboardWidget() override;
 
  public slots:
-  void setFirstTeamColor(const QColor& color);
-  void setSecondTeamColor(const QColor& color);
+  void setColor(const QColor& firstColor, const QColor& secondColor);
   void setScore(int first, int second);
 
  private:
   Ui::ScoreboardWidget* ui;
   QAction* viewAction;
-
-  void writeLocalSettings(QSettings& settings) override;
-  void loadLocalSettings(const QSettings& settings) override;
 
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
