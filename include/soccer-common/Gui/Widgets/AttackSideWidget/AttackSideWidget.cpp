@@ -3,9 +3,8 @@
 
 #include "soccer-common/Gui/MainWindow/MainWindowMenuBar/MainWindowMenuBar.h"
 
-AttackSideWidget::AttackSideWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
+AttackSideWidget::AttackSideWidget(QWidgetWith<MenuBarOptions> parent) :
     QWidget(parent),
-    WidgetSettings(this, parent),
     MenuBarOptions(parent),
     ui(new Ui::AttackSideWidget),
     viewAction(Factory::toggleViewAction(this)) {
@@ -15,7 +14,8 @@ AttackSideWidget::AttackSideWidget(QWidgetWith<WidgetSettings, MenuBarOptions> p
 AttackSideWidget::~AttackSideWidget() {
   delete ui;
 }
-void AttackSideWidget::chooseRightSide(bool isRight) {
+
+void AttackSideWidget::setRightSide(bool isRight) {
   if (isRight) {
     ui->side->setText("Right");
   } else {
@@ -23,18 +23,6 @@ void AttackSideWidget::chooseRightSide(bool isRight) {
   }
 }
 
-void AttackSideWidget::writeLocalSettings(QSettings& settings) {
-  settings.setValue("AttackSideWidget", ui->side->text());
-}
-
-void AttackSideWidget::loadLocalSettings(const QSettings& settings) {
-  QString savedSide = settings.value("AttackSideWidget").value<QString>();
-  if (savedSide == "Left") {
-    chooseRightSide(false);
-  } else {
-    chooseRightSide(true);
-  }
-}
 void AttackSideWidget::putWidgetActions(MainWindowMenuBar& menubar) {
-  menubar["View"]["Informations"].addAction(viewAction);
+  menubar["View"]["Information"].addAction(viewAction);
 }

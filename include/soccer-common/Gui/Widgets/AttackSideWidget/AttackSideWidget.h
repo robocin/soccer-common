@@ -11,21 +11,19 @@ namespace Ui {
   class AttackSideWidget;
 }
 
-class AttackSideWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
+class AttackSideWidget : public QWidget, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit AttackSideWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit AttackSideWidget(QWidgetWith<MenuBarOptions> parent = nullptr);
   ~AttackSideWidget();
+
  public slots:
-  void chooseRightSide(bool choose);
+  void setRightSide(bool isRight);
 
  private:
   Ui::AttackSideWidget* ui;
   QAction* viewAction;
-
-  void writeLocalSettings(QSettings& settings) override;
-  void loadLocalSettings(const QSettings& settings) override;
 
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
