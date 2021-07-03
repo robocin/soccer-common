@@ -104,6 +104,14 @@ class Extends<QPoint> : public QPoint {
 
   using QPoint::manhattanLength;
 
+  constexpr void normalize() {
+    *this = Geometry2D::normalize(*this);
+  }
+
+  constexpr Extends<QPoint> normalized() const {
+    return Geometry2D::normalize(*this);
+  }
+
   bool isInPolygon(const QVector<QPoint>& polygon) const {
     return Geometry2D::pointInPolygon<QPoint>(polygon, *this);
   }
