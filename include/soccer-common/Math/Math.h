@@ -85,6 +85,16 @@ namespace Math {
     return (value - lLower) * (rHigher - rLower) / (lHigher - lLower) + rLower;
   }
 
+  /*!
+   * @tparam T integral type.
+   * @return returns the integer ceil of ceil(numerator, denominator).
+   */
+  template <class T>
+  [[maybe_unused]] constexpr std::enable_if_t<std::is_integral_v<T>, T> ceil(const T& numerator,
+                                                                             const T& denominator) {
+    return static_cast<bool>(numerator) ? (1 + (numerator - 1) / denominator) : 0;
+  }
+
   using std::min;
   using std::max;
   using std::minmax;
@@ -130,17 +140,6 @@ namespace Math {
   using std::lgamma;
 
   using std::ceil;
-
-  /*!
-   * @tparam T integral type.
-   * @return returns the integer ceil of ceil(numerator, denominator).
-   */
-  template <class T>
-  [[maybe_unused]] constexpr std::enable_if_t<std::is_integral_v<T>, T> ceil(const T& numerator,
-                                                                             const T& denominator) {
-    return static_cast<bool>(numerator) ? (1 + (numerator - 1) / denominator) : 0;
-  }
-
   using std::floor;
   using std::trunc;
 
