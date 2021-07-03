@@ -75,6 +75,58 @@ namespace Geometry {
     }
     return angle;
   }
+
+  /*!
+   * @tparam T arithmetic type.
+   * @param value The angle to normalize, in radians or degrees (depending on center and amplitude
+   * values).
+   * @param center The center of the angle interval. <br>
+   *   if center == 0 and amplitude == π, the interval is [-π ; +π]. <br>
+   *   if center == π and amplitude == π, the interval is [0 ; 2*π].
+   * @param amplitude The amplitude of the angle, usually π in radians or 180 in degrees.
+   * @return Normalizes the angle and returns the value between [-amplitude + center, +amplitude +
+   * center].
+   */
+  template <class T>
+  constexpr T normalizeAngle(T value, const T& center, const T& amplitude) {
+    value = Math::modularize<T>(value, static_cast<T>(2) * amplitude);
+    if (value < -amplitude + center) {
+      value += static_cast<T>(2) * amplitude;
+    } else if (value > amplitude + center) {
+      value -= static_cast<T>(2) * amplitude;
+    }
+    return value;
+  }
+
+  /*!
+   * @tparam T floating point type.
+   * @param radians The angle to normalize, in radians.
+   * @return Normalizes the angle and returns the value between [-π, +π].
+   */
+  template <class T>
+  constexpr std::enable_if_t<std::is_floating_point_v<T>, T> normalizeInPI(const T& radians) {
+    return normalizeAngle<T>(radians, 0, static_cast<T>(PI));
+  }
+
+  /*!
+   * @tparam T floating point type.
+   * @param radians The angle to normalize, in radians.
+   * @return Normalizes the angle and returns the value between [-180, +180].
+   */
+  template <class T>
+  constexpr std::enable_if_t<std::is_floating_point_v<T>, T> normalizeIn180(const T& degrees) {
+    return normalizeAngle<T>(degrees, 0, static_cast<T>(180));
+  }
+
+  /*!
+   * @tparam T integer point type.
+   * @param radians The angle to normalize, in radians.
+   * @return Normalizes the angle and returns the value between [-180, +180] in double.
+   */
+  template <class T>
+  constexpr std::enable_if_t<std::is_integral_v<T>, double> normalizeIn180(const T& degrees) {
+    return normalizeAngle<double>(degrees, 0, static_cast<double>(180));
+  }
 } // namespace Geometry
 
 #ifndef GEOMETRY_UNDEF_PI
@@ -84,11 +136,16 @@ using Geometry::PI;
 namespace Geometry2D {
   using namespace Geometry;
 
+  /*!
+   * @brief Return the type of Point coordinates.
+   */
   template <class PT>
   using CoordType =
       std::common_type_t<decltype(std::declval<PT>().x()), decltype(std::declval<PT>().y())>;
 
-  // Extends<QPointF> will be used as standard 2D point.
+  /*!
+   * @brief Extends<QPointF> will be used as standard 2D point.
+   */
   using Point [[maybe_unused]] = Extends<QPointF>;
 
   /*!
@@ -326,9 +383,9 @@ namespace Geometry2D {
     if (polygon.size() < 3) {
       throw std::runtime_error("polygon size is less than 3.");
     }
-
+    int n = static_cast<int>(polygon.size());
     CoordType<PT> ret = 0;
-    for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
+    for (int h = n - 1, i = 0; i < n; h = i++) {
       ret += cross<PT>(polygon[h], polygon[i]);
     }
     return ret;
@@ -375,8 +432,8 @@ namespace Geometry2D {
   centroid(const QVector<PT>& polygon) {
     PT ret(0, 0);
     const auto& scale = static_cast<CoordType<PT>>(6) * signedArea<PT>(polygon);
-
-    for (int h = polygon.size() - 1, i = 0; i < polygon.size(); h = i++) {
+    int n = static_cast<int>(polygon.size());
+    for (int h = n - 1, i = 0; i < n; h = i++) {
       ret += (polygon[h] + polygon[i]) * cross<PT>(polygon[h], polygon[i]);
     }
 
@@ -715,9 +772,10 @@ namespace Geometry2D {
    */
   template <class PT>
   bool pointInPolygon(const QVector<PT>& polygon, const PT& p) {
+    int n = static_cast<int>(polygon.size());
     bool c = false;
-    for (int i = 0; i < polygon.size(); ++i) {
-      int j = (i + 1) % polygon.size();
+    for (int i = 0; i < n; ++i) {
+      int j = (i + 1) % n;
       if (polygon[i].y() <= p.y() && p.y() < polygon[j].y() ||
           polygon[j].y() <= p.y() && p.y() < polygon[i].y()) {
         if (p.x() < (polygon[i].x() + (polygon[j].x() - polygon[i].x()) * (p.y() - polygon[i].y()) /
@@ -735,8 +793,9 @@ namespace Geometry2D {
    */
   template <class PT>
   bool pointOnPolygon(const QVector<PT>& polygon, const PT& p) {
-    for (int i = 0; i < polygon.size(); ++i) {
-      if (PT proj = projectPointSegment<PT>(polygon[i], polygon[(i + 1) % polygon.size()], p);
+    int n = static_cast<int>(polygon.size());
+    for (int i = 0; i < n; ++i) {
+      if (PT proj = projectPointSegment<PT>(polygon[i], polygon[(i + 1) % n], p);
           Math::isNull(distanceSquared<PT>(proj, p))) {
         return true;
       }
