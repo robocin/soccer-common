@@ -184,7 +184,7 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing QString */ {
-    Arg<QString> empty;
+    Arg<QString> empty = "";
     bool error = false;
     try {
       auto text = Text(empty, QRegularExpression(R"_((.+))_"));
