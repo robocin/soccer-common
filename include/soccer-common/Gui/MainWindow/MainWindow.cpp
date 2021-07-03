@@ -79,6 +79,9 @@ void MainWindow::setup(const QString& name, const QString& version, const QStrin
   /* menubar cannot be initialized before all modules insertion */ {
     setupMenuBar(mainWindowMenuBar);
   }
+  /* robots widgets pattern cannot be initialized without project path */ {
+    setupRobotsWidgetsPattern(projectPath + "/resources/robots.png");
+  }
   /* loading configs */ {
     qWarning() << "starting to load configuration...";
     loadEvent();
@@ -249,6 +252,19 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
 
   /* status bar */ {
     menubar["View"].addAction(Factory::toggleViewAction("Status Bar", statusBar()));
+    menubar["View"].addSeparator();
+  }
+
+  /* max visible robots */ {
+    auto* maxVisibleRobots = new QAction("Max Visible Robots...", &menubar["View"]);
+    QObject::connect(maxVisibleRobots, &QAction::triggered, this, [this]() {
+      int value =
+          QInputDialog::getInt(this, "Max Visible Robots:", "Max Robots", -1, 1, maxRobots());
+      if (value > 0) {
+        setMaxVisibleRobots(value);
+      }
+    });
+    menubar["View"].addAction(maxVisibleRobots);
     menubar["View"].addSeparator();
   }
 
