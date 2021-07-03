@@ -11,12 +11,14 @@
 
 template <>
 class Extends<QPoint> : public QPoint {
+  using CoordType = Geometry2D::CoordType<QPoint>;
+
  public:
   constexpr Extends() noexcept : QPoint() {
   }
   constexpr Extends(const QPoint& p) noexcept : QPoint(p) {
   }
-  constexpr Extends(int xpos, int ypos) noexcept : QPoint(xpos, ypos) {
+  constexpr Extends(CoordType xpos, CoordType ypos) noexcept : QPoint(xpos, ypos) {
   }
 
   constexpr bool operator<(const Extends<QPoint>& other) const {
@@ -38,7 +40,7 @@ class Extends<QPoint> : public QPoint {
     *this = transposed();
   }
 
-  constexpr inline int& operator[](int i) {
+  constexpr inline CoordType& operator[](int i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -46,7 +48,7 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  constexpr inline int operator[](int i) const {
+  constexpr inline CoordType operator[](int i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -54,19 +56,19 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  constexpr int dot(const QPoint& other) const {
+  constexpr CoordType dot(const QPoint& other) const {
     return Geometry2D::dot<QPoint>(*this, other);
   }
 
-  constexpr int cross(const QPoint& other) const {
+  constexpr CoordType cross(const QPoint& other) const {
     return Geometry2D::cross<QPoint>(*this, other);
   }
 
-  constexpr int distSquaredTo(const QPoint& other) const {
+  constexpr CoordType distSquaredTo(const QPoint& other) const {
     return Geometry2D::distanceSquared<QPoint>(*this, other);
   }
 
-  constexpr qreal distTo(const QPoint& other) const {
+  constexpr auto distTo(const QPoint& other) const {
     return Geometry2D::distance<QPoint>(*this, other);
   }
 
@@ -86,19 +88,19 @@ class Extends<QPoint> : public QPoint {
     return Geometry2D::rotateCCW90(*this);
   }
 
-  constexpr qreal angle() const {
+  constexpr auto angle() const {
     return Geometry2D::angle(*this);
   }
 
-  constexpr qreal angleTo(const QPoint& other) const {
+  constexpr auto angleTo(const QPoint& other) const {
     return Geometry2D::angleBetween<QPoint>(*this, other);
   }
 
-  constexpr int lengthSquared() const {
+  constexpr CoordType lengthSquared() const {
     return Geometry2D::lengthSquared(*this);
   }
 
-  constexpr qreal length() const {
+  constexpr auto length() const {
     return Geometry2D::length(*this);
   }
 
@@ -119,6 +121,8 @@ class Extends<QPoint> : public QPoint {
 
 template <>
 class Extends<QPointF> : public QPointF {
+  using CoordType = Geometry2D::CoordType<QPointF>;
+
  public:
   constexpr Extends() noexcept : QPointF() {
   }
@@ -126,7 +130,7 @@ class Extends<QPointF> : public QPointF {
   }
   constexpr Extends(const QPointF& p) noexcept : QPointF(p) {
   }
-  constexpr Extends(qreal xpos, qreal ypos) noexcept : QPointF(xpos, ypos) {
+  constexpr Extends(CoordType xpos, CoordType ypos) noexcept : QPointF(xpos, ypos) {
   }
 
   constexpr bool operator<(const Extends<QPointF>& other) const {
@@ -148,7 +152,7 @@ class Extends<QPointF> : public QPointF {
     *this = transposed();
   }
 
-  constexpr inline qreal& operator[](int i) {
+  constexpr inline CoordType& operator[](int i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -156,7 +160,7 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  constexpr inline qreal operator[](int i) const {
+  constexpr inline CoordType operator[](int i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -164,35 +168,35 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  constexpr qreal dot(const QPointF& other) const {
+  constexpr CoordType dot(const QPointF& other) const {
     return Geometry2D::dot<QPointF>(*this, other);
   }
 
-  constexpr qreal cross(const QPointF& other) const {
+  constexpr CoordType cross(const QPointF& other) const {
     return Geometry2D::cross<QPointF>(*this, other);
   }
 
-  constexpr qreal distSquaredTo(const QPointF& other) const {
+  constexpr CoordType distSquaredTo(const QPointF& other) const {
     return Geometry2D::distanceSquared<QPointF>(*this, other);
   }
 
-  constexpr qreal distTo(const QPointF& other) const {
+  constexpr auto distTo(const QPointF& other) const {
     return Geometry2D::distance<QPointF>(*this, other);
   }
 
-  constexpr qreal distToLine(const QPointF& a, const QPointF& b) const {
+  constexpr auto distToLine(const QPointF& a, const QPointF& b) const {
     return Geometry2D::distancePointLine<QPointF>(a, b, *this);
   }
 
-  constexpr qreal distToLine(const QLineF& line) const {
+  constexpr auto distToLine(const QLineF& line) const {
     return Geometry2D::distancePointLine<QPointF>(line, *this);
   }
 
-  constexpr qreal distToSegment(const QPointF& a, const QPointF& b) const {
+  constexpr auto distToSegment(const QPointF& a, const QPointF& b) const {
     return Geometry2D::distancePointSegment<QPointF>(a, b, *this);
   }
 
-  constexpr qreal distToSegment(const QLineF& line) const {
+  constexpr auto distToSegment(const QLineF& line) const {
     return Geometry2D::distancePointSegment<QPointF>(line, *this);
   }
 
@@ -228,37 +232,37 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::rotateCCW90(*this);
   }
 
-  constexpr void rotateCCW(qreal t) {
+  constexpr void rotateCCW(CoordType t) {
     *this = Geometry2D::rotateCCW(*this, t);
   }
 
-  constexpr Extends<QPointF> rotatedCCW(qreal t) const {
+  constexpr Extends<QPointF> rotatedCCW(CoordType t) const {
     return Geometry2D::rotateCCW(*this, t);
   }
 
-  constexpr qreal angle() const {
+  constexpr auto angle() const {
     return Geometry2D::angle(*this);
   }
 
-  constexpr qreal angleTo(const QPointF& other) const {
+  constexpr auto angleTo(const QPointF& other) const {
     return Geometry2D::angleBetween<QPointF>(*this, other);
   }
 
-  constexpr qreal lengthSquared() const {
+  constexpr CoordType lengthSquared() const {
     return Geometry2D::lengthSquared(*this);
   }
 
-  constexpr qreal length() const {
+  constexpr auto length() const {
     return Geometry2D::length(*this);
   }
 
   using QPointF::manhattanLength;
 
-  constexpr void resize(qreal t) {
+  constexpr void resize(CoordType t) {
     *this = Geometry2D::resize(*this, t);
   }
 
-  constexpr Extends<QPointF> resized(qreal t) const {
+  constexpr Extends<QPointF> resized(CoordType t) const {
     return Geometry2D::resize(*this, t);
   }
 

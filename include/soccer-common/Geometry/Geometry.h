@@ -305,7 +305,7 @@ namespace Geometry2D {
    * product of the vector with itself.
    */
   template <class PT>
-  constexpr auto lengthSquared(const PT& p) {
+  constexpr CoordType<PT> lengthSquared(const PT& p) {
     return dot<PT>(p, p);
   }
 
