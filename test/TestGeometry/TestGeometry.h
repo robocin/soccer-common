@@ -20,6 +20,10 @@ class TestGeometry : public QObject {
 
   void test_radiansToDegrees_whenGivenAFloatingPoint_shouldWork();
   void test_degreesToRadians_whenGivenAFloatingPoint_shouldWork();
+  void test_smallestAngleDiff_whenGivenTwoFloatingPointNumbers_shouldWork();
+  void test_normalizeAngle_whenGivenThreeFloatingPointNumbers_shouldWork();
+  void test_normalizeInPI_whenGivenAFloatingPoint_shouldWork();
+  void test_normalizeIn180_whenGivenAFloatingPoint_shouldWork();
   void test_2D_operatorLess_whenGivenTwoPoints_shouldWork();
   void test_2D_dot_whenGivenTwoPoints_shouldWork();
   void test_2D_cross_whenGivenTwoPoints_shouldWork();
@@ -36,7 +40,8 @@ class TestGeometry : public QObject {
   void test_2D_length_whenGivenAPoint_shouldWork();
   void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
   void test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
-  void test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
+  void test_2D_normalize_whenGivenAFloatingPointPoint_shouldWork();
+  void test_2D_normalize_whenGivenAnIntegerPoint_shouldWork();
   void test_2D_isTriangle_whenGivenThreeNumbers_shouldWork();
   void test_2D_signedArea2_whenGivenAPolygon_shouldWork();
   void test_2D_signedArea_whenGivenAPolygon_shouldWork();
@@ -59,6 +64,11 @@ class TestGeometry : public QObject {
   void test_2D_linesCollinear_whenGivenTwoLines_shouldWork();
   void test_2D_segmentsIntersect_whenGivenFourFloatingPointPoints_shouldWork();
   void test_2D_segmentsIntersect_whenGivenTwoLines_shouldWork();
+  void test_2D_linesIntersection_whenGivenFourFloatingPointPoints_shouldWork();
+  void test_2D_linesIntersection_whenGivenTwoLines_shouldWork();
+  void test_2D_segmentsIntersection_whenGivenFourFloatingPointPoints_shouldWork();
+  void test_2D_segmentsIntersection_whenGivenTwoLines_shouldWork();
+  void test_2D_convexHull_whenGivenAPolygon_shouldWork();
   void test_2D_pointInPolygon_whenGivenAPolygonAndAPoint_shouldWork();
   void test_2D_pointOnPolygon_whenGivenAPolygonAndAPoint_shouldWork();
 };
