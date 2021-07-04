@@ -117,6 +117,9 @@ class Extends<QPoint> : public QPoint {
   bool isInPolygon(const QVector<QPoint>& polygon) const {
     return Geometry2D::pointInPolygon<QPoint>(polygon, *this);
   }
+
+ private:
+  using QPoint::dotProduct;
 };
 
 template <>
@@ -281,6 +284,9 @@ class Extends<QPointF> : public QPointF {
   inline bool isOnPolygon(const QVector<QPointF>& polygon) const {
     return Geometry2D::pointOnPolygon<QPointF>(polygon, *this);
   }
+
+ private:
+  using QPointF::dotProduct;
 };
 
 #pragma clang diagnostic pop
