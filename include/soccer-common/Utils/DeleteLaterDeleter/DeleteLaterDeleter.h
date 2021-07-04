@@ -9,10 +9,12 @@
 
 struct DeleteLaterDeleter {
   DeleteLaterDeleter() = default;
+
   template <class T>
   inline void operator()(T* ptr) const {
     QScopedPointerObjectDeleteLater<T>::cleanup(ptr);
   }
+
   template <class T>
   static inline void cleanup(T* ptr) {
     return QScopedPointerObjectDeleteLater<T>::cleanup(ptr);
