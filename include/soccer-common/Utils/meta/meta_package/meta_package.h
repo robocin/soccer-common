@@ -18,7 +18,7 @@
  */
 #define RC_VAR(type, varname)                                                                      \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
@@ -35,7 +35,7 @@
  */
 #define RC_VARVAL(type, varname, default_value)                                                    \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
@@ -55,9 +55,16 @@
  */
 #define RC_VAROPT(type, varname)                                                                   \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
+  }                                                                                                \
+  inline auto set_##varname(const std::optional<type>& varname)->decltype(*this)& {                \
+    m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  inline bool has_##varname() const {                                                              \
+    return m_##varname.has_value();                                                                \
   }                                                                                                \
   inline const type& varname() const {                                                             \
     try {                                                                                          \
