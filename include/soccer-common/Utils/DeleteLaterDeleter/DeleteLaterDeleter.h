@@ -2,8 +2,8 @@
 // Created by jose-cruz on 11/06/2021.
 //
 
-#ifndef VSS_UNIFICATION_DELETELATERDELETER_H
-#define VSS_UNIFICATION_DELETELATERDELETER_H
+#ifndef SOCCER_COMMON_DELETELATERDELETER_H
+#define SOCCER_COMMON_DELETELATERDELETER_H
 
 #include <QScopedPointerObjectDeleteLater>
 
@@ -19,4 +19,4 @@ struct DeleteLaterDeleter {
   }
 };
 
-#endif // VSS_UNIFICATION_DELETELATERDELETER_H
+#endif // SOCCER_COMMON_DELETELATERDELETER_H

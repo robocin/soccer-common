@@ -2,9 +2,9 @@
 // Created by jose-cruz on 16/06/2021.
 //
 
-#ifndef SSL_UNIFICATION_PHYSICS_H
-#define SSL_UNIFICATION_PHYSICS_H
+#ifndef SOCCER_COMMON_PHYSICS_H
+#define SOCCER_COMMON_PHYSICS_H
 
 #include "Kinematics/Kinematics.h"
 
-#endif // SSL_UNIFICATION_PHYSICS_H
+#endif // SOCCER_COMMON_PHYSICS_H

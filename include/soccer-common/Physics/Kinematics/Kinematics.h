@@ -2,8 +2,8 @@
 // Created by jose-cruz on 16/06/2021.
 //
 
-#ifndef SSL_UNIFICATION_KINEMATICS_H
-#define SSL_UNIFICATION_KINEMATICS_H
+#ifndef SOCCER_COMMON_KINEMATICS_H
+#define SOCCER_COMMON_KINEMATICS_H
 
 #include <QtGlobal>
 #include <optional>
@@ -43,4 +43,4 @@ namespace Kinematics {
   };
 } // namespace Kinematics
 
-#endif // SSL_UNIFICATION_KINEMATICS_H
+#endif // SOCCER_COMMON_KINEMATICS_H
