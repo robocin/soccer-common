@@ -77,6 +77,22 @@ namespace Geometry {
   }
 
   /*!
+   * @param value the value in degrees.
+   * @return Returns the value in radians.
+   */
+  constexpr auto operator"" _degrees(long double value) {
+    return Geometry::degreesToRadians(value);
+  }
+
+  /*!
+   * @param value the value in degrees.
+   * @return Returns the value in radians.
+   */
+  constexpr auto operator"" _degrees(unsigned long long value) {
+    return Geometry::degreesToRadians(value);
+  }
+
+  /*!
    * @tparam T arithmetic type.
    * @param value The angle to normalize, in radians or degrees (depending on center and amplitude
    * values).
@@ -133,6 +149,10 @@ namespace Geometry {
 using Geometry::PI;
 #endif
 
+#ifndef GEOMETRY_UNDEF_LITERAL_OPERATOR_DEGREES
+using Geometry::operator""_degrees;
+#endif
+
 namespace Geometry2D {
   using namespace Geometry;
 
@@ -173,6 +193,22 @@ namespace Geometry2D {
    */
   constexpr bool operator<(const QVector2D& lhs, const QVector2D& rhs) {
     return (lhs.x() != rhs.x()) ? (lhs.x() < rhs.x()) : (lhs.y() < rhs.y());
+  }
+
+  /*!
+   * @return Returns a PT with the given angle and unitary length.
+   */
+  template <class PT>
+  constexpr PT fromPolar(CoordType<PT> angle) {
+    return PT(std::cos(angle), std::sin(angle));
+  }
+
+  /*!
+   * @return Returns a PT with the given length and angle.
+   */
+  template <class PT>
+  constexpr PT fromPolar(CoordType<PT> length, CoordType<PT> angle) {
+    return PT(std::cos(angle) * length, std::sin(angle) * length);
   }
 
   /*!
