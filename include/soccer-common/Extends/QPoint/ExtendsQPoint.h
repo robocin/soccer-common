@@ -390,6 +390,13 @@ class Extends<QPointF> : public QPointF {
   using QPointF::dotProduct;
 };
 
+#ifndef EXTENDS_UNDEF_POINT
+/*!
+ * @brief Extends<QPointF> will be used as standard 2D point.
+ */
+using Point [[maybe_unused]] = Extends<QPointF>;
+#endif
+
 #pragma clang diagnostic pop
 
 #endif // SOCCER_COMMON_EXTENDSPOINT_H

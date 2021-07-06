@@ -14,9 +14,6 @@
   #define M_PI 3.14159265358979323846
 #endif
 
-template <class T>
-class Extends;
-
 namespace Geometry {
   static constexpr qreal PI = M_PI;
 
@@ -162,11 +159,6 @@ namespace Geometry2D {
   template <class PT>
   using CoordType =
       std::common_type_t<decltype(std::declval<PT>().x()), decltype(std::declval<PT>().y())>;
-
-  /*!
-   * @brief Extends<QPointF> will be used as standard 2D point.
-   */
-  using Point [[maybe_unused]] = Extends<QPointF>;
 
   /*!
    * @param lhs, rhs values to compare.
@@ -840,9 +832,5 @@ namespace Geometry2D {
   }
 
 } // namespace Geometry2D
-
-#ifndef GEOMETRY_2D_UNDEF_POINT
-using Geometry2D::Point;
-#endif
 
 #endif // SOCCER_COMMON_GEOMETRY_H
