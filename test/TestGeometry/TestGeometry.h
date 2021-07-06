@@ -20,11 +20,14 @@ class TestGeometry : public QObject {
 
   void test_radiansToDegrees_whenGivenAFloatingPoint_shouldWork();
   void test_degreesToRadians_whenGivenAFloatingPoint_shouldWork();
+  void test_operator_degrees_whenGivenAFloatingPoint_shouldWork();
   void test_smallestAngleDiff_whenGivenTwoFloatingPointNumbers_shouldWork();
   void test_normalizeAngle_whenGivenThreeFloatingPointNumbers_shouldWork();
   void test_normalizeInPI_whenGivenAFloatingPoint_shouldWork();
   void test_normalizeIn180_whenGivenAFloatingPoint_shouldWork();
   void test_2D_operatorLess_whenGivenTwoPoints_shouldWork();
+  void test2D_fromPolar_whenGivenAFloatingPoint_shouldWork();
+  void test2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork();
   void test_2D_dot_whenGivenTwoPoints_shouldWork();
   void test_2D_cross_whenGivenTwoPoints_shouldWork();
   void test_2D_distanceSquared_whenGivenFourNumbers_shouldWork();

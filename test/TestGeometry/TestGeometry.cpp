@@ -54,6 +54,13 @@ void TestGeometry::test_degreesToRadians_whenGivenAFloatingPoint_shouldWork() {
   QCOMPARE(ld3_PI_2, ld3_PI_2v);
 }
 
+void TestGeometry::test_operator_degrees_whenGivenAFloatingPoint_shouldWork() {
+  using Geometry::operator""_degrees;
+  QCOMPARE(PI, 180_degrees);
+  QCOMPARE(PI / 2.0, 90_degrees);
+  QCOMPARE(PI / 4.0, 45_degrees);
+}
+
 void TestGeometry::test_smallestAngleDiff_whenGivenTwoFloatingPointNumbers_shouldWork() {
   using namespace Geometry;
 
@@ -162,6 +169,20 @@ void TestGeometry::test_2D_operatorLess_whenGivenTwoPoints_shouldWork() {
     QPointF fRhsLessY(10, 10);
     QCOMPARE(fLhsLessY < fRhsLessY, true);
   }
+}
+
+void TestGeometry::test2D_fromPolar_whenGivenAFloatingPoint_shouldWork() {
+  using Geometry2D::fromPolar;
+  QCOMPARE(QPointF(1, 0), fromPolar<QPointF>(0));
+  QCOMPARE(QPointF(0, 1), fromPolar<QPointF>(PI / 2));
+  QCOMPARE(QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0), fromPolar<QPointF>(PI / 4.0));
+}
+
+void TestGeometry::test2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork() {
+  using Geometry2D::fromPolar;
+  QCOMPARE(QPointF(10, 0), fromPolar<QPointF>(10, 0));
+  QCOMPARE(QPointF(0, 20), fromPolar<QPointF>(20, PI / 2));
+  QCOMPARE(QPointF(30 * std::sqrt(2), 30 * std::sqrt(2)), fromPolar<QPointF>(60, PI / 4.0));
 }
 
 void TestGeometry::test_2D_dot_whenGivenTwoPoints_shouldWork() {
