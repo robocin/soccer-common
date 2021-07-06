@@ -66,6 +66,9 @@
   inline bool has_##varname() const {                                                              \
     return m_##varname.has_value();                                                                \
   }                                                                                                \
+  inline const std::optional<type>& optional_##varname() const {                                   \
+    return m_##varname;                                                                            \
+  }                                                                                                \
   inline const type& varname() const {                                                             \
     try {                                                                                          \
       return m_##varname.value();                                                                  \
