@@ -100,7 +100,7 @@ class Extends<QPoint> : public QPoint {
     *this = transposed();
   }
 
-  constexpr inline CoordType& operator[](int i) {
+  constexpr inline CoordType& operator[](qsizetype i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -108,7 +108,7 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  constexpr inline CoordType operator[](int i) const {
+  constexpr inline CoordType operator[](qsizetype i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -256,7 +256,7 @@ class Extends<QPointF> : public QPointF {
     *this = transposed();
   }
 
-  constexpr inline CoordType& operator[](int i) {
+  constexpr inline CoordType& operator[](qsizetype i) {
     switch (i) {
       case 0: return rx();
       case 1: return ry();
@@ -264,7 +264,7 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  constexpr inline CoordType operator[](int i) const {
+  constexpr inline CoordType operator[](qsizetype i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
