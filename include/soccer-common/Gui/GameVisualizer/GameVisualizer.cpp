@@ -222,7 +222,7 @@ void GameVisualizer::getUpdates() {
       for (auto& ptr : object.paintings[i].ref()) {
         if (ptr.second) {
           bool visibility =
-              !(paintings.find(ptr.first) != paintings.end()) || paintings[ptr.first].visibility();
+              (paintings.find(ptr.first) == paintings.end()) || paintings[ptr.first].visibility();
           auto it =
               paintings
                   .insert_or_assign(ptr.first, static_cast<PaintingPointer>(std::move(ptr.second)))
@@ -237,9 +237,13 @@ void GameVisualizer::getUpdates() {
     {
       for (auto [key, visibility] : object.visibility.ref()) {
         for (auto& painting : local.paintings) {
-          if (painting.find(key) != painting.end()) {
-            painting[key].setVisibility(visibility);
+          if (painting.find(key) == painting.end()) {
+            painting.insert_or_assign(
+                key,
+                PaintingPointer(Painting::create([](GameVisualizerPainter2D*) {
+                })));
           }
+          painting[key].setVisibility(visibility);
         }
       }
       object.visibility->clear();
