@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_ROBOT_H
 
 #include "soccer-common/Entities/Entity/Entity.h"
+#include "soccer-common/Geometry/Geometry.h"
 
 namespace Common {
   template <class PT>
@@ -30,6 +31,10 @@ namespace Common {
 
     [[nodiscard]] constexpr float angle() const {
       return m_angle;
+    }
+
+    constexpr auto angleTo(const PT& p) const {
+      return Geometry2D::angleBetween<PT>(Geometry2D::fromPolar<PT>(m_angle), p - m_position);
     }
 
     constexpr bool operator<(const RawRobot& other) const {
