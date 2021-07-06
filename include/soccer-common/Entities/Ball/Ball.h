@@ -17,6 +17,8 @@ namespace Common {
     using RawEntity<PT>::position;
     using RawEntity<PT>::operator const PT&;
 
+    using RawEntity<PT>::distTo;
+
     constexpr bool operator<(const RawBall& other) const {
       return static_cast<const RawEntity<PT>&>(*this) < static_cast<const RawEntity<PT>&>(other);
     }
@@ -52,6 +54,8 @@ namespace Common {
     using Entity<PT>::operator const PT&;
     using Entity<PT>::velocity;
     using Entity<PT>::acceleration;
+
+    using RawEntity<PT>::distTo;
 
     constexpr bool operator<(const Ball& other) const {
       return static_cast<const Entity<PT>&>(*this) < static_cast<const Entity<PT>&>(other);

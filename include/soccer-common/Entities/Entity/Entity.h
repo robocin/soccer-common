@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_ENTITY_H
 
 #include <tuple>
+#include "soccer-common/Geometry/Geometry.h"
 
 namespace Common {
   template <class PT>
@@ -20,6 +21,10 @@ namespace Common {
     }
     constexpr operator const PT&() const { // NOLINT(google-explicit-constructor)
       return position();
+    }
+
+    constexpr auto distTo(const PT& p) const {
+      return Geometry2D::distance<PT>(m_position, p);
     }
 
     constexpr bool operator<(const RawEntity& other) const {
@@ -61,6 +66,8 @@ namespace Common {
     constexpr const PT& acceleration() const {
       return m_acceleration;
     }
+
+    using RawEntity<PT>::distTo;
 
     constexpr bool operator<(const Entity& other) const {
       return std::tie(m_position, m_velocity, m_acceleration) <
