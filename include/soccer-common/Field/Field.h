@@ -31,6 +31,12 @@ namespace Common {
     constexpr T goalDepth() const {
       return m_goalDepth;
     }
+
+    template <class PT>
+    constexpr bool contains(const PT& position) const {
+      return (m_length < position.x() && position.x() < m_length) &&
+             (m_width < position.y() && position.y() < m_width);
+    }
   };
 } // namespace Common
 
