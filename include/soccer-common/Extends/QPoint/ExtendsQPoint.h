@@ -180,7 +180,48 @@ class Extends<QPoint> : public QPoint {
 
  private:
   using QPoint::dotProduct;
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(Extends<QPoint>& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<QPoint&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(const Extends<QPoint>& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<const QPoint&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(Extends<QPoint>&& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<QPoint&&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(const Extends<QPoint>&& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<const QPoint&&>(p));
+  }
 };
+
+// tuple protocol:
+
+namespace std {
+  template <>
+  class tuple_size<Extends<QPoint>> : public integral_constant<size_t, 2> {};
+  template <>
+  class tuple_element<0, Extends<QPoint>> {
+   public:
+    using type = Geometry2D::CoordType<Extends<QPoint>>;
+  };
+  template <>
+  class tuple_element<1, Extends<QPoint>> {
+   public:
+    using type = Geometry2D::CoordType<Extends<QPoint>>;
+  };
+} // namespace std
 
 template <>
 class Extends<QPointF> : public QPointF {
@@ -388,7 +429,48 @@ class Extends<QPointF> : public QPointF {
 
  private:
   using QPointF::dotProduct;
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(Extends<QPointF>& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<QPointF&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(const Extends<QPointF>& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<const QPointF&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(Extends<QPointF>&& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<QPointF&&>(p));
+  }
+
+  template <std::size_t I, std::enable_if_t<(I < 2), bool> = true>
+  friend constexpr decltype(auto) get(const Extends<QPointF>&& p) noexcept {
+    using std::get;
+    return get<I>(static_cast<const QPointF&&>(p));
+  }
 };
+
+// tuple protocol:
+
+namespace std {
+  template <>
+  class tuple_size<Extends<QPointF>> : public integral_constant<size_t, 2> {};
+  template <>
+  class tuple_element<0, Extends<QPointF>> {
+   public:
+    using type = Geometry2D::CoordType<Extends<QPointF>>;
+  };
+  template <>
+  class tuple_element<1, Extends<QPointF>> {
+   public:
+    using type = Geometry2D::CoordType<Extends<QPointF>>;
+  };
+} // namespace std
 
 #ifndef EXTENDS_UNDEF_POINT
 /*!
