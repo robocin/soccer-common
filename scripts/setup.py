@@ -6,8 +6,6 @@ import sys
 import subprocess
 from typing import List
 
-essentials = ['boost', 'clang-format', 'doxygen', 'g++', 'open-gl', 'protobuf', 'qt']
-
 
 class ColorPrint:
     def __init__(self, color: str):
@@ -103,7 +101,8 @@ def show_command():
 
 
 def essentials_command():
-    run_multiple_scripts(essentials)
+    with open('essentials.txt', 'r') as essentials_file:
+        run_multiple_scripts(essentials_file.read().splitlines())
 
 
 def install_command(scripts: List[str]):
