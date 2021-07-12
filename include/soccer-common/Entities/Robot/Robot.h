@@ -32,6 +32,7 @@ namespace Common {
       return m_angle;
     }
 
+    using RawEntity<PT>::distSquaredTo;
     using RawEntity<PT>::distTo;
 
     constexpr auto angleTo(const PT& p) const {
@@ -86,6 +87,7 @@ namespace Common {
     using Entity<PT>::velocity;
     using Entity<PT>::acceleration;
 
+    using Entity<PT>::distSquaredTo;
     using Entity<PT>::distTo;
     using RawRobot<PT>::angleTo;
 

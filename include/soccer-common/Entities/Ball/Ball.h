@@ -17,6 +17,7 @@ namespace Common {
     using RawEntity<PT>::position;
     using RawEntity<PT>::operator const PT&;
 
+    using RawEntity<PT>::distSquaredTo;
     using RawEntity<PT>::distTo;
 
     constexpr bool operator<(const RawBall& other) const {
@@ -55,6 +56,7 @@ namespace Common {
     using Entity<PT>::velocity;
     using Entity<PT>::acceleration;
 
+    using RawEntity<PT>::distSquaredTo;
     using RawEntity<PT>::distTo;
 
     constexpr bool operator<(const Ball& other) const {

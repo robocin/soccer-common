@@ -23,8 +23,12 @@ namespace Common {
       return position();
     }
 
-    constexpr auto distTo(const PT& p) const {
-      return Geometry2D::distance<PT>(m_position, p);
+    constexpr auto distSquaredTo(const PT& other) const {
+      return Geometry2D::distanceSquared<PT>(m_position, other);
+    }
+
+    constexpr auto distTo(const PT& other) const {
+      return Geometry2D::distance<PT>(m_position, other);
     }
 
     constexpr bool operator<(const RawEntity& other) const {
@@ -67,6 +71,7 @@ namespace Common {
       return m_acceleration;
     }
 
+    using RawEntity<PT>::distSquaredTo;
     using RawEntity<PT>::distTo;
 
     constexpr bool operator<(const Entity& other) const {
