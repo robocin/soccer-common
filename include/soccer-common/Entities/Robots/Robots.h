@@ -88,10 +88,16 @@ namespace Common {
       });
     }
 
-    qsizetype removeById(id_type id) {
-      return QList<R>::removeIf([id](const R& robot) {
+    void removeById(id_type id) {
+      QList<R>::removeIf([id](const R& robot) {
         return id == robot.id();
       });
+    }
+
+    Robots<R> removedById(id_type id) const {
+      Robots<R> robots(*this);
+      robots.removeById(id);
+      return robots;
     }
 
     iterator closestTo(const PT& position) {
