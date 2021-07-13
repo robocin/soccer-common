@@ -94,6 +94,12 @@ namespace Common {
       });
     }
 
+    Robots<R> removed(const R& robot) const {
+      Robots<R> robots(*this);
+      robots.removeAll(robot);
+      return robots;
+    }
+
     Robots<R> removedById(id_type id) const {
       Robots<R> robots(*this);
       robots.removeById(id);
