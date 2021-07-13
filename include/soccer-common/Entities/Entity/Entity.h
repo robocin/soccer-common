@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_ENTITY_H
 
 #include <tuple>
+#include <QDebug>
 #include "soccer-common/Geometry/Geometry.h"
 
 namespace Common {
@@ -87,5 +88,16 @@ namespace Common {
     }
   };
 } // namespace Common
+
+#ifndef QT_NO_DEBUG_STREAM
+template <class PT>
+QDebug operator<<(QDebug dbg, const Common::RawEntity<PT>& entity) {
+  QDebugStateSaver saver(dbg);
+  dbg.nospace();
+  dbg << Qt::fixed << qSetRealNumberPrecision(2);
+  dbg << "Entity(position(" << entity.position().x() << ',' << entity.position().y() << "))";
+  return dbg;
+}
+#endif
 
 #endif // SOCCER_COMMON_ENTITY_H

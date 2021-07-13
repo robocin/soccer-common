@@ -105,4 +105,16 @@ namespace Common {
   };
 } // namespace Common
 
+#ifndef QT_NO_DEBUG_STREAM
+template <class PT>
+QDebug operator<<(QDebug dbg, const Common::RawRobot<PT>& robot) {
+  QDebugStateSaver saver(dbg);
+  dbg.nospace();
+  dbg << Qt::fixed << qSetRealNumberPrecision(2);
+  dbg << "Robot(id(" << robot.id() << "), angle(" << Geometry::radiansToDegrees(robot.angle())
+      << "), position(" << robot.position().x() << ',' << robot.position().y() << "))";
+  return dbg;
+}
+#endif
+
 #endif // SOCCER_COMMON_ROBOT_H

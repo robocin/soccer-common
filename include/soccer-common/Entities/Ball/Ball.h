@@ -71,4 +71,15 @@ namespace Common {
   };
 } // namespace Common
 
+#ifndef QT_NO_DEBUG_STREAM
+template <class PT>
+QDebug operator<<(QDebug dbg, const Common::RawBall<PT>& ball) {
+  QDebugStateSaver saver(dbg);
+  dbg.nospace();
+  dbg << Qt::fixed << qSetRealNumberPrecision(2);
+  dbg << "Ball(position(" << ball.position().x() << ',' << ball.position().y() << "))";
+  return dbg;
+}
+#endif
+
 #endif // SOCCER_COMMON_BALL_H
