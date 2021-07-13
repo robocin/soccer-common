@@ -22,6 +22,11 @@
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname = type(std::forward<Args>(args)...);                                               \
+    return *this;                                                                                  \
+  }                                                                                                \
   inline const type& varname() const {                                                             \
     return m_##varname;                                                                            \
   }                                                                                                \
@@ -37,6 +42,11 @@
  public:                                                                                           \
   inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname = type(std::forward<Args>(args)...);                                               \
     return *this;                                                                                  \
   }                                                                                                \
   inline const type& varname() const {                                                             \
@@ -61,6 +71,11 @@
   }                                                                                                \
   inline auto set_##varname(const std::optional<type>& varname)->decltype(*this)& {                \
     m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname.emplace(std::forward<Args>(args)...);                                              \
     return *this;                                                                                  \
   }                                                                                                \
   inline bool has_##varname() const {                                                              \
