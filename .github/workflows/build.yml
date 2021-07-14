@@ -14,10 +14,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
-        uses: actions/checkout@v2.3.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: recursive
+        uses: actions/checkout@v2
+        
+      - name: checkout-submodules
+        run: git submodule update --init --recursive
       
       # Install all dependencies using setup.py script inside scripts folder
       - name: install-dependencies
