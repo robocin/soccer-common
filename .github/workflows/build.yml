@@ -15,9 +15,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
         uses: actions/checkout@v2
-        
-      - name: checkout-submodules
-        run: git submodule update --init --recursive
+        with:
+          submodules: recursive
       
       # Install all dependencies using setup.py script inside scripts folder
       - name: install-dependencies
