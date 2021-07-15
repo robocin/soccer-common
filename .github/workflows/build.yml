@@ -24,3 +24,13 @@ jobs:
       
       - name: build
         run: cd ${GITHUB_WORKSPACE} && mkdir build && cd build && cmake .. && make -j$(grep -c ^processor /proc/cpuinfo)
+      
+      - name: run-tests
+        run: cd ${GITHUB_WORKSPACE}/bin &&
+          (
+            if [ -d "test/" ]; then
+              for test in $(find . -executable -type f); do
+                ${test} && echo " ";
+              done;
+            fi
+          )
