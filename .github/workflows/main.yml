@@ -45,9 +45,9 @@ jobs:
         run: |
           (
             cd ${GITHUB_WORKSPACE}/bin
-            
+
             if [ -d "test/" ]; then
-              for test in $(find . -executable -type f); do
+              for test in $(find ./test -executable -type f); do
                 ${test} -platform offscreen && echo " ";
               done;
             fi
