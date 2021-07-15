@@ -1,4 +1,4 @@
-name: Build CI
+name: Main CI
 
 # Controls when the workflow will run
 on:
@@ -17,13 +17,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      
+
       # Install all dependencies using setup.py script inside scripts folder
       - name: install-dependencies
         run: cd ${GITHUB_WORKSPACE}/scripts && sudo ./setup.py --essentials
-        
+
       - name: check-coding-style
-        run: |
+        run: cd ${GITHUB_WORKSPACE} &&
           (
             format_files=$(
               find . -type d \( -path ./bin -o -path ./lib -o -path ./libs -o -path ./build \) -prune -false \
@@ -35,10 +35,10 @@ jobs:
               clang-format --dry-run --Werror -i "${file}"
             done
           )
-      
+
       - name: build
         run: cd ${GITHUB_WORKSPACE} && mkdir build && cd build && cmake .. && make -j$(grep -c ^processor /proc/cpuinfo)
-      
+
       - name: run-tests
         run: cd ${GITHUB_WORKSPACE}/bin &&
           (
@@ -48,3 +48,4 @@ jobs:
               done;
             fi
           )
+
