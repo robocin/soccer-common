@@ -63,7 +63,7 @@ namespace Parameters {
     }
 
    public:
-    using type = T;
+    using value_type = T;
 
     // disable_empty_constructor:
     Arg() = delete;
@@ -178,6 +178,10 @@ namespace Parameters {
 
   template <class T>
   class Text : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -221,16 +225,22 @@ namespace Parameters {
 
   template <class T>
   class SpinBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+    value_type minValue;
+    value_type maxValue;
 
    public:
-    template <class U>
-    SpinBox(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    SpinBox(Arg<T>& t_ref,
+            value_type t_minValue,
+            value_type t_maxValue,
+            const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -238,8 +248,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      minValue = t_minValue;
+      maxValue = t_maxValue;
     }
 
     QString inputType() const override final {
@@ -268,23 +278,27 @@ namespace Parameters {
 
   template <class T>
   class DoubleSpinBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
    protected:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_floating_point_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+
+    value_type minValue;
+    value_type maxValue;
     int precision;
 
     DoubleSpinBox(Arg<T>& t_ref, const QString& t_about = "") : ParameterType<T>(t_ref, t_about) {
     }
 
    public:
-    template <class U>
     DoubleSpinBox(Arg<T>& t_ref,
-                  U t_minValue,
-                  U t_maxValue,
+                  value_type t_minValue,
+                  value_type t_maxValue,
                   int t_precision = 2,
                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
@@ -297,8 +311,8 @@ namespace Parameters {
       if (!(0 <= t_precision && t_precision <= 15)) {
         throw std::runtime_error("SpinBox precision value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      minValue = t_minValue;
+      maxValue = t_maxValue;
       precision = t_precision;
     }
 
@@ -334,6 +348,10 @@ namespace Parameters {
 
   template <class T>
   class MappedAngleToDegrees : public DoubleSpinBox<T> {
+   public:
+    using value_type = typename DoubleSpinBox<T>::value_type;
+
+   private:
     using DoubleSpinBox<T>::setValue;
     using DoubleSpinBox<T>::eval;
     using DoubleSpinBox<T>::ref;
@@ -353,8 +371,8 @@ namespace Parameters {
 
    public:
     MappedAngleToDegrees(Arg<T>& t_ref,
-                         double t_minValue = 0.0,
-                         double t_maxValue = 2.0 * PI,
+                         value_type t_minValue = 0.0,
+                         value_type t_maxValue = 2.0 * PI,
                          int t_precision = 2,
                          const QString& t_about = "") :
         DoubleSpinBox<T>(t_ref, message(t_about)) {
@@ -367,8 +385,8 @@ namespace Parameters {
       if (!(0 <= t_precision && t_precision <= 15)) {
         throw std::runtime_error("SpinBox precision value out of range.");
       }
-      minValue = qRadiansToDegrees(static_cast<T>(t_minValue));
-      maxValue = qRadiansToDegrees(static_cast<T>(t_maxValue));
+      minValue = qRadiansToDegrees(t_minValue);
+      maxValue = qRadiansToDegrees(t_maxValue);
       precision = t_precision;
     }
 
@@ -389,16 +407,22 @@ namespace Parameters {
 
   template <class T>
   class Slider : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+    value_type minValue;
+    value_type maxValue;
 
    public:
-    template <class U>
-    Slider(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    Slider(Arg<T>& t_ref,
+           value_type t_minValue,
+           value_type t_maxValue,
+           const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -406,8 +430,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("Slider ref value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      minValue = t_minValue;
+      maxValue = t_maxValue;
     }
 
     QString inputType() const override final {
@@ -435,6 +459,10 @@ namespace Parameters {
   };
 
   class CheckBox : public ParameterType<bool> {
+   public:
+    using value_type = typename Arg<bool>::value_type;
+
+   private:
     using ParameterType<bool>::setValue;
     using ParameterType<bool>::eval;
     using ParameterType<bool>::ref;
@@ -467,6 +495,10 @@ namespace Parameters {
 
   template <class T>
   class ComboBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -528,6 +560,10 @@ namespace Parameters {
 
   template <class T>
   class MappedComboBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
