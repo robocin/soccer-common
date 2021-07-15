@@ -341,7 +341,7 @@ namespace Parameters {
     using DoubleSpinBox<T>::maxValue;
     using DoubleSpinBox<T>::precision;
 
-    static constexpr T PI = qDegreesToRadians(180.0);
+    static constexpr double PI = qDegreesToRadians(180.0);
 
     static QString message(QString about) {
       if (!about.isEmpty()) {
@@ -353,8 +353,8 @@ namespace Parameters {
 
    public:
     MappedAngleToDegrees(Arg<T>& t_ref,
-                         T t_minValue = static_cast<T>(0),
-                         T t_maxValue = static_cast<T>(2 * PI),
+                         double t_minValue = static_cast<double>(0),
+                         double t_maxValue = static_cast<double>(2 * PI),
                          int t_precision = 2,
                          const QString& t_about = "") :
         DoubleSpinBox<T>(t_ref, message(t_about)) {
