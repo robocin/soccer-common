@@ -14,7 +14,7 @@
 
 /*!
  * @brief declares a private type with name 'varname', initialized with value, and its own public
- * get method
+ * static get method
  */
 #define RC_CTE(type, varname, value)                                                               \
  public:                                                                                           \
