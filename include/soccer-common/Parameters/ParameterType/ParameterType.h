@@ -353,8 +353,8 @@ namespace Parameters {
 
    public:
     MappedAngleToDegrees(Arg<T>& t_ref,
-                         double t_minValue = static_cast<double>(0),
-                         double t_maxValue = static_cast<double>(2 * PI),
+                         double t_minValue = 0.0,
+                         double t_maxValue = 2.0 * PI,
                          int t_precision = 2,
                          const QString& t_about = "") :
         DoubleSpinBox<T>(t_ref, message(t_about)) {
