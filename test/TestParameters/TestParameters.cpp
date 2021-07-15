@@ -390,6 +390,89 @@ void TestParameters::test_DoubleSpinBox_WithInvalidParameters_ShouldThrowExcepti
   }
 }
 
+void TestParameters::test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "dale robocin";
+
+  /* testing float */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> angle = std::acos(-1.0);
+    auto mappedAngle = MappedAngleToDegrees(angle, 0.0, 2 * PI, 2, description);
+    QCOMPARE(mappedAngle.value(), "180.00");
+    QCOMPARE(mappedAngle.type(), Utils::nameOfType<double>());
+    QCOMPARE(mappedAngle.inputType(), InputType::DoubleSpinBox);
+    QCOMPARE(mappedAngle.description(),
+             QString(description) + " (input in degrees mapped to radians)");
+    QCOMPARE(mappedAngle.payload(),
+             Utils::quoted(Detail::MinValue) + ": " + QString::number(0.0, 'f', 2) + ", " +
+                 Utils::quoted(Detail::MaxValue) + ": " + QString::number(360.0, 'f', 2) + ", " +
+                 Utils::quoted(Detail::Precision) + ": " + QString::number(2));
+    QCOMPARE(mappedAngle.isChooseable(), false);
+    QCOMPARE(mappedAngle.update("45"), true);
+    QCOMPARE(angle, PI / 4);
+    QCOMPARE(mappedAngle.update("60"), true);
+    QCOMPARE(angle, PI / 3);
+  }
+}
+
+void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+
+  /* testing float out of range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<float> angle = -PI;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(angle);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double wrong range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 2 * PI, 0.0);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing float precision out of range */ {
+    float PI = std::acos(-1.0);
+
+    Arg<float> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 0.0f, PI, -1);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double precision out of range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 0.0, PI, -1);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
 void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
   using namespace Parameters;
 
