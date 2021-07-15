@@ -130,6 +130,8 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
       settings.setValue("tabWidgetCurrentIndex", currentIndex);
     }
 
+    settings.setValue("Max Visible Robots", m_maxVisibleRobots);
+
     auto actions = m_menu->actions();
     for (auto viewAction : actions) {
       settings.setValue(viewAction->text() + "ViewAction", viewAction->isChecked());
@@ -140,6 +142,10 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
     if (settings.contains("tabWidgetCurrentIndex")) {
       int currentIndex = settings.value("tabWidgetCurrentIndex").value<int>();
       m_tabWidget->setCurrentIndex(currentIndex);
+    }
+
+    if (settings.contains("Max Visible Robots")) {
+      setMaxVisibleRobots(settings.value("Max Visible Robots").value<int>());
     }
 
     auto actions = m_menu->actions();
@@ -154,16 +160,6 @@ class RobotsWidgets::TabsWidget : public WidgetSettings, public MenuBarOptions {
 
   void putWidgetActions(MainWindowMenuBar& menubar) override {
     menubar["View"].addMenu(m_menu);
-  }
-
-  void writeLocalSettings(QJsonObject& json) override {
-    json["Max Visible Robots"] = m_maxVisibleRobots;
-  }
-
-  void loadLocalSettings(const QJsonObject& json) override {
-    if (json.contains("Max Visible Robots")) {
-      setMaxVisibleRobots(json["Max Visible Robots"].toInt(static_cast<int>(m_robots.size())));
-    }
   }
 };
 
