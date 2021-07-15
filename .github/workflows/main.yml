@@ -44,10 +44,10 @@ jobs:
       - name: run-tests
         run: |
           (
-            cd ${GITHUB_WORKSPACE}/bin
+            cd ${GITHUB_WORKSPACE}
 
-            if [ -d "test/" ]; then
-              for test in $(find ./test -executable -type f); do
+            if [ -d "bin/test/" ]; then
+              for test in $(find ./bin/test -executable -type f); do
                 ${test} -platform offscreen && echo " ";
               done;
             fi
