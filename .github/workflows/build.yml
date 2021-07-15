@@ -26,7 +26,7 @@ jobs:
         run: cd ${GITHUB_WORKSPACE} && mkdir build && cd build && cmake .. && make -j$(grep -c ^processor /proc/cpuinfo)
       
       - name: run-tests
-        run: cd ${GITHUB_WORKSPACE}/bin && export QT_DEBUG_PLUGINS=1 &&
+        run: cd ${GITHUB_WORKSPACE}/bin &&
           (
             if [ -d "test/" ]; then
               for test in $(find . -executable -type f); do
