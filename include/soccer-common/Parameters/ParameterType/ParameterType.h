@@ -268,6 +268,7 @@ namespace Parameters {
 
   template <class T>
   class DoubleSpinBox : public ParameterType<T> {
+   protected:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -275,6 +276,9 @@ namespace Parameters {
     T minValue;
     T maxValue;
     int precision;
+
+    DoubleSpinBox(Arg<T>& t_ref, const QString& t_about = "") : ParameterType<T>(t_ref, t_about) {
+    }
 
    public:
     template <class U>
@@ -298,7 +302,7 @@ namespace Parameters {
       precision = t_precision;
     }
 
-    QString value() const override final {
+    QString value() const override {
       return QString::number(ref.value(), 'f', precision);
     }
 
@@ -317,10 +321,65 @@ namespace Parameters {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) override {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
           setValue(*op);
+          return true;
+        }
+      }
+      return false;
+    }
+  };
+
+  template <class T>
+  class MappedAngleToDegrees : public DoubleSpinBox<T> {
+    using DoubleSpinBox<T>::setValue;
+    using DoubleSpinBox<T>::eval;
+    using DoubleSpinBox<T>::ref;
+    using DoubleSpinBox<T>::minValue;
+    using DoubleSpinBox<T>::maxValue;
+    using DoubleSpinBox<T>::precision;
+
+    static constexpr T PI = qDegreesToRadians(180.0);
+
+    static QString message(QString about) {
+      if (!about.isEmpty()) {
+        about += " ";
+      }
+      about += "(input in degrees mapped to radians)";
+      return about;
+    }
+
+   public:
+    MappedAngleToDegrees(Arg<T>& t_ref,
+                         T t_minValue = static_cast<T>(0),
+                         T t_maxValue = static_cast<T>(2 * PI),
+                         int t_precision = 2,
+                         const QString& t_about = "") :
+        DoubleSpinBox<T>(t_ref, message(t_about)) {
+      if (t_minValue >= t_maxValue) {
+        throw std::runtime_error("minValue is greater or equal than maxValue.");
+      }
+      if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
+        throw std::runtime_error("SpinBox ref value out of range.");
+      }
+      if (!(0 <= t_precision && t_precision <= 15)) {
+        throw std::runtime_error("SpinBox precision value out of range.");
+      }
+      minValue = qRadiansToDegrees(static_cast<T>(t_minValue));
+      maxValue = qRadiansToDegrees(static_cast<T>(t_maxValue));
+      precision = t_precision;
+    }
+
+    QString value() const override final {
+      return QString::number(qRadiansToDegrees(ref.value()), 'f', precision);
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (minValue <= *op && *op <= maxValue) {
+          setValue(qDegreesToRadians(*op));
           return true;
         }
       }
