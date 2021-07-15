@@ -13,6 +13,19 @@
 #define RC_META_PACKAGE(type) class [[nodiscard]] [[maybe_unused]] type
 
 /*!
+ * @brief declares a private type with name 'varname', initialized with value, and its own public
+ * get method
+ */
+#define RC_CTE(type, varname, value)                                                               \
+ public:                                                                                           \
+  static constexpr const type& varname() {                                                         \
+    return m_##varname;                                                                            \
+  }                                                                                                \
+                                                                                                   \
+ private:                                                                                          \
+  static constexpr type m_##varname = {value}
+
+/*!
  * @brief declares a private type with name 'varname', default_value
  * initialized, and its own public set/get methods
  */
