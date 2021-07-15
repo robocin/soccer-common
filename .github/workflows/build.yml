@@ -23,12 +23,18 @@ jobs:
         run: cd ${GITHUB_WORKSPACE}/scripts && sudo ./setup.py --essentials
         
       - name: check-coding-style
-        run: (
-               format_files=$(find . -type d \( -path ./bin -o -path ./lib -o -path ./libs -o -path ./build \) -prune -false -o -name "*.h" -o -name "*.h++" -o -name "*.hxx" -o -name "*.H" -o -name "*.hpp" -o -name "*.c" -o -name "*.c++" -o -name "*.cxx" -o -name "*.C" -o -name "*.cpp")               
-               for file in ${format_files}; do
-                 clang-format --dry-run --Werror -i "${file}"
-               done
-             )
+        run: |
+          (
+            format_files=$(
+              find . -type d \( -path ./bin -o -path ./lib -o -path ./libs -o -path ./build \) -prune -false \
+                -o -name "*.h" -o -name "*.h++" -o -name "*.hxx" -o -name "*.H" -o -name "*.hpp" \
+                -o -name "*.c" -o -name "*.c++" -o -name "*.cxx" -o -name "*.C" -o -name "*.cpp"
+            )
+
+            for file in ${format_files}; do
+              clang-format --dry-run --Werror -i "${file}"
+            done
+          )
       
       - name: build
         run: cd ${GITHUB_WORKSPACE} && mkdir build && cd build && cmake .. && make -j$(grep -c ^processor /proc/cpuinfo)
