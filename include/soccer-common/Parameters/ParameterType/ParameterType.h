@@ -232,7 +232,9 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_integral_v<T>, "unsupported type.");
+
     value_type minValue;
     value_type maxValue;
 
@@ -414,7 +416,9 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_integral_v<T>, "unsupported type.");
+
     value_type minValue;
     value_type maxValue;
 
