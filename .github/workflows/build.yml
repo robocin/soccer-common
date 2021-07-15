@@ -29,9 +29,10 @@ jobs:
                    -o -name "*.h" -o -name "*.h++" -o -name "*.hxx" -o -name "*.H" -o -name "*.hpp" \
                    -o -name "*.c" -o -name "*.c++" -o -name "*.cxx" -o -name "*.C" -o -name "*.cpp"
                )
+               
                for file in ${format_files}; do
                  clang-format --dry-run --Werror -i "${file}"
-               done
+               done;
              )
       
       - name: build
