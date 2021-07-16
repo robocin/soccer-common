@@ -2,6 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cmake" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libs/magic_enum" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/scripts/ubuntu" vcs="Git" />
   </component>
 </project>

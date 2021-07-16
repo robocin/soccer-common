@@ -16,7 +16,6 @@ class ModulePrivate : public QObject, private QRunnable {
   static void waitOrDelete(ModulePrivate* object);
 
  public slots:
-  void runInParallel();
   void prepareToDelete();
 
  protected:
@@ -32,6 +31,12 @@ class ModulePrivate : public QObject, private QRunnable {
 
   void parametersUpdate();
   void run() final;
+
+ signals:
+  void runInParallel();
+
+ protected slots:
+  void tryStart();
 };
 
 #endif // SOCCER_COMMON_MODULEPRIVATE_H

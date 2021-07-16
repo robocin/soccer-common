@@ -39,6 +39,11 @@ class SharedValue {
     return std::forward<FunctionPointer>(f)(m_instance);
   }
 
+  template <class FunctionPointer>
+  constexpr decltype(auto) apply(FunctionPointer&& f) const {
+    return std::forward<FunctionPointer>(f)(m_instance);
+  }
+
   template <class... Args>
   constexpr void emplace(Args&&... args) {
     m_instance = T(std::forward<Args>(args)...);

@@ -13,13 +13,31 @@
 #define RC_META_PACKAGE(type) class [[nodiscard]] [[maybe_unused]] type
 
 /*!
+ * @brief declares a private type with name 'varname', initialized with value, and its own public
+ * static get method
+ */
+#define RC_CTE(type, varname, value)                                                               \
+ public:                                                                                           \
+  static constexpr const type& varname() {                                                         \
+    return m_##varname;                                                                            \
+  }                                                                                                \
+                                                                                                   \
+ private:                                                                                          \
+  static constexpr type m_##varname = {value}
+
+/*!
  * @brief declares a private type with name 'varname', default_value
  * initialized, and its own public set/get methods
  */
 #define RC_VAR(type, varname)                                                                      \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname = type(std::forward<Args>(args)...);                                               \
     return *this;                                                                                  \
   }                                                                                                \
   inline const type& varname() const {                                                             \
@@ -35,8 +53,13 @@
  */
 #define RC_VARVAL(type, varname, default_value)                                                    \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname = type(std::forward<Args>(args)...);                                               \
     return *this;                                                                                  \
   }                                                                                                \
   inline const type& varname() const {                                                             \
@@ -55,9 +78,24 @@
  */
 #define RC_VAROPT(type, varname)                                                                   \
  public:                                                                                           \
-  inline auto varname(const type& varname)->decltype(*this)& {                                     \
+  inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
+  }                                                                                                \
+  inline auto set_##varname(const std::optional<type>& varname)->decltype(*this)& {                \
+    m_##varname = varname;                                                                         \
+    return *this;                                                                                  \
+  }                                                                                                \
+  template <class... Args>                                                                         \
+  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
+    m_##varname.emplace(std::forward<Args>(args)...);                                              \
+    return *this;                                                                                  \
+  }                                                                                                \
+  inline bool has_##varname() const {                                                              \
+    return m_##varname.has_value();                                                                \
+  }                                                                                                \
+  inline const std::optional<type>& optional_##varname() const {                                   \
+    return m_##varname;                                                                            \
   }                                                                                                \
   inline const type& varname() const {                                                             \
     try {                                                                                          \

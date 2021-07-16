@@ -11,5 +11,7 @@
 #include "Field/Field.h"
 #include "ModulesPrivate/ModulesPrivate.h"
 #include "Gui/Gui.h"
+#include "Math/Math.h"
+#include "Physics/Physics.h"
 
 #endif // SOCCER_COMMON_SOCCER_COMMON_H

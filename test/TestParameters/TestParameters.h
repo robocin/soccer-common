@@ -35,6 +35,9 @@ class TestParameters : public QObject {
   void test_DoubleSpinBox_WithValidParameters_ShouldConstruct();
   void test_DoubleSpinBox_WithInvalidParameters_ShouldThrowException();
 
+  void test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct();
+  void test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException();
+
   void test_Slider_WithValidParameters_ShouldConstruct();
   void test_Slider_WithInvalidParameters_ShouldThrowException();
 
@@ -45,6 +48,9 @@ class TestParameters : public QObject {
 
   void test_MappedComboBox_WithValidParameters_ShouldConstruct();
   void test_MappedComboBox_WithInvalidParameters_ShouldThrowException();
+
+  void test_PushButton_WithValidParameters_ShouldConstruct();
+  void test_PushButton_WithInvalidParameters_ShouldThrowException();
 
   // handler:
   void test_ParametersHandler_WithValidParametersShouldConstruct();

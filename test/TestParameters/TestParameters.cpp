@@ -45,8 +45,8 @@ void TestParameters::test_ParameterType_eval_WithInvalidParameters_ShouldReturnN
     QCOMPARE(ParameterType<bool>::eval("-0"), std::nullopt);
     QCOMPARE(ParameterType<bool>::eval("-1"), std::nullopt);
 
-    QCOMPARE(ParameterType<bool>::eval("FALSE"), std::nullopt);
-    QCOMPARE(ParameterType<bool>::eval("TRUE"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("FALSE1"), std::nullopt);
+    QCOMPARE(ParameterType<bool>::eval("TRUE2"), std::nullopt);
   }
 
   /* arithmetic types */ {
@@ -148,7 +148,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
   /* testing double */ {
     Arg<double> real = std::acos(-1.0);
     auto text = Text(real, Regex::AnyMatch, description);
-    QCOMPARE(text.value(), QString::number(std::acos(-1.0), 'f', 10));
+    QCOMPARE(text.value(), QString::number(std::acos(-1.0), 'f', 15));
     QCOMPARE(text.type(), Utils::nameOfType<double>());
     QCOMPARE(text.inputType(), InputType::Text);
     QCOMPARE(text.description(), description);
@@ -184,7 +184,7 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing QString */ {
-    Arg<QString> empty;
+    Arg<QString> empty = "";
     bool error = false;
     try {
       auto text = Text(empty, QRegularExpression(R"_((.+))_"));
@@ -356,11 +356,116 @@ void TestParameters::test_DoubleSpinBox_WithInvalidParameters_ShouldThrowExcepti
     QVERIFY(error);
   }
 
-  /* testing int wrong range */ {
+  /* testing double wrong range */ {
     Arg<double> real = 5;
     bool error = false;
     try {
       auto doubleSpinBox = DoubleSpinBox(real, 10, -10);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing float precision out of range */ {
+    Arg<float> real = 50;
+    bool error = false;
+    try {
+      auto doubleSpinBox = DoubleSpinBox(real, 0, 100, -1);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double precision out of range */ {
+    Arg<double> real = 50;
+    bool error = false;
+    try {
+      auto doubleSpinBox = DoubleSpinBox(real, 0, 100, 20);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
+void TestParameters::test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "dale robocin";
+
+  /* testing float */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> angle = std::acos(-1.0);
+    auto mappedAngle = MappedAngleToDegrees(angle, 0.0, 2 * PI, 2, description);
+    QCOMPARE(mappedAngle.value(), "180.00");
+    QCOMPARE(mappedAngle.type(), Utils::nameOfType<double>());
+    QCOMPARE(mappedAngle.inputType(), InputType::DoubleSpinBox);
+    QCOMPARE(mappedAngle.description(),
+             QString(description) + " (input in degrees mapped to radians)");
+    QCOMPARE(mappedAngle.payload(),
+             Utils::quoted(Detail::MinValue) + ": " + QString::number(0.0, 'f', 2) + ", " +
+                 Utils::quoted(Detail::MaxValue) + ": " + QString::number(360.0, 'f', 2) + ", " +
+                 Utils::quoted(Detail::Precision) + ": " + QString::number(2));
+    QCOMPARE(mappedAngle.isChooseable(), false);
+    QCOMPARE(mappedAngle.update("45"), true);
+    QCOMPARE(angle, PI / 4);
+    QCOMPARE(mappedAngle.update("60"), true);
+    QCOMPARE(angle, PI / 3);
+  }
+}
+
+void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+
+  /* testing float out of range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<float> angle = -PI;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(angle);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double wrong range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 2 * PI, 0.0);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing float precision out of range */ {
+    float PI = std::acos(-1.0);
+
+    Arg<float> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 0.0f, PI, -1);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+
+  /* testing double precision out of range */ {
+    double PI = std::acos(-1.0);
+
+    Arg<double> real = 0;
+    bool error = false;
+    try {
+      auto matd = MappedAngleToDegrees(real, 0.0, PI, -1);
     } catch (...) {
       error = true;
     }
@@ -654,6 +759,53 @@ void TestParameters::test_MappedComboBox_WithInvalidParameters_ShouldThrowExcept
     }
     QVERIFY(error);
   }
+}
+
+void TestParameters::test_PushButton_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  QObject object;
+  bool verify = false;
+  auto lambda = [&verify]() {
+    verify = true;
+  };
+  QString description = "empty lambda";
+  auto pushButton = Parameters::PushButton(&object, lambda, description);
+
+  std::function<void()> function = *reinterpret_cast<std::function<void()>*>(
+      Utils::removeQuotes(pushButton.value()).toULongLong());
+  function();
+  QVERIFY(verify);
+  QCOMPARE(pushButton.type(), Utils::nameOfType(lambda));
+  QCOMPARE(pushButton.inputType(), InputType::PushButton);
+  QCOMPARE(pushButton.description(), description);
+  QCOMPARE(pushButton.payload(),
+           Utils::quoted(Detail::Parent) + ": " +
+               Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&object))));
+  QCOMPARE(pushButton.isChooseable(), false);
+  QCOMPARE(pushButton.update("false"), false);
+  QCOMPARE(pushButton.update("true"), false);
+  QCOMPARE(pushButton.update("abcd"), false);
+  QCOMPARE(pushButton.update("3.14"), false);
+  QCOMPARE(pushButton.update("123"), false);
+  QCOMPARE(pushButton.update("[] () { return; }"), false);
+}
+
+void TestParameters::test_PushButton_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+
+  bool verify = false;
+  auto lambda = [&verify]() {
+    verify = true;
+  };
+  QString description = "empty lambda";
+  bool error = false;
+  try {
+    auto pushButton = Parameters::PushButton(nullptr, lambda, description);
+  } catch (...) {
+    error = true;
+  }
+  QVERIFY(error);
 }
 
 void TestParameters::test_ParametersHandler_WithValidParametersShouldConstruct() {

@@ -34,6 +34,10 @@ ParameterWidget::ParameterWidget(QWidget* parent) :
                                                        this,
                                                        std::placeholders::_1,
                                                        std::placeholders::_2);
+  inputMethodBuildMap[InputType::PushButton] = std::bind(&ParameterWidget::buildPushButton,
+                                                         this,
+                                                         std::placeholders::_1,
+                                                         std::placeholders::_2);
 }
 
 ParameterWidget::~ParameterWidget() {
@@ -165,6 +169,12 @@ InputWidgets::InputMethod* ParameterWidget::buildComboBox(const QJsonObject& jso
 
 InputWidgets::InputMethod* ParameterWidget::buildCheckBox(const QJsonObject& json, QStringList&) {
   return new InputWidgets::CheckBox(json, ui->mainWidget);
+}
+
+InputWidgets::InputMethod* ParameterWidget::buildPushButton(const QJsonObject& json,
+                                                            QStringList& details) {
+  details.pop_back(); // default value.
+  return new InputWidgets::PushButton(json, ui->mainWidget);
 }
 
 void ParameterWidget::receiveOnValueChanged() {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 include(../version.cmake)
 include(../cmake/utils.cmake)
@@ -16,10 +16,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h")
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.cpp")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h" "*.h++" "*.hxx" "*.H" "*.hpp")
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.c" "*.c++" "*.cxx" "*.C" "*.cpp")
 
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 get_filename_component(PROJECT_PATH ../ ABSOLUTE)
 ROBOCIN_LINK_PROJECT_DEFINITIONS(${PROJECT_NAME} ${PROJECT_PATH})

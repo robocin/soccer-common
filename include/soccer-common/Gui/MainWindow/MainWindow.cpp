@@ -47,6 +47,12 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
   }
+  /* Mouse position on status bar */ {
+    connect(gameVisualizer(), &GameVisualizer::relativeMousePos, this, [this](const QPointF& pos) {
+      statusBar()->showMessage(
+          QString("Cursor: [X = %1, Y = %2]").arg(pos.x(), 5, 'f', 2).arg(pos.y(), 5, 'f', 2));
+    });
+  }
 }
 
 MainWindow::~MainWindow() {
@@ -72,6 +78,9 @@ void MainWindow::setup(const QString& name, const QString& version, const QStrin
   }
   /* menubar cannot be initialized before all modules insertion */ {
     setupMenuBar(mainWindowMenuBar);
+  }
+  /* robots widgets pattern cannot be initialized without project path */ {
+    setupRobotsWidgetsPattern(projectPath + "/resources/robots.png");
   }
   /* loading configs */ {
     qWarning() << "starting to load configuration...";
@@ -238,6 +247,24 @@ void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
       isFullScreen() ? showNormal() : showFullScreen();
     });
     menubar["View"].addAction(fullscreen);
+    menubar["View"].addSeparator();
+  }
+
+  /* status bar */ {
+    menubar["View"].addAction(Factory::toggleViewAction("Status Bar", statusBar()));
+    menubar["View"].addSeparator();
+  }
+
+  /* max visible robots */ {
+    auto* maxVisibleRobots = new QAction("Max Visible Robots...", &menubar["View"]);
+    QObject::connect(maxVisibleRobots, &QAction::triggered, this, [this]() {
+      int value =
+          QInputDialog::getInt(this, "Max Visible Robots:", "Max Robots", -1, 1, maxRobots());
+      if (value > 0) {
+        setMaxVisibleRobots(value);
+      }
+    });
+    menubar["View"].addAction(maxVisibleRobots);
     menubar["View"].addSeparator();
   }
 

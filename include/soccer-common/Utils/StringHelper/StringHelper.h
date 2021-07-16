@@ -82,7 +82,8 @@ namespace Utils {
   Extends<QString> nameOfCurrentType(T&& variant) {
     return std::visit(
         [](auto&& value) {
-          return Utils::nameOfType(value);
+          using U = std::decay_t<decltype(value)>;
+          return Utils::nameOfType<U>();
         },
         std::forward<T>(variant));
   }

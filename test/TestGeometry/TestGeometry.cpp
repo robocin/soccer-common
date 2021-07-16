@@ -54,6 +54,91 @@ void TestGeometry::test_degreesToRadians_whenGivenAFloatingPoint_shouldWork() {
   QCOMPARE(ld3_PI_2, ld3_PI_2v);
 }
 
+void TestGeometry::test_operator_degrees_whenGivenAFloatingPoint_shouldWork() {
+  using Geometry::operator""_degrees;
+  QCOMPARE(PI, 180_degrees);
+  QCOMPARE(PI / 2.0, 90_degrees);
+  QCOMPARE(PI / 4.0, 45_degrees);
+}
+
+void TestGeometry::test_smallestAngleDiff_whenGivenTwoFloatingPointNumbers_shouldWork() {
+  using namespace Geometry;
+
+  /* in -180 to +180 range */ {
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(20.0), qDegreesToRadians(45.0)),
+             qDegreesToRadians(25));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-45.0), qDegreesToRadians(45.0)),
+             qDegreesToRadians(90));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-85.0), qDegreesToRadians(90.0)),
+             qDegreesToRadians(175));
+
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-95.0), qDegreesToRadians(90.0)),
+             qDegreesToRadians(-175));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-45.0), qDegreesToRadians(125.0)),
+             qDegreesToRadians(170));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-45.0), qDegreesToRadians(145.0)),
+             qDegreesToRadians(-170));
+
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-45.0), qDegreesToRadians(125.0)),
+             qDegreesToRadians(170));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-45.0), qDegreesToRadians(145.0)),
+             qDegreesToRadians(-170));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(29.4803), qDegreesToRadians(-88.6381)),
+             qDegreesToRadians(-118.1184));
+
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-78.3251), qDegreesToRadians(-159.036)),
+             qDegreesToRadians(-80.7109));
+  }
+
+  /* wider range */ {
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-70099), qDegreesToRadians(29840)),
+             qDegreesToRadians(-141));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(-165313), qDegreesToRadians(33693)),
+             qDegreesToRadians(-74));
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(1174), qDegreesToRadians(-154146)),
+             qDegreesToRadians(-160));
+
+    QCOMPARE(smallestAngleDiff(qDegreesToRadians(60175), qDegreesToRadians(42213)),
+             qDegreesToRadians(38));
+  }
+}
+
+void TestGeometry::test_normalizeAngle_whenGivenThreeFloatingPointNumbers_shouldWork() {
+  using namespace Geometry;
+  /* degrees */ {
+    QCOMPARE(-10, normalizeAngle(-10, 0, 180));
+    QCOMPARE(-45, normalizeAngle(-45, 0, 180));
+    QCOMPARE(-90, normalizeAngle(-90, 0, 180));
+    QCOMPARE(-90, normalizeAngle(270, 0, 180));
+    QCOMPARE(180, normalizeAngle(360 + 180, 0, 180));
+  }
+  /* radians */ {
+    QCOMPARE(degreesToRadians(-10), normalizeAngle(degreesToRadians(-10), 0.0, PI));
+    QCOMPARE(degreesToRadians(-45), normalizeAngle(degreesToRadians(-45), 0.0, PI));
+    QCOMPARE(degreesToRadians(-90), normalizeAngle(degreesToRadians(-90), 0.0, PI));
+    QCOMPARE(degreesToRadians(-90), normalizeAngle(degreesToRadians(270), 0.0, PI));
+    QCOMPARE(degreesToRadians(180), normalizeAngle(degreesToRadians(360 + 180), 0.0, PI));
+  }
+}
+
+void TestGeometry::test_normalizeInPI_whenGivenAFloatingPoint_shouldWork() {
+  using namespace Geometry;
+  QCOMPARE(0.174533, normalizeInPI(0.174533));
+  QCOMPARE(-PI / 4.0, normalizeInPI(-PI / 4.0));
+  QCOMPARE(-PI / 2.0, normalizeInPI(-PI / 2.0));
+  QCOMPARE(-PI / 2.0, normalizeInPI(3.0 * PI / 2.0));
+  QCOMPARE(PI, normalizeInPI(3 * PI));
+}
+
+void TestGeometry::test_normalizeIn180_whenGivenAFloatingPoint_shouldWork() {
+  using namespace Geometry;
+  QCOMPARE(-10, normalizeIn180(-10));
+  QCOMPARE(-45, normalizeIn180(-45));
+  QCOMPARE(-90, normalizeIn180(-90));
+  QCOMPARE(-90, normalizeIn180(270));
+  QCOMPARE(180, normalizeIn180(360 + 180));
+}
+
 void TestGeometry::test_2D_operatorLess_whenGivenTwoPoints_shouldWork() {
   using namespace Geometry2D;
 
@@ -84,6 +169,20 @@ void TestGeometry::test_2D_operatorLess_whenGivenTwoPoints_shouldWork() {
     QPointF fRhsLessY(10, 10);
     QCOMPARE(fLhsLessY < fRhsLessY, true);
   }
+}
+
+void TestGeometry::test2D_fromPolar_whenGivenAFloatingPoint_shouldWork() {
+  using Geometry2D::fromPolar;
+  QCOMPARE(QPointF(1, 0), fromPolar<QPointF>(0));
+  QCOMPARE(QPointF(0, 1), fromPolar<QPointF>(PI / 2));
+  QCOMPARE(QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0), fromPolar<QPointF>(PI / 4.0));
+}
+
+void TestGeometry::test2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork() {
+  using Geometry2D::fromPolar;
+  QCOMPARE(QPointF(10, 0), fromPolar<QPointF>(10, 0));
+  QCOMPARE(QPointF(0, 20), fromPolar<QPointF>(20, PI / 2));
+  QCOMPARE(QPointF(30 * std::sqrt(2), 30 * std::sqrt(2)), fromPolar<QPointF>(60, PI / 4.0));
 }
 
 void TestGeometry::test_2D_dot_whenGivenTwoPoints_shouldWork() {
@@ -271,12 +370,21 @@ void TestGeometry::test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_
   QCOMPARE(resize(QPointF(-10, -10), std::sqrt(2)), -QPointF(1, 1));
 }
 
-void TestGeometry::test_2D_normalize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork() {
+void TestGeometry::test_2D_normalize_whenGivenAFloatingPointPoint_shouldWork() {
   using namespace Geometry2D;
 
   QCOMPARE(normalize(QPointF(2, 2)), QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
 
   QCOMPARE(normalize(QPointF(-10, -10)), -QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
+}
+
+void TestGeometry::test_2D_normalize_whenGivenAnIntegerPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QCOMPARE(normalize(QPoint(2, 2)), QPoint(1, 1));
+  QCOMPARE(normalize(QPoint(2, -2)), QPoint(1, -1));
+  QCOMPARE(normalize(QPoint(-10, -10)), -QPoint(1, 1));
+  QCOMPARE(normalize(QPoint(-8, 10)), QPoint(-4, 5));
 }
 
 void TestGeometry::test_2D_isTriangle_whenGivenThreeNumbers_shouldWork() {
@@ -296,7 +404,7 @@ void TestGeometry::test_2D_signedArea2_whenGivenAPolygon_shouldWork() {
   QCOMPARE(signedArea2(rpoly1), 200);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(signedArea2(poly2), -60.0);
 
   QPolygonF rpoly2(poly2);
@@ -314,7 +422,7 @@ void TestGeometry::test_2D_signedArea_whenGivenAPolygon_shouldWork() {
   QCOMPARE(signedArea(rpoly1), 100);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(signedArea(poly2), -30.0);
 
   QPolygonF rpoly2(poly2);
@@ -332,7 +440,7 @@ void TestGeometry::test_2D_area2_whenGivenAPolygon_shouldWork() {
   QCOMPARE(area2(rpoly1), 200);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(area2(poly2), 60.0);
 
   QPolygonF rpoly2(poly2);
@@ -350,7 +458,7 @@ void TestGeometry::test_2D_area_whenGivenAPolygon_shouldWork() {
   QCOMPARE(area(rpoly1), 100);
 
   QPolygonF poly2 =
-      QVector{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
+      QVector<QPointF>{QPointF(3, 4), QPointF(5, 11), QPointF(12, 8), QPointF(9, 5), QPointF(5, 6)};
   QCOMPARE(area(poly2), 30.0);
 
   QPolygonF rpoly2(poly2);
@@ -360,12 +468,12 @@ void TestGeometry::test_2D_area_whenGivenAPolygon_shouldWork() {
 
 void TestGeometry::test_2D_centroid_whenGivenAPolygonOfFloatingPointPoints_shouldWork() {
   using namespace Geometry2D;
-  QPolygonF poly1{QVector{QPointF(1, 0), QPointF(2, 0), QPointF(0, 3)}};
+  QPolygonF poly1{QVector<QPointF>{QPointF(1, 0), QPointF(2, 0), QPointF(0, 3)}};
 
   QCOMPARE(centroid(poly1), QPointF(1, 1));
 
-  QPolygonF poly2 =
-      QVector({QPointF(1, 0), QPointF(2, 1), QPointF(0, 3), QPointF(-1, 2), QPointF(-2, -1)});
+  QPolygonF poly2 = QVector<QPointF>(
+      {QPointF(1, 0), QPointF(2, 1), QPointF(0, 3), QPointF(-1, 2), QPointF(-2, -1)});
   QCOMPARE(centroid(poly2), QPointF(-0.08 - 1.0 / 300.0, 0.91 + 2.0 / 300.0));
 }
 
@@ -396,6 +504,36 @@ void TestGeometry::test_2D_projectPointLine_whenGivenALineAndAFloatingPointPoint
     QLineF line(0, 0, 2, 2);
     QPointF c(1, 1);
     QCOMPARE(projectPointLine(line, c), QPointF(1, 1));
+  }
+}
+
+void TestGeometry::test_2D_distancePointLine_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QPointF a(0, 0), b(2, 2), c(2, 0), d(0, 2);
+    QCOMPARE(distancePointLine(a, b, c), std::sqrt(2));
+    QCOMPARE(distancePointLine(a, b, d), std::sqrt(2));
+  }
+
+  {
+    QPointF a(0, 0), b(2, 2), c(1, 1);
+    QCOMPARE(distancePointLine(a, b, c), 0.0);
+  }
+}
+
+void TestGeometry::test_2D_distancePointLine_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(2, 0), d(0, 2);
+    QCOMPARE(distancePointLine(line, c), std::sqrt(2));
+    QCOMPARE(distancePointLine(line, d), std::sqrt(2));
+  }
+
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(1, 1);
+    QCOMPARE(distancePointLine(line, c), 0.0);
   }
 }
 
@@ -449,6 +587,36 @@ void TestGeometry::test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPo
   QCOMPARE(projectPointSegment(QLineF(-5, -2, 10, 4), QPointF(3, 7)), QPointF(5, 2));
   QCOMPARE(projectPointSegment(QLineF(7.5, 3, 10, 4), QPointF(3, 7)), QPointF(7.5, 3));
   QCOMPARE(projectPointSegment(QLineF(-5, -2, 2.5, 1), QPointF(3, 7)), QPointF(2.5, 1));
+}
+
+void TestGeometry::test_2D_distancePointSegment_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QPointF a(0, 0), b(2, 2), c(2, 0), d(0, 2);
+    QCOMPARE(distancePointSegment(a, b, c), std::sqrt(2));
+    QCOMPARE(distancePointSegment(a, b, d), std::sqrt(2));
+  }
+
+  {
+    QPointF a(0, 0), b(2, 2), c(1, 1);
+    QCOMPARE(distancePointSegment(a, b, c), 0.0);
+  }
+}
+
+void TestGeometry::test_2D_distancePointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(2, 0), d(0, 2);
+    QCOMPARE(distancePointSegment(line, c), std::sqrt(2));
+    QCOMPARE(distancePointSegment(line, d), std::sqrt(2));
+  }
+
+  {
+    QLineF line(0, 0, 2, 2);
+    QPointF c(1, 1);
+    QCOMPARE(distancePointSegment(line, c), 0.0);
+  }
 }
 
 void TestGeometry::test_2D_linesParallel_whenGivenFourPoints_shouldWork() {
@@ -518,6 +686,195 @@ void TestGeometry::test_2D_segmentsIntersect_whenGivenTwoLines_shouldWork() {
   QVERIFY(segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(4, 3, 0, 5)));
   QVERIFY(segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(2, -1, -2, 1)));
   QVERIFY(!segmentsIntersect(QLineF(0, 0, 2, 4), QLineF(5, 5, 1, 7)));
+}
+
+void TestGeometry::test_2D_linesIntersection_whenGivenFourFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+
+  /* x and y axis */ {
+    auto intersection =
+        linesIntersection(QPointF(0, 2), QPointF(0, 4), QPointF(2, 0), QPointF(100, 0));
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, 0));
+  }
+  /* collinear */ {
+    auto intersection =
+        linesIntersection(QPointF(0, 0), QPointF(1, 1), QPointF(2, 2), QPointF(3, 3));
+    QVERIFY(!intersection);
+  }
+  /* parallel */ {
+    auto intersection =
+        linesIntersection(QPointF(0, 1), QPointF(1, 2), QPointF(2, 2), QPointF(3, 3));
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    auto intersection =
+        linesIntersection(QPointF(0, -5), QPointF(0, 0), QPointF(-4.5, -4.5), QPointF(3, -7));
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, -6));
+  }
+  /* any case */ {
+    auto intersection =
+        linesIntersection(QPointF(0, 6), QPointF(-9, -2), QPointF(-2, -0), QPointF(0, 0));
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(-6.75, 0));
+  }
+}
+
+void TestGeometry::test_2D_linesIntersection_whenGivenTwoLines_shouldWork() {
+  using namespace Geometry2D;
+
+  /* x and y axis */ {
+    QLineF lhs(0, 2, 0, 4);
+    QLineF rhs(2, 0, 100, 0);
+    auto intersection = linesIntersection(lhs, rhs);
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, 0));
+  }
+  /* collinear */ {
+    QLineF lhs(0, 0, 1, 1);
+    QLineF rhs(2, 2, 3, 3);
+    auto intersection = linesIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* parallel */ {
+    QLineF lhs(0, 1, 1, 2);
+    QLineF rhs(2, 2, 3, 3);
+    auto intersection = linesIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    QLineF lhs(0, -5, 0, 0);
+    QLineF rhs(-4.5, -4.5, 3, -7);
+    auto intersection = linesIntersection(lhs, rhs);
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, -6));
+  }
+  /* any case */ {
+    QLineF lhs(0, 6, -9, -2);
+    QLineF rhs(-2, -0, 0, 0);
+    auto intersection = linesIntersection(lhs, rhs);
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(-6.75, 0));
+  }
+}
+
+void TestGeometry::test_2D_segmentsIntersection_whenGivenFourFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+
+  /* x and y axis */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, 2), QPointF(0, 4), QPointF(2, 0), QPointF(100, 0));
+    QVERIFY(!intersection);
+  }
+  /* collinear */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, 0), QPointF(1, 1), QPointF(2, 2), QPointF(3, 3));
+    QVERIFY(!intersection);
+  }
+  /* parallel */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, 1), QPointF(1, 2), QPointF(2, 2), QPointF(3, 3));
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, -5), QPointF(0, 0), QPointF(-4.5, -4.5), QPointF(3, -7));
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, -10), QPointF(0, 0), QPointF(-4.5, -4.5), QPointF(3, -7));
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, -6));
+  }
+  /* any case */ {
+    auto intersection =
+        segmentsIntersection(QPointF(0, 6), QPointF(-9, -2), QPointF(-2, 0), QPointF(0, 0));
+    QVERIFY(!intersection);
+  }
+}
+
+void TestGeometry::test_2D_segmentsIntersection_whenGivenTwoLines_shouldWork() {
+  using namespace Geometry2D;
+
+  /* x and y axis */ {
+    QLineF lhs(0, 2, 0, 4);
+    QLineF rhs(2, 0, 100, 0);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* collinear */ {
+    QLineF lhs(0, 0, 1, 1);
+    QLineF rhs(2, 2, 3, 3);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* parallel */ {
+    QLineF lhs(0, 1, 1, 2);
+    QLineF rhs(2, 2, 3, 3);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    QLineF lhs(0, -5, 0, 0);
+    QLineF rhs(-4.5, -4.5, 3, -7);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+  /* any case */ {
+    QLineF lhs(0, -10, 0, 0);
+    QLineF rhs(-4.5, -4.5, 3, -7);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(intersection);
+    QCOMPARE(intersection.value(), QPointF(0, -6));
+  }
+  /* any case */ {
+    QLineF lhs(0, 6, -9, -2);
+    QLineF rhs(-2, -0, 0, 0);
+    auto intersection = segmentsIntersection(lhs, rhs);
+    QVERIFY(!intersection);
+  }
+}
+
+void TestGeometry::test_2D_convexHull_whenGivenAPolygon_shouldWork() {
+  using namespace Geometry2D;
+  /* poly of integer points */ {
+    QPolygon poly;
+    poly << QPoint(30, 60) << QPoint(50, 40) << QPoint(0, 30) << QPoint(15, 25) << QPoint(70, 30)
+         << QPoint(55, 20) << QPoint(50, 10) << QPoint(20, 0);
+    QCOMPARE(
+        convexHull(poly),
+        QPolygon({QPoint(0, 30), QPoint(20, 0), QPoint(50, 10), QPoint(70, 30), QPoint(30, 60)}));
+  }
+  /* poly of floating point points */ {
+    QPolygonF poly({QPointF(-7, 8),
+                    QPointF(-4, 6),
+                    QPointF(2, 6),
+                    QPointF(6, 4),
+                    QPointF(8, 6),
+                    QPointF(7, -2),
+                    QPointF(4, -6),
+                    QPointF(8, -7),
+                    QPointF(0, 0),
+                    QPointF(3, -2),
+                    QPointF(6, -10),
+                    QPointF(0, -6),
+                    QPointF(-9, -5),
+                    QPointF(-8, -2),
+                    QPointF(-8, 0),
+                    QPointF(-10, 3),
+                    QPointF(-2, 2),
+                    QPointF(-10, 4)});
+    QCOMPARE(convexHull(poly),
+             QPolygonF({QPointF(-10, 3),
+                        QPointF(-9, -5),
+                        QPointF(6, -10),
+                        QPointF(8, -7),
+                        QPointF(8, 6),
+                        QPointF(-7, 8),
+                        QPointF(-10, 4)}));
+  }
 }
 
 void TestGeometry::test_2D_pointInPolygon_whenGivenAPolygonAndAPoint_shouldWork() {

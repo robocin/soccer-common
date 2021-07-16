@@ -22,17 +22,11 @@ namespace detail {
       return std::forward<F>(f);
     }
   }
-
-  template <class T, class... Ts>
-  Extends<QString> overloaded_visitor_rte_message() {
-    auto type = Utils::nameOfType<T>();
-    auto functors = Utils::nameOfTypes<Ts...>();
-    return type + " is not invocable by " + functors + ".";
-  }
 } // namespace detail
 
 template <class... Ts>
 class [[maybe_unused]] overloaded_visitor_t : public Ts... {
+ protected:
   template <class U, class... Us>
   static constexpr bool are_same_v = (std::is_same<U, Us>::value && ...);
 
@@ -47,6 +41,7 @@ class [[maybe_unused]] overloaded_visitor_t : public Ts... {
   };
 
  public:
+  overloaded_visitor_t() = default;
   explicit overloaded_visitor_t(Ts... functors) : Ts(functors)... {
   }
 
@@ -55,8 +50,9 @@ class [[maybe_unused]] overloaded_visitor_t : public Ts... {
 
   template <class T>
   std::enable_if_t<!(std::is_invocable_v<Ts, T> || ...), result_type> operator()(T&&) const {
-    using detail::overloaded_visitor_rte_message;
-    throw std::runtime_error(overloaded_visitor_rte_message<T, Ts...>());
+    auto type = Utils::nameOfType<T>();
+    auto functors = Utils::nameOfTypes<Ts...>();
+    throw std::runtime_error(type + " is not invocable by " + functors + ".");
   }
 };
 
@@ -65,10 +61,13 @@ class [[maybe_unused]] overloaded_visitor_t<> {
  public:
   overloaded_visitor_t() = default;
 
+  using result_type = void;
+
   template <class T>
   void operator()(T&&) const {
-    using detail::overloaded_visitor_rte_message;
-    throw std::runtime_error(overloaded_visitor_rte_message<T>());
+    auto type = Utils::nameOfType<T>();
+    auto functors = Utils::nameOfTypes();
+    throw std::runtime_error(type + " is not invocable by " + functors + ".");
   }
 };
 

@@ -20,10 +20,6 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::value_or;
   using std::optional<T>::reset;
 
-  constexpr operator T() const {
-    return std::optional<T>::value();
-  }
-
   constexpr T value() const {
     return std::optional<T>::value();
   }
@@ -36,6 +32,34 @@ class SharedOptional : public std::optional<T> {
     T ret(std::move(std::optional<T>::value()));
     std::optional<T>::reset();
     return ret;
+  }
+
+  template <class U>
+  bool extract_to(U& other) {
+    if (has_value()) {
+      other = static_cast<U>(getAndReset());
+      return true;
+    }
+    return false;
+  }
+
+  template <class U>
+  bool extractTo(U& other) {
+    return extract_to(other);
+  }
+
+  template <class U>
+  bool extract_to(std::optional<U>& other) {
+    if (has_value()) {
+      other.template emplace(static_cast<U>(getAndReset()));
+      return true;
+    }
+    return false;
+  }
+
+  template <class U>
+  bool extractTo(std::optional<U>& other) {
+    return extract_to(other);
   }
 
   template <class U>
@@ -55,6 +79,11 @@ class SharedOptional : public std::optional<T> {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(FunctionPointer&& f) {
+    return std::forward<FunctionPointer>(f)(*this);
+  }
+
+  template <class FunctionPointer>
+  constexpr decltype(auto) apply(FunctionPointer&& f) const {
     return std::forward<FunctionPointer>(f)(*this);
   }
 

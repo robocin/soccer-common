@@ -11,7 +11,9 @@ namespace InputWidgets {
 
    public:
     explicit InputMethod(QWidget* parent);
-    virtual ~InputMethod();
+    virtual ~InputMethod() = default;
+
+    virtual bool isPushButton();
 
     virtual void set(const QString& value) = 0;
     virtual QString backupValue() const = 0;
@@ -90,8 +92,8 @@ namespace InputWidgets {
     QCheckBox checkBox;
     bool backup;
 
-    Qt::CheckState checkStateFromBoolean(bool value) const;
-    bool booleanFromCheckState(Qt::CheckState checkState) const;
+    static Qt::CheckState checkStateFromBoolean(bool value);
+    static bool booleanFromCheckState(Qt::CheckState checkState);
 
    public:
     explicit CheckBox(const QJsonObject& json, QWidget* parent);
@@ -109,6 +111,21 @@ namespace InputWidgets {
 
    public:
     explicit ComboBox(const QJsonObject& json, QWidget* parent);
+
+    void set(const QString& value) override;
+    QString backupValue() const override;
+    QString currentValue() const override;
+    void storeCurrent() override;
+    void loadBackup() override;
+  };
+
+  class PushButton : public InputMethod {
+    QPushButton pushButton;
+
+   public:
+    explicit PushButton(const QJsonObject& json, QWidget* parent);
+
+    bool isPushButton() override;
 
     void set(const QString& value) override;
     QString backupValue() const override;

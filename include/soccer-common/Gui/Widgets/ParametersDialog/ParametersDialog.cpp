@@ -50,6 +50,9 @@ Parameters::UpdateRequests ParametersDialog::getUpdates(bool overwriteBackup,
   UpdateRequests updates;
   for (auto up : m_widgets) {
     auto input = up->input();
+    if (input->isPushButton()) {
+      continue;
+    }
     if (allValues || (input->backupValue() != input->currentValue())) {
       updates += UpdateRequest(up->path(), input->currentValue());
       if (overwriteBackup) {
@@ -65,6 +68,9 @@ void ParametersDialog::openCurrentFromJsonHandler(const Parameters::JsonHandler&
   for (const auto& up : updates) {
     auto it = m_widgets.find(up.path());
     if (it != m_widgets.end()) {
+      if (it.value()->input()->isPushButton()) {
+        continue;
+      }
       if (up.value() != it.value()->input()->currentValue()) {
         it.value()->input()->set(up.value());
         qWarning().nospace() << "trying to load " << up.path() << " with value: " << up.value()
@@ -139,6 +145,9 @@ void ParametersDialog::onCancelButtonClicked() {
   qWarning().nospace() << "discarding changes from " << m_title << ".";
   for (auto up : m_widgets) {
     auto input = up->input();
+    if (input->isPushButton()) {
+      continue;
+    }
     if (input->backupValue() != input->currentValue()) {
       qWarning().nospace() << "discarding " << up->path() << ".";
       up->input()->loadBackup();

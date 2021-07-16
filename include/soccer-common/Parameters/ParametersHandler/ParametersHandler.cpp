@@ -27,6 +27,9 @@ namespace Parameters {
     std::function<void(JsonHandler&, const QJsonObject&)> f = [&](JsonHandler& handler,
                                                                   const QJsonObject& object) {
       if (isParameterType(object)) {
+        if (object[Detail::InputType] == InputType::PushButton) {
+          return;
+        }
         handler.m_value = object[Detail::Value].toVariant().toString();
         if (object.contains(Detail::Conditional)) {
           f(handler, object[Detail::Conditional].toObject());

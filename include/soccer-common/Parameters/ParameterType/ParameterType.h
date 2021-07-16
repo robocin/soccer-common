@@ -18,6 +18,7 @@ namespace Parameters {
     static constexpr const char* DoubleSpinBox = "DoubleSpinBox";
     static constexpr const char* ComboBox = "ComboBox";
     static constexpr const char* CheckBox = "CheckBox";
+    static constexpr const char* PushButton = "PushButton";
   } // namespace InputType
 
   namespace Detail {
@@ -31,10 +32,11 @@ namespace Parameters {
     static constexpr const char* Options = "Options";
     static constexpr const char* Regex = "Regex";
     static constexpr const char* Conditional = "Conditional";
+    static constexpr const char* Parent = "Parent";
   } // namespace Detail
 
   struct ParameterBase {
-    virtual ~ParameterBase();
+    virtual ~ParameterBase() = default;
     virtual QString value() const = 0;
     virtual QString inputType() const = 0;
     virtual QString type() const = 0;
@@ -61,7 +63,10 @@ namespace Parameters {
     }
 
    public:
-    using type = T;
+    using value_type = T;
+
+    // disable_empty_constructor:
+    Arg() = delete;
 
     template <class... Us>
     Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
@@ -108,8 +113,9 @@ namespace Parameters {
       if constexpr (std::is_enum_v<T>) {
         return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
       } else if constexpr (std::is_same_v<T, bool>) {
-        if (auto var = QVariant(str); var.canConvert<bool>()) {
-          return std::make_optional<T>(var.toBool());
+        static const QStringList options = {"0", "1", "false", "true"};
+        if (options.contains(str, Qt::CaseInsensitive)) {
+          return std::make_optional<T>(str == "1" || str.toLower() == "true");
         } else {
           return std::nullopt;
         }
@@ -146,7 +152,7 @@ namespace Parameters {
       } else if constexpr (std::is_same_v<T, bool>) {
         return ref.value() ? "true" : "false";
       } else if constexpr (std::is_floating_point_v<T>) {
-        return QString::number(ref.value(), 'f', 10);
+        return QString::number(ref.value(), 'f', 15);
       } else if constexpr (std::is_arithmetic_v<T>) {
         return QString::number(ref.value());
       } else if constexpr (std::is_base_of_v<QString, T>) {
@@ -172,6 +178,10 @@ namespace Parameters {
 
   template <class T>
   class Text : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -215,16 +225,24 @@ namespace Parameters {
 
   template <class T>
   class SpinBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+
+    value_type minValue;
+    value_type maxValue;
 
    public:
-    template <class U>
-    SpinBox(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    SpinBox(Arg<T>& t_ref,
+            value_type t_minValue,
+            value_type t_maxValue,
+            const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -232,8 +250,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      minValue = t_minValue;
+      maxValue = t_maxValue;
     }
 
     QString inputType() const override final {
@@ -262,19 +280,27 @@ namespace Parameters {
 
   template <class T>
   class DoubleSpinBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   protected:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_floating_point_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+
+    value_type minValue;
+    value_type maxValue;
     int precision;
 
+    DoubleSpinBox(Arg<T>& t_ref, const QString& t_about = "") : ParameterType<T>(t_ref, t_about) {
+    }
+
    public:
-    template <class U>
     DoubleSpinBox(Arg<T>& t_ref,
-                  U t_minValue,
-                  U t_maxValue,
+                  value_type t_minValue,
+                  value_type t_maxValue,
                   int t_precision = 2,
                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
@@ -284,12 +310,15 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("SpinBox ref value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      if (!(0 <= t_precision && t_precision <= 15)) {
+        throw std::runtime_error("SpinBox precision value out of range.");
+      }
+      minValue = t_minValue;
+      maxValue = t_maxValue;
       precision = t_precision;
     }
 
-    QString value() const override final {
+    QString value() const override {
       return QString::number(ref.value(), 'f', precision);
     }
 
@@ -308,7 +337,7 @@ namespace Parameters {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) override {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
           setValue(*op);
@@ -320,17 +349,84 @@ namespace Parameters {
   };
 
   template <class T>
+  class MappedAngleToDegrees : public DoubleSpinBox<T> {
+   public:
+    using value_type = typename DoubleSpinBox<T>::value_type;
+
+   private:
+    using DoubleSpinBox<T>::setValue;
+    using DoubleSpinBox<T>::eval;
+    using DoubleSpinBox<T>::ref;
+    using DoubleSpinBox<T>::minValue;
+    using DoubleSpinBox<T>::maxValue;
+    using DoubleSpinBox<T>::precision;
+
+    static constexpr double PI = qDegreesToRadians(180.0);
+
+    static QString message(QString about) {
+      if (!about.isEmpty()) {
+        about += " ";
+      }
+      about += "(input in degrees mapped to radians)";
+      return about;
+    }
+
+   public:
+    MappedAngleToDegrees(Arg<T>& t_ref,
+                         value_type t_minValue = 0.0,
+                         value_type t_maxValue = 2.0 * PI,
+                         int t_precision = 2,
+                         const QString& t_about = "") :
+        DoubleSpinBox<T>(t_ref, message(t_about)) {
+      if (t_minValue >= t_maxValue) {
+        throw std::runtime_error("minValue is greater or equal than maxValue.");
+      }
+      if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
+        throw std::runtime_error("SpinBox ref value out of range.");
+      }
+      if (!(0 <= t_precision && t_precision <= 15)) {
+        throw std::runtime_error("SpinBox precision value out of range.");
+      }
+      minValue = qRadiansToDegrees(t_minValue);
+      maxValue = qRadiansToDegrees(t_maxValue);
+      precision = t_precision;
+    }
+
+    QString value() const override final {
+      return QString::number(qRadiansToDegrees(ref.value()), 'f', precision);
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        if (minValue <= *op && *op <= maxValue) {
+          setValue(qDegreesToRadians(*op));
+          return true;
+        }
+      }
+      return false;
+    }
+  };
+
+  template <class T>
   class Slider : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
+
     static_assert(std::is_integral_v<T>, "unsupported type.");
-    T minValue;
-    T maxValue;
+
+    value_type minValue;
+    value_type maxValue;
 
    public:
-    template <class U>
-    Slider(Arg<T>& t_ref, U t_minValue, U t_maxValue, const QString& t_about = "") :
+    Slider(Arg<T>& t_ref,
+           value_type t_minValue,
+           value_type t_maxValue,
+           const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
@@ -338,8 +434,8 @@ namespace Parameters {
       if (!(t_minValue <= t_ref && t_ref <= t_maxValue)) {
         throw std::runtime_error("Slider ref value out of range.");
       }
-      minValue = static_cast<T>(t_minValue);
-      maxValue = static_cast<T>(t_maxValue);
+      minValue = t_minValue;
+      maxValue = t_maxValue;
     }
 
     QString inputType() const override final {
@@ -367,6 +463,10 @@ namespace Parameters {
   };
 
   class CheckBox : public ParameterType<bool> {
+   public:
+    using value_type = typename Arg<bool>::value_type;
+
+   private:
     using ParameterType<bool>::setValue;
     using ParameterType<bool>::eval;
     using ParameterType<bool>::ref;
@@ -399,6 +499,10 @@ namespace Parameters {
 
   template <class T>
   class ComboBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -460,6 +564,10 @@ namespace Parameters {
 
   template <class T>
   class MappedComboBox : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
@@ -523,6 +631,53 @@ namespace Parameters {
         setValue(bimap.right.find(str)->get_left());
         return true;
       }
+      return false;
+    }
+  };
+
+  class PushButton : public ParameterBase {
+    QString m_type;
+    QString m_about;
+    qulonglong m_parent;
+    std::function<void()> m_function;
+
+   public:
+    template <class FunctionPointer>
+    explicit PushButton(QObject* t_parent, FunctionPointer&& t_f, QString t_about = "") :
+        m_type(Utils::nameOfType<FunctionPointer>()),
+        m_parent(reinterpret_cast<qulonglong>(t_parent)),
+        m_function(std::forward<FunctionPointer>(t_f)),
+        m_about(std::move(t_about)) {
+      if (!t_parent) {
+        throw std::runtime_error("t_parent must be a valid pointer.");
+      }
+    }
+
+    QString value() const override final {
+      return Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&m_function)));
+    }
+
+    QString inputType() const override final {
+      return InputType::PushButton;
+    }
+
+    QString type() const override final {
+      return m_type;
+    }
+
+    QString description() const override final {
+      return m_about;
+    }
+
+    QString payload() const override final {
+      return Utils::quoted(Detail::Parent) + ": " + Utils::quoted(QString::number(m_parent));
+    }
+
+    bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString&) override final {
       return false;
     }
   };

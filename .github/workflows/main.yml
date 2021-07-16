@@ -1,0 +1,55 @@
+name: Main CI
+
+# Controls when the workflow will run
+on:
+  push:
+  pull_request:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # Install all dependencies using setup.py script inside scripts folder
+      - name: install-dependencies
+        run: cd ${GITHUB_WORKSPACE}/scripts && sudo ./setup.py --essentials
+
+      - name: check-coding-style
+        run: |
+          (
+            cd ${GITHUB_WORKSPACE}
+
+            format_files=$(
+              find . -type d \( -path ./bin -o -path ./lib -o -path ./libs -o -path ./build \) -prune -false \
+                -o -name "*.h" -o -name "*.h++" -o -name "*.hxx" -o -name "*.H" -o -name "*.hpp" \
+                -o -name "*.c" -o -name "*.c++" -o -name "*.cxx" -o -name "*.C" -o -name "*.cpp"
+            )
+
+            for file in ${format_files}; do
+              clang-format --dry-run --Werror -i "${file}"
+            done
+          )
+
+      - name: build
+        run: cd ${GITHUB_WORKSPACE} && mkdir build && cd build && cmake .. && make -j$(grep -c ^processor /proc/cpuinfo)
+
+      - name: run-tests
+        run: |
+          (
+            cd ${GITHUB_WORKSPACE}
+
+            if [ -d "bin/test/" ]; then
+              for test in $(find ./bin/test -executable -type f); do
+                ${test} -platform offscreen && echo " ";
+              done;
+            fi
+          )
+

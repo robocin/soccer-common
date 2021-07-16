@@ -17,21 +17,20 @@ namespace Ui {
   class ColorTeamWidget;
 }
 
-class ColorTeamWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
+class ColorTeamWidget : public QWidget, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit ColorTeamWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  explicit ColorTeamWidget(QWidgetWith<MenuBarOptions> parent = nullptr);
   ~ColorTeamWidget();
+
  public slots:
-  void setColor(QColor color);
+  void setColor(const QColor& color);
 
  private:
   Ui::ColorTeamWidget* ui;
   QAction* viewAction;
 
-  void writeLocalSettings(QSettings& settings) override;
-  void loadLocalSettings(const QSettings& settings) override;
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 

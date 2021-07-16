@@ -54,6 +54,7 @@ MaxEmptyLinesToKeep: 1
 PointerAlignment: Left
 
 SortIncludes: false
+SortUsingDeclarations: false
 
 # spaces
 SpaceAfterCStyleCast: true

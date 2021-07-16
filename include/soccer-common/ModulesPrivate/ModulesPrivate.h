@@ -130,6 +130,32 @@ class ModulesPrivate : public QObject {
                                         ref,
                                         &ModuleBase::receiveUpdateRequests);
       }
+      /* interface */ {
+        auto gui = static_cast<ModulesPrivate*>(modules)->gui();
+        connect(ref,
+                &ModuleBase::setInterfaceScoreboard,
+                gui->scoreboard(),
+                &ScoreboardWidget::setScore);
+
+        connect(ref,
+                &ModuleBase::setInterfaceTeamColor,
+                gui->scoreboard(),
+                &ScoreboardWidget::setColor);
+
+        connect(ref,
+                &ModuleBase::setInterfaceTeamColor,
+                gui->colorTeam(),
+                &ColorTeamWidget::setColor);
+
+        connect(ref, &ModuleBase::setInterfaceTeamColor, gui, [gui](const QColor& color) {
+          gui->setRobotDetailsColor(color);
+        });
+
+        connect(ref,
+                &ModuleBase::setInterfaceAttackSide,
+                gui->attackSide(),
+                &AttackSideWidget::setRightSide);
+      }
       return connections;
     }
 
