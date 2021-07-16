@@ -20,10 +20,6 @@ class SharedOptional : public std::optional<T> {
   using std::optional<T>::value_or;
   using std::optional<T>::reset;
 
-  constexpr operator T() const {
-    return std::optional<T>::value();
-  }
-
   constexpr T value() const {
     return std::optional<T>::value();
   }
