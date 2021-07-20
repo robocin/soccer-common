@@ -63,8 +63,8 @@ namespace Common {
    public:
     constexpr Robot(int id, float angle, const Entity<PT>& entity) :
         RawEntity<PT>(entity.position()),
-        Entity<PT>(entity),
-        RawRobot<PT>(id, angle, entity.position()) {
+        RawRobot<PT>(id, angle, entity.position()),
+        Entity<PT>(entity) {
     }
     constexpr Robot(const RawRobot<PT>& rawRobot, const PT& velocity, const PT& acceleration) :
         Robot(rawRobot.id(),
