@@ -8,15 +8,15 @@ namespace Common {
     T m_length;
     T m_width;
 
-    T m_goalWidth;
     T m_goalDepth;
+    T m_goalWidth;
 
    public:
-    constexpr Field(const T& length, const T& width, const T& goalWidth, const T& goalDepth) :
+    constexpr Field(const T& length, const T& width, const T& goalDepth, const T& goalWidth) :
         m_length(length),
         m_width(width),
-        m_goalWidth(goalWidth),
-        m_goalDepth(goalDepth) {
+        m_goalDepth(goalDepth),
+        m_goalWidth(goalWidth) {
     }
 
     constexpr T length() const {
@@ -25,11 +25,11 @@ namespace Common {
     constexpr T width() const {
       return m_width;
     }
-    constexpr T goalWidth() const {
-      return m_goalWidth;
-    }
     constexpr T goalDepth() const {
       return m_goalDepth;
+    }
+    constexpr T goalWidth() const {
+      return m_goalWidth;
     }
   };
 } // namespace Common
