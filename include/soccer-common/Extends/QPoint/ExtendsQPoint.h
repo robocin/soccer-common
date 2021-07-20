@@ -120,7 +120,7 @@ class Extends<QPoint> : public QPoint {
     return Extends<QPoint>(static_cast<const QPoint&>(p) / c);
   }
 
-  Extends<QPoint> transposed() const {
+  constexpr Extends<QPoint> transposed() const {
     return Extends<QPoint>(QPoint::transposed());
   }
   constexpr inline void transpose() {
@@ -344,7 +344,7 @@ class Extends<QPointF> : public QPointF {
     return Extends<QPointF>(static_cast<const QPointF&>(p) / divisor);
   }
 
-  Extends<QPointF> transposed() const {
+  constexpr Extends<QPointF> transposed() const {
     return Extends<QPointF>(QPointF::transposed());
   }
   constexpr inline void transpose() {
