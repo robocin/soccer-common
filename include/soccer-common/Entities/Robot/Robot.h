@@ -55,16 +55,16 @@ namespace Common {
   // -------------------------------------------------------------------------------------------- //
 
   template <class PT>
-  class Robot : public Entity<PT>, public RawRobot<PT> {
+  class Robot : public RawRobot<PT>, public Entity<PT> {
    protected:
     using RawRobot<PT>::m_id;
     using RawRobot<PT>::m_angle;
 
    public:
     constexpr Robot(int id, float angle, const Entity<PT>& entity) :
-        RawEntity<PT>(entity.position()),
+        Entity<PT>(entity),
         RawRobot<PT>(id, angle, entity.position()),
-        Entity<PT>(entity) {
+        RawEntity<PT>(entity.position()) {
     }
     constexpr Robot(const RawRobot<PT>& rawRobot, const PT& velocity, const PT& acceleration) :
         Robot(rawRobot.id(),
