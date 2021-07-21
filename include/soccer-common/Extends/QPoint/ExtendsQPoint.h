@@ -35,8 +35,16 @@ class Extends<QPoint> : public QPoint {
     return lhs < static_cast<const QPoint&>(rhs);
   }
 
+  constexpr inline Extends<QPoint>& operator+=(const QPoint& point) {
+    QPoint::operator+=(point);
+    return *this;
+  }
   constexpr inline Extends<QPoint>& operator+=(const Extends<QPoint>& point) {
     QPoint::operator+=(static_cast<const QPoint&>(point));
+    return *this;
+  }
+  constexpr inline Extends<QPoint>& operator-=(const QPoint& point) {
+    QPoint::operator-=(point);
     return *this;
   }
   constexpr inline Extends<QPoint>& operator-=(const Extends<QPoint>& point) {
@@ -60,13 +68,29 @@ class Extends<QPoint> : public QPoint {
     return *this;
   }
 
+  friend constexpr inline Extends<QPoint> operator+(const QPoint& p1,
+                                                    const Extends<QPoint>& p2) noexcept {
+    return Extends<QPoint>(p1 + static_cast<const QPoint&>(p2));
+  }
   friend constexpr inline Extends<QPoint> operator+(const Extends<QPoint>& p1,
                                                     const Extends<QPoint>& p2) noexcept {
     return Extends<QPoint>(static_cast<const QPoint&>(p1) + static_cast<const QPoint&>(p2));
   }
+  friend constexpr inline Extends<QPoint> operator+(const Extends<QPoint>& p1,
+                                                    const QPoint& p2) noexcept {
+    return Extends<QPoint>(static_cast<const QPoint&>(p1) + p2);
+  }
+  friend constexpr inline Extends<QPoint> operator-(const QPoint& p1,
+                                                    const Extends<QPoint>& p2) noexcept {
+    return Extends<QPoint>(p1 - static_cast<const QPoint&>(p2));
+  }
   friend constexpr inline Extends<QPoint> operator-(const Extends<QPoint>& p1,
                                                     const Extends<QPoint>& p2) noexcept {
     return Extends<QPoint>(static_cast<const QPoint&>(p1) - static_cast<const QPoint&>(p2));
+  }
+  friend constexpr inline Extends<QPoint> operator-(const Extends<QPoint>& p1,
+                                                    const QPoint& p2) noexcept {
+    return Extends<QPoint>(static_cast<const QPoint&>(p1) - p2);
   }
   friend constexpr inline Extends<QPoint> operator*(const Extends<QPoint>& p, float factor) {
     return Extends<QPoint>(static_cast<const QPoint&>(p) * factor);
@@ -96,6 +120,9 @@ class Extends<QPoint> : public QPoint {
     return Extends<QPoint>(static_cast<const QPoint&>(p) / c);
   }
 
+  constexpr Extends<QPoint> transposed() const {
+    return Extends<QPoint>(QPoint::transposed());
+  }
   constexpr inline void transpose() {
     *this = transposed();
   }
@@ -252,8 +279,16 @@ class Extends<QPointF> : public QPointF {
     return lhs < static_cast<const QPointF&>(rhs);
   }
 
+  constexpr inline Extends<QPointF>& operator+=(const QPointF& p) {
+    QPointF::operator+=(p);
+    return *this;
+  }
   constexpr inline Extends<QPointF>& operator+=(const Extends<QPointF>& p) {
     QPointF::operator+=(static_cast<const QPointF&>(p));
+    return *this;
+  }
+  constexpr inline Extends<QPointF>& operator-=(const QPointF& p) {
+    QPointF::operator-=(p);
     return *this;
   }
   constexpr inline Extends<QPointF>& operator-=(const Extends<QPointF>& p) {
@@ -269,13 +304,29 @@ class Extends<QPointF> : public QPointF {
     return *this;
   }
 
+  friend constexpr inline Extends<QPointF> operator+(const QPointF& p1,
+                                                     const Extends<QPointF>& p2) {
+    return Extends<QPointF>(p1 + static_cast<const QPointF&>(p2));
+  }
   friend constexpr inline Extends<QPointF> operator+(const Extends<QPointF>& p1,
                                                      const Extends<QPointF>& p2) {
     return Extends<QPointF>(static_cast<const QPointF&>(p1) + static_cast<const QPointF&>(p2));
   }
+  friend constexpr inline Extends<QPointF> operator+(const Extends<QPointF>& p1,
+                                                     const QPointF& p2) {
+    return Extends<QPointF>(static_cast<const QPointF&>(p1) + p2);
+  }
+  friend constexpr inline Extends<QPointF> operator-(const QPointF& p1,
+                                                     const Extends<QPointF>& p2) {
+    return Extends<QPointF>(p1 - static_cast<const QPointF&>(p2));
+  }
   friend constexpr inline Extends<QPointF> operator-(const Extends<QPointF>& p1,
                                                      const Extends<QPointF>& p2) {
     return Extends<QPointF>(static_cast<const QPointF&>(p1) - static_cast<const QPointF&>(p2));
+  }
+  friend constexpr inline Extends<QPointF> operator-(const Extends<QPointF>& p1,
+                                                     const QPointF& p2) {
+    return Extends<QPointF>(static_cast<const QPointF&>(p1) - p2);
   }
   friend constexpr inline Extends<QPointF> operator*(const Extends<QPointF>& p, qreal c) {
     return Extends<QPointF>(static_cast<const QPointF&>(p) * c);
@@ -293,6 +344,9 @@ class Extends<QPointF> : public QPointF {
     return Extends<QPointF>(static_cast<const QPointF&>(p) / divisor);
   }
 
+  constexpr Extends<QPointF> transposed() const {
+    return Extends<QPointF>(QPointF::transposed());
+  }
   constexpr inline void transpose() {
     *this = transposed();
   }

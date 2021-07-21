@@ -15,5 +15,6 @@
 #include "overloaded_visitor_t/overloaded_visitor_t.h"
 #include "IthSender/IthSender.h"
 #include "DeleteLaterDeleter/DeleteLaterDeleter.h"
+#include "Protobuf/Protobuf.h"
 
 #endif // SOCCER_COMMON_UTILS_H

@@ -34,19 +34,17 @@ namespace Common {
   // -------------------------------------------------------------------------------------------- //
 
   template <class PT>
-  class Ball : public Entity<PT>, public RawBall<PT> {
+  class Ball : public RawBall<PT>, public Entity<PT> {
    protected:
    public:
     constexpr explicit Ball(const Entity<PT>& entity) :
-        RawEntity<PT>(entity.position()),
         Entity<PT>(entity),
-        RawBall<PT>(entity.position()) {
+        RawBall<PT>(entity.position()),
+        RawEntity<PT>(entity.position()) {
     }
-
     constexpr Ball(const RawBall<PT>& rawBall, const PT& velocity, const PT& acceleration) :
         Ball(Entity(rawBall.position(), velocity, acceleration)) {
     }
-
     constexpr Ball(const PT& position, const PT& velocity, const PT& acceleration) :
         Ball(Entity(position, velocity, acceleration)) {
     }

@@ -11,8 +11,6 @@ namespace Common {
    protected:
     PT m_position;
 
-    RawEntity() = default;
-
    public:
     constexpr explicit RawEntity(const PT& position) : m_position(position) {
     }
