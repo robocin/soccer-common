@@ -126,11 +126,11 @@ void TestField::test_field_constexpr_withVSS3x3Values() {
   static_assert(!field.enemyGoalContains(QPoint(+85, +19)));
   static_assert(!field.enemyGoalContains(QPoint(+85, +20)));
 
-  static_assert(field.fieldContains(QPoint(0, 0)));
-  static_assert(field.fieldContains(QPoint(+30, +30)));
-  static_assert(field.fieldContains(QPoint(-30, +30)));
-  static_assert(field.fieldContains(QPoint(-30, -30)));
-  static_assert(field.fieldContains(QPoint(+30, -30)));
+  static_assert(field.withoutGoalsContains(QPoint(0, 0)));
+  static_assert(field.withoutGoalsContains(QPoint(+30, +30)));
+  static_assert(field.withoutGoalsContains(QPoint(-30, +30)));
+  static_assert(field.withoutGoalsContains(QPoint(-30, -30)));
+  static_assert(field.withoutGoalsContains(QPoint(+30, -30)));
 
   static_assert(!field.contains(QPoint(-85, -20)));
   static_assert(!field.contains(QPoint(-85, -19)));

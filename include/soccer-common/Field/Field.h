@@ -317,10 +317,10 @@ namespace Common {
                                     leftGoalContains(point, radius);
     }
 
-    // field contains:
+    // without goals contains:
 
-    constexpr bool fieldContains(const PT& point,
-                                 const std::optional<T> radius = std::nullopt) const {
+    constexpr bool withoutGoalsContains(const PT& point,
+                                        const std::optional<T> radius = std::nullopt) const {
       if (radius) {
         return contains(bottomLeft(), topRight(), point, radius.value());
       } else {
@@ -331,7 +331,7 @@ namespace Common {
     // contains:
 
     constexpr bool contains(const PT& point, const std::optional<T> radius = std::nullopt) const {
-      return leftGoalContains(point, radius) || fieldContains(point, radius) ||
+      return leftGoalContains(point, radius) || withoutGoalsContains(point, radius) ||
              rightGoalContains(point, radius);
     }
 
@@ -426,11 +426,11 @@ namespace Common {
       return (bottomLeft.x() < point.x() && point.x() < topRight.x()) &&
              (bottomLeft.y() < point.y() && point.y() < topRight.y());
     }
+
     static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, const T& radius) {
       const PT& b1(point - PT(radius / 2, radius / 2));
       const PT& b2(point + PT(radius / 2, radius / 2));
-      return !((a2.x() <= b1.x()) || (b2.x() <= a1.x())) &&
-             !((a2.y() <= b1.y()) || (b2.y() <= a1.y()));
+      return ((b1.x() < a2.x()) && (a1.x() < b2.x())) && ((b1.y() < a2.y()) && (a1.y() < b2.y()));
     }
   };
 } // namespace Common
