@@ -421,16 +421,16 @@ namespace Common {
     T m_penaltyAreaDepth;
     T m_penaltyAreaWidth;
 
+    // strictly contains:
     static constexpr bool contains(const PT& bottomLeft, const PT& topRight, const PT& point) {
       return (bottomLeft.x() < point.x() && point.x() < topRight.x()) &&
              (bottomLeft.y() < point.y() && point.y() < topRight.y());
     }
-
-    static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, T radius) {
+    static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, const T& radius) {
       const PT& b1(point - PT(radius / 2, radius / 2));
       const PT& b2(point + PT(radius / 2, radius / 2));
-
-      return !((a2.x() < b1.x()) || (b2.x() < a1.x())) && !((a2.y() < b1.y()) || (b2.y() < a1.y()));
+      return !((a2.x() <= b1.x()) || (b2.x() <= a1.x())) &&
+             !((a2.y() <= b1.y()) || (b2.y() <= a1.y()));
     }
   };
 } // namespace Common
