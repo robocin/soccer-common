@@ -8,8 +8,8 @@
 
 namespace Common {
   /*!
-   * @tparam PT
-   * @tparam T
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam T Type of values. Default is the PT type of coordinates.
    * @note The center/middle of the field is defined in (0, 0).
    */
   template <class PT, class T = Geometry2D::CoordType<PT>>
