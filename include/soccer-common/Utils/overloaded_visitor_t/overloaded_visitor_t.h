@@ -7,22 +7,8 @@
 
 #include <type_traits>
 #include <functional>
+#include "soccer-common/Utils/detail/detail.h"
 #include "soccer-common/Utils/StringHelper/StringHelper.h"
-
-namespace detail {
-  template <class F>
-  static constexpr bool is_function_pointer_v = std::is_pointer_v<std::decay_t<F>>&&
-      std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>;
-
-  template <class F>
-  decltype(auto) make_functor(F&& f) {
-    if constexpr (is_function_pointer_v<F>) {
-      return std::function(std::forward<F>(f));
-    } else {
-      return std::forward<F>(f);
-    }
-  }
-} // namespace detail
 
 template <class... Ts>
 class [[maybe_unused]] overloaded_visitor_t : public Ts... {

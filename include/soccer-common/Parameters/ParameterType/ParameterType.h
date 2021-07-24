@@ -91,11 +91,8 @@ namespace Parameters {
 
   template <class T>
   class ParameterType : public ParameterBase {
-    template <class U, class... Us>
-    static constexpr bool is_any_of_v = std::disjunction_v<std::is_same<U, Us>...>;
-
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> && !(is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
                       std::is_base_of_v<T, QString>,
                   "unsupported type.");
 
