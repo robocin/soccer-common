@@ -6,6 +6,10 @@
 
 #include "soccer-common/Geometry/Geometry.h"
 
+#ifndef M_SQRT1_2
+  #define M_SQRT1_2 0.70710678118654752440 /* 1 / sqrt(2) */
+#endif
+
 namespace Common {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
@@ -428,8 +432,9 @@ namespace Common {
     }
 
     static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, const T& radius) {
-      const PT& b1(point - PT(radius / 2, radius / 2));
-      const PT& b2(point + PT(radius / 2, radius / 2));
+      constexpr auto inscribedRadius = static_cast<T>(radius * M_SQRT1_2); // radius * (sqrt(2) / 2)
+      const PT& b1(point - PT(inscribedRadius, inscribedRadius));
+      const PT& b2(point + PT(inscribedRadius, inscribedRadius));
       return ((b1.x() < a2.x()) && (a1.x() < b2.x())) && ((b1.y() < a2.y()) && (a1.y() < b2.y()));
     }
   };
