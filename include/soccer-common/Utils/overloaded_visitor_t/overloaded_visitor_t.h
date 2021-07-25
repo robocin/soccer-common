@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <functional>
 #include "soccer-common/Utils/detail/detail.h"
-#include "soccer-common/Utils/StringHelper/StringHelper.h"
+#include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 template <class... Ts>
 class [[maybe_unused]] overloaded_visitor_t : public Ts... {

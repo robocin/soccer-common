@@ -5,7 +5,7 @@
 #include <mutex>
 #include <functional>
 #include <utility>
-#include "soccer-common/Utils/StringHelper/StringHelper.h"
+#include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 template <class T, class... Args>
 class InheritanceFactorySafeMap {
