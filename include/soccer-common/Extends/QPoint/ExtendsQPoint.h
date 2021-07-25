@@ -526,7 +526,7 @@ namespace std {
   };
 } // namespace std
 
-#ifndef EXTENDS_UNDEF_POINT
+#ifndef SOCCER_COMMON_EXTENDSPOINT_H_UNDEF_POINT
 /*!
  * @brief Extends<QPointF> will be used as standard 2D point.
  */

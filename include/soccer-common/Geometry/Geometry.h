@@ -142,11 +142,11 @@ namespace Geometry {
   }
 } // namespace Geometry
 
-#ifndef GEOMETRY_UNDEF_PI
+#ifndef SOCCER_COMMON_GEOMETRY_H_UNDEF_PI
 using Geometry::PI;
 #endif
 
-#ifndef GEOMETRY_UNDEF_LITERAL_OPERATOR_DEGREES
+#ifndef SOCCER_COMMON_GEOMETRY_H_UNDEF_LITERAL_OPERATOR_DEGREES
 using Geometry::operator""_degrees;
 #endif
 
