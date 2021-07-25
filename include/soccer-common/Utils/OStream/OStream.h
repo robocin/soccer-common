@@ -28,10 +28,7 @@ QDebug operator<<(QDebug dbg, const std::variant<Args...>& variant) {
   std::visit(
       [&](auto&& value) {
         dbg.nospace();
-        dbg.noquote();
-        dbg << Utils::nameOfType<std::variant<Args...>>();
-        dbg.quote();
-        dbg << "(" << value << ")";
+        dbg << "std::variant(" << value << ")";
       },
       variant);
   return dbg;
