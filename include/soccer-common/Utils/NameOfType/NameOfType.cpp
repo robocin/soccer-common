@@ -1,4 +1,4 @@
-#include "StringHelper.h"
+#include "NameOfType.h"
 
 Extends<QString> Utils::quoted(const QString& str) {
   if (str.size() > 1 && str.front() == '\"' && str.back() == '\"') {
