@@ -10,6 +10,13 @@
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 #ifndef QT_NO_DEBUG_STREAM
+
+inline QDebug operator<<(QDebug dbg, const std::nullopt_t&) {
+  QDebugStateSaver saver(dbg);
+  dbg << "std::nullopt";
+  return dbg;
+}
+
 template <class T>
 QDebug operator<<(QDebug dbg, const std::optional<T>& optional) {
   QDebugStateSaver saver(dbg);
@@ -17,8 +24,14 @@ QDebug operator<<(QDebug dbg, const std::optional<T>& optional) {
   if (optional) {
     dbg << "std::optional(" << optional.value() << ")";
   } else {
-    dbg << "nullopt";
+    dbg << std::nullopt;
   }
+  return dbg;
+}
+
+inline QDebug operator<<(QDebug dbg, const std::monostate&) {
+  QDebugStateSaver saver(dbg);
+  dbg << "std::monostate{}";
   return dbg;
 }
 
@@ -33,6 +46,7 @@ QDebug operator<<(QDebug dbg, const std::variant<Args...>& variant) {
       variant);
   return dbg;
 }
+
 #endif
 
 #endif // SOCCER_COMMON_OSTREAM_H
