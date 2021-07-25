@@ -39,8 +39,7 @@ class InheritanceFactorySafeMap {
   using type = QMap<Key, Value>;
 
   template <class U>
-  void insert(QString description = "") {
-    static_assert(std::is_base_of_v<T, U>);
+  std::enable_if_t<std::is_base_of_v<T, U>> insert(QString description = "") {
     std::lock_guard locker(m_mutex);
     m_map.insert(Utils::nameOfType<U>(), Value(makeFactory<U>, std::move(description)));
   }
