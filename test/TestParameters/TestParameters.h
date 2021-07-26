@@ -35,8 +35,8 @@ class TestParameters : public QObject {
   void test_DoubleSpinBox_WithValidParameters_ShouldConstruct();
   void test_DoubleSpinBox_WithInvalidParameters_ShouldThrowException();
 
-  void test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct();
-  void test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException();
+  void test_MappedAngleInRadiansToDegrees_WithValidParameters_ShouldConstruct();
+  void test_MappedAngleInRadiansToDegrees_WithInvalidParameters_ShouldThrowException();
 
   void test_Slider_WithValidParameters_ShouldConstruct();
   void test_Slider_WithInvalidParameters_ShouldThrowException();
