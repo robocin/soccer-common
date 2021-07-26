@@ -11,6 +11,23 @@
 
 #ifndef QT_NO_DEBUG_STREAM
 
+namespace OStreamUtils {
+  template <class OStream, class Tuple, std::size_t N>
+  struct FormatTuple {
+    static void print(OStream ostream, Tuple tuple) {
+      FormatTuple<OStream, Tuple, N - 1>::print(ostream, tuple);
+      ostream << ", " << std::get<N - 1>(tuple);
+    }
+  };
+
+  template <class OStream, class Tuple>
+  struct FormatTuple<OStream, Tuple, 1> {
+    static void print(OStream ostream, Tuple tuple) {
+      ostream << std::get<0>(tuple);
+    }
+  };
+} // namespace OStreamUtils
+
 inline QDebug operator<<(QDebug dbg, const std::nullopt_t&) {
   QDebugStateSaver saver(dbg);
   dbg << "std::nullopt";
@@ -44,6 +61,24 @@ QDebug operator<<(QDebug dbg, const std::variant<Args...>& variant) {
         dbg << "std::variant(" << value << ")";
       },
       variant);
+  return dbg;
+}
+
+template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool> = true>
+QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
+  QDebugStateSaver saver(dbg);
+  dbg.nospace();
+  dbg << "std::tuple()";
+  return dbg;
+}
+
+template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
+QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
+  QDebugStateSaver saver(dbg);
+  dbg.nospace();
+  dbg << "std::tuple(";
+  OStreamUtils::FormatTuple<decltype(dbg), decltype(tuple), sizeof...(Args)>::print(dbg, tuple);
+  dbg << ")";
   return dbg;
 }
 
