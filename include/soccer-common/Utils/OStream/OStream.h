@@ -31,7 +31,7 @@ QDebug operator<<(QDebug dbg, const std::optional<T>& optional) {
 
 inline QDebug operator<<(QDebug dbg, const std::monostate&) {
   QDebugStateSaver saver(dbg);
-  dbg << "std::monostate{}";
+  dbg << "std::monostate()";
   return dbg;
 }
 
