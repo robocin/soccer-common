@@ -346,7 +346,7 @@ namespace Parameters {
   };
 
   template <class T>
-  class MappedAngleToDegrees : public DoubleSpinBox<T> {
+  class MappedAngleInRadiansToDegrees : public DoubleSpinBox<T> {
    public:
     using value_type = typename DoubleSpinBox<T>::value_type;
 
@@ -369,11 +369,11 @@ namespace Parameters {
     }
 
    public:
-    explicit MappedAngleToDegrees(Arg<T>& t_ref,
-                                  value_type t_minValue = -PI,
-                                  value_type t_maxValue = +PI,
-                                  int t_precision = 2,
-                                  const QString& t_about = "") :
+    explicit MappedAngleInRadiansToDegrees(Arg<T>& t_ref,
+                                           value_type t_minValue = -PI,
+                                           value_type t_maxValue = +PI,
+                                           int t_precision = 2,
+                                           const QString& t_about = "") :
         DoubleSpinBox<T>(t_ref, message(t_about)) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");
