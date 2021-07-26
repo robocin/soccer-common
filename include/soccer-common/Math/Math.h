@@ -7,6 +7,7 @@
 
 #include <numeric>
 #include <algorithm>
+#include <stdexcept>
 #include <type_traits>
 
 #include <QtGlobal>
