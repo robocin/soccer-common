@@ -51,7 +51,7 @@ namespace Parameters {
     Handler() = default;
     ~Handler() = default;
 
-    template <class T, class SFINAE = std::enable_if_t<std::is_base_of_v<ParameterBase, T>>>
+    template <class T, std::enable_if_t<std::is_base_of_v<ParameterBase, T>, bool> = true>
     Handler& operator=(T&& p) {
       value = std::make_unique<T>(std::forward<T>(p));
       return *this;
