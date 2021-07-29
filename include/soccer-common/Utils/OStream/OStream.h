@@ -5,6 +5,7 @@
 #ifndef SOCCER_COMMON_OSTREAM_H
 #define SOCCER_COMMON_OSTREAM_H
 
+#include <string>
 #include <QDebug>
 #include <optional>
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
@@ -79,6 +80,12 @@ QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   dbg << "std::tuple(";
   OStreamUtils::FormatTuple<decltype(dbg), decltype(tuple), sizeof...(Args)>::print(dbg, tuple);
   dbg << ")";
+  return dbg;
+}
+
+inline QDebug operator<<(QDebug dbg, const std::string& str) {
+  QDebugStateSaver saver(dbg);
+  dbg << QString::fromStdString(str);
   return dbg;
 }
 
