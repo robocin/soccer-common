@@ -255,10 +255,6 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     void operator()(Types&&... types) {
-      if (factory.empty()) {
-        qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
-        return;
-      }
       qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       exec(std::forward<Types>(types)...);
     }
@@ -268,12 +264,20 @@ class ModulesPrivate : public QObject {
   template <class M, class T, class F, class... Types>
   void makeModule(M* modules, T*& ref, const F& factory, Types&&... types) {
     Q_ASSERT(ref == nullptr);
+    if (factory.empty()) {
+      qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
+      return;
+    }
     Maker(modules, ref, factory)(std::forward<Types>(types)...);
   }
 
   template <class M, class T, class F, class... Types>
   void makeModule(M* modules, QVector<T*>& vect, const F& factory, Types&&... types) {
     Q_ASSERT(vect.empty());
+    if (factory.empty()) {
+      qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
+      return;
+    }
     int n = static_cast<ModulesPrivate*>(modules)->gui()->maxRobots();
     vect.resize(n);
     for (int i = 0; i < n; ++i) {
