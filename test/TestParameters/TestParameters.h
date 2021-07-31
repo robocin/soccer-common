@@ -29,14 +29,20 @@ class TestParameters : public QObject {
   void test_Text_WithValidParameters_ShouldConstruct();
   void test_Text_WithInvalidParameters_ShouldThrowException();
 
+  void test_File_WithValidParameters_ShouldConstruct();
+  void test_File_WithInvalidParameters_ShouldThrowException();
+
+  void test_Directory_WithValidParameters_ShouldConstruct();
+  void test_Directory_WithInvalidParameters_ShouldThrowException();
+
   void test_SpinBox_WithValidParameters_ShouldConstruct();
   void test_SpinBox_WithInvalidParameters_ShouldThrowException();
 
   void test_DoubleSpinBox_WithValidParameters_ShouldConstruct();
   void test_DoubleSpinBox_WithInvalidParameters_ShouldThrowException();
 
-  void test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct();
-  void test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException();
+  void test_MappedAngleInRadiansToDegrees_WithValidParameters_ShouldConstruct();
+  void test_MappedAngleInRadiansToDegrees_WithInvalidParameters_ShouldThrowException();
 
   void test_Slider_WithValidParameters_ShouldConstruct();
   void test_Slider_WithInvalidParameters_ShouldThrowException();

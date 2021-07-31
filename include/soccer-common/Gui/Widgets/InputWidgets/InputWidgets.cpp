@@ -63,6 +63,108 @@ void InputWidgets::TextEdit::loadBackup() {
   textEdit.setAlignment(Qt::AlignCenter);
 }
 
+InputWidgets::FileDialog::FileDialog(const QJsonObject& json, QWidget* parent) :
+    InputMethod(parent) {
+  QObject::connect(&textBrowser,
+                   &QTextEdit::textChanged,
+                   this,
+                   &InputWidgets::FileDialog::receiveOnValueChanged);
+
+  parameterLayout.addWidget(&textBrowser);
+  pushButton.setText("📁");
+  parameterLayout.addWidget(&pushButton);
+  inputMethodLayout.addLayout(&parameterLayout);
+
+  QString value = json[Detail::Value].toVariant().toString();
+  textBrowser.setText(value);
+  textBrowser.setAlignment(Qt::AlignCenter);
+  backup = textBrowser.toPlainText();
+
+  defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
+  filter = json[Detail::Filter].toVariant().toString();
+
+  QObject::connect(&pushButton, &QPushButton::clicked, this, [this]() {
+    QString name = QFileDialog::getOpenFileName(this, "Open File", defaultDirectory, filter);
+    textBrowser.setText(name);
+    textBrowser.setAlignment(Qt::AlignCenter);
+  });
+}
+
+void InputWidgets::FileDialog::set(const QString& value) {
+  textBrowser.setText(value);
+  textBrowser.setAlignment(Qt::AlignCenter);
+}
+
+QString InputWidgets::FileDialog::backupValue() const {
+  return backup;
+}
+
+QString InputWidgets::FileDialog::currentValue() const {
+  return textBrowser.toPlainText();
+}
+
+void InputWidgets::FileDialog::storeCurrent() {
+  backup = textBrowser.toPlainText();
+}
+
+void InputWidgets::FileDialog::loadBackup() {
+  textBrowser.setText(backup);
+  textBrowser.setAlignment(Qt::AlignCenter);
+}
+
+InputWidgets::DirectoryDialog::DirectoryDialog(const QJsonObject& json, QWidget* parent) :
+    InputMethod(parent) {
+  QObject::connect(&textBrowser,
+                   &QTextEdit::textChanged,
+                   this,
+                   &InputWidgets::DirectoryDialog::receiveOnValueChanged);
+
+  parameterLayout.addWidget(&textBrowser);
+  pushButton.setText("📁");
+  parameterLayout.addWidget(&pushButton);
+  inputMethodLayout.addLayout(&parameterLayout);
+
+  QString value = json[Detail::Value].toVariant().toString();
+  textBrowser.setText(value);
+  textBrowser.setAlignment(Qt::AlignCenter);
+  backup = textBrowser.toPlainText();
+
+  defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
+  options = json[Detail::Options].toVariant().toString();
+
+  QObject::connect(&pushButton, &QPushButton::clicked, this, [this]() {
+    QString name =
+        QFileDialog::getExistingDirectory(this,
+                                          "Open Directory",
+                                          defaultDirectory.isEmpty() ? "~" : defaultDirectory,
+                                          MagicEnum::cast<QFileDialog::Option>(options).value());
+    textBrowser.setText(name);
+    textBrowser.setAlignment(Qt::AlignCenter);
+  });
+}
+
+void InputWidgets::DirectoryDialog::set(const QString& value) {
+  textBrowser.setText(value);
+  textBrowser.setAlignment(Qt::AlignCenter);
+}
+
+QString InputWidgets::DirectoryDialog::backupValue() const {
+  return backup;
+}
+
+QString InputWidgets::DirectoryDialog::currentValue() const {
+  return textBrowser.toPlainText();
+}
+
+void InputWidgets::DirectoryDialog::storeCurrent() {
+  backup = textBrowser.toPlainText();
+}
+
+void InputWidgets::DirectoryDialog::loadBackup() {
+  textBrowser.setText(backup);
+  textBrowser.setAlignment(Qt::AlignCenter);
+}
+
 InputWidgets::Slider::Slider(const QJsonObject& json, QWidget* parent) : InputMethod(parent) {
   slider.slider.setOrientation(Qt::Horizontal);
   slider.label.setAlignment(Qt::AlignCenter);

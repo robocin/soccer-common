@@ -3,6 +3,7 @@
 
 #include <set>
 #include <QString>
+#include <QFileDialog>
 #include <QTextStream>
 #include <boost/bimap.hpp>
 #include <QRegularExpression>
@@ -19,6 +20,8 @@ namespace Parameters {
     static constexpr const char* ComboBox = "ComboBox";
     static constexpr const char* CheckBox = "CheckBox";
     static constexpr const char* PushButton = "PushButton";
+    static constexpr const char* File = "File";
+    static constexpr const char* Directory = "Directory";
   } // namespace InputType
 
   namespace Detail {
@@ -33,6 +36,8 @@ namespace Parameters {
     static constexpr const char* Regex = "Regex";
     static constexpr const char* Conditional = "Conditional";
     static constexpr const char* Parent = "Parent";
+    static constexpr const char* Filter = "Filter";
+    static constexpr const char* DefaultDirectory = "DefaultDirectory";
   } // namespace Detail
 
   struct ParameterBase {
@@ -91,11 +96,8 @@ namespace Parameters {
 
   template <class T>
   class ParameterType : public ParameterBase {
-    template <class U, class... Us>
-    static constexpr bool is_any_of_v = std::disjunction_v<std::is_same<U, Us>...>;
-
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> && !(is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
                       std::is_base_of_v<T, QString>,
                   "unsupported type.");
 
@@ -191,10 +193,10 @@ namespace Parameters {
     using ParameterType<T>::value;
 
     explicit Text(Arg<T>& t_ref,
-                  const QRegularExpression& t_regex = Regex::AnyMatch,
+                  QRegularExpression t_regex = Regex::AnyMatch,
                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
-        regex(t_regex) {
+        regex(std::move(t_regex)) {
       if (!regex.match(Utils::removeQuotes(static_cast<QString>(value()))).hasMatch()) {
         throw std::runtime_error("Text regex doesn't match.");
       }
@@ -218,6 +220,104 @@ namespace Parameters {
           setValue(*op);
           return true;
         }
+      }
+      return false;
+    }
+  };
+
+  template <class T, std::enable_if_t<std::is_base_of_v<T, QString>, bool> = true>
+  class File : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
+    using ParameterType<T>::setValue;
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
+    QString filter;
+    QString defaultDirectory;
+
+   public:
+    using ParameterType<T>::value;
+
+    explicit File(Arg<T>& t_ref,
+                  QString t_filter = "",
+                  QString t_defaultDirectory = "",
+                  const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about),
+        filter(std::move(t_filter)),
+        defaultDirectory(std::move(t_defaultDirectory)) {
+      if (!Utils::removeQuotes(static_cast<QString>(value())).isEmpty()) {
+        throw std::runtime_error("t_ref must be empty.");
+      }
+    }
+
+    QString inputType() const override final {
+      return InputType::File;
+    }
+
+    QString payload() const override final {
+      return Utils::quoted(Detail::Filter) + ": " + Utils::quoted(filter) + ", " +
+             Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
+    }
+
+    bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        setValue(*op);
+        return true;
+      }
+      return false;
+    }
+  };
+
+  template <class T, std::enable_if_t<std::is_base_of_v<T, QString>, bool> = true>
+  class Directory : public ParameterType<T> {
+   public:
+    using value_type = typename Arg<T>::value_type;
+
+   private:
+    using ParameterType<T>::setValue;
+    using ParameterType<T>::eval;
+    using ParameterType<T>::ref;
+    QString options;
+    QString defaultDirectory;
+
+   public:
+    using ParameterType<T>::value;
+
+    explicit Directory(Arg<T>& t_ref,
+                       const QFileDialog::Option& t_options = QFileDialog::Option::ShowDirsOnly,
+                       QString t_defaultDirectory = "",
+                       const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about),
+        options(MagicEnum::name(t_options)),
+        defaultDirectory(std::move(t_defaultDirectory)) {
+      if (!Utils::removeQuotes(static_cast<QString>(value())).isEmpty()) {
+        throw std::runtime_error("t_ref must be empty.");
+      }
+    }
+
+    QString inputType() const override final {
+      return InputType::Directory;
+    }
+
+    QString payload() const override final {
+      return Utils::quoted(Detail::Options) + ": " + Utils::quoted(options) + ", " +
+             Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
+    }
+
+    bool isChooseable() const override final {
+      return false;
+    }
+
+    bool update(const QString& str) override final {
+      if (auto op = eval(str)) {
+        setValue(*op);
+        return true;
       }
       return false;
     }
@@ -349,7 +449,7 @@ namespace Parameters {
   };
 
   template <class T>
-  class MappedAngleToDegrees : public DoubleSpinBox<T> {
+  class MappedAngleInRadiansToDegrees : public DoubleSpinBox<T> {
    public:
     using value_type = typename DoubleSpinBox<T>::value_type;
 
@@ -372,11 +472,11 @@ namespace Parameters {
     }
 
    public:
-    MappedAngleToDegrees(Arg<T>& t_ref,
-                         value_type t_minValue = 0.0,
-                         value_type t_maxValue = 2.0 * PI,
-                         int t_precision = 2,
-                         const QString& t_about = "") :
+    explicit MappedAngleInRadiansToDegrees(Arg<T>& t_ref,
+                                           value_type t_minValue = -PI,
+                                           value_type t_maxValue = +PI,
+                                           int t_precision = 2,
+                                           const QString& t_about = "") :
         DoubleSpinBox<T>(t_ref, message(t_about)) {
       if (t_minValue >= t_maxValue) {
         throw std::runtime_error("minValue is greater or equal than maxValue.");

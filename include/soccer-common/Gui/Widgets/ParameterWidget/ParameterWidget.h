@@ -42,6 +42,8 @@ class ParameterWidget : public QWidget {
   void showConditionalOrHide();
 
   InputWidgets::InputMethod* buildTextEdit(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildFileDialog(const QJsonObject& json, QStringList& details);
+  InputWidgets::InputMethod* buildDirectoryDialog(const QJsonObject& json, QStringList& details);
   InputWidgets::InputMethod* buildSlider(const QJsonObject& json, QStringList& details);
   InputWidgets::InputMethod* buildSpinBox(const QJsonObject& json, QStringList& details);
   InputWidgets::InputMethod* buildDoubleSpinBox(const QJsonObject& json, QStringList& details);

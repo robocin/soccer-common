@@ -97,7 +97,6 @@ class SharedOptional : public std::optional<T> {
 
  private:
   using std::optional<T>::operator=;
-  using std::optional<T>::value;
   using std::optional<T>::emplace;
   using std::optional<T>::swap;
 };

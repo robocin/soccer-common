@@ -16,8 +16,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h" "*.h++" "*.hxx" "*.H" "*.hpp")
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.c" "*.c++" "*.cxx" "*.C" "*.cpp")
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "*.h" "*.hh" "*.h++" "*.hxx" "*.H" "*.hpp")
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "*.c" "*.cc" "*.c++" "*.cxx" "*.C" "*.cpp")
 
 add_library(${PROJECT_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 

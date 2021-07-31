@@ -206,6 +206,79 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   }
 }
 
+void TestParameters::test_File_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "seleciona um arquivo";
+
+  /* testing QString */ {
+    Arg<QString> string = "";
+    auto text = File(string, "Json (*.json)", ".", description);
+    QCOMPARE(text.value(), Utils::quoted(""));
+    QCOMPARE(text.type(), Utils::nameOfType<QString>());
+    QCOMPARE(text.inputType(), InputType::File);
+    QCOMPARE(text.description(), description);
+    QCOMPARE(text.payload(),
+             Utils::quoted(Detail::Filter) + ": " + Utils::quoted("Json (*.json)") + ", " +
+                 Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
+    QCOMPARE(text.isChooseable(), false);
+
+    QCOMPARE(text.update("/opt/qt/6.2.0/gcc_64/bin/qmake"), true);
+    QCOMPARE(string, "/opt/qt/6.2.0/gcc_64/bin/qmake");
+  }
+}
+
+void TestParameters::test_File_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+  /* testing QString */ {
+    Arg<QString> string = "not/empty";
+    bool error = false;
+    try {
+      auto arg = File(string);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
+void TestParameters::test_Directory_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "seleciona um path";
+
+  /* testing QString */ {
+    Arg<QString> string = "";
+    auto text = Directory(string, QFileDialog::Option::ReadOnly, ".", description);
+    QCOMPARE(text.value(), Utils::quoted(""));
+    QCOMPARE(text.type(), Utils::nameOfType<QString>());
+    QCOMPARE(text.inputType(), InputType::Directory);
+    QCOMPARE(text.description(), description);
+    QCOMPARE(text.payload(),
+             Utils::quoted(Detail::Options) + ": " +
+                 Utils::quoted(MagicEnum::name(QFileDialog::Option::ReadOnly)) + ", " +
+                 Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
+    QCOMPARE(text.isChooseable(), false);
+
+    QCOMPARE(text.update("/opt/qt"), true);
+    QCOMPARE(string, "/opt/qt");
+  }
+}
+
+void TestParameters::test_Directory_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+  /* testing QString */ {
+    Arg<QString> string = "not/empty";
+    bool error = false;
+    try {
+      auto arg = Directory(string);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
 void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
   using namespace Parameters;
 
@@ -390,7 +463,7 @@ void TestParameters::test_DoubleSpinBox_WithInvalidParameters_ShouldThrowExcepti
   }
 }
 
-void TestParameters::test_MappedAngleToDegrees_WithValidParameters_ShouldConstruct() {
+void TestParameters::test_MappedAngleInRadiansToDegrees_WithValidParameters_ShouldConstruct() {
   using namespace Parameters;
 
   static constexpr const char* description = "dale robocin";
@@ -399,7 +472,7 @@ void TestParameters::test_MappedAngleToDegrees_WithValidParameters_ShouldConstru
     double PI = std::acos(-1.0);
 
     Arg<double> angle = std::acos(-1.0);
-    auto mappedAngle = MappedAngleToDegrees(angle, 0.0, 2 * PI, 2, description);
+    auto mappedAngle = MappedAngleInRadiansToDegrees(angle, 0.0, 2 * PI, 2, description);
     QCOMPARE(mappedAngle.value(), "180.00");
     QCOMPARE(mappedAngle.type(), Utils::nameOfType<double>());
     QCOMPARE(mappedAngle.inputType(), InputType::DoubleSpinBox);
@@ -417,16 +490,17 @@ void TestParameters::test_MappedAngleToDegrees_WithValidParameters_ShouldConstru
   }
 }
 
-void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrowException() {
+void TestParameters::
+    test_MappedAngleInRadiansToDegrees_WithInvalidParameters_ShouldThrowException() {
   using namespace Parameters;
 
   /* testing float out of range */ {
     double PI = std::acos(-1.0);
 
-    Arg<float> angle = -PI;
+    Arg<float> angle = -2 * PI;
     bool error = false;
     try {
-      auto matd = MappedAngleToDegrees(angle);
+      auto matd = MappedAngleInRadiansToDegrees(angle);
     } catch (...) {
       error = true;
     }
@@ -439,7 +513,7 @@ void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrow
     Arg<double> real = 0;
     bool error = false;
     try {
-      auto matd = MappedAngleToDegrees(real, 2 * PI, 0.0);
+      auto matd = MappedAngleInRadiansToDegrees(real, 2 * PI, 0.0);
     } catch (...) {
       error = true;
     }
@@ -452,7 +526,7 @@ void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrow
     Arg<float> real = 0;
     bool error = false;
     try {
-      auto matd = MappedAngleToDegrees(real, 0.0f, PI, -1);
+      auto matd = MappedAngleInRadiansToDegrees(real, 0.0f, PI, -1);
     } catch (...) {
       error = true;
     }
@@ -465,7 +539,7 @@ void TestParameters::test_MappedAngleToDegrees_WithInvalidParameters_ShouldThrow
     Arg<double> real = 0;
     bool error = false;
     try {
-      auto matd = MappedAngleToDegrees(real, 0.0, PI, -1);
+      auto matd = MappedAngleInRadiansToDegrees(real, 0.0, PI, -1);
     } catch (...) {
       error = true;
     }

@@ -43,6 +43,46 @@ namespace InputWidgets {
     void loadBackup() override;
   };
 
+  class FileDialog : public InputMethod {
+    QString filter;
+    QString defaultDirectory;
+    QString backup;
+
+    QTextEdit textBrowser;
+    QPushButton pushButton;
+
+    QHBoxLayout parameterLayout;
+
+   public:
+    explicit FileDialog(const QJsonObject& json, QWidget* parent);
+
+    void set(const QString& value) override;
+    QString backupValue() const override;
+    QString currentValue() const override;
+    void storeCurrent() override;
+    void loadBackup() override;
+  };
+
+  class DirectoryDialog : public InputMethod {
+    QString options;
+    QString defaultDirectory;
+    QString backup;
+
+    QTextEdit textBrowser;
+    QPushButton pushButton;
+
+    QHBoxLayout parameterLayout;
+
+   public:
+    explicit DirectoryDialog(const QJsonObject& json, QWidget* parent);
+
+    void set(const QString& value) override;
+    QString backupValue() const override;
+    QString currentValue() const override;
+    void storeCurrent() override;
+    void loadBackup() override;
+  };
+
   class Slider : public InputMethod {
     struct SliderPrivate {
       QSlider slider;

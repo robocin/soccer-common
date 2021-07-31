@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_STRINGHELPER_H
-#define SOCCER_COMMON_STRINGHELPER_H
+#ifndef SOCCER_COMMON_NAMEOFTYPE_H
+#define SOCCER_COMMON_NAMEOFTYPE_H
 
 #include <QString>
 #include <variant>
@@ -92,4 +92,4 @@ namespace Utils {
   Extends<QString> removeQuotes(const QString& str);
 } // namespace Utils
 
-#endif // SOCCER_COMMON_STRINGHELPER_H
+#endif // SOCCER_COMMON_NAMEOFTYPE_H

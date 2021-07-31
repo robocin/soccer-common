@@ -4,7 +4,7 @@
 #include "meta/meta.h"
 #include "Color/Color.h"
 #include "InheritanceFactorySafeMap/InheritanceFactorySafeMap.h"
-#include "StringHelper/StringHelper.h"
+#include "NameOfType/NameOfType.h"
 #include "PtrMulticast/PtrMulticast.h"
 #include "InterruptRequest/InterruptRequest.h"
 #include "Regex/Regex.h"
@@ -16,5 +16,8 @@
 #include "IthSender/IthSender.h"
 #include "DeleteLaterDeleter/DeleteLaterDeleter.h"
 #include "Protobuf/Protobuf.h"
+#include "detail/detail.h"
+#include "is_in/is_in.h"
+#include "OStream/OStream.h"
 
 #endif // SOCCER_COMMON_UTILS_H
