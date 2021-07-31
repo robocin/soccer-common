@@ -18,6 +18,14 @@ ParameterWidget::ParameterWidget(QWidget* parent) :
                                                    this,
                                                    std::placeholders::_1,
                                                    std::placeholders::_2);
+  inputMethodBuildMap[InputType::File] = std::bind(&ParameterWidget::buildFileDialog,
+                                                   this,
+                                                   std::placeholders::_1,
+                                                   std::placeholders::_2);
+  inputMethodBuildMap[InputType::Directory] = std::bind(&ParameterWidget::buildDirectoryDialog,
+                                                        this,
+                                                        std::placeholders::_1,
+                                                        std::placeholders::_2);
   inputMethodBuildMap[InputType::Slider] =
       std::bind(&ParameterWidget::buildSlider, this, std::placeholders::_1, std::placeholders::_2);
   inputMethodBuildMap[InputType::SpinBox] =
@@ -62,8 +70,11 @@ void ParameterWidget::build(QMap<QStringList, ParameterWidget*>& widgets,
     widgets.insert(parameterPath, this);
   }
   QString inputType = "• " + QString(Detail::Type) + ": " + json[Detail::Type].toString() + ";";
-  QString defaultValue = "• Default" + QString(Detail::Value) + ": " +
-                         json[Detail::Value].toVariant().toString() + ";";
+  QString defaultValue = json[Detail::Value].toVariant().toString();
+  if (defaultValue.isEmpty()) {
+    defaultValue = Utils::quoted(defaultValue);
+  }
+  defaultValue = "• Default" + QString(Detail::Value) + ": " + defaultValue + ";";
   QStringList details;
   ui->label->setTextFormat(Qt::TextFormat::MarkdownText);
   ui->label->setText(Markdown::bold(name) + ":");
@@ -118,6 +129,42 @@ InputWidgets::InputMethod* ParameterWidget::buildTextEdit(const QJsonObject& jso
       "• " + QString(Detail::Regex) + ": " + Utils::quoted(json[Detail::Regex].toString()) + ";";
   details += regex;
   return new InputWidgets::TextEdit(json, ui->mainWidget);
+}
+
+InputWidgets::InputMethod* ParameterWidget::buildFileDialog(const QJsonObject& json,
+                                                            QStringList& details) {
+
+  QString filter = json[Detail::Filter].toVariant().toString();
+  if (filter.isEmpty()) {
+    filter = Utils::quoted(filter);
+  }
+  filter = "• " + QString(Detail::Filter) + ": " + filter + ";";
+  QString defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
+  if (defaultDirectory.isEmpty()) {
+    defaultDirectory = Utils::quoted(defaultDirectory);
+  }
+  defaultDirectory = "• " + QString(Detail::DefaultDirectory) + ": " + defaultDirectory + ";";
+  details += filter;
+  details += defaultDirectory;
+  return new InputWidgets::FileDialog(json, ui->mainWidget);
+}
+
+InputWidgets::InputMethod* ParameterWidget::buildDirectoryDialog(const QJsonObject& json,
+                                                                 QStringList& details) {
+
+  QString options = json[Detail::Options].toVariant().toString();
+  if (options.isEmpty()) {
+    options = Utils::quoted(options);
+  }
+  options = "• " + QString(Detail::Options) + ": " + options + ";";
+  QString defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
+  if (defaultDirectory.isEmpty()) {
+    defaultDirectory = Utils::quoted(defaultDirectory);
+  }
+  defaultDirectory = "• " + QString(Detail::DefaultDirectory) + ": " + defaultDirectory + ";";
+  details += options;
+  details += defaultDirectory;
+  return new InputWidgets::DirectoryDialog(json, ui->mainWidget);
 }
 
 InputWidgets::InputMethod* ParameterWidget::buildSlider(const QJsonObject& json,
