@@ -206,6 +206,79 @@ void TestParameters::test_Text_WithInvalidParameters_ShouldThrowException() {
   }
 }
 
+void TestParameters::test_File_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "seleciona um arquivo";
+
+  /* testing QString */ {
+    Arg<QString> string = "";
+    auto text = File(string, "Json (*.json)", ".", description);
+    QCOMPARE(text.value(), Utils::quoted(""));
+    QCOMPARE(text.type(), Utils::nameOfType<QString>());
+    QCOMPARE(text.inputType(), InputType::File);
+    QCOMPARE(text.description(), description);
+    QCOMPARE(text.payload(),
+             Utils::quoted(Detail::Filter) + ": " + Utils::quoted("Json (*.json)") + ", " +
+                 Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
+    QCOMPARE(text.isChooseable(), false);
+
+    QCOMPARE(text.update("/opt/qt/6.2.0/gcc_64/bin/qmake"), true);
+    QCOMPARE(string, "/opt/qt/6.2.0/gcc_64/bin/qmake");
+  }
+}
+
+void TestParameters::test_File_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+  /* testing QString */ {
+    Arg<QString> string = "not/empty";
+    bool error = false;
+    try {
+      auto arg = File(string);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
+void TestParameters::test_Directory_WithValidParameters_ShouldConstruct() {
+  using namespace Parameters;
+
+  static constexpr const char* description = "seleciona um path";
+
+  /* testing QString */ {
+    Arg<QString> string = "";
+    auto text = Directory(string, QFileDialog::Option::ReadOnly, ".", description);
+    QCOMPARE(text.value(), Utils::quoted(""));
+    QCOMPARE(text.type(), Utils::nameOfType<QString>());
+    QCOMPARE(text.inputType(), InputType::Directory);
+    QCOMPARE(text.description(), description);
+    QCOMPARE(text.payload(),
+             Utils::quoted(Detail::Options) + ": " +
+                 Utils::quoted(MagicEnum::name(QFileDialog::Option::ReadOnly)) + ", " +
+                 Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
+    QCOMPARE(text.isChooseable(), false);
+
+    QCOMPARE(text.update("/opt/qt"), true);
+    QCOMPARE(string, "/opt/qt");
+  }
+}
+
+void TestParameters::test_Directory_WithInvalidParameters_ShouldThrowException() {
+  using namespace Parameters;
+  /* testing QString */ {
+    Arg<QString> string = "not/empty";
+    bool error = false;
+    try {
+      auto arg = Directory(string);
+    } catch (...) {
+      error = true;
+    }
+    QVERIFY(error);
+  }
+}
+
 void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
   using namespace Parameters;
 
