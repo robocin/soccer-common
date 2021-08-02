@@ -34,6 +34,12 @@ class SharedOptional : public std::optional<T> {
     return ret;
   }
 
+  std::optional<T> getOptionalAndReset() {
+    std::optional<T> ret(std::move(static_cast<std::optional<T>&>(*this)));
+    std::optional<T>::reset();
+    return ret;
+  }
+
   template <class U>
   bool extract_to(U& other) {
     if (has_value()) {
