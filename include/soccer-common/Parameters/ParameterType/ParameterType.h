@@ -248,7 +248,9 @@ namespace Parameters {
         filter(std::move(t_filter)),
         defaultDirectory(std::move(t_defaultDirectory)) {
       if (!Utils::removeQuotes(static_cast<QString>(value())).isEmpty()) {
-        throw std::runtime_error("t_ref must be empty.");
+        if (!QFile::exists(Utils::removeQuotes(static_cast<QString>(value())))) {
+          throw std::runtime_error("t_ref must be empty or a valid file.");
+        }
       }
     }
 
@@ -267,8 +269,10 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
-        setValue(*op);
-        return true;
+        if (op.value().isEmpty() || QFile::exists(op.value())) {
+          setValue(*op);
+          return true;
+        }
       }
       return false;
     }
@@ -297,7 +301,9 @@ namespace Parameters {
         options(MagicEnum::name(t_options)),
         defaultDirectory(std::move(t_defaultDirectory)) {
       if (!Utils::removeQuotes(static_cast<QString>(value())).isEmpty()) {
-        throw std::runtime_error("t_ref must be empty.");
+        if (!QDir(Utils::removeQuotes(static_cast<QString>(value()))).exists()) {
+          throw std::runtime_error("t_ref must be empty or a valid directory.");
+        }
       }
     }
 
@@ -316,8 +322,10 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
-        setValue(*op);
-        return true;
+        if (op.value().isEmpty() || QDir(op.value()).exists()) {
+          setValue(*op);
+          return true;
+        }
       }
       return false;
     }
@@ -390,11 +398,12 @@ namespace Parameters {
 
     static_assert(std::is_floating_point_v<T>, "unsupported type.");
 
-    value_type minValue;
-    value_type maxValue;
-    int precision;
+    value_type minValue{};
+    value_type maxValue{};
+    int precision{};
 
-    DoubleSpinBox(Arg<T>& t_ref, const QString& t_about = "") : ParameterType<T>(t_ref, t_about) {
+    explicit DoubleSpinBox(Arg<T>& t_ref, const QString& t_about = "") :
+        ParameterType<T>(t_ref, t_about) {
     }
 
    public:

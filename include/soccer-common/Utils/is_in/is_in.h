@@ -11,7 +11,7 @@ namespace Utils {
   // signatures --------------------------------------------------------------------------------- //
 
   template <class T, class... Args>
-  constexpr bool is_in(T&&, Args&&...);
+  constexpr std::enable_if_t<(sizeof...(Args) > 1), bool> is_in(T&&, Args&&...);
 
   template <class T, class U>
   constexpr std::enable_if_t<std::is_same_v<std::decay_t<T>, std::common_type_t<T, U>>, bool>
@@ -41,7 +41,7 @@ namespace Utils {
   // -------------------------------------------------------------------------------------------- //
 
   template <class T, class... Args>
-  constexpr bool is_in(T&& lhs, Args&&... args) {
+  constexpr std::enable_if_t<(sizeof...(Args) > 1), bool> is_in(T&& lhs, Args&&... args) {
     return (is_in(std::forward<T>(lhs), std::forward<Args>(args)) || ...);
   }
 
