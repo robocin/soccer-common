@@ -71,7 +71,7 @@ InputWidgets::FileDialog::FileDialog(const QJsonObject& json, QWidget* parent) :
                    &InputWidgets::FileDialog::receiveOnValueChanged);
 
   parameterLayout.addWidget(&textBrowser);
-  pushButton.setText("📁");
+  pushButton.setText("📄");
   parameterLayout.addWidget(&pushButton);
   inputMethodLayout.addLayout(&parameterLayout);
 
@@ -120,7 +120,7 @@ InputWidgets::DirectoryDialog::DirectoryDialog(const QJsonObject& json, QWidget*
                    &InputWidgets::DirectoryDialog::receiveOnValueChanged);
 
   parameterLayout.addWidget(&textBrowser);
-  pushButton.setText("📁");
+  pushButton.setText("📂");
   parameterLayout.addWidget(&pushButton);
   inputMethodLayout.addLayout(&parameterLayout);
 

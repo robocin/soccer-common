@@ -59,7 +59,7 @@ namespace Common {
       return m_penaltyAreaWidth;
     }
 
-    // size is equals to the field size + goal sizes.
+    // size is equals to the field size + goals depth.
     constexpr PT size() const {
       return PT(length() + 2 * goalDepth(), width());
     }

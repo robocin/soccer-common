@@ -48,7 +48,7 @@ namespace InputWidgets {
     QString defaultDirectory;
     QString backup;
 
-    QTextEdit textBrowser;
+    QTextBrowser textBrowser;
     QPushButton pushButton;
 
     QHBoxLayout parameterLayout;
@@ -68,7 +68,7 @@ namespace InputWidgets {
     QString defaultDirectory;
     QString backup;
 
-    QTextEdit textBrowser;
+    QTextBrowser textBrowser;
     QPushButton pushButton;
 
     QHBoxLayout parameterLayout;
