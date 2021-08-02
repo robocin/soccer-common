@@ -269,8 +269,10 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
-        setValue(*op);
-        return true;
+        if (op.value().isEmpty() || QFile::exists(op.value())) {
+          setValue(*op);
+          return true;
+        }
       }
       return false;
     }
@@ -320,8 +322,10 @@ namespace Parameters {
 
     bool update(const QString& str) override final {
       if (auto op = eval(str)) {
-        setValue(*op);
-        return true;
+        if (op.value().isEmpty() || QDir(op.value()).exists()) {
+          setValue(*op);
+          return true;
+        }
       }
       return false;
     }
