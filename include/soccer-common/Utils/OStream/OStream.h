@@ -8,6 +8,7 @@
 #include <string>
 #include <QDebug>
 #include <optional>
+#include "soccer-common/Utils/detail/detail.h"
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -36,7 +37,8 @@ inline QDebug operator<<(QDebug dbg, const std::nullopt_t&) {
 }
 
 template <class T>
-QDebug operator<<(QDebug dbg, const std::optional<T>& optional) {
+std::enable_if_t<detail::is_streamable_v<QDebug, T>, QDebug>
+operator<<(QDebug dbg, const std::optional<T>& optional) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
   if (optional) {
@@ -54,7 +56,8 @@ inline QDebug operator<<(QDebug dbg, const std::monostate&) {
 }
 
 template <class... Args>
-QDebug operator<<(QDebug dbg, const std::variant<Args...>& variant) {
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::variant<Args...>& variant) {
   QDebugStateSaver saver(dbg);
   std::visit(
       [&](auto&& value) {
@@ -66,7 +69,8 @@ QDebug operator<<(QDebug dbg, const std::variant<Args...>& variant) {
 }
 
 template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool> = true>
-QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
   dbg << "std::tuple()";
@@ -74,7 +78,8 @@ QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
 }
 
 template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
-QDebug operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
   dbg << "std::tuple(";
