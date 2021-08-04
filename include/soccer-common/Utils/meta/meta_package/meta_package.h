@@ -45,7 +45,8 @@
   }                                                                                                \
                                                                                                    \
  private:                                                                                          \
-  type m_##varname = {}
+  type m_##varname {                                                                               \
+  }
 
 /*!
  * @brief declares a private type with name 'varname', given default value, and
