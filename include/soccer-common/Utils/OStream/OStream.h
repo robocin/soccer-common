@@ -13,21 +13,55 @@
 
 #ifndef QT_NO_DEBUG_STREAM
 
+// signatures ----------------------------------------------------------------------------------- //
+
 namespace OStreamUtils {
   template <class OStream, class Tuple, std::size_t N>
   struct FormatTuple {
-    static void print(OStream ostream, Tuple tuple) {
-      FormatTuple<OStream, Tuple, N - 1>::print(ostream, tuple);
-      ostream << ", " << std::get<N - 1>(tuple);
-    }
+    static void print(OStream ostream, Tuple tuple);
   };
 
   template <class OStream, class Tuple>
   struct FormatTuple<OStream, Tuple, 1> {
-    static void print(OStream ostream, Tuple tuple) {
-      ostream << std::get<0>(tuple);
-    }
+    static void print(OStream ostream, Tuple tuple);
   };
+} // namespace OStreamUtils
+
+inline QDebug operator<<(QDebug dbg, const std::nullopt_t&);
+
+template <class T>
+std::enable_if_t<detail::is_streamable_v<QDebug, T>, QDebug>
+operator<<(QDebug dbg, const std::optional<T>& optional);
+
+inline QDebug operator<<(QDebug dbg, const std::monostate&);
+
+template <class... Args>
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::variant<Args...>& variant);
+
+template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool> = true>
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
+
+template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
+std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
+
+inline QDebug operator<<(QDebug dbg, const std::string& str);
+
+// ---------------------------------------------------------------------------------------------- //
+
+namespace OStreamUtils {
+  template <class OStream, class Tuple, std::size_t N>
+  void FormatTuple<OStream, Tuple, N>::print(OStream ostream, Tuple tuple) {
+    FormatTuple<OStream, Tuple, N - 1>::print(ostream, tuple);
+    ostream << ", " << std::get<N - 1>(tuple);
+  }
+
+  template <class OStream, class Tuple>
+  void FormatTuple<OStream, Tuple, 1>::print(OStream ostream, Tuple tuple) {
+    ostream << std::get<0>(tuple);
+  }
 } // namespace OStreamUtils
 
 inline QDebug operator<<(QDebug dbg, const std::nullopt_t&) {
@@ -68,7 +102,7 @@ operator<<(QDebug dbg, const std::variant<Args...>& variant) {
   return dbg;
 }
 
-template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool> = true>
+template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool>>
 std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
@@ -77,7 +111,7 @@ operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   return dbg;
 }
 
-template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
+template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool>>
 std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
