@@ -16,14 +16,26 @@
 template <>
 class Extends<QString> : public QString {
  public:
-  template <class... Args>
-  Extends(Args&&... args) : QString(std::forward<Args>(args)...) {
+  Extends() = default;
+  Extends(const QChar* unicode, qsizetype size) : QString(unicode, size) {
+  }
+  Extends(const QChar& c) : QString(c) {
+  }
+  Extends(qsizetype size, const QChar& c) : QString(size, c) {
+  }
+  Extends(const QLatin1String& latin1) : QString(latin1) {
+  }
+  Extends(const QString& other) : QString(other) {
+  }
+  Extends(QString&& other) : QString(other) {
+  }
+  Extends(const char* ch) : QString(ch) {
+  }
+  Extends(const QByteArray& a) : QString(a) {
+  }
+  Extends(qsizetype size, Qt::Initialization initialization) : QString(size, initialization) {
   }
   Extends(const std::string& str) : QString(QString::fromStdString(str)) {
-  }
-
-  operator std::string() const {
-    return toStdString();
   }
 };
 
