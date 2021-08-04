@@ -105,6 +105,16 @@ namespace detail {
 
   template <class... Ts>
   inline constexpr bool has_common_type_v = has_common_type<Ts...>::value;
+
+  template <class S, class C, class = void>
+  struct is_streamable : ::std::false_type {};
+
+  template <class S, class C>
+  struct is_streamable<S, C, std::void_t<decltype(std::declval<S&>() << std::declval<C const&>())>>
+      : ::std::true_type {};
+
+  template <class S, class C>
+  inline constexpr bool is_streamable_v = is_streamable<S, C>::value;
 } // namespace detail
 
 #endif // SOCCER_COMMON_DETAIL_H
