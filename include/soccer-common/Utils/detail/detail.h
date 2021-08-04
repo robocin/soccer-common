@@ -64,6 +64,15 @@ namespace detail {
   template <class U>
   inline constexpr bool has_contains_v = has_contains<U>::value;
 
+  template <class U, class V = void>
+  struct has_clear : std::false_type {};
+
+  template <class U>
+  struct has_clear<U, std::void_t<decltype(std::declval<U>().clear())>> : std::true_type {};
+
+  template <class U>
+  inline constexpr bool has_clear_v = has_clear<U>::value;
+
   template <class U>
   inline constexpr bool dependent_false_v = false;
 
