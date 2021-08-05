@@ -26,16 +26,14 @@ class SharedValue {
     return m_instance;
   }
 
-  template <class U = T,
-            std::enable_if_t<detail::is_iterable_v<U> && detail::has_clear_v<U>, bool> = true>
+  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
   U getAndClear() {
     U value = std::move(m_instance);
     m_instance.clear();
     return value;
   }
 
-  template <class U = T,
-            std::enable_if_t<detail::is_iterable_v<U> && detail::has_clear_v<U>, bool> = true>
+  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
   U get_and_clear() {
     return getAndClear();
   }
