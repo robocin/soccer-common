@@ -7,7 +7,9 @@
 
 #include "soccer-common/Utils/detail/detail.h"
 
+#ifdef SOCCER_COMMON_IS_IN_H_UNDEF_IS_IN
 namespace Utils {
+#endif
   // signatures --------------------------------------------------------------------------------- //
 
   template <class T, class... Args>
@@ -114,10 +116,8 @@ namespace Utils {
       return false;
     }
   }
+#ifdef SOCCER_COMMON_IS_IN_H_UNDEF_IS_IN
 } // namespace Utils
-
-#ifndef SOCCER_COMMON_IS_IN_H_UNDEF_IS_IN
-using Utils::is_in;
 #endif
 
 #endif // SOCCER_COMMON_IS_IN_H

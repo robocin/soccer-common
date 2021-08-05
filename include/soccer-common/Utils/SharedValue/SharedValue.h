@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_SHAREDVALUE_H
 
 #include <utility>
+#include "soccer-common/Utils/detail/detail.h"
 
 template <class T>
 class SharedValue {
@@ -17,16 +18,24 @@ class SharedValue {
     m_instance = std::forward<U>(other);
   }
 
-  constexpr operator T() const {
-    return m_instance;
-  }
-
   constexpr T value() const {
     return m_instance;
   }
 
   constexpr T get() const {
     return m_instance;
+  }
+
+  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
+  U getAndClear() {
+    U value = std::move(m_instance);
+    m_instance.clear();
+    return value;
+  }
+
+  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
+  U get_and_clear() {
+    return getAndClear();
   }
 
   template <class U>
