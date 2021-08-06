@@ -7,6 +7,11 @@
 
 namespace Common {
   template <class PT>
+  /*!
+   * @brief General raw entity class that holds only telemetry data
+   * 
+   * @details This is the parent class to all raw entity classes. 
+   */
   class RawEntity {
    protected:
     PT m_position;
@@ -44,6 +49,12 @@ namespace Common {
   // -------------------------------------------------------------------------------------------- //
 
   template <class PT>
+  /*!
+   * @brief General entity class that holds telemetry data plus calculated values.
+   * 
+   * @details This is the parent class to all (Not Raw) entity classes. 
+   * 
+   */
   class Entity : virtual public RawEntity<PT> {
    protected:
     using RawEntity<PT>::m_position;

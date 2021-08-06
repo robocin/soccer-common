@@ -5,6 +5,11 @@
 
 namespace Common {
   template <class PT>
+
+  /*!
+   * @brief Ball class that holds only telemetry data
+   * 
+   */
   class RawBall : virtual public RawEntity<PT> {
    protected:
    public:
@@ -34,6 +39,10 @@ namespace Common {
   // -------------------------------------------------------------------------------------------- //
 
   template <class PT>
+  /*!
+   * @brief Ball class that holds telemetry data plus calculated values. 
+   * 
+   */
   class Ball : public RawBall<PT>, public Entity<PT> {
    protected:
    public:

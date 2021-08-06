@@ -5,6 +5,10 @@
 
 namespace Common {
   template <class PT>
+  /**
+   * @brief Robot class that holds only telemetry data.
+   * 
+   */
   class RawRobot : virtual public RawEntity<PT> {
    protected:
     using RawEntity<PT>::m_position;
@@ -55,6 +59,10 @@ namespace Common {
   // -------------------------------------------------------------------------------------------- //
 
   template <class PT>
+  /*!
+   * @brief Robot class that holds telemetry data plus calculated values. 
+   * 
+   */
   class Robot : public RawRobot<PT>, public Entity<PT> {
    protected:
     using RawRobot<PT>::m_id;
