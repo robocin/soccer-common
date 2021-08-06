@@ -5,7 +5,7 @@
 
 namespace Common {
   template <class PT>
-  /**
+  /*!
    * @brief Robot class that holds only telemetry data.
    * 
    */
