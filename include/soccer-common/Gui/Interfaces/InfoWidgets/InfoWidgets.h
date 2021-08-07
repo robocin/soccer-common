@@ -24,6 +24,8 @@ class InfoWidgets {
   ScoreboardWidget* scoreboard() const;
   AttackSideWidget* attackSide() const;
   ColorTeamWidget* colorTeam() const;
+
+  QLayout* infoWidgetsLayout() const;
 };
 
 #endif // SOCCER_COMMON_INFOWIDGETS_H

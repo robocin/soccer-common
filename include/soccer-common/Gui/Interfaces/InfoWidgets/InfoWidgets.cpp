@@ -36,3 +36,7 @@ AttackSideWidget* InfoWidgets::attackSide() const {
 ColorTeamWidget* InfoWidgets::colorTeam() const {
   return m_colorTeam;
 }
+
+QLayout* InfoWidgets::infoWidgetsLayout() const {
+  return m_layout;
+}
