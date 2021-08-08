@@ -36,6 +36,7 @@ class TestGeometry : public QObject {
   void test_2D_distance_whenGivenTwoPoints_shouldWork();
   void test_2D_rotateCW90_whenGivenAPoint_shouldWork();
   void test_2D_rotateCCW90_whenGivenAPoint_shouldWork();
+  void test_2D_rotateCW_whenGivenAFloatingPointPoint_shouldWork();
   void test_2D_rotateCCW_whenGivenAFloatingPointPoint_shouldWork();
   void test_2D_angle_whenGivenAPoint_shouldWork();
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
