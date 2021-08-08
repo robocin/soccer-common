@@ -296,7 +296,20 @@ namespace Geometry2D {
    * @tparam PT Requires '.x()' and '.y()' members (they must be floating point).
    * @tparam T type of the value to rotate.
    * @param p, t the vector and the value to rotate, in radians.
-   * @return Returns a copy of p rotated in counter-clockwise direction by 90 degrees.
+   * @return Returns a copy of p rotated in clockwise direction by t degrees.
+   */
+  template <class PT>
+  constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT>
+  rotateCW(const PT& p, CoordType<PT> t) {
+    return PT(p.x() * std::cos(t) + p.y() * std::sin(t),
+              -p.x() * std::sin(t) + p.y() * std::cos(t));
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members (they must be floating point).
+   * @tparam T type of the value to rotate.
+   * @param p, t the vector and the value to rotate, in radians.
+   * @return Returns a copy of p rotated in counter-clockwise direction by t degrees.
    */
   template <class PT>
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT>

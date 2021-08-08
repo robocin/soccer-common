@@ -431,6 +431,14 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::rotateCCW90(*this);
   }
 
+  constexpr inline void rotateCW(CoordType t) {
+    *this = Geometry2D::rotateCW(*this, t);
+  }
+
+  constexpr inline Extends<QPointF> rotatedCW(CoordType t) const {
+    return Geometry2D::rotateCW(*this, t);
+  }
+
   constexpr inline void rotateCCW(CoordType t) {
     *this = Geometry2D::rotateCCW(*this, t);
   }
