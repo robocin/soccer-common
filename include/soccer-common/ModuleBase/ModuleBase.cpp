@@ -22,8 +22,10 @@ void ModuleBase::setup(const Modules* modules) {
 }
 
 void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
-  updateRequests->append(updates);
-  if (!updateRequests->empty()) {
+  if (updateRequests.apply([&updates](auto& ur) {
+        ur.append(updates);
+        return !ur.empty();
+      })) {
     emit onReceiveUpdateRequests();
   }
 }
