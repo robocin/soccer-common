@@ -122,7 +122,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
     QCOMPARE(text.description(), description);
     QCOMPARE(text.payload(),
              Utils::quoted(Detail::Regex) + ": " + Utils::quoted(Regex::AnyMatch.pattern()));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("bordeaux"), true);
     QCOMPARE(string, "bordeaux");
@@ -137,7 +137,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
     QCOMPARE(text.description(), description);
     QCOMPARE(text.payload(),
              Utils::quoted(Detail::Regex) + ": " + Utils::quoted(Regex::AnyMatch.pattern()));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("24"), true);
     QCOMPARE(integer, 24);
@@ -154,7 +154,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
     QCOMPARE(text.description(), description);
     QCOMPARE(text.payload(),
              Utils::quoted(Detail::Regex) + ": " + Utils::quoted(Regex::AnyMatch.pattern()));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("3.33"), true);
     QCOMPARE(real, 3.33);
@@ -171,7 +171,7 @@ void TestParameters::test_Text_WithValidParameters_ShouldConstruct() {
     QCOMPARE(text.description(), description);
     QCOMPARE(text.payload(),
              Utils::quoted(Detail::Regex) + ": " + Utils::quoted(Regex::AnyMatch.pattern()));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("true"), true);
     QCOMPARE(boolean, true);
@@ -221,7 +221,7 @@ void TestParameters::test_File_WithValidParameters_ShouldConstruct() {
     QCOMPARE(text.payload(),
              Utils::quoted(Detail::Filter) + ": " + Utils::quoted("Json (*.json)") + ", " +
                  Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("/opt/qt/6.2.0/gcc_64/bin/qmake"), true);
     QCOMPARE(string, "/opt/qt/6.2.0/gcc_64/bin/qmake");
@@ -258,7 +258,7 @@ void TestParameters::test_Directory_WithValidParameters_ShouldConstruct() {
              Utils::quoted(Detail::Options) + ": " +
                  Utils::quoted(MagicEnum::name(QFileDialog::Option::ReadOnly)) + ", " +
                  Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
-    QCOMPARE(text.isChooseable(), false);
+    QCOMPARE(text.isChoosable(), false);
 
     QCOMPARE(text.update("/opt/qt"), true);
     QCOMPARE(string, "/opt/qt");
@@ -294,7 +294,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(spinBox.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(0) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(10));
-    QCOMPARE(spinBox.isChooseable(), false);
+    QCOMPARE(spinBox.isChoosable(), false);
     QCOMPARE(spinBox.update("10"), true);
     QCOMPARE(integer, 10);
     QCOMPARE(spinBox.update("20"), false);
@@ -311,7 +311,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(spinBox.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(-10) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(20));
-    QCOMPARE(spinBox.isChooseable(), false);
+    QCOMPARE(spinBox.isChoosable(), false);
     QCOMPARE(spinBox.update("15"), true);
     QCOMPARE(integer, 15);
     QCOMPARE(spinBox.update("30"), false);
@@ -328,7 +328,7 @@ void TestParameters::test_SpinBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(spinBox.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(-20) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(30));
-    QCOMPARE(spinBox.isChooseable(), false);
+    QCOMPARE(spinBox.isChoosable(), false);
     QCOMPARE(spinBox.update("20"), true);
     QCOMPARE(integer, 20);
     QCOMPARE(spinBox.update("100"), false);
@@ -389,7 +389,7 @@ void TestParameters::test_DoubleSpinBox_WithValidParameters_ShouldConstruct() {
              Utils::quoted(Detail::MinValue) + ": " + QString::number(0, 'f', 6) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(10, 'f', 6) + ", " +
                  Utils::quoted(Detail::Precision) + ": " + QString::number(6));
-    QCOMPARE(doubleSpinBox.isChooseable(), false);
+    QCOMPARE(doubleSpinBox.isChoosable(), false);
     QCOMPARE(doubleSpinBox.update("10"), true);
     QCOMPARE(real, 10);
     QCOMPARE(doubleSpinBox.update("20"), false);
@@ -407,7 +407,7 @@ void TestParameters::test_DoubleSpinBox_WithValidParameters_ShouldConstruct() {
              Utils::quoted(Detail::MinValue) + ": " + QString::number(-10, 'f', 2) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(20, 'f', 2) + ", " +
                  Utils::quoted(Detail::Precision) + ": " + QString::number(2));
-    QCOMPARE(doubleSpinBox.isChooseable(), false);
+    QCOMPARE(doubleSpinBox.isChoosable(), false);
     QCOMPARE(doubleSpinBox.update("10"), true);
     QCOMPARE(real, 10);
     QCOMPARE(doubleSpinBox.update("40"), false);
@@ -482,7 +482,7 @@ void TestParameters::test_MappedAngleInRadiansToDegrees_WithValidParameters_Shou
              Utils::quoted(Detail::MinValue) + ": " + QString::number(0.0, 'f', 2) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(360.0, 'f', 2) + ", " +
                  Utils::quoted(Detail::Precision) + ": " + QString::number(2));
-    QCOMPARE(mappedAngle.isChooseable(), false);
+    QCOMPARE(mappedAngle.isChoosable(), false);
     QCOMPARE(mappedAngle.update("45"), true);
     QCOMPARE(angle, PI / 4);
     QCOMPARE(mappedAngle.update("60"), true);
@@ -562,7 +562,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
     QCOMPARE(slider.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(0) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(10));
-    QCOMPARE(slider.isChooseable(), false);
+    QCOMPARE(slider.isChoosable(), false);
     QCOMPARE(slider.update("10"), true);
     QCOMPARE(integer, 10);
     QCOMPARE(slider.update("20"), false);
@@ -579,7 +579,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
     QCOMPARE(slider.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(-10) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(20));
-    QCOMPARE(slider.isChooseable(), false);
+    QCOMPARE(slider.isChoosable(), false);
     QCOMPARE(slider.update("15"), true);
     QCOMPARE(integer, 15);
     QCOMPARE(slider.update("30"), false);
@@ -596,7 +596,7 @@ void TestParameters::test_Slider_WithValidParameters_ShouldConstruct() {
     QCOMPARE(slider.payload(),
              Utils::quoted(Detail::MinValue) + ": " + QString::number(-20) + ", " +
                  Utils::quoted(Detail::MaxValue) + ": " + QString::number(30));
-    QCOMPARE(slider.isChooseable(), false);
+    QCOMPARE(slider.isChoosable(), false);
     QCOMPARE(slider.update("20"), true);
     QCOMPARE(integer, 20);
     QCOMPARE(slider.update("100"), false);
@@ -654,7 +654,7 @@ void TestParameters::test_CheckBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(checkBox.inputType(), InputType::CheckBox);
     QCOMPARE(checkBox.description(), description);
     QCOMPARE(checkBox.payload(), "");
-    QCOMPARE(checkBox.isChooseable(), true);
+    QCOMPARE(checkBox.isChoosable(), true);
     QCOMPARE(checkBox.update("true"), true);
     QCOMPARE(boolean, true);
     QCOMPARE(checkBox.update("ANY_VALUE"), false);
@@ -677,7 +677,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(comboBox.inputType(), InputType::ComboBox);
     QCOMPARE(comboBox.description(), description);
     QCOMPARE(comboBox.payload(), Utils::quoted(Detail::Options) + R"_(: ["A", "B", "C"])_");
-    QCOMPARE(comboBox.isChooseable(), true);
+    QCOMPARE(comboBox.isChoosable(), true);
     QCOMPARE(comboBox.update("B"), true);
     QCOMPARE(myEnum, Tp::B);
     QCOMPARE(comboBox.update("G"), false);
@@ -692,7 +692,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(comboBox.inputType(), InputType::ComboBox);
     QCOMPARE(comboBox.description(), description);
     QCOMPARE(comboBox.payload(), Utils::quoted(Detail::Options) + R"_(: ["G", "H", "I"])_");
-    QCOMPARE(comboBox.isChooseable(), true);
+    QCOMPARE(comboBox.isChoosable(), true);
     QCOMPARE(comboBox.update("H"), true);
     QCOMPARE(string, "H");
     QCOMPARE(comboBox.update("Z"), false);
@@ -707,7 +707,7 @@ void TestParameters::test_ComboBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(comboBox.inputType(), InputType::ComboBox);
     QCOMPARE(comboBox.description(), description);
     QCOMPARE(comboBox.payload(), Utils::quoted(Detail::Options) + R"_(: [11, 12, 13, 14])_");
-    QCOMPARE(comboBox.isChooseable(), true);
+    QCOMPARE(comboBox.isChoosable(), true);
     QCOMPARE(comboBox.update("13"), true);
     QCOMPARE(integer, 13);
     QCOMPARE(comboBox.update("20"), false);
@@ -771,7 +771,7 @@ void TestParameters::test_MappedComboBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(mappedComboBox.description(), description);
     QCOMPARE(mappedComboBox.payload(),
              Utils::quoted(Detail::Options) + R"_(: ["HAHA", "HEHE", "HIHI"])_");
-    QCOMPARE(mappedComboBox.isChooseable(), true);
+    QCOMPARE(mappedComboBox.isChoosable(), true);
     QCOMPARE(mappedComboBox.update("HIHI"), true);
     QCOMPARE(myEnum, Tp::C);
     QCOMPARE(mappedComboBox.update("HOHO"), false);
@@ -788,7 +788,7 @@ void TestParameters::test_MappedComboBox_WithValidParameters_ShouldConstruct() {
     QCOMPARE(mappedComboBox.description(), description);
     QCOMPARE(mappedComboBox.payload(),
              Utils::quoted(Detail::Options) + R"_(: ["11onze", "12doze", "13treze"])_");
-    QCOMPARE(mappedComboBox.isChooseable(), true);
+    QCOMPARE(mappedComboBox.isChoosable(), true);
     QCOMPARE(mappedComboBox.update("13treze"), true);
     QCOMPARE(integer, 13);
     QCOMPARE(mappedComboBox.update("20vinte"), false);
@@ -856,7 +856,7 @@ void TestParameters::test_PushButton_WithValidParameters_ShouldConstruct() {
   QCOMPARE(pushButton.payload(),
            Utils::quoted(Detail::Parent) + ": " +
                Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&object))));
-  QCOMPARE(pushButton.isChooseable(), false);
+  QCOMPARE(pushButton.isChoosable(), false);
   QCOMPARE(pushButton.update("false"), false);
   QCOMPARE(pushButton.update("true"), false);
   QCOMPARE(pushButton.update("abcd"), false);

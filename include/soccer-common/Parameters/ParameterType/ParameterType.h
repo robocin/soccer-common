@@ -47,7 +47,7 @@ namespace Parameters {
     virtual QString type() const = 0;
     virtual QString description() const = 0;
     virtual QString payload() const = 0;
-    virtual bool isChooseable() const = 0;
+    virtual bool isChoosable() const = 0;
     virtual bool update(const QString& str) = 0;
   };
 
@@ -173,7 +173,7 @@ namespace Parameters {
     }
 
     QString payload() const override = 0;
-    bool isChooseable() const override = 0;
+    bool isChoosable() const override = 0;
 
     bool update(const QString& str) override = 0;
   };
@@ -263,7 +263,7 @@ namespace Parameters {
              Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -316,7 +316,7 @@ namespace Parameters {
              Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -371,7 +371,7 @@ namespace Parameters {
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -442,7 +442,7 @@ namespace Parameters {
              ": " + QString::number(precision);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -556,7 +556,7 @@ namespace Parameters {
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -593,7 +593,7 @@ namespace Parameters {
       return "";
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
@@ -656,7 +656,7 @@ namespace Parameters {
       return Utils::quoted(Detail::Options) + ": " + options;
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
@@ -731,7 +731,7 @@ namespace Parameters {
       return Utils::quoted(Detail::Options) + ": " + options;
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
@@ -782,7 +782,7 @@ namespace Parameters {
       return Utils::quoted(Detail::Parent) + ": " + Utils::quoted(QString::number(m_parent));
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
