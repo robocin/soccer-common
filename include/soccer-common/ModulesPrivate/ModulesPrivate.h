@@ -103,7 +103,6 @@ class ModulesPrivate : public QObject {
     }
 
     static void setup(T* instance, M* modules) {
-      qWarning() << "performing" << instance << "setup.";
       static_cast<ModuleBase*>(instance)->setup(modules);
     }
 
