@@ -16,20 +16,27 @@ void ModulePrivate::prepareToDelete() {
 void ModulePrivate::update() {
 }
 
-void ModulePrivate::parametersUpdate() {
+QVector<Parameters::ParameterBase*> ModulePrivate::parametersUpdate() {
   Parameters::UpdateRequests updates = updateRequests.apply([](Parameters::UpdateRequests& ur) {
     Parameters::UpdateRequests updates = ur;
     ur.clear();
     return updates;
   });
+  QVector<Parameters::ParameterBase*> updated;
   if (!updates.empty()) {
-    parametersHandler.update(updates);
+    auto notUpdated = parametersHandler.update(updates, &updated);
+    qWarning() << "the following parameters were not updated:";
+    for (const auto& up : notUpdated) {
+      qWarning().nospace() << up.path() << " with value: " << up.value() << ".";
+    }
+    qWarning() << "--";
   }
+  return updated;
 }
 
 void ModulePrivate::run() {
   if ([[maybe_unused]] std::unique_lock locker{execMutex, std::try_to_lock}) {
-    parametersUpdate();
+    ParametersUpdateGuard guard(parametersUpdate());
     update();
     exec();
   }
