@@ -181,7 +181,7 @@ namespace Parameters {
 
       if (!parametersHandler.map.empty()) {
         if (parametersHandler.value) {
-          Q_ASSERT(parametersHandler.value->isChooseable());
+          Q_ASSERT(parametersHandler.value->isChoosable());
           if (parametersHandler.value->inputType() == InputType::CheckBox) {
             for (auto& [key, value] : parametersHandler.map) {
               Q_ASSERT(key == "true" || key == "false");
@@ -235,8 +235,9 @@ namespace Parameters {
     return QJsonDocument::fromJson(json()).object();
   }
 
-  QVector<UpdateRequest> Handler::update(const QVector<UpdateRequest>& updates) {
-    QVector<UpdateRequest> ret;
+  QVector<UpdateRequest> Handler::update(const QVector<UpdateRequest>& updates,
+                                         QVector<ParameterBase*>* updated) {
+    QVector<UpdateRequest> notUpdated;
     for (const auto& up : updates) {
       auto path = up.path();
       Handler* ptr = this;
@@ -250,14 +251,18 @@ namespace Parameters {
         }
       }
       if (found && ptr->value) {
-        if (!ptr->value->update(up.value())) {
-          ret += up;
+        if (ptr->value->update(up.value())) {
+          if (updated) {
+            updated->emplace_back(ptr->value.get());
+          }
+        } else {
+          notUpdated += up;
         }
       } else {
-        ret += up;
+        notUpdated += up;
       }
     }
-    return ret;
+    return notUpdated;
   }
 } // namespace Parameters
 
