@@ -25,11 +25,13 @@ QVector<Parameters::ParameterBase*> ModulePrivate::parametersUpdate() {
   QVector<Parameters::ParameterBase*> updated;
   if (!updates.empty()) {
     auto notUpdated = parametersHandler.update(updates, &updated);
-    qWarning() << "the following parameters were not updated:";
-    for (const auto& up : notUpdated) {
-      qWarning().nospace() << up.path() << " with value: " << up.value() << ".";
+    if (!notUpdated.empty()) {
+      qWarning() << "the following parameters were not updated:";
+      for (const auto& up : notUpdated) {
+        qWarning().nospace() << up.path() << " with value: " << up.value() << ".";
+      }
+      qWarning() << "--";
     }
-    qWarning() << "--";
   }
   return updated;
 }
