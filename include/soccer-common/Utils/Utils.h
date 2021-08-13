@@ -19,5 +19,6 @@
 #include "detail/detail.h"
 #include "is_in/is_in.h"
 #include "OStream/OStream.h"
+#include "utility/utility.h"
 
 #endif // SOCCER_COMMON_UTILS_H
