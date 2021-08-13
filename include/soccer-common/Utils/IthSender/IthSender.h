@@ -8,7 +8,7 @@
 #include <QObject>
 #include <array>
 
-template <class Sender, size_t N = 22>
+template <class Sender, size_t N = 16>
 class IthSender {
   std::array<Sender*, N> m_senders{};
 
