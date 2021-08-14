@@ -5,6 +5,7 @@
 #ifndef SOCCER_COMMON_PROTOBUF_H
 #define SOCCER_COMMON_PROTOBUF_H
 
+#include <optional>
 #include <QByteArray>
 
 namespace Protobuf {
@@ -16,10 +17,11 @@ namespace Protobuf {
   }
 
   template <class Proto>
-  Proto fromByteArray(const QByteArray& datagram) {
-    Proto proto;
-    proto.ParseFromArray(datagram, static_cast<int>(datagram.size()));
-    return proto;
+  std::optional<Proto> fromByteArray(const QByteArray& datagram) {
+    if (Proto proto; proto.ParseFromArray(datagram, static_cast<int>(datagram.size()))) {
+      return proto;
+    }
+    return std::nullopt;
   }
 } // namespace Protobuf
 

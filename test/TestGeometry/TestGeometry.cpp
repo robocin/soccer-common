@@ -298,6 +298,15 @@ void TestGeometry::test_2D_rotateCCW90_whenGivenAPoint_shouldWork() {
   }
 }
 
+void TestGeometry::test_2D_rotateCW_whenGivenAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QPointF pt(1, 0);
+  QCOMPARE(rotateCW(pt, PI), QPointF(-1, 0));
+  QCOMPARE(rotateCW(pt, PI / 2.0), QPointF(0, -1));
+  QCOMPARE(rotateCW(pt, PI / 4.0), QPointF(std::sqrt(2) / 2.0, -std::sqrt(2) / 2.0));
+}
+
 void TestGeometry::test_2D_rotateCCW_whenGivenAFloatingPointPoint_shouldWork() {
   using namespace Geometry2D;
 

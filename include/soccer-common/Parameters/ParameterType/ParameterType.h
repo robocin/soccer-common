@@ -1,6 +1,9 @@
 #ifndef SOCCER_COMMON_PARAMETERTYPE_H
 #define SOCCER_COMMON_PARAMETERTYPE_H
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "modernize-use-nodiscard"
+
 #include <set>
 #include <QString>
 #include <QFileDialog>
@@ -47,8 +50,10 @@ namespace Parameters {
     virtual QString type() const = 0;
     virtual QString description() const = 0;
     virtual QString payload() const = 0;
-    virtual bool isChooseable() const = 0;
+    virtual bool isChoosable() const = 0;
     virtual bool update(const QString& str) = 0;
+
+    virtual void setUpdated(bool updated) = 0;
   };
 
   template <class T>
@@ -63,8 +68,11 @@ namespace Parameters {
 
     template <class U>
     void set(U&& value) {
-      m_updated = true;
       m_value = std::forward<U>(value);
+    }
+
+    void setUpdated(bool updated) {
+      m_updated = updated;
     }
 
    public:
@@ -73,9 +81,12 @@ namespace Parameters {
     // disable_empty_constructor:
     Arg() = delete;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "google-explicit-constructor"
     template <class... Us>
     Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
     }
+#pragma clang diagnostic pop
 
     // disable_copy:
     Arg(const Arg&) = delete;
@@ -90,7 +101,7 @@ namespace Parameters {
     }
 
     bool updated() const {
-      return m_updated ? (m_updated = false, true) : m_updated;
+      return m_updated;
     }
   };
 
@@ -168,14 +179,18 @@ namespace Parameters {
       return Utils::nameOfType<T>();
     }
 
-    QString description() const override final {
+    QString description() const final {
       return about;
     }
 
     QString payload() const override = 0;
-    bool isChooseable() const override = 0;
+    bool isChoosable() const override = 0;
 
     bool update(const QString& str) override = 0;
+
+    void setUpdated(bool updated) final {
+      ref.setUpdated(updated);
+    }
   };
 
   template <class T>
@@ -202,19 +217,19 @@ namespace Parameters {
       }
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::Text;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::Regex) + ": " + Utils::quoted(regex.pattern());
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (regex.match(str).hasMatch()) {
           setValue(*op);
@@ -254,20 +269,20 @@ namespace Parameters {
       }
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::File;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::Filter) + ": " + Utils::quoted(filter) + ", " +
              Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (op.value().isEmpty() || QFile::exists(op.value())) {
           setValue(*op);
@@ -307,20 +322,20 @@ namespace Parameters {
       }
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::Directory;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::Options) + ": " + Utils::quoted(options) + ", " +
              Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted(defaultDirectory);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (op.value().isEmpty() || QDir(op.value()).exists()) {
           setValue(*op);
@@ -362,20 +377,20 @@ namespace Parameters {
       maxValue = t_maxValue;
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::SpinBox;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
           setValue(*op);
@@ -431,18 +446,18 @@ namespace Parameters {
       return QString::number(ref.value(), 'f', precision);
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::DoubleSpinBox;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue, 'f', precision) +
              ", " + Utils::quoted(Detail::MaxValue) + ": " +
              QString::number(maxValue, 'f', precision) + ", " + Utils::quoted(Detail::Precision) +
              ": " + QString::number(precision);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
@@ -501,11 +516,11 @@ namespace Parameters {
       precision = t_precision;
     }
 
-    QString value() const override final {
+    QString value() const final {
       return QString::number(qRadiansToDegrees(ref.value()), 'f', precision);
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
           setValue(qDegreesToRadians(*op));
@@ -547,20 +562,20 @@ namespace Parameters {
       maxValue = t_maxValue;
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::Slider;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::MinValue) + ": " + QString::number(minValue) + ", " +
              Utils::quoted(Detail::MaxValue) + ": " + QString::number(maxValue);
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (minValue <= *op && *op <= maxValue) {
           setValue(*op);
@@ -585,19 +600,19 @@ namespace Parameters {
         ParameterType<bool>(t_ref, t_about) {
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::CheckBox;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return "";
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         setValue(*op);
         return true;
@@ -626,15 +641,15 @@ namespace Parameters {
       }
     }
 
-    QString type() const override final {
+    QString type() const final {
       return Utils::nameOfType<T>();
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::ComboBox;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       QString options;
       QTextStream stream(&options);
       stream << Qt::fixed;
@@ -656,11 +671,11 @@ namespace Parameters {
       return Utils::quoted(Detail::Options) + ": " + options;
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto op = eval(str)) {
         if (set.find(*op) != set.end()) {
           setValue(*op);
@@ -707,15 +722,15 @@ namespace Parameters {
       }
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::ComboBox;
     }
 
-    QString type() const override final {
+    QString type() const final {
       return "mapped(" + Utils::nameOfType<T>() + ")";
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       QString options;
       QTextStream stream(&options);
       stream << Qt::fixed;
@@ -731,11 +746,11 @@ namespace Parameters {
       return Utils::quoted(Detail::Options) + ": " + options;
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return true;
     }
 
-    bool update(const QString& str) override final {
+    bool update(const QString& str) final {
       if (auto it = bimap.right.find(str); it != bimap.right.end()) {
         setValue(bimap.right.find(str)->get_left());
         return true;
@@ -750,6 +765,9 @@ namespace Parameters {
     qulonglong m_parent;
     std::function<void()> m_function;
 
+    void setUpdated(bool updated) final {
+    }
+
    public:
     template <class FunctionPointer>
     explicit PushButton(QObject* t_parent, FunctionPointer&& t_f, QString t_about = "") :
@@ -762,34 +780,36 @@ namespace Parameters {
       }
     }
 
-    QString value() const override final {
+    QString value() const final {
       return Utils::quoted(QString::number(reinterpret_cast<qulonglong>(&m_function)));
     }
 
-    QString inputType() const override final {
+    QString inputType() const final {
       return InputType::PushButton;
     }
 
-    QString type() const override final {
+    QString type() const final {
       return m_type;
     }
 
-    QString description() const override final {
+    QString description() const final {
       return m_about;
     }
 
-    QString payload() const override final {
+    QString payload() const final {
       return Utils::quoted(Detail::Parent) + ": " + Utils::quoted(QString::number(m_parent));
     }
 
-    bool isChooseable() const override final {
+    bool isChoosable() const final {
       return false;
     }
 
-    bool update(const QString&) override final {
+    bool update(const QString&) final {
       return false;
     }
   };
 } // namespace Parameters
+
+#pragma clang diagnostic pop
 
 #endif // SOCCER_COMMON_PARAMETERTYPE_H

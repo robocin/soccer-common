@@ -29,7 +29,7 @@ class ModulePrivate : public QObject, private QRunnable {
   volatile std::atomic<QThreadPool*> threadPool;
   std::mutex execMutex;
 
-  void parametersUpdate();
+  QVector<Parameters::ParameterBase*> parametersUpdate();
   void run() final;
 
  signals:
@@ -37,6 +37,24 @@ class ModulePrivate : public QObject, private QRunnable {
 
  protected slots:
   void tryStart();
+
+ private:
+  struct ParametersUpdateGuard {
+    QVector<Parameters::ParameterBase*> parameters;
+
+    inline explicit ParametersUpdateGuard(QVector<Parameters::ParameterBase*>&& parameters) :
+        parameters(parameters) {
+      for (auto parameter : parameters) {
+        parameter->setUpdated(true);
+      }
+    }
+
+    inline ~ParametersUpdateGuard() {
+      for (auto parameter : parameters) {
+        parameter->setUpdated(false);
+      }
+    }
+  };
 };
 
 #endif // SOCCER_COMMON_MODULEPRIVATE_H

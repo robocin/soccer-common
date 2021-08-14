@@ -5,6 +5,8 @@
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 
 #include <optional>
+#include <stdexcept>
+#include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 /*!
  * @brief This macro advertises and helps to create a package
@@ -102,7 +104,10 @@
     try {                                                                                          \
       return m_##varname.value();                                                                  \
     } catch (const std::bad_optional_access&) {                                                    \
-      throw;                                                                                       \
+      throw std::runtime_error(                                                                    \
+          ("the field \'" + Utils::nameOfType<std::decay_t<decltype(*this)>>() +                   \
+           "::" + QString(#varname) + "()\' is std::nullopt (bad optional access).")               \
+              .toStdString());                                                                     \
     }                                                                                              \
   }                                                                                                \
                                                                                                    \

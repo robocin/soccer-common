@@ -1,6 +1,9 @@
 #ifndef SOCCER_COMMON_PARAMETERSHANDLER_H
 #define SOCCER_COMMON_PARAMETERSHANDLER_H
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "modernize-use-nodiscard"
+
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -63,11 +66,14 @@ namespace Parameters {
 
     QByteArray json() const;
     QJsonObject jsonObject() const;
-    QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates);
+    QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates,
+                                  QVector<ParameterBase*>* updated = nullptr);
   };
 } // namespace Parameters
 
 Q_DECLARE_METATYPE(Parameters::UpdateRequest);
 Q_DECLARE_METATYPE(Parameters::UpdateRequests);
+
+#pragma clang diagnostic pop
 
 #endif // SOCCER_COMMON_PARAMETERSHANDLER_H
