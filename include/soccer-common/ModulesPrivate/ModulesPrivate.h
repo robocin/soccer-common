@@ -69,6 +69,7 @@ class ModulesPrivate : public QObject {
 
  signals:
   void setup();
+  void init();
   void impulse();
 
   void prepareToDelete();
@@ -112,6 +113,11 @@ class ModulesPrivate : public QObject {
       /* ModulesPrivate */ {
         connections += QObject::connect(modules,
                                         &ModulesPrivate::setup,
+                                        ref,
+                                        std::bind(Maker::setup, ref, modules));
+
+        connections += QObject::connect(modules,
+                                        &ModulesPrivate::init,
                                         ref,
                                         std::bind(Maker::setup, ref, modules));
 

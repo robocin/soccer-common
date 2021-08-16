@@ -25,6 +25,7 @@ ModulesPrivate::Timers* ModulesPrivate::timers() const {
 void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
   if (isRunning) {
     emit setup();
+    emit init();
     emit impulse();
   } else {
     qWarning() << "starting rebuild...";
