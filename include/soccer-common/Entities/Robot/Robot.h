@@ -4,23 +4,38 @@
 #include "soccer-common/Entities/Entity/Entity.h"
 
 namespace Common {
-  template <class PT>
   /*!
    * @brief Robot class that holds only telemetry data.
    * 
    */
+  template <class PT>
   class RawRobot : virtual public RawEntity<PT> {
    protected:
     using RawEntity<PT>::m_position;
-    int m_id{};
-    float m_angle{};
+    int m_id{}; /**< robot id */
+    float m_angle{}; /**< robot angle */
+
 
    public:
+    /*!
+     * @brief Class constructor
+     * 
+     * @param id - robot id 
+     * @param angle - Current robot angle 
+     * @param rawEntity - rawEntity instance 
+     */
     constexpr RawRobot(int id, float angle, const RawEntity<PT>& rawEntity) :
         RawEntity<PT>(rawEntity),
         m_id(id),
         m_angle(angle) {
     }
+   /*!
+     * @brief Class constructor
+     * 
+     * @param id - robot id 
+     * @param angle - Current robot angle 
+     * @param position - Current robot position
+     */
     constexpr RawRobot(int id, float angle, const PT& position) :
         RawRobot(id, angle, RawEntity(position)) {
     }
@@ -28,10 +43,18 @@ namespace Common {
     using RawEntity<PT>::position;
     using RawEntity<PT>::operator const PT&;
 
+    /*!
+     * @return Robot id
+     *
+     */
     [[nodiscard]] constexpr int id() const {
       return m_id;
     }
 
+    /*!
+     * @return Current robot angle
+     *
+     */
     [[nodiscard]] constexpr float angle() const {
       return m_angle;
     }
@@ -39,6 +62,9 @@ namespace Common {
     using RawEntity<PT>::distSquaredTo;
     using RawEntity<PT>::distTo;
 
+    /*!
+     * @return Angle to face given point
+     */
     constexpr auto angleTo(const PT& p) const {
       return Geometry2D::angleBetween<PT>(Geometry2D::fromPolar<PT>(m_angle), p - m_position);
     }
@@ -58,27 +84,51 @@ namespace Common {
 
   // -------------------------------------------------------------------------------------------- //
 
-  template <class PT>
   /*!
    * @brief Robot class that holds telemetry data plus calculated values. 
    * 
    */
+  template <class PT>
   class Robot : public RawRobot<PT>, public Entity<PT> {
    protected:
     using RawRobot<PT>::m_id;
     using RawRobot<PT>::m_angle;
 
    public:
+    /*!
+     * @brief Class constructor
+     * 
+     * @param id - robot id 
+     * @param angle - Current robot angle 
+     * @param entity - entity instance 
+     */
     constexpr Robot(int id, float angle, const Entity<PT>& entity) :
         Entity<PT>(entity),
         RawRobot<PT>(id, angle, entity.position()),
         RawEntity<PT>(entity.position()) {
     }
+    /*!
+     * @brief Class constructor
+     * 
+     * 
+     * @param rawRobot - RawRobot instance
+     * @param velocity - Current robot velocity 
+     * @param acceleration - Current robot acceleration
+     */
     constexpr Robot(const RawRobot<PT>& rawRobot, const PT& velocity, const PT& acceleration) :
         Robot(rawRobot.id(),
               rawRobot.angle(),
               Entity(rawRobot.position(), velocity, acceleration)) {
     }
+    /*!
+     * @brief Class constructor
+     * 
+     * @param id - robot id 
+     * @param angle - Current robot angle 
+     * @param position - Current robot position 
+     * @param velocity - Current robot velocity 
+     * @param acceleration - Current robot acceleration
+     */
     constexpr Robot(int id,
                     float angle,
                     const PT& position,

@@ -4,19 +4,28 @@
 #include "soccer-common/Entities/Entity/Entity.h"
 
 namespace Common {
-  template <class PT>
-
   /*!
    * @brief Ball class that holds only telemetry data
    * 
    */
+  template <class PT>
   class RawBall : virtual public RawEntity<PT> {
    protected:
    public:
+    /*!
+     * @brief Class constructor
+     * 
+     * @param rawEntity - rawEntity instance 
+     */
     constexpr explicit RawBall(const RawEntity<PT>& rawEntity) : RawEntity<PT>(rawEntity) {
     }
 
-    constexpr explicit RawBall(const PT& position) : RawBall(RawEntity(position)) {
+    /*!
+     * @brief Class constructor
+     * 
+     * @param position - Current ball position 
+     */
+   constexpr explicit RawBall(const PT& position) : RawBall(RawEntity(position)) {
     }
 
     using RawEntity<PT>::position;
@@ -38,22 +47,41 @@ namespace Common {
 
   // -------------------------------------------------------------------------------------------- //
 
-  template <class PT>
   /*!
    * @brief Ball class that holds telemetry data plus calculated values. 
    * 
    */
+  template <class PT>
   class Ball : public RawBall<PT>, public Entity<PT> {
    protected:
    public:
+    /*!
+     * @brief Class constructor
+     * 
+     * @param entity - entity instance 
+     */
     constexpr explicit Ball(const Entity<PT>& entity) :
         Entity<PT>(entity),
         RawBall<PT>(entity.position()),
         RawEntity<PT>(entity.position()) {
     }
+    /*!
+     * @brief Class constructor
+     * 
+     * @param rawBall - RawBall instance 
+     * @param velocity - Current velocity 
+     * @param acceleration - Current acceleration 
+     */
     constexpr Ball(const RawBall<PT>& rawBall, const PT& velocity, const PT& acceleration) :
         Ball(Entity(rawBall.position(), velocity, acceleration)) {
     }
+    /*!
+     * @brief Class constructor
+     * 
+     * @param position - Current position 
+     * @param velocity - Current velocity 
+     * @param acceleration - Current acceleration 
+     */
     constexpr Ball(const PT& position, const PT& velocity, const PT& acceleration) :
         Ball(Entity(position, velocity, acceleration)) {
     }
