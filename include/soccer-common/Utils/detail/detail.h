@@ -124,6 +124,18 @@ namespace detail {
 
   template <class S, class C>
   inline constexpr bool is_streamable_v = is_streamable<S, C>::value;
+
+  template <class L, class R, class = void>
+  struct is_comparable : std::false_type {};
+
+  template <class L, class R>
+  using comparability = decltype(std::declval<L>() == std::declval<R>());
+
+  template <class L, class R>
+  struct is_comparable<L, R, std::void_t<comparability<L, R>>> : std::true_type {};
+
+  template <class L, class R>
+  inline constexpr bool is_comparable_v = is_comparable<L, R>::value;
 } // namespace detail
 
 #endif // SOCCER_COMMON_DETAIL_H
