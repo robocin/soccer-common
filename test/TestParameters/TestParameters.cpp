@@ -223,8 +223,11 @@ void TestParameters::test_File_WithValidParameters_ShouldConstruct() {
                  Utils::quoted(Detail::DefaultDirectory) + ": " + Utils::quoted("."));
     QCOMPARE(text.isChoosable(), false);
 
-    QCOMPARE(text.update("/opt/qt/6.2.0/gcc_64/bin/qmake"), true);
-    QCOMPARE(string, "/opt/qt/6.2.0/gcc_64/bin/qmake");
+    QCOMPARE(text.update(""), true);
+    QCOMPARE(string, "");
+
+    QCOMPARE(text.update("not/empty/not_empty.file"), false);
+    QCOMPARE(string, "");
   }
 }
 
