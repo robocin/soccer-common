@@ -12,7 +12,6 @@ void ModuleBase::build() {
 
 void ModuleBase::setup(const Modules* modules) {
   connectModules(modules);
-  init(modules);
   connect(this,
           &ModuleBase::onReceiveUpdateRequests,
           this,

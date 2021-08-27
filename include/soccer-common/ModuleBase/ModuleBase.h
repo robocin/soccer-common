@@ -11,14 +11,12 @@
 class Modules;
 
 class ModuleBase : public ModulePrivate {
+  friend class ModulesPrivate;
   Q_OBJECT
 
  public:
   explicit ModuleBase(QThreadPool* threadPool);
   ~ModuleBase() override = default;
-
-  void build();
-  void setup(const Modules* modules);
 
  signals:
   void onReceiveUpdateRequests();
@@ -29,19 +27,23 @@ class ModuleBase : public ModulePrivate {
   void setInterfaceTeamColor(const QColor& firstColor, const QColor& secondColor);
   void setInterfaceAttackSide(bool isRight);
 
- public slots:
-  void receiveUpdateRequests(const Parameters::UpdateRequests& updates);
-
  protected:
   Parameters::Handler& parameters();
-  virtual void buildParameters();
 
+  virtual void buildParameters();
   virtual void connectModules(const Modules* modules);
+
+ protected slots:
   virtual void init(const Modules* modules);
 
  private:
   using ModulePrivate::parametersHandler;
   using ModulePrivate::updateRequests;
+
+ private slots:
+  void build();
+  void setup(const Modules* modules);
+  void receiveUpdateRequests(const Parameters::UpdateRequests& updates);
 };
 
 // -------------------------------------------------------------------------- //

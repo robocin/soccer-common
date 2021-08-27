@@ -69,6 +69,7 @@ class ModulesPrivate : public QObject {
 
  signals:
   void setup();
+  void init();
   void impulse();
 
   void prepareToDelete();
@@ -102,10 +103,6 @@ class ModulesPrivate : public QObject {
       ref->prepareToDelete();
     }
 
-    static void setup(T* instance, M* modules) {
-      static_cast<ModuleBase*>(instance)->setup(modules);
-    }
-
     inline static QVector<QMetaObject::Connection>
     setDefaultConnections(T* ref, M* modules, ModuleBox* moduleBox) {
       QVector<QMetaObject::Connection> connections;
@@ -113,7 +110,12 @@ class ModulesPrivate : public QObject {
         connections += QObject::connect(modules,
                                         &ModulesPrivate::setup,
                                         ref,
-                                        std::bind(Maker::setup, ref, modules));
+                                        std::bind(&ModuleBase::setup, ref, modules));
+
+        connections += QObject::connect(modules,
+                                        &ModulesPrivate::init,
+                                        ref,
+                                        std::bind(&ModuleBase::init, ref, modules));
 
         connections +=
             QObject::connect(modules, &ModulesPrivate::impulse, ref, &ModuleBase::runInParallel);
