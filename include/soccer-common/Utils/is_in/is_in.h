@@ -16,7 +16,7 @@ namespace Utils {
   constexpr std::enable_if_t<(sizeof...(Args) > 1), bool> is_in(T&&, Args&&...);
 
   template <class T, class U>
-  constexpr std::enable_if_t<std::is_same_v<std::decay_t<T>, std::common_type_t<T, U>>, bool>
+  constexpr std::enable_if_t<detail::is_comparable_v<std::decay_t<T>, std::decay_t<U>>, bool>
   is_in(T&&, U&&);
 
   template <class T, class Tuple>
@@ -48,7 +48,7 @@ namespace Utils {
   }
 
   template <class T, class U>
-  constexpr std::enable_if_t<std::is_same_v<std::decay_t<T>, std::common_type_t<T, U>>, bool>
+  constexpr std::enable_if_t<detail::is_comparable_v<std::decay_t<T>, std::decay_t<U>>, bool>
   is_in(T&& lhs, U&& rhs) {
     return std::forward<T>(lhs) == std::forward<U>(rhs);
   }
@@ -118,6 +118,8 @@ namespace Utils {
   }
 #ifdef SOCCER_COMMON_IS_IN_H_UNDEF_IS_IN
 } // namespace Utils
+#else
+  #define is_in(...) is_in(__VA_ARGS__)
 #endif
 
 #endif // SOCCER_COMMON_IS_IN_H
