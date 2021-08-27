@@ -52,6 +52,7 @@ jobs:
                 if [ $error_code -ne 0 ]; then
                   exit $error_code
                 fi
+                echo "\n"
               done;
             fi
           )
