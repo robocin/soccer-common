@@ -207,7 +207,7 @@ InputWidgets::InputMethod* ParameterWidget::buildComboBox(const QJsonObject& jso
                                                           QStringList& details) {
   QJsonArray itemsAsJson = json[Detail::Options].toArray();
   QStringList itemsAsStringList;
-  for (const QJsonValue& object : itemsAsJson) {
+  for (const auto& object : itemsAsJson) {
     itemsAsStringList += object.toVariant().toString();
   }
   details += "• " + QString(Detail::Options) + ": [" + itemsAsStringList.join(", ") + "];";
