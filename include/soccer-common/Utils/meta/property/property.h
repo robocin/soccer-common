@@ -75,7 +75,7 @@
   }                                                                                                \
                                                                                                    \
  private:                                                                                          \
-  type m_##varname = {default_value}
+  type m_##varname = default_value
 
 #if !BOOST_PP_VARIADICS_MSVC
   #define RC_PROPERTY(...) BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__)
