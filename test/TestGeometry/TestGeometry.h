@@ -42,6 +42,7 @@ class TestGeometry : public QObject {
   void test_2D_angleBetween_whenGivenTwoPoints_shouldWork();
   void test_2D_lengthSquared_whenGivenAPoint_shouldWork();
   void test_2D_length_whenGivenAPoint_shouldWork();
+  void test_2D_norm_whenGivenAPoint_shouldWork();
   void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
   void test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
   void test_2D_normalize_whenGivenAFloatingPointPoint_shouldWork();
@@ -58,6 +59,10 @@ class TestGeometry : public QObject {
   void test_2D_distancePointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_reflectPointLine_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_isOnTheLeft_whenGivenThreeFloatingPointPoints_shouldWork();
+  void test_2D_isOnTheLeft_whenGivenALineAndAFloatingPointPoint_shouldWork();
+  void test_2D_isOnTheRight_whenGivenThreeFloatingPointPoints_shouldWork();
+  void test_2D_isOnTheRight_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_projectPointSegment_whenGivenThreeFloatingPointPoints_shouldWork();
   void test_2D_projectPointSegment_whenGivenALineAndAFloatingPointPoint_shouldWork();
   void test_2D_distancePointSegment_whenGivenThreeFloatingPointPoints_shouldWork();

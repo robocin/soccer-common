@@ -364,6 +364,13 @@ void TestGeometry::test_2D_length_whenGivenAPoint_shouldWork() {
   QCOMPARE(length(QPointF(40.0, 30.0)), 50.0);
 }
 
+void TestGeometry::test_2D_norm_whenGivenAPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QCOMPARE(norm(QPoint(40, 30)), 50);
+  QCOMPARE(norm(QPointF(40.0, 30.0)), 50.0);
+}
+
 void TestGeometry::test_2D_manhattanLength_whenGivenAPoint_shouldWork() {
   using namespace Geometry2D;
 
@@ -582,6 +589,44 @@ void TestGeometry::test_2D_reflectPointLine_whenGivenALineAndAFloatingPointPoint
     QCOMPARE(reflectPointLine(line, c), d);
     QCOMPARE(reflectPointLine(line, d), c);
   }
+}
+
+void TestGeometry::test_2D_isOnTheLeft_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  QPointF a(0, 0), b(0, 10), c(-5, 5);
+  QVERIFY(isOnTheLeft(a, b, c));
+  QVERIFY(isOnTheLeft(a, b, c));
+  QVERIFY(!isOnTheLeft(a, b, -c));
+  QVERIFY(isOnTheLeft(b, a, -c));
+}
+
+void TestGeometry::test_2D_isOnTheLeft_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  QLineF line(0, 0, 0, 10);
+  QPointF c(-5, 5);
+  QVERIFY(isOnTheLeft(line, c));
+  QVERIFY(isOnTheLeft(line, c));
+  QVERIFY(!isOnTheLeft(line, -c));
+  QVERIFY(isOnTheLeft(QLineF(line.p2(), line.p1()), -c));
+}
+
+void TestGeometry::test_2D_isOnTheRight_whenGivenThreeFloatingPointPoints_shouldWork() {
+  using namespace Geometry2D;
+  QPointF a(0, 0), b(0, 10), c(-5, 5);
+  QVERIFY(!isOnTheRight(a, b, c));
+  QVERIFY(!isOnTheRight(a, b, c));
+  QVERIFY(isOnTheRight(a, b, -c));
+  QVERIFY(!isOnTheRight(b, a, -c));
+}
+
+void TestGeometry::test_2D_isOnTheRight_whenGivenALineAndAFloatingPointPoint_shouldWork() {
+  using namespace Geometry2D;
+  QLineF line(0, 0, 0, 10);
+  QPointF c(-5, 5);
+  QVERIFY(!isOnTheRight(line, c));
+  QVERIFY(!isOnTheRight(line, c));
+  QVERIFY(isOnTheRight(line, -c));
+  QVERIFY(!isOnTheRight(QLineF(line.p2(), line.p1()), -c));
 }
 
 void TestGeometry::test_2D_projectPointSegment_whenGivenThreeFloatingPointPoints_shouldWork() {
