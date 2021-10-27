@@ -3,7 +3,7 @@
 
 #include "meta/meta.h"
 #include "Color/Color.h"
-#include "InheritanceFactorySafeMap/InheritanceFactorySafeMap.h"
+#include "InheritanceFactory/InheritanceFactory.h"
 #include "NameOfType/NameOfType.h"
 #include "PtrMulticast/PtrMulticast.h"
 #include "InterruptRequest/InterruptRequest.h"
