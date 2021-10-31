@@ -38,9 +38,9 @@ namespace Common {
    protected:
    public:
     constexpr explicit Ball(const Entity<PT>& entity) :
-        Entity<PT>(entity),
+        RawEntity<PT>(entity.position()),
         RawBall<PT>(entity.position()),
-        RawEntity<PT>(entity.position()) {
+        Entity<PT>(entity) {
     }
     constexpr Ball(const RawBall<PT>& rawBall, const PT& velocity, const PT& acceleration) :
         Ball(Entity(rawBall.position(), velocity, acceleration)) {
