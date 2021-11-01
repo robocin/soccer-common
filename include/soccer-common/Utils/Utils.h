@@ -9,7 +9,6 @@
 #include "InterruptRequest/InterruptRequest.h"
 #include "Regex/Regex.h"
 #include "Singleton/Singleton.h"
-#include "SharedOptional/SharedOptional.h"
 #include "SharedValue/SharedValue.h"
 #include "SharedWrapper/SharedWrapper.h"
 #include "overloaded_visitor_t/overloaded_visitor_t.h"
