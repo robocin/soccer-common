@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_INHERITANCEFACTORYSAFEMAP_H
-#define SOCCER_COMMON_INHERITANCEFACTORYSAFEMAP_H
+#ifndef SOCCER_COMMON_INHERITANCEFACTORY_H
+#define SOCCER_COMMON_INHERITANCEFACTORY_H
 
 #include <QMap>
 #include <mutex>
@@ -8,7 +8,7 @@
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 template <class T, class... Args>
-class InheritanceFactorySafeMap {
+class InheritanceFactory {
   using Key = QString;
   class Value : public std::function<T*(Args...)> {
     QString m_description;
@@ -22,7 +22,7 @@ class InheritanceFactorySafeMap {
         m_description(std::move(description)) {
     }
 
-    QString description() const {
+    [[nodiscard]] QString description() const {
       return m_description;
     }
   };
@@ -75,4 +75,4 @@ class InheritanceFactorySafeMap {
   }
 };
 
-#endif // SOCCER_COMMON_INHERITANCEFACTORYSAFEMAP_H
+#endif // SOCCER_COMMON_INHERITANCEFACTORY_H

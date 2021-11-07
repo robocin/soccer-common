@@ -1,0 +1,1 @@
+#include "InheritanceFactory.h"

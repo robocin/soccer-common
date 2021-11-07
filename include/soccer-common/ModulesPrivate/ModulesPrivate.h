@@ -89,7 +89,7 @@ class ModulesPrivate : public QObject {
     static_assert(std::is_same_v<Modules, M>);
     static_assert(std::is_base_of_v<ModulesPrivate, M>);
 
-    using F = typename InheritanceFactorySafeMap<T, Args...>::type;
+    using F = typename InheritanceFactory<T, Args...>::type;
 
     M* modules;
     T*& ref;
@@ -248,7 +248,7 @@ class ModulesPrivate : public QObject {
     }
 
    public:
-    Maker(M* t_modules, T*& t_ref, const InheritanceFactorySafeMap<T, Args...>& t_factory) :
+    Maker(M* t_modules, T*& t_ref, const InheritanceFactory<T, Args...>& t_factory) :
         modules(t_modules),
         ref(t_ref),
         factory(t_factory) {

@@ -364,6 +364,17 @@ namespace Geometry2D {
   /*!
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param p the vector.
+   * @return The same of length.
+   * @see length(PT).
+   */
+  template <class PT>
+  constexpr auto norm(const PT& p) {
+    return length<PT>(p);
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param p the vector.
    * @return Returns the sum of the absolute values of x() and y(), traditionally known as the
    * "Manhattan length" of the vector from the origin to the point.
    */
@@ -550,6 +561,50 @@ namespace Geometry2D {
   template <class PT>
   constexpr PT reflectPointLine(const QLineF& line, const PT& c) {
     return reflectPointLine<PT>(line.p1(), line.p2(), c);
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param a, b, c line through (a, b) and point c.
+   * @return Returns if the point c is on the left side of the line.
+   * @note assuming line.p1() != line.p2().
+   */
+  template <class PT>
+  constexpr bool isOnTheLeft(PT a, PT b, PT c) {
+    return cross<PT>(b - a, c - a) > 0;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param line, c line and point c.
+   * @return Returns if the point c is on the left side of the line.
+   * @note assuming line.p1() != line.p2().
+   */
+  template <class PT>
+  constexpr bool isOnTheLeft(const QLineF& line, PT c) {
+    return cross<PT>(line.p2() - line.p1(), c - line.p1()) > 0;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param a, b, c line through (a, b) and point c.
+   * @return Returns if the point c is on the right side of the line.
+   * @note assuming line.p1() != line.p2().
+   */
+  template <class PT>
+  constexpr bool isOnTheRight(PT a, PT b, PT c) {
+    return cross<PT>(b - a, c - a) < 0;
+  }
+
+  /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param line, c line and point c.
+   * @return Returns if the point c is on the right side of the line.
+   * @note assuming line.p1() != line.p2().
+   */
+  template <class PT>
+  constexpr bool isOnTheRight(const QLineF& line, PT c) {
+    return cross<PT>(line.p2() - line.p1(), c - line.p1()) < 0;
   }
 
   /*!

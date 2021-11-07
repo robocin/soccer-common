@@ -5,8 +5,8 @@
 #ifndef SOCCER_COMMON_KINEMATICS_H
 #define SOCCER_COMMON_KINEMATICS_H
 
-#include <QtGlobal>
 #include <optional>
+#include "soccer-common/Geometry/Geometry.h"
 
 namespace Kinematics {
   template <class PT>
@@ -14,7 +14,8 @@ namespace Kinematics {
     /*!
      * @brief s = so + v * t
      */
-    static constexpr PT position(qreal t, const PT& v, const std::optional<PT>& so = std::nullopt) {
+    static constexpr PT
+    position(Geometry2D::CoordType<PT> t, const PT& v, const std::optional<PT>& so = std::nullopt) {
       return so.value_or(PT()) + v * t;
     }
 
@@ -25,8 +26,9 @@ namespace Kinematics {
      * (s - so) / t = v <br>
      * v = (s - so) / t
      */
-    static constexpr PT velocity(const PT& s, qreal t, const std::optional<PT>& so = std::nullopt) {
-      return qFuzzyIsNull(t) ? PT() : (s - so.value_or(s)) / t;
+    static constexpr PT
+    velocity(const PT& s, Geometry2D::CoordType<PT> t, const std::optional<PT>& so = std::nullopt) {
+      return Math::isNull(t) ? PT() : (s - so.value_or(s)) / t;
     }
 
     /*!
@@ -36,9 +38,10 @@ namespace Kinematics {
      * (v - vo) / t = a <br>
      * a = (v - vo) / t
      */
-    static constexpr PT
-    acceleration(const PT& v, qreal t, const std::optional<PT>& vo = std::nullopt) {
-      return qFuzzyIsNull(t) ? PT() : (v - vo.value_or(v)) / t;
+    static constexpr PT acceleration(const PT& v,
+                                     Geometry2D::CoordType<PT> t,
+                                     const std::optional<PT>& vo = std::nullopt) {
+      return Math::isNull(t) ? PT() : (v - vo.value_or(v)) / t;
     }
   };
 } // namespace Kinematics

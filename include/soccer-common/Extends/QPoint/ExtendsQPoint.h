@@ -191,6 +191,10 @@ class Extends<QPoint> : public QPoint {
     return Geometry2D::length(*this);
   }
 
+  constexpr inline auto norm() const {
+    return Geometry2D::norm(*this);
+  }
+
   using QPoint::manhattanLength;
 
   constexpr inline void normalize() {
@@ -203,6 +207,22 @@ class Extends<QPoint> : public QPoint {
 
   inline bool isInPolygon(const QVector<QPoint>& polygon) const {
     return Geometry2D::pointInPolygon<QPoint>(polygon, *this);
+  }
+
+  constexpr inline bool isOnTheLeftOf(const QPoint& a, const QPoint& b) const {
+    return Geometry2D::isOnTheLeft<QPoint>(a, b, *this);
+  }
+
+  constexpr inline bool isOnTheLeftOf(const QLine& line) const {
+    return Geometry2D::isOnTheLeft<QPoint>(line.p1(), line.p2(), *this);
+  }
+
+  constexpr inline bool isOnTheRightOf(const QPoint& a, const QPoint& b) const {
+    return Geometry2D::isOnTheRight<QPoint>(a, b, *this);
+  }
+
+  constexpr inline bool isOnTheRightOf(const QLine& line) const {
+    return Geometry2D::isOnTheRight<QPoint>(line.p1(), line.p2(), *this);
   }
 
  private:
@@ -415,6 +435,30 @@ class Extends<QPointF> : public QPointF {
     return Geometry2D::projectPointSegment<QPointF>(line.p1(), line.p2(), *this);
   }
 
+  constexpr inline Extends<QPointF> reflectedOntoLine(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::reflectPointLine<QPointF>(a, b, *this);
+  }
+
+  constexpr inline Extends<QPointF> reflectedOntoLine(const QLineF& line) const {
+    return Geometry2D::reflectPointLine<QPointF>(line.p1(), line.p2(), *this);
+  }
+
+  constexpr inline bool isOnTheLeftOf(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::isOnTheLeft<QPointF>(a, b, *this);
+  }
+
+  constexpr inline bool isOnTheLeftOf(const QLineF& line) const {
+    return Geometry2D::isOnTheLeft<QPointF>(line.p1(), line.p2(), *this);
+  }
+
+  constexpr inline bool isOnTheRightOf(const QPointF& a, const QPointF& b) const {
+    return Geometry2D::isOnTheRight<QPointF>(a, b, *this);
+  }
+
+  constexpr inline bool isOnTheRightOf(const QLineF& line) const {
+    return Geometry2D::isOnTheRight<QPointF>(line.p1(), line.p2(), *this);
+  }
+
   constexpr inline void rotateCW90() {
     *this = Geometry2D::rotateCW90(*this);
   }
@@ -461,6 +505,10 @@ class Extends<QPointF> : public QPointF {
 
   constexpr inline auto length() const {
     return Geometry2D::length(*this);
+  }
+
+  constexpr inline auto norm() const {
+    return Geometry2D::norm(*this);
   }
 
   using QPointF::manhattanLength;

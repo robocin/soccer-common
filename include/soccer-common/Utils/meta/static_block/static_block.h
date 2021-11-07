@@ -21,12 +21,14 @@ namespace __rc_meta { // NOLINT(bugprone-reserved-identifier)
   };
 } // namespace __rc_meta
 
-#define __RC_TOKEN_PASTING__(A, B) __RC_TOKEN_PASTING_IMPL__(A, B)
-#define __RC_TOKEN_PASTING_IMPL__(A, B) A##B
+#define __RC_STATIC_BLOCK_TOKEN_PASTING__(A, B) __RC_STATIC_BLOCK_TOKEN_PASTING_IMPL__(A, B)
+#define __RC_STATIC_BLOCK_TOKEN_PASTING_IMPL__(A, B) A##B
 
 #define __static_block_declaration__                                                               \
-  inline static const auto __RC_TOKEN_PASTING__(                                                   \
-      __RC_TOKEN_PASTING__(__RC_TOKEN_PASTING__(static_block_tag_, __COUNTER__), _at_line_),       \
+  inline static const auto __RC_STATIC_BLOCK_TOKEN_PASTING__(                                      \
+      __RC_STATIC_BLOCK_TOKEN_PASTING__(                                                           \
+          __RC_STATIC_BLOCK_TOKEN_PASTING__(static_block_tag_, __COUNTER__),                       \
+          _at_line_),                                                                              \
       __LINE__) = (__rc_meta::static_block_tag)[]()->void
 
 #define static_block __static_block_declaration__ // NOLINT(cert-err58-cpp)
