@@ -11,6 +11,7 @@
 
 #include <optional>
 #include <stdexcept>
+
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 /*!
@@ -81,12 +82,14 @@
   #define RC_PROPERTY(...) BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__)
 #else
   #define RC_PROPERTY(...)                                                                         \
-    BOOST_PP_CAT(BOOST_PP_OVERLOAD(MACRO_, __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY())
+    BOOST_PP_CAT(BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY())
 #endif
 
 #ifndef SOCCER_COMMON_PROPERTY_UNDEF
   #define PROPERTY(...) RC_PROPERTY(__VA_ARGS__)
 #endif
+
+#include "ctor.h"
 
 #pragma clang diagnostic pop
 
