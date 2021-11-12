@@ -1,5 +1,5 @@
-#ifndef SSL_UNIFICATION_CTOR_H
-#define SSL_UNIFICATION_CTOR_H
+#ifndef SOCCER_COMMON_CTOR_H
+#define SOCCER_COMMON_CTOR_H
 
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -369,4 +369,4 @@
   #define CTOR(...) RC_CTOR(__VA_ARGS__)
 #endif
 
-#endif // SSL_UNIFICATION_CTOR_H
+#endif // SOCCER_COMMON_CTOR_H
