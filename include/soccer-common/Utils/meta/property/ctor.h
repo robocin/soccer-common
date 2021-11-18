@@ -12,20 +12,22 @@
 
 #define RC_CTOR_2(type, var1)                                                                      \
  public:                                                                                           \
-  inline explicit type(decltype(m_##var1) var1) : m_##var1(var1) {                                 \
+  inline explicit type(decltype(m_##var1) var1) : m_##var1(std::move(var1)) {                      \
   }
 
 #define RC_CTOR_3(type, var1, var2)                                                                \
  public:                                                                                           \
-  inline type(decltype(m_##var1) var1, decltype(m_##var2) var2) : m_##var1(var1), m_##var2(var2) { \
+  inline type(decltype(m_##var1) var1, decltype(m_##var2) var2) :                                  \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)) {                                                                  \
   }
 
 #define RC_CTOR_4(type, var1, var2, var3)                                                          \
  public:                                                                                           \
   inline type(decltype(m_##var1) var1, decltype(m_##var2) var2, decltype(m_##var3) var3) :         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)) {                                                                  \
   }
 
 #define RC_CTOR_5(type, var1, var2, var3, var4)                                                    \
@@ -34,10 +36,10 @@
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
               decltype(m_##var4) var4) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)) {                                                                  \
   }
 
 #define RC_CTOR_6(type, var1, var2, var3, var4, var5)                                              \
@@ -47,11 +49,11 @@
               decltype(m_##var3) var3,                                                             \
               decltype(m_##var4) var4,                                                             \
               decltype(m_##var5) var5) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)) {                                                                  \
   }
 
 #define RC_CTOR_7(type, var1, var2, var3, var4, var5, var6)                                        \
@@ -62,12 +64,12 @@
               decltype(m_##var4) var4,                                                             \
               decltype(m_##var5) var5,                                                             \
               decltype(m_##var6) var6) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)) {                                                                  \
   }
 
 #define RC_CTOR_8(type, var1, var2, var3, var4, var5, var6, var7)                                  \
@@ -79,13 +81,13 @@
               decltype(m_##var5) var5,                                                             \
               decltype(m_##var6) var6,                                                             \
               decltype(m_##var7) var7) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)) {                                                                  \
   }
 
 #define RC_CTOR_9(type, var1, var2, var3, var4, var5, var6, var7, var8)                            \
@@ -98,14 +100,14 @@
               decltype(m_##var6) var6,                                                             \
               decltype(m_##var7) var7,                                                             \
               decltype(m_##var8) var8) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)) {                                                                  \
   }
 
 #define RC_CTOR_10(type, var1, var2, var3, var4, var5, var6, var7, var8, var9)                     \
@@ -119,15 +121,15 @@
               decltype(m_##var7) var7,                                                             \
               decltype(m_##var8) var8,                                                             \
               decltype(m_##var9) var9) :                                                           \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9) {                                                                             \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)) {                                                                  \
   }
 
 #define RC_CTOR_11(type, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10)              \
@@ -142,16 +144,16 @@
               decltype(m_##var8) var8,                                                             \
               decltype(m_##var9) var9,                                                             \
               decltype(m_##var10) var10) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)) {                                                                \
   }
 
 #define RC_CTOR_12(type, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11)       \
@@ -167,17 +169,17 @@
               decltype(m_##var9) var9,                                                             \
               decltype(m_##var10) var10,                                                           \
               decltype(m_##var11) var11) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10),                                                                            \
-      m_##var11(var11) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)),                                                                 \
+      m_##var11(std::move(var11)) {                                                                \
   }
 
 #define RC_CTOR_13(type,                                                                           \
@@ -206,18 +208,18 @@
               decltype(m_##var10) var10,                                                           \
               decltype(m_##var11) var11,                                                           \
               decltype(m_##var12) var12) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10),                                                                            \
-      m_##var11(var11),                                                                            \
-      m_##var12(var12) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)),                                                                 \
+      m_##var11(std::move(var11)),                                                                 \
+      m_##var12(std::move(var12)) {                                                                \
   }
 
 #define RC_CTOR_14(type,                                                                           \
@@ -248,19 +250,19 @@
               decltype(m_##var11) var11,                                                           \
               decltype(m_##var12) var12,                                                           \
               decltype(m_##var13) var13) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10),                                                                            \
-      m_##var11(var11),                                                                            \
-      m_##var12(var12),                                                                            \
-      m_##var13(var13) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)),                                                                 \
+      m_##var11(std::move(var11)),                                                                 \
+      m_##var12(std::move(var12)),                                                                 \
+      m_##var13(std::move(var13)) {                                                                \
   }
 
 #define RC_CTOR_15(type,                                                                           \
@@ -293,20 +295,20 @@
               decltype(m_##var12) var12,                                                           \
               decltype(m_##var13) var13,                                                           \
               decltype(m_##var14) var14) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10),                                                                            \
-      m_##var11(var11),                                                                            \
-      m_##var12(var12),                                                                            \
-      m_##var13(var13),                                                                            \
-      m_##var14(var14) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)),                                                                 \
+      m_##var11(std::move(var11)),                                                                 \
+      m_##var12(std::move(var12)),                                                                 \
+      m_##var13(std::move(var13)),                                                                 \
+      m_##var14(std::move(var14)) {                                                                \
   }
 
 #define RC_CTOR_16(type,                                                                           \
@@ -341,21 +343,21 @@
               decltype(m_##var13) var13,                                                           \
               decltype(m_##var14) var14,                                                           \
               decltype(m_##var15) var15) :                                                         \
-      m_##var1(var1),                                                                              \
-      m_##var2(var2),                                                                              \
-      m_##var3(var3),                                                                              \
-      m_##var4(var4),                                                                              \
-      m_##var5(var5),                                                                              \
-      m_##var6(var6),                                                                              \
-      m_##var7(var7),                                                                              \
-      m_##var8(var8),                                                                              \
-      m_##var9(var9),                                                                              \
-      m_##var10(var10),                                                                            \
-      m_##var11(var11),                                                                            \
-      m_##var12(var12),                                                                            \
-      m_##var13(var13),                                                                            \
-      m_##var14(var14),                                                                            \
-      m_##var15(var15) {                                                                           \
+      m_##var1(std::move(var1)),                                                                   \
+      m_##var2(std::move(var2)),                                                                   \
+      m_##var3(std::move(var3)),                                                                   \
+      m_##var4(std::move(var4)),                                                                   \
+      m_##var5(std::move(var5)),                                                                   \
+      m_##var6(std::move(var6)),                                                                   \
+      m_##var7(std::move(var7)),                                                                   \
+      m_##var8(std::move(var8)),                                                                   \
+      m_##var9(std::move(var9)),                                                                   \
+      m_##var10(std::move(var10)),                                                                 \
+      m_##var11(std::move(var11)),                                                                 \
+      m_##var12(std::move(var12)),                                                                 \
+      m_##var13(std::move(var13)),                                                                 \
+      m_##var14(std::move(var14)),                                                                 \
+      m_##var15(std::move(var15)) {                                                                \
   }
 
 #if !BOOST_PP_VARIADICS_MSVC
