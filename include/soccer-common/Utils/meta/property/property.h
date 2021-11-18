@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_META_PACKAGE_H
-#define SOCCER_COMMON_META_PACKAGE_H
+#ifndef SOCCER_COMMON_PROPERTY_H
+#define SOCCER_COMMON_PROPERTY_H
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
@@ -36,13 +36,13 @@
     m_##varname.emplace(std::forward<Args>(args)...);                                              \
     return *this;                                                                                  \
   }                                                                                                \
-  inline bool has_##varname() const {                                                              \
+  [[nodiscard]] inline bool has_##varname() const {                                                \
     return m_##varname.has_value();                                                                \
   }                                                                                                \
-  inline const std::optional<type>& optional_##varname() const {                                   \
+  [[nodiscard]] inline const std::optional<type>& optional_##varname() const {                     \
     return m_##varname;                                                                            \
   }                                                                                                \
-  inline const type& varname() const {                                                             \
+  [[nodiscard]] inline const type& varname() const {                                               \
     try {                                                                                          \
       return m_##varname.value();                                                                  \
     } catch (const std::bad_optional_access&) {                                                    \
@@ -71,7 +71,7 @@
     m_##varname = type(std::forward<Args>(args)...);                                               \
     return *this;                                                                                  \
   }                                                                                                \
-  inline const type& varname() const {                                                             \
+  [[nodiscard]] inline const type& varname() const {                                               \
     return m_##varname;                                                                            \
   }                                                                                                \
                                                                                                    \
@@ -93,4 +93,4 @@
 
 #pragma clang diagnostic pop
 
-#endif // SOCCER_COMMON_META_PACKAGE_H
+#endif // SOCCER_COMMON_PROPERTY_H
