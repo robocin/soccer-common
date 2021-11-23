@@ -6,12 +6,14 @@ ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
 }
 
 void ModuleBase::build() {
-  buildParameters();
-  emit sendParameters(parameters().jsonObject());
+  buildParameters(parametersHandler);
+  emit onBuildParameters(parametersHandler);
+  emit sendParameters(parametersHandler.jsonObject());
 }
 
 void ModuleBase::setup(const Modules* modules) {
   connectModules(modules);
+  emit onConnectModules(modules);
   connect(this,
           &ModuleBase::onReceiveUpdateRequests,
           this,
@@ -29,11 +31,7 @@ void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates
   }
 }
 
-Parameters::Handler& ModuleBase::parameters() {
-  return parametersHandler;
-}
-
-void ModuleBase::buildParameters() {
+void ModuleBase::buildParameters(Parameters::Handler&) {
 }
 
 void ModuleBase::connectModules(const Modules*) {

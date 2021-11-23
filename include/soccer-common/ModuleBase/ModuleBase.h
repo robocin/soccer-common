@@ -20,6 +20,11 @@ class ModuleBase : public ModulePrivate {
 
  signals:
   void onReceiveUpdateRequests();
+
+  void onInit(const Modules* modules);
+  void onBuildParameters(Parameters::Handler& parameters);
+  void onConnectModules(const Modules* modules);
+
   void sendParameters(const QJsonObject& parameters);
 
   /* interface */ signals:
@@ -28,9 +33,7 @@ class ModuleBase : public ModulePrivate {
   void setInterfaceAttackSide(bool isRight);
 
  protected:
-  Parameters::Handler& parameters();
-
-  virtual void buildParameters();
+  virtual void buildParameters(Parameters::Handler& parameters);
   virtual void connectModules(const Modules* modules);
 
  protected slots:
