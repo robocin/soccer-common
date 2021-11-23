@@ -112,10 +112,10 @@ class ModulesPrivate : public QObject {
                                         ref,
                                         std::bind(&ModuleBase::setup, ref, modules));
 
-        connections += QObject::connect(modules,
-                                        &ModulesPrivate::init,
-                                        ref,
-                                        std::bind(&ModuleBase::init, ref, modules));
+        connections += QObject::connect(modules, &ModulesPrivate::init, ref, [ref, modules]() {
+          ref->init(modules);
+          emit ref->onInit(modules);
+        });
 
         connections +=
             QObject::connect(modules, &ModulesPrivate::impulse, ref, &ModuleBase::runInParallel);
