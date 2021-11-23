@@ -72,7 +72,7 @@ namespace Common {
     }
 
     // center in (0, 0).
-    static constexpr PT center() {
+    constexpr PT center() const {
       return PT(0, 0);
     }
 
