@@ -64,4 +64,46 @@ class IndexedModuleBase : public ModuleBase {
   int m_index;
 };
 
+// -------------------------------------------------------------------------- //
+
+class ModuleExtension {
+ public:
+  template <class M>
+  inline ModuleExtension(const QString& group, M* m) {
+    static_assert(std::is_base_of_v<ModuleBase, M>, "M must be a ModuleBase type.");
+    QObject::connect(
+        m,
+        &ModuleBase::onBuildParameters,
+        m,
+        [this, group](Parameters::Handler& parameters) {
+          buildParameters(parameters[group]);
+        },
+        Qt::DirectConnection);
+    QObject::connect(
+        m,
+        &ModuleBase::onConnectModules,
+        m,
+        [this](const Modules* modules) {
+          connectModules(modules);
+        },
+        Qt::DirectConnection);
+    QObject::connect(
+        m,
+        &ModuleBase::onInit,
+        m,
+        [this](const Modules* modules) {
+          init(modules);
+        },
+        Qt::DirectConnection);
+  }
+  template <class E, class M>
+  inline ModuleExtension([[maybe_unused]] E* extension, M* m) :
+      ModuleExtension(Utils::nameOfType<E>(), m) {
+  }
+  virtual ~ModuleExtension() = default;
+  virtual void buildParameters(Parameters::Handler&);
+  virtual void connectModules(const Modules*);
+  virtual void init(const Modules*);
+};
+
 #endif // SOCCER_COMMON_MODULEBASE_H

@@ -50,3 +50,14 @@ IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
 int IndexedModuleBase::index() const {
   return m_index;
 }
+
+// -------------------------------------------------------------------------- //
+
+void ModuleExtension::buildParameters(Parameters::Handler&) {
+}
+
+void ModuleExtension::connectModules(const Modules*) {
+}
+
+void ModuleExtension::init(const Modules*) {
+}
