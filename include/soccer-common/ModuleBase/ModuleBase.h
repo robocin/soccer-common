@@ -69,14 +69,18 @@ class IndexedModuleBase : public ModuleBase {
 class ModuleExtension {
  public:
   template <class M>
-  inline ModuleExtension(const QString& group, M* m) {
+  explicit ModuleExtension(const QString& group, M* m) {
     static_assert(std::is_base_of_v<ModuleBase, M>, "M must be a ModuleBase type.");
     QObject::connect(
         m,
         &ModuleBase::onBuildParameters,
         m,
-        [this, group](Parameters::Handler& parameters) {
-          buildParameters(parameters[group]);
+        [this, g = group](Parameters::Handler& parameters) {
+          Parameters::Handler handler;
+          buildParameters(handler);
+          if (!handler.empty()) {
+            parameters[g] = std::move(handler);
+          }
         },
         Qt::DirectConnection);
     QObject::connect(
@@ -96,7 +100,7 @@ class ModuleExtension {
         },
         Qt::DirectConnection);
   }
-  template <class E, class M>
+  template <class E, class M, std::enable_if_t<std::is_base_of_v<ModuleExtension, E>, bool> = true>
   inline ModuleExtension([[maybe_unused]] E* extension, M* m) :
       ModuleExtension(Utils::nameOfType<E>(), m) {
   }

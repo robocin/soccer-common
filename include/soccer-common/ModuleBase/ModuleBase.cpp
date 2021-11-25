@@ -8,18 +8,21 @@ ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
 void ModuleBase::build() {
   buildParameters(parametersHandler);
   emit onBuildParameters(parametersHandler);
+
   emit sendParameters(parametersHandler.jsonObject());
 }
 
 void ModuleBase::setup(const Modules* modules) {
   connectModules(modules);
   emit onConnectModules(modules);
+
   connect(this,
           &ModuleBase::onReceiveUpdateRequests,
           this,
           &ModulePrivate::runInParallel,
           Qt::DirectConnection);
-  connect(this, &ModulePrivate::runInParallel, this, &ModuleBase::tryStart);
+
+  connect(this, &ModulePrivate::runInParallel, this, &ModuleBase::tryStart, Qt::DirectConnection);
 }
 
 void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
