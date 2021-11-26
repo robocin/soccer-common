@@ -35,7 +35,7 @@ void TestField::test_field_constexpr_withVSS3x3Values() {
   static_assert(field.size() == QPoint(170, 130));
 
   static_assert(field.min() == QPoint(-75, -65));
-  static_assert(Field::center() == QPoint(0, 0));
+  static_assert(field.center() == QPoint(0, 0));
   static_assert(field.max() == QPoint(75, 65));
 
   static_assert(field.bottomLeft() == QPoint(-75, -65));
