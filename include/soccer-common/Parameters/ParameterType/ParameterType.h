@@ -761,9 +761,9 @@ namespace Parameters {
 
   class PushButton : public ParameterBase {
     QString m_type;
-    QString m_about;
     qulonglong m_parent;
     std::function<void()> m_function;
+    QString m_about;
 
     void setUpdated(bool updated) final {
     }
