@@ -90,6 +90,8 @@ namespace Utils {
 
   Extends<QString> quoted(const QString& str);
   Extends<QString> removeQuotes(const QString& str);
+
+  Extends<QString> removeScope(const QString& str);
 } // namespace Utils
 
 #endif // SOCCER_COMMON_NAMEOFTYPE_H
