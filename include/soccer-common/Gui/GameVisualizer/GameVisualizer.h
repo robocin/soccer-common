@@ -46,7 +46,7 @@ class GameVisualizer : public QOpenGLWidget,
 
  private slots:
   void draw(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
-  void clearUniqueIntegerKey(int uniqueKey);
+  void clearUniqueIntegerKey(int uniqueKey, Painting::Layers layer);
   void setVisibility(int uniqueKey, bool visibility);
 
  protected:
@@ -144,7 +144,7 @@ class GameVisualizer::PaintingPointer : public std::unique_ptr<Painting> {
     m_visibility = visibility;
   }
 
-  inline bool visibility() const {
+  [[nodiscard]] inline bool visibility() const {
     return m_visibility;
   }
 };
@@ -168,7 +168,7 @@ class GameVisualizer::Key : public QObject {
     m_layer = layer;
     //
     QObject::connect(this,
-                     &GameVisualizer::Key::onKeyDeleted,
+                     &GameVisualizer::Key::onClearKey,
                      gameVisualizer,
                      &GameVisualizer::clearUniqueIntegerKey,
                      Qt::QueuedConnection);
@@ -211,12 +211,16 @@ class GameVisualizer::Key : public QObject {
                            m_layer);
   }
 
+  inline void clear() {
+    emit onClearKey(m_key, m_layer);
+  }
+
   inline void setVisibility(bool isVisible) {
     emit onVisibilityChanged(m_key, isVisible);
   }
 
   inline ~Key() override {
-    emit onKeyDeleted(m_key);
+    emit onClearKey(m_key, m_layer);
   }
 
   inline explicit operator int() const {
@@ -224,7 +228,7 @@ class GameVisualizer::Key : public QObject {
   }
 
  signals:
-  void onKeyDeleted(int key);
+  void onClearKey(int key, Painting::Layers layer);
   void onVisibilityChanged(int key, bool visibility);
   void onPaintingEmitted(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
 

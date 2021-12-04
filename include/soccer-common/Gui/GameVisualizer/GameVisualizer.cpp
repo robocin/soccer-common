@@ -49,14 +49,13 @@ void GameVisualizer::draw(int uniqueIntegerKey, Painting* painting, Painting::La
       });
 }
 
-void GameVisualizer::clearUniqueIntegerKey(int uniqueKey) {
+void GameVisualizer::clearUniqueIntegerKey(int uniqueKey, Painting::Layers layer) {
   ScheduleUpdateAtEnd schedule(this);
-  for (int i = 0; i < MagicEnum::count<Painting::Layers>(); ++i) {
-    shared->paintings[i].apply(
-        [uniqueKey](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
-          paintings[uniqueKey] = nullptr;
-        });
-  }
+  int idx = static_cast<int>(layer);
+  shared->paintings[idx].apply(
+      [uniqueKey](std::map<int, std::unique_ptr<Painting>>& paintings) -> void {
+        paintings[uniqueKey] = nullptr;
+      });
 }
 
 void GameVisualizer::setVisibility(int uniqueKey, bool visibility) {
