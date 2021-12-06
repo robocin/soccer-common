@@ -81,6 +81,11 @@ void TestField::test_field_constexpr_withVSS3x3Values() {
   static_assert(field.allyPenaltyAreaCornerBottom() == QPoint(-60, -35));
   static_assert(field.enemyPenaltyAreaCornerBottom() == QPoint(+60, -35));
 
+  static_assert(field.leftPenaltyAreaCenter() == QPoint(-60, 0));
+  static_assert(field.rightPenaltyAreaCenter() == QPoint(+60, 0));
+  static_assert(field.allyPenaltyAreaCenter() == QPoint(-60, 0));
+  static_assert(field.enemyPenaltyAreaCenter() == QPoint(+60, 0));
+
   static_assert(field.leftPenaltyAreaCornerTop() == QPoint(-60, +35));
   static_assert(field.rightPenaltyAreaCornerTop() == QPoint(+60, +35));
   static_assert(field.allyPenaltyAreaCornerTop() == QPoint(-60, +35));

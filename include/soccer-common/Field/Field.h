@@ -263,6 +263,28 @@ namespace Common {
       return isAttackingToRight() ? rightPenaltyAreaCornerBottom() : leftPenaltyAreaCornerBottom();
     }
 
+    // penalty area center:
+
+    // left goalkeeper penalty area center.
+    constexpr PT leftPenaltyAreaCenter() const {
+      return PT(min().x() + penaltyAreaDepth(), center().y());
+    }
+
+    // right goalkeeper penalty area center.
+    constexpr PT rightPenaltyAreaCenter() const {
+      return PT(max().x() - penaltyAreaDepth(), center().y());
+    }
+
+    // our goalkeeper penalty area center.
+    constexpr PT allyPenaltyAreaCenter() const {
+      return isAttackingToRight() ? leftPenaltyAreaCenter() : rightPenaltyAreaCenter();
+    }
+
+    // enemy goalkeeper penalty area center.
+    constexpr PT enemyPenaltyAreaCenter() const {
+      return isAttackingToRight() ? rightPenaltyAreaCenter() : leftPenaltyAreaCenter();
+    }
+
     // penalty area corner top:
 
     // left goalkeeper penalty area corner top.
