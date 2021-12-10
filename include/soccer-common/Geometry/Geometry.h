@@ -872,8 +872,8 @@ namespace Geometry2D {
     bool c = false;
     for (int i = 0; i < n; ++i) {
       int j = (i + 1) % n;
-      if (polygon[i].y() <= p.y() && p.y() < polygon[j].y() ||
-          polygon[j].y() <= p.y() && p.y() < polygon[i].y()) {
+      if ((polygon[i].y() <= p.y() && p.y() < polygon[j].y()) ||
+          (polygon[j].y() <= p.y() && p.y() < polygon[i].y())) {
         if (p.x() < (polygon[i].x() + (polygon[j].x() - polygon[i].x()) * (p.y() - polygon[i].y()) /
                                           (polygon[j].y() - polygon[i].y()))) {
           c = !c;
