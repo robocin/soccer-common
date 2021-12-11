@@ -15,7 +15,7 @@
 #endif
 
 namespace Geometry {
-  static constexpr qreal PI = M_PI;
+  static constexpr double PI = M_PI;
 
   /*!
    * @tparam T floating point type.
