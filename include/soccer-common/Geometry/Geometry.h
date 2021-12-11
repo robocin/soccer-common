@@ -60,6 +60,8 @@ namespace Geometry {
   /*!
    * @param lhs, rhs floating point values in radians.
    * @return Returns the signed smallest angle difference in radians.
+   * @note This function is not a true angle difference, it is a signed angle difference.
+   * @note The angle difference is target (rhs) - source (lhs).
    */
   template <class T>
   constexpr std::enable_if_t<std::is_floating_point_v<T>, T> smallestAngleDiff(const T& lhs,
