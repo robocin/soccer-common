@@ -31,9 +31,9 @@
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
-  template <class... Args>                                                                         \
-  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
-    m_##varname.emplace(std::forward<Args>(args)...);                                              \
+  template <class... Ts>                                                                           \
+  inline auto emplace_##varname(Ts&&... ts)->decltype(*this)& {                                    \
+    m_##varname.emplace(std::forward<Ts>(ts)...);                                                  \
     return *this;                                                                                  \
   }                                                                                                \
   [[nodiscard]] inline bool has_##varname() const {                                                \
@@ -53,7 +53,7 @@
     }                                                                                              \
   }                                                                                                \
                                                                                                    \
- private:                                                                                          \
+ protected:                                                                                        \
   std::optional<type> m_##varname
 
 /*!
@@ -66,16 +66,16 @@
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
-  template <class... Args>                                                                         \
-  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
-    m_##varname = type(std::forward<Args>(args)...);                                               \
+  template <class... Ts>                                                                           \
+  inline auto emplace_##varname(Ts&&... ts)->decltype(*this)& {                                    \
+    m_##varname = type(std::forward<Ts>(ts)...);                                                   \
     return *this;                                                                                  \
   }                                                                                                \
   [[nodiscard]] inline const type& varname() const {                                               \
     return m_##varname;                                                                            \
   }                                                                                                \
                                                                                                    \
- private:                                                                                          \
+ protected:                                                                                        \
   type m_##varname = default_value
 
 #if !BOOST_PP_VARIADICS_MSVC
