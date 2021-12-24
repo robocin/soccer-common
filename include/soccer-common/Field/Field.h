@@ -31,7 +31,7 @@ namespace Common {
         m_penaltyAreaWidth(penaltyAreaWidth) {
     }
 
-    constexpr bool isAttackingToRight() const {
+    [[nodiscard]] constexpr bool isAttackingToRight() const {
       return m_isAttackingToRight;
     }
 
@@ -305,6 +305,70 @@ namespace Common {
     // enemy goalkeeper penalty area corner top.
     constexpr PT enemyPenaltyAreaCornerTop() const {
       return isAttackingToRight() ? rightPenaltyAreaCornerTop() : leftPenaltyAreaCornerTop();
+    }
+
+    // penalty area goal corner top:
+
+    // left goalkeeper penalty area goal corner top.
+    constexpr PT leftPenaltyAreaGoalCornerTop() const {
+      return PT(min().x(), (penaltyAreaWidth() / 2));
+    }
+
+    // right goalkeeper penalty area goal corner top.
+    constexpr PT rightPenaltyAreaGoalCornerTop() const {
+      return PT(max().x(), (penaltyAreaWidth() / 2));
+    }
+
+    // our goalkeeper penalty area goal corner top.
+    constexpr PT allyPenaltyAreaGoalCornerTop() const {
+      return isAttackingToRight() ? leftPenaltyAreaGoalCornerTop() :
+                                    rightPenaltyAreaGoalCornerTop();
+    }
+
+    // enemy goalkeeper penalty area goal corner top.
+    constexpr PT enemyPenaltyAreaGoalCornerTop() const {
+      return isAttackingToRight() ? rightPenaltyAreaGoalCornerTop() :
+                                    leftPenaltyAreaGoalCornerTop();
+    }
+
+    // penalty area goal corner bottom:
+
+    // left goalkeeper penalty area goal corner bottom.
+    constexpr PT leftPenaltyAreaGoalCornerBottom() const {
+      return PT(min().x(), -(penaltyAreaWidth() / 2));
+    }
+
+    // right goalkeeper penalty area goal corner bottom.
+    constexpr PT rightPenaltyAreaGoalCornerBottom() const {
+      return PT(max().x(), -(penaltyAreaWidth() / 2));
+    }
+
+    // our goalkeeper penalty area goal corner bottom.
+    constexpr PT allyPenaltyAreaGoalCornerBottom() const {
+      return isAttackingToRight() ? leftPenaltyAreaGoalCornerBottom() :
+                                    rightPenaltyAreaGoalCornerBottom();
+    }
+
+    // enemy goalkeeper penalty area goal corner bottom.
+    constexpr PT enemyPenaltyAreaGoalCornerBottom() const {
+      return isAttackingToRight() ? rightPenaltyAreaGoalCornerBottom() :
+                                    leftPenaltyAreaGoalCornerBottom();
+    }
+
+    static constexpr PT leftDirection() {
+      return PT(-1, 0);
+    }
+
+    static constexpr PT rightDirection() {
+      return PT(+1, 0);
+    }
+
+    constexpr PT attackDirection() const {
+      return isAttackingToRight() ? rightDirection() : leftDirection();
+    }
+
+    constexpr PT defendDirection() const {
+      return isAttackingToRight() ? leftDirection() : rightDirection();
     }
 
     // goal contains:
