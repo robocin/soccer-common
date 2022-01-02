@@ -35,7 +35,7 @@ void TestField::test_field_constexpr_withVSS3x3Values() {
   static_assert(field.size() == QPoint(170, 130));
 
   static_assert(field.min() == QPoint(-75, -65));
-  static_assert(Field::center() == QPoint(0, 0));
+  static_assert(field.center() == QPoint(0, 0));
   static_assert(field.max() == QPoint(75, 65));
 
   static_assert(field.bottomLeft() == QPoint(-75, -65));
@@ -81,10 +81,30 @@ void TestField::test_field_constexpr_withVSS3x3Values() {
   static_assert(field.allyPenaltyAreaCornerBottom() == QPoint(-60, -35));
   static_assert(field.enemyPenaltyAreaCornerBottom() == QPoint(+60, -35));
 
+  static_assert(field.leftPenaltyAreaCenter() == QPoint(-60, 0));
+  static_assert(field.rightPenaltyAreaCenter() == QPoint(+60, 0));
+  static_assert(field.allyPenaltyAreaCenter() == QPoint(-60, 0));
+  static_assert(field.enemyPenaltyAreaCenter() == QPoint(+60, 0));
+
   static_assert(field.leftPenaltyAreaCornerTop() == QPoint(-60, +35));
   static_assert(field.rightPenaltyAreaCornerTop() == QPoint(+60, +35));
   static_assert(field.allyPenaltyAreaCornerTop() == QPoint(-60, +35));
   static_assert(field.enemyPenaltyAreaCornerTop() == QPoint(+60, +35));
+
+  static_assert(field.leftPenaltyAreaGoalCornerTop() == QPoint(-75, +35));
+  static_assert(field.rightPenaltyAreaGoalCornerTop() == QPoint(+75, +35));
+  static_assert(field.allyPenaltyAreaGoalCornerTop() == QPoint(-75, +35));
+  static_assert(field.enemyPenaltyAreaGoalCornerTop() == QPoint(+75, +35));
+
+  static_assert(field.leftPenaltyAreaGoalCornerBottom() == QPoint(-75, -35));
+  static_assert(field.rightPenaltyAreaGoalCornerBottom() == QPoint(+75, -35));
+  static_assert(field.allyPenaltyAreaGoalCornerBottom() == QPoint(-75, -35));
+  static_assert(field.enemyPenaltyAreaGoalCornerBottom() == QPoint(+75, -35));
+
+  static_assert(Field::leftDirection() == QPoint(-1, 0));
+  static_assert(Field::rightDirection() == QPoint(+1, 0));
+  static_assert(field.attackDirection() == QPoint(+1, 0));
+  static_assert(field.defendDirection() == QPoint(-1, 0));
 
   static_assert(!field.leftGoalContains(QPoint(-85, -20)));
   static_assert(!field.leftGoalContains(QPoint(-85, -19)));

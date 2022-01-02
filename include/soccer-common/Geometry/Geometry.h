@@ -15,7 +15,7 @@
 #endif
 
 namespace Geometry {
-  static constexpr qreal PI = M_PI;
+  static constexpr double PI = M_PI;
 
   /*!
    * @tparam T floating point type.
@@ -60,6 +60,8 @@ namespace Geometry {
   /*!
    * @param lhs, rhs floating point values in radians.
    * @return Returns the signed smallest angle difference in radians.
+   * @note This function is not a true angle difference, it is a signed angle difference.
+   * @note The angle difference is target (rhs) - source (lhs).
    */
   template <class T>
   constexpr std::enable_if_t<std::is_floating_point_v<T>, T> smallestAngleDiff(const T& lhs,
@@ -872,8 +874,8 @@ namespace Geometry2D {
     bool c = false;
     for (int i = 0; i < n; ++i) {
       int j = (i + 1) % n;
-      if (polygon[i].y() <= p.y() && p.y() < polygon[j].y() ||
-          polygon[j].y() <= p.y() && p.y() < polygon[i].y()) {
+      if ((polygon[i].y() <= p.y() && p.y() < polygon[j].y()) ||
+          (polygon[j].y() <= p.y() && p.y() < polygon[i].y())) {
         if (p.x() < (polygon[i].x() + (polygon[j].x() - polygon[i].x()) * (p.y() - polygon[i].y()) /
                                           (polygon[j].y() - polygon[i].y()))) {
           c = !c;

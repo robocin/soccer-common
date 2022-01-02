@@ -8,6 +8,7 @@
 #include <variant>
 #include <utility>
 #include <functional>
+#include <optional>
 
 namespace detail {
   template <class F>

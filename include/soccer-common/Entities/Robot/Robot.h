@@ -9,15 +9,15 @@ namespace Common {
    protected:
     using RawEntity<PT>::m_position;
     int m_id{};
-    float m_angle{};
+    Geometry2D::CoordType<PT> m_angle{};
 
    public:
-    constexpr RawRobot(int id, float angle, const RawEntity<PT>& rawEntity) :
+    constexpr RawRobot(int id, Geometry2D::CoordType<PT> angle, const RawEntity<PT>& rawEntity) :
         RawEntity<PT>(rawEntity),
         m_id(id),
         m_angle(angle) {
     }
-    constexpr RawRobot(int id, float angle, const PT& position) :
+    constexpr RawRobot(int id, Geometry2D::CoordType<PT> angle, const PT& position) :
         RawRobot(id, angle, RawEntity(position)) {
     }
 
@@ -28,7 +28,7 @@ namespace Common {
       return m_id;
     }
 
-    [[nodiscard]] constexpr float angle() const {
+    [[nodiscard]] constexpr Geometry2D::CoordType<PT> angle() const {
       return m_angle;
     }
 
@@ -61,7 +61,7 @@ namespace Common {
     using RawRobot<PT>::m_angle;
 
    public:
-    constexpr Robot(int id, float angle, const Entity<PT>& entity) :
+    constexpr Robot(int id, Geometry2D::CoordType<PT> angle, const Entity<PT>& entity) :
         RawEntity<PT>(entity.position()),
         RawRobot<PT>(id, angle, entity.position()),
         Entity<PT>(entity) {
@@ -72,7 +72,7 @@ namespace Common {
               Entity(rawRobot.position(), velocity, acceleration)) {
     }
     constexpr Robot(int id,
-                    float angle,
+                    Geometry2D::CoordType<PT> angle,
                     const PT& position,
                     const PT& velocity,
                     const PT& acceleration) :

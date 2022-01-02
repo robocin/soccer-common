@@ -219,8 +219,8 @@ namespace Parameters {
         }
 
         ret += "}";
-      } else {
-        Q_ASSERT(parametersHandler.value);
+      } else if (!parametersHandler.value) {
+        throw std::runtime_error("parametersHandler.value is nullptr.");
       }
 
       if (parametersHandler.value) {
@@ -263,6 +263,10 @@ namespace Parameters {
       }
     }
     return notUpdated;
+  }
+
+  bool Handler::empty() const {
+    return !value && map.empty();
   }
 } // namespace Parameters
 

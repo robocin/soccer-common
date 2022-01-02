@@ -14,9 +14,14 @@ namespace Common {
    public:
     constexpr explicit RawEntity(const PT& position) : m_position(position) {
     }
-
     constexpr const PT& position() const {
       return m_position;
+    }
+    constexpr Geometry2D::CoordType<PT> x() const {
+      return m_position.x();
+    }
+    constexpr Geometry2D::CoordType<PT> y() const {
+      return m_position.y();
     }
     constexpr operator const PT&() const { // NOLINT(google-explicit-constructor)
       return position();

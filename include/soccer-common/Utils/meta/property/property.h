@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_META_PACKAGE_H
-#define SOCCER_COMMON_META_PACKAGE_H
+#ifndef SOCCER_COMMON_PROPERTY_H
+#define SOCCER_COMMON_PROPERTY_H
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
@@ -11,6 +11,7 @@
 
 #include <optional>
 #include <stdexcept>
+
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 /*!
@@ -30,18 +31,18 @@
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
-  template <class... Args>                                                                         \
-  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
-    m_##varname.emplace(std::forward<Args>(args)...);                                              \
+  template <class... Ts>                                                                           \
+  inline auto emplace_##varname(Ts&&... ts)->decltype(*this)& {                                    \
+    m_##varname.emplace(std::forward<Ts>(ts)...);                                                  \
     return *this;                                                                                  \
   }                                                                                                \
-  inline bool has_##varname() const {                                                              \
+  [[nodiscard]] inline bool has_##varname() const {                                                \
     return m_##varname.has_value();                                                                \
   }                                                                                                \
-  inline const std::optional<type>& optional_##varname() const {                                   \
+  [[nodiscard]] inline const std::optional<type>& optional_##varname() const {                     \
     return m_##varname;                                                                            \
   }                                                                                                \
-  inline const type& varname() const {                                                             \
+  [[nodiscard]] inline const type& varname() const {                                               \
     try {                                                                                          \
       return m_##varname.value();                                                                  \
     } catch (const std::bad_optional_access&) {                                                    \
@@ -52,7 +53,7 @@
     }                                                                                              \
   }                                                                                                \
                                                                                                    \
- private:                                                                                          \
+ protected:                                                                                        \
   std::optional<type> m_##varname
 
 /*!
@@ -65,29 +66,31 @@
     m_##varname = varname;                                                                         \
     return *this;                                                                                  \
   }                                                                                                \
-  template <class... Args>                                                                         \
-  inline auto emplace_##varname(Args&&... args)->decltype(*this)& {                                \
-    m_##varname = type(std::forward<Args>(args)...);                                               \
+  template <class... Ts>                                                                           \
+  inline auto emplace_##varname(Ts&&... ts)->decltype(*this)& {                                    \
+    m_##varname = type(std::forward<Ts>(ts)...);                                                   \
     return *this;                                                                                  \
   }                                                                                                \
-  inline const type& varname() const {                                                             \
+  [[nodiscard]] inline const type& varname() const {                                               \
     return m_##varname;                                                                            \
   }                                                                                                \
                                                                                                    \
- private:                                                                                          \
+ protected:                                                                                        \
   type m_##varname = default_value
 
 #if !BOOST_PP_VARIADICS_MSVC
   #define RC_PROPERTY(...) BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__)
 #else
   #define RC_PROPERTY(...)                                                                         \
-    BOOST_PP_CAT(BOOST_PP_OVERLOAD(MACRO_, __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY())
+    BOOST_PP_CAT(BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY())
 #endif
 
 #ifndef SOCCER_COMMON_PROPERTY_UNDEF
   #define PROPERTY(...) RC_PROPERTY(__VA_ARGS__)
 #endif
 
+#include "ctor.h"
+
 #pragma clang diagnostic pop
 
-#endif // SOCCER_COMMON_META_PACKAGE_H
+#endif // SOCCER_COMMON_PROPERTY_H

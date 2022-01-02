@@ -13,3 +13,10 @@ Extends<QString> Utils::removeQuotes(const QString& str) {
   }
   return str;
 }
+
+Extends<QString> Utils::removeScope(const QString& str) {
+  if (auto index = str.lastIndexOf("::"); index != -1) {
+    return str.mid(index + 2);
+  }
+  return str;
+};

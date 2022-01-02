@@ -95,11 +95,11 @@ class SharedValue<std::optional<T>> {
     m_instance = std::forward<U>(value);
   }
 
-  constexpr operator bool() const {
+  constexpr explicit operator bool() const {
     return m_instance.operator bool();
   }
 
-  constexpr bool has_value() const {
+  [[nodiscard]] constexpr bool has_value() const {
     return m_instance.has_value();
   }
 

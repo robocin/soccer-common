@@ -8,6 +8,7 @@
 #include <string>
 #include <QDebug>
 #include <optional>
+#include "soccer-common/MagicEnum/MagicEnum.h"
 #include "soccer-common/Utils/detail/detail.h"
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
@@ -48,6 +49,9 @@ std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
 
 inline QDebug operator<<(QDebug dbg, const std::string& str);
+
+template <class T>
+inline std::enable_if_t<std::is_enum_v<T>, QDebug> operator<<(QDebug dbg, const T& e);
 
 // ---------------------------------------------------------------------------------------------- //
 
@@ -128,6 +132,13 @@ inline QDebug operator<<(QDebug dbg, const std::string& str) {
   return dbg;
 }
 
-#endif
+template <class T>
+inline std::enable_if_t<std::is_enum_v<T>, QDebug> operator<<(QDebug dbg, const T& e) {
+  QDebugStateSaver saver(dbg);
+  dbg << MagicEnum::name(e);
+  return dbg;
+}
+
+#endif // QT_NO_DEBUG_STREAM
 
 #endif // SOCCER_COMMON_OSTREAM_H

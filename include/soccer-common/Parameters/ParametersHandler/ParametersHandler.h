@@ -49,10 +49,12 @@ namespace Parameters {
     std::map<QString, Handler> map;
 
    public:
-    Q_DISABLE_COPY_MOVE(Handler);
+    Q_DISABLE_COPY(Handler);
 
     Handler() = default;
     ~Handler() = default;
+
+    Handler& operator=(Handler&& other) = default;
 
     template <class T, std::enable_if_t<std::is_base_of_v<ParameterBase, T>, bool> = true>
     Handler& operator=(T&& p) {
@@ -68,6 +70,7 @@ namespace Parameters {
     QJsonObject jsonObject() const;
     QVector<UpdateRequest> update(const QVector<UpdateRequest>& updates,
                                   QVector<ParameterBase*>* updated = nullptr);
+    bool empty() const;
   };
 } // namespace Parameters
 

@@ -6,18 +6,23 @@ ModuleBase::ModuleBase(QThreadPool* threadPool) : ModulePrivate(threadPool) {
 }
 
 void ModuleBase::build() {
-  buildParameters();
-  emit sendParameters(parameters().jsonObject());
+  buildParameters(parametersHandler);
+  emit onBuildParameters(parametersHandler);
+
+  emit sendParameters(parametersHandler.jsonObject());
 }
 
 void ModuleBase::setup(const Modules* modules) {
   connectModules(modules);
+  emit onConnectModules(modules);
+
   connect(this,
           &ModuleBase::onReceiveUpdateRequests,
           this,
           &ModulePrivate::runInParallel,
           Qt::DirectConnection);
-  connect(this, &ModulePrivate::runInParallel, this, &ModuleBase::tryStart);
+
+  connect(this, &ModulePrivate::runInParallel, this, &ModuleBase::tryStart, Qt::DirectConnection);
 }
 
 void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates) {
@@ -29,11 +34,7 @@ void ModuleBase::receiveUpdateRequests(const Parameters::UpdateRequests& updates
   }
 }
 
-Parameters::Handler& ModuleBase::parameters() {
-  return parametersHandler;
-}
-
-void ModuleBase::buildParameters() {
+void ModuleBase::buildParameters(Parameters::Handler&) {
 }
 
 void ModuleBase::connectModules(const Modules*) {
@@ -51,4 +52,15 @@ IndexedModuleBase::IndexedModuleBase(int index, QThreadPool* threadPool) :
 
 int IndexedModuleBase::index() const {
   return m_index;
+}
+
+// -------------------------------------------------------------------------- //
+
+void ModuleExtension::buildParameters(Parameters::Handler&) {
+}
+
+void ModuleExtension::connectModules(const Modules*) {
+}
+
+void ModuleExtension::init(const Modules*) {
 }
