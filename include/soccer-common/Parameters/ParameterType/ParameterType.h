@@ -61,10 +61,15 @@ namespace Parameters {
 
   template <class T>
   class Arg {
+    static_assert(std::is_enum_v<T> ||
+                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
+                      std::is_base_of_v<T, QString>,
+                  "unsupported type.");
+
     friend class ParameterType<T>;
 
     T m_value;
-    mutable bool m_updated{};
+    mutable bool m_updated;
 
     template <class U>
     void set(U&& value) {
@@ -81,12 +86,9 @@ namespace Parameters {
     // disable_empty_constructor:
     Arg() = delete;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "google-explicit-constructor"
-    template <class... Us>
-    Arg(Us&&... us) : m_value(std::forward<Us>(us)...), m_updated(false) {
+    template <class U>
+    Arg(U value) : m_value(value), m_updated(false) { // NOLINT(google-explicit-constructor)
     }
-#pragma clang diagnostic pop
 
     // disable_copy:
     Arg(const Arg&) = delete;
@@ -106,12 +108,47 @@ namespace Parameters {
   };
 
   template <class T>
-  class ParameterType : public ParameterBase {
-    static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
-                      std::is_base_of_v<T, QString>,
-                  "unsupported type.");
+  class Arg<std::atomic<T>> {
+    friend class ParameterType<std::atomic<T>>;
 
+    std::atomic<T> m_value;
+
+    template <class U>
+    void set(U&& value) {
+      m_value.store(std::forward<U>(value));
+    }
+
+    void setUpdated(bool) {
+    }
+
+   public:
+    using value_type = T;
+
+    // disable_empty_constructor:
+    Arg() = delete;
+
+    template <class U>
+    Arg(U value) : m_value(value) { // NOLINT(google-explicit-constructor)
+    }
+
+    // disable_copy:
+    Arg(const Arg&) = delete;
+    Arg& operator=(const Arg&) = delete;
+
+    T value() const {
+      return m_value.load();
+    }
+
+    operator T() const { // NOLINT(google-explicit-constructor)
+      return m_value.load();
+    }
+  };
+
+  template <class T>
+  using Atomic = Arg<std::atomic<T>>;
+
+  template <class T>
+  class ParameterType : public ParameterBase {
    protected:
     Arg<T>& ref;
     QString about;
@@ -122,35 +159,37 @@ namespace Parameters {
     }
 
    public:
-    static std::optional<T> eval(const QString& str) {
-      if constexpr (std::is_enum_v<T>) {
-        return static_cast<std::optional<T>>(MagicEnum::cast<T>(str));
-      } else if constexpr (std::is_same_v<T, bool>) {
+    using value_type = typename Arg<T>::value_type;
+
+    static std::optional<value_type> eval(const QString& str) {
+      if constexpr (std::is_enum_v<value_type>) {
+        return static_cast<std::optional<value_type>>(MagicEnum::cast<value_type>(str));
+      } else if constexpr (std::is_same_v<value_type, bool>) {
         static const QStringList options = {"0", "1", "false", "true"};
         if (options.contains(str, Qt::CaseInsensitive)) {
-          return std::make_optional<T>(str == "1" || str.toLower() == "true");
+          return std::make_optional<value_type>(str == "1" || str.toLower() == "true");
         } else {
           return std::nullopt;
         }
-      } else if constexpr (std::is_arithmetic_v<T>) {
-        T value;
+      } else if constexpr (std::is_arithmetic_v<value_type>) {
+        value_type value;
         QString buffer = str;
         QTextStream stream(&buffer);
         stream >> value;
         if (stream.status() == QTextStream::Ok) {
-          return std::make_optional<T>(std::move(value));
+          return std::make_optional<value_type>(std::move(value));
         } else {
           return std::nullopt;
         }
-      } else if constexpr (std::is_base_of_v<QString, T>) {
-        return std::make_optional<T>(str);
+      } else if constexpr (std::is_base_of_v<QString, value_type>) {
+        return std::make_optional<value_type>(str);
       }
     }
 
     explicit ParameterType(Arg<T>& t_ref, QString t_about = "") :
         ref(t_ref),
         about(std::move(t_about)) {
-      if constexpr (std::is_enum_v<T>) {
+      if constexpr (std::is_enum_v<value_type>) {
         if (!MagicEnum::contains(ref.value())) {
           throw std::runtime_error("enum value out of range.");
         }
@@ -160,15 +199,15 @@ namespace Parameters {
     ~ParameterType() override = default;
 
     QString value() const override {
-      if constexpr (std::is_enum_v<T>) {
+      if constexpr (std::is_enum_v<value_type>) {
         return Utils::quoted(MagicEnum::name(ref.value()));
-      } else if constexpr (std::is_same_v<T, bool>) {
+      } else if constexpr (std::is_same_v<value_type, bool>) {
         return ref.value() ? "true" : "false";
-      } else if constexpr (std::is_floating_point_v<T>) {
+      } else if constexpr (std::is_floating_point_v<value_type>) {
         return QString::number(ref.value(), 'f', 15);
-      } else if constexpr (std::is_arithmetic_v<T>) {
+      } else if constexpr (std::is_arithmetic_v<value_type>) {
         return QString::number(ref.value());
-      } else if constexpr (std::is_base_of_v<QString, T>) {
+      } else if constexpr (std::is_base_of_v<QString, value_type>) {
         return Utils::quoted(ref.value());
       }
     }
@@ -176,7 +215,7 @@ namespace Parameters {
     QString inputType() const override = 0;
 
     QString type() const override {
-      return Utils::nameOfType<T>();
+      return Utils::nameOfType<value_type>();
     }
 
     QString description() const final {
@@ -240,7 +279,8 @@ namespace Parameters {
     }
   };
 
-  template <class T, std::enable_if_t<std::is_base_of_v<T, QString>, bool> = true>
+  template <class T,
+            std::enable_if_t<std::is_base_of_v<typename Arg<T>::value_type, QString>, bool> = true>
   class File : public ParameterType<T> {
    public:
     using value_type = typename Arg<T>::value_type;
@@ -293,7 +333,8 @@ namespace Parameters {
     }
   };
 
-  template <class T, std::enable_if_t<std::is_base_of_v<T, QString>, bool> = true>
+  template <class T,
+            std::enable_if_t<std::is_base_of_v<typename Arg<T>::value_type, QString>, bool> = true>
   class Directory : public ParameterType<T> {
    public:
     using value_type = typename Arg<T>::value_type;
@@ -356,7 +397,7 @@ namespace Parameters {
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
 
-    static_assert(std::is_integral_v<T>, "unsupported type.");
+    static_assert(std::is_integral_v<value_type>, "unsupported type.");
 
     value_type minValue;
     value_type maxValue;
@@ -411,7 +452,7 @@ namespace Parameters {
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
 
-    static_assert(std::is_floating_point_v<T>, "unsupported type.");
+    static_assert(std::is_floating_point_v<value_type>, "unsupported type.");
 
     value_type minValue{};
     value_type maxValue{};
@@ -541,7 +582,7 @@ namespace Parameters {
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
 
-    static_assert(std::is_integral_v<T>, "unsupported type.");
+    static_assert(std::is_integral_v<value_type>, "unsupported type.");
 
     value_type minValue;
     value_type maxValue;
@@ -630,10 +671,10 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
-    std::set<T> set;
+    std::set<value_type> set;
 
    public:
-    ComboBox(Arg<T>& t_ref, const QVector<T>& t_set, const QString& t_about = "") :
+    ComboBox(Arg<T>& t_ref, const QVector<value_type>& t_set, const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
         set(t_set.begin(), t_set.end()) {
       if (!((set.size() > 1) && set.find(t_ref) != set.end())) {
@@ -642,7 +683,7 @@ namespace Parameters {
     }
 
     QString type() const final {
-      return Utils::nameOfType<T>();
+      return Utils::nameOfType<value_type>();
     }
 
     QString inputType() const final {
@@ -656,9 +697,9 @@ namespace Parameters {
 
       for (auto it = set.begin(); it != set.end(); ++it) {
         const T& value = *it;
-        if constexpr (std::is_base_of_v<QString, T>) {
+        if constexpr (std::is_base_of_v<QString, value_type>) {
           stream << Utils::quoted(value);
-        } else if constexpr (std::is_enum_v<T>) {
+        } else if constexpr (std::is_enum_v<value_type>) {
           stream << Utils::quoted(MagicEnum::name(value));
         } else {
           stream << value;
@@ -695,13 +736,15 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
-    boost::bimap<T, QString> bimap;
+    boost::bimap<value_type, QString> bimap;
 
    public:
-    MappedComboBox(Arg<T>& t_ref, const QMap<T, QString>& t_map, const QString& t_about = "") :
+    MappedComboBox(Arg<T>& t_ref,
+                   const QMap<value_type, QString>& t_map,
+                   const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
-        bimap([](const QMap<T, QString>& map) {
-          boost::bimap<T, QString> ret;
+        bimap([](const QMap<value_type, QString>& map) {
+          boost::bimap<value_type, QString> ret;
           for (auto it = map.begin(); it != map.end(); ++it) {
             ret.insert({it.key(), it.value()});
           }
@@ -727,7 +770,7 @@ namespace Parameters {
     }
 
     QString type() const final {
-      return "mapped(" + Utils::nameOfType<T>() + ")";
+      return "mapped(" + Utils::nameOfType<value_type>() + ")";
     }
 
     QString payload() const final {
@@ -765,7 +808,7 @@ namespace Parameters {
     std::function<void()> m_function;
     QString m_about;
 
-    void setUpdated(bool updated) final {
+    void setUpdated(bool) final {
     }
 
    public:
