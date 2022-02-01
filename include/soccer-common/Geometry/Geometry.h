@@ -906,4 +906,48 @@ namespace Geometry2D {
 
 } // namespace Geometry2D
 
+namespace Geometry3D {
+  using namespace Geometry;
+
+  /*!
+   * @brief Return the type of Point coordinates.
+   */
+  template <class PT>
+  using CoordType = std::common_type_t<decltype(std::declval<PT>().x()),
+                                       decltype(std::declval<PT>().y()),
+                                       decltype(std::declval<PT>().z())>;
+
+  template <class PT>
+  CoordType<PT> dot(const PT& lhs, const PT& rhs) {
+    return (lhs.x() * rhs.x()) + (lhs.y() * rhs.y()) + (lhs.z() * rhs.z());
+  }
+
+  template <class PT>
+  constexpr PT cross(const PT& lhs, const PT& rhs) {
+    return PT(lhs.y() * rhs.z() - rhs.z() * rhs.y(),
+              lhs.z() * rhs.x() - lhs.x() * rhs.z(),
+              lhs.x() * rhs.y() - lhs.y() * rhs.x());
+  }
+
+  template <class T>
+  constexpr T distanceSquared(T x1, T y1, T z1, T x2, T y2, T z2) {
+    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
+  }
+
+  template <class PT>
+  constexpr CoordType<PT> distanceSquared(const PT& lhs, const PT& rhs) {
+    return distanceSquared<CoordType<PT>>(lhs.x(), lhs.y(), lhs.z(), rhs.x(), rhs.y(), rhs.z());
+  }
+
+  template <class T>
+  constexpr auto distance(T x1, T y1, T z1, T x2, T y2, T z2) {
+    return std::sqrt(distanceSquared<T>(x1, y1, z1, x2, y2, z2));
+  }
+
+  template <class PT>
+  constexpr auto distance(const PT& lhs, const PT& rhs) {
+    return distance<CoordType<PT>>(lhs.x(), lhs.y(), lhs.z(), rhs.x(), rhs.y(), rhs.z());
+  }
+} // namespace Geometry3D
+
 #endif // SOCCER_COMMON_GEOMETRY_H
