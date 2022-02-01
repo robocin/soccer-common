@@ -394,6 +394,9 @@ namespace Geometry2D {
   template <class PT>
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT> resize(const PT& p,
                                                                                  CoordType<PT> t) {
+    if ((Math::isNull(p.x()) && Math::isNull(p.y())) || Math::isNull(t)) {
+      throw std::runtime_error("p is null or t is zero.");
+    }
     return static_cast<PT>(p / length(p) * t);
   }
 
