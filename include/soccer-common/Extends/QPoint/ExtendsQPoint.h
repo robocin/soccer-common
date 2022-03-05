@@ -589,6 +589,18 @@ namespace std {
 using Point [[maybe_unused]] = Extends<QPointF>;
 #endif
 
+#ifndef SOCCER_COMMON_EXTENDSPOINT_H_UNDEF_COORD_TYPE
+/*!
+ * @brief coord_type will be used as standard coordinate type.
+ */
+using coord_type = Geometry2D::CoordType<Point>;
+
+/*!
+ * @brief real_type will be used as standard real type.
+ */
+using real_t = coord_type;
+#endif
+
 #pragma clang diagnostic pop
 
 #endif // SOCCER_COMMON_EXTENDSPOINT_H
