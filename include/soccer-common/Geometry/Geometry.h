@@ -395,7 +395,7 @@ namespace Geometry2D {
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT> resize(const PT& p,
                                                                                  CoordType<PT> t) {
     if ((Math::isNull(p.x()) && Math::isNull(p.y())) || Math::isNull(t)) {
-      throw std::runtime_error("p is null or t is zero.");
+      return PT(0, 0);
     }
     return static_cast<PT>(p / length(p) * t);
   }
@@ -419,6 +419,9 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr std::enable_if_t<std::is_integral_v<CoordType<PT>>, PT> normalize(const PT& p) {
+    if (Math::isNull(p.x()) && Math::isNull(p.y())) {
+      return PT(0, 0);
+    }
     return p / std::gcd(std::abs(p.x()), std::abs(p.y()));
   }
 
@@ -438,7 +441,7 @@ namespace Geometry2D {
   template <class PT>
   CoordType<PT> signedArea2(const QVector<PT>& polygon) {
     if (polygon.size() < 3) {
-      throw std::runtime_error("polygon size is less than 3.");
+      return 0;
     }
     int n = static_cast<int>(polygon.size());
     CoordType<PT> ret = 0;
