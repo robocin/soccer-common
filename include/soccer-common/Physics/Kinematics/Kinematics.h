@@ -25,6 +25,15 @@ namespace Kinematics {
     static constexpr PT position(const PT& so, const PT& v, real_t t) {
       return PT(position(so.x(), v.x(), t), position(so.y(), v.y(), t));
     }
+    template <class PT>
+    static constexpr PT position(const std::optional<PT>& so, const PT& v, const PT& t) {
+      return PT(position(so ? so->x() : 0.0, v.x(), t.x()),
+                position(so ? so->y() : 0.0, v.y(), t.y()));
+    }
+    template <class PT>
+    static constexpr PT position(const PT& so, const PT& v, const PT& t) {
+      return PT(position(so.x(), v.x(), t.x()), position(so.y(), v.y(), t.y()));
+    }
 
     /*!
      * @brief
@@ -44,6 +53,15 @@ namespace Kinematics {
     static constexpr PT velocity(const PT& s, const PT& so, real_t t) {
       return PT(velocity(s.x(), so.x(), t), velocity(s.y(), so.y(), t));
     }
+    template <class PT>
+    static constexpr PT velocity(const PT& s, const std::optional<PT>& so, const PT& t) {
+      return PT(velocity(s.x(), so ? so->x() : 0.0, t.x()),
+                velocity(s.y(), so ? so->y() : 0.0, t.y()));
+    }
+    template <class PT>
+    static constexpr PT velocity(const PT& s, const PT& so, const PT& t) {
+      return PT(velocity(s.x(), so.x(), t.x()), velocity(s.y(), so.y(), t.y()));
+    }
 
     /*!
      * @brief
@@ -57,6 +75,10 @@ namespace Kinematics {
     template <class PT>
     static constexpr real_t time(const PT& s, const PT& so, real_t speed) {
       return Math::isNull(speed) ? 0.0 : Geometry2D::norm(s - so) / speed;
+    }
+    template <class PT>
+    static constexpr PT time(const PT& s, const PT& so, const PT& v) {
+      return PT(time(s.x(), so.x(), v.x()), time(s.y(), so.y(), v.y()));
     }
   };
 
@@ -78,6 +100,16 @@ namespace Kinematics {
     static constexpr PT position(const PT& so, const PT& vo, const PT& a, real_t t) {
       return PT(position(so.x(), vo.x(), a.x(), t), position(so.y(), vo.y(), a.y(), t));
     }
+    template <class PT>
+    static constexpr PT
+    position(const std::optional<PT>& so, const PT& vo, const PT& a, const PT& t) {
+      return PT(position(so ? so->x() : 0.0, vo.x(), a.x(), t.x()),
+                position(so ? so->y() : 0.0, vo.y(), a.y(), t.y()));
+    }
+    template <class PT>
+    static constexpr PT position(const PT& so, const PT& vo, const PT& a, const PT& t) {
+      return PT(position(so.x(), vo.x(), a.x(), t.x()), position(so.y(), vo.y(), a.y(), t.y()));
+    }
 
     /*!
      * @brief v = vo + a * t
@@ -92,6 +124,32 @@ namespace Kinematics {
     template <class PT>
     static constexpr PT velocity(const PT& vo, const PT& a, real_t t) {
       return PT(velocity(vo.x(), a.x(), t), velocity(vo.y(), a.y(), t));
+    }
+    template <class PT>
+    static constexpr PT velocity(const std::optional<PT>& vo, const PT& a, const PT& t) {
+      return PT(velocity(vo ? vo->x() : 0.0, a.x(), t.x()),
+                velocity(vo ? vo->y() : 0.0, a.y(), t.y()));
+    }
+    template <class PT>
+    static constexpr PT velocity(const PT& vo, const PT& a, const PT& t) {
+      return PT(velocity(vo.x(), a.x(), t.x()), velocity(vo.y(), a.y(), t.y()));
+    }
+
+    /*!
+     * @brief v = vo + a * t <br>
+     * a * t = v - vo <br>
+     * t = (v - vo) / a
+     */
+    static constexpr real_t time(real_t v, real_t vo, real_t a) {
+      return Math::isNull(a) ? 0.0 : (v - vo) / a;
+    }
+    template <class PT>
+    static constexpr PT time(const std::optional<PT>& v, const PT& vo, const PT& a) {
+      return PT(time(v ? v->x() : 0.0, vo.x(), a.x()), time(v ? v->y() : 0.0, vo.y(), a.y()));
+    }
+    template <class PT>
+    static constexpr PT time(const PT& v, const PT& vo, const PT& a) {
+      return PT(time(v.x(), vo.x(), a.x()), time(v.y(), vo.y(), a.y()));
     }
 
     /*!
@@ -111,6 +169,15 @@ namespace Kinematics {
     template <class PT>
     static constexpr PT acceleration(const PT& v, const PT& vo, real_t t) {
       return PT(acceleration(v.x(), vo.x(), t), acceleration(v.y(), vo.y(), t));
+    }
+    template <class PT>
+    static constexpr PT acceleration(const PT& v, const std::optional<PT>& vo, const PT& t) {
+      return PT(acceleration(v.x(), vo ? vo->x() : 0.0, t.x()),
+                acceleration(v.y(), vo ? vo->y() : 0.0, t.y()));
+    }
+    template <class PT>
+    static constexpr PT acceleration(const PT& v, const PT& vo, const PT& t) {
+      return PT(acceleration(v.x(), vo.x(), t.x()), acceleration(v.y(), vo.y(), t.y()));
     }
 
     struct Torricelli {
