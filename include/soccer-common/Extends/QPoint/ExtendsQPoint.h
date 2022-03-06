@@ -197,6 +197,10 @@ class Extends<QPoint> : public QPoint {
 
   using QPoint::manhattanLength;
 
+  [[nodiscard]] constexpr inline Extends<QPoint> unitaryAxisDirection() const {
+    return Geometry2D::unitaryAxisDirection(*this);
+  }
+
   constexpr inline void normalize() {
     *this = Geometry2D::normalize(*this);
   }
@@ -379,7 +383,7 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  constexpr inline CoordType operator[](qsizetype i) cnst {
+  constexpr inline CoordType operator[](qsizetype i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -515,6 +519,10 @@ class Extends<QPointF> : public QPointF {
   }
 
   using QPointF::manhattanLength;
+
+  [[nodiscard]] constexpr inline Extends<QPointF> unitaryAxisDirection() const {
+    return Geometry2D::unitaryAxisDirection(*this);
+  }
 
   constexpr inline void resize(CoordType t) {
     *this = Geometry2D::resize(*this, t);
