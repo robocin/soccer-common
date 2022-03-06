@@ -74,6 +74,15 @@ namespace detail {
   template <class U>
   inline constexpr bool has_clear_v = has_clear<U>::value;
 
+  template <class U, class V = void>
+  struct has_empty : std::false_type {};
+
+  template <class U>
+  struct has_empty<U, std::void_t<decltype(std::declval<U>().empty())>> : std::true_type {};
+
+  template <class U>
+  inline constexpr bool has_empty_v = has_empty<U>::value;
+
   template <class U>
   inline constexpr bool dependent_false_v = false;
 
