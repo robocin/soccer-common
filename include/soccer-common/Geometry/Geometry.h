@@ -386,6 +386,17 @@ namespace Geometry2D {
   }
 
   /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param p the vector.
+   * @return Returns the unitary value (1 or -1) in each axis, if it isn't null.
+   */
+  template <class PT>
+  constexpr PT unitaryAxisDirection(const PT& p) {
+    return PT(Math::isNull(p.x()) ? 0 : (p.x() > 0 ? 1 : -1),
+              Math::isNull(p.y()) ? 0 : (p.y() > 0 ? 1 : -1));
+  }
+
+  /*!
    * @tparam PT Requires '.x()' and '.y()' members (they must be floating point).
    * @tparam T type of the value to resize.
    * @param p, t the vector and the value to resize.
