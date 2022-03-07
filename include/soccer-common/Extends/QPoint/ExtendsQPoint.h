@@ -604,7 +604,7 @@ using Point [[maybe_unused]] = Extends<QPointF>;
 /*!
  * @brief coord_type will be used as standard coordinate type.
  */
-using coord_type = Geometry2D::CoordType<Point>;
+using coord_type = Geometry2D::CoordType<Extends<QPointF>>;
 
 /*!
  * @brief real_type will be used as standard real type.
