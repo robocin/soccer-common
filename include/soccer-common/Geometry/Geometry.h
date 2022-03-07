@@ -156,11 +156,23 @@ namespace Geometry2D {
   using namespace Geometry;
 
   /*!
-   * @brief Return the type of Point coordinates.
+   * @brief Returns the type of Point coordinates.
    */
   template <class PT>
   using CoordType =
       std::common_type_t<decltype(std::declval<PT>().x()), decltype(std::declval<PT>().y())>;
+
+  template <class U, class V = void>
+  struct is_pt : std::false_type {};
+
+  template <class U>
+  struct is_pt<U, std::void_t<CoordType<U>>> : std::true_type {};
+
+  /*!
+   * @brief Returns if the type is a Point.
+   */
+  template <class U>
+  inline static constexpr bool is_pt_v = is_pt<U>::value;
 
   /*!
    * @param lhs, rhs values to compare.
