@@ -8,7 +8,6 @@
 #include <QString>
 #include <QFileDialog>
 #include <QTextStream>
-#include <boost/bimap.hpp>
 #include <QRegularExpression>
 #include <utility>
 #include "soccer-common/Utils/Utils.h"
@@ -736,32 +735,36 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
-    boost::bimap<value_type, QString> bimap;
+
+    QMap<T, QString> leftMap;
+    QMap<QString, T> rightMap;
 
    public:
     MappedComboBox(Arg<T>& t_ref,
                    const QMap<value_type, QString>& t_map,
                    const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
-        bimap([](const QMap<value_type, QString>& map) {
-          boost::bimap<value_type, QString> ret;
-          for (auto it = map.begin(); it != map.end(); ++it) {
-            ret.insert({it.key(), it.value()});
+        leftMap(t_map),
+        rightMap([&t_map]() {
+          QMap<QString, T> map;
+          for (auto it = t_map.begin(); it != t_map.end(); ++it) {
+            map.insert(it.value(), it.key());
           }
-          return ret;
-        }(t_map)) {
-      bool contains = bimap.left.find(t_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) && (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
+          return map;
+        }()) {
+      bool contains = leftMap.find(t_ref) != leftMap.end();
+      if (!((leftMap.size() > 1) && (static_cast<int>(leftMap.size()) == rightMap.size()) &&
+            contains)) {
         throw std::runtime_error("the size of map must be greater than 1, and must contain ref.");
       }
     }
 
     QString value() const override {
-      auto it = bimap.left.find(ParameterType<T>::ref.value());
-      if (it == bimap.left.end()) {
+      auto it = leftMap.find(ParameterType<T>::ref.value());
+      if (it == leftMap.end()) {
         throw std::runtime_error("the value was not found.");
       } else {
-        return Utils::quoted(it->second);
+        return Utils::quoted(it.value());
       }
     }
 
@@ -778,10 +781,10 @@ namespace Parameters {
       QTextStream stream(&options);
       stream << Qt::fixed;
 
-      for (auto it = bimap.right.begin(); it != bimap.right.end(); ++it) {
-        stream << Utils::quoted(it->first);
+      for (auto it = rightMap.begin(); it != rightMap.end(); ++it) {
+        stream << Utils::quoted(it.key());
 
-        if (std::next(it) != bimap.right.end()) {
+        if (std::next(it) != rightMap.end()) {
           stream << ", ";
         }
       }
@@ -794,8 +797,8 @@ namespace Parameters {
     }
 
     bool update(const QString& str) final {
-      if (auto it = bimap.right.find(str); it != bimap.right.end()) {
-        setValue(bimap.right.find(str)->get_left());
+      if (auto it = rightMap.find(str); it != rightMap.end()) {
+        setValue(it.value());
         return true;
       }
       return false;
