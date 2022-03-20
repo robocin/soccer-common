@@ -70,58 +70,58 @@ class Extends<QPoint> : public QPoint {
 
   friend constexpr inline Extends<QPoint> operator+(const QPoint& p1,
                                                     const Extends<QPoint>& p2) noexcept {
-    return Extends<QPoint>(p1 + static_cast<const QPoint&>(p2));
+    return Extends<QPoint>{p1 + static_cast<const QPoint&>(p2)};
   }
   friend constexpr inline Extends<QPoint> operator+(const Extends<QPoint>& p1,
                                                     const Extends<QPoint>& p2) noexcept {
-    return Extends<QPoint>(static_cast<const QPoint&>(p1) + static_cast<const QPoint&>(p2));
+    return Extends<QPoint>{static_cast<const QPoint&>(p1) + static_cast<const QPoint&>(p2)};
   }
   friend constexpr inline Extends<QPoint> operator+(const Extends<QPoint>& p1,
                                                     const QPoint& p2) noexcept {
-    return Extends<QPoint>(static_cast<const QPoint&>(p1) + p2);
+    return Extends<QPoint>{static_cast<const QPoint&>(p1) + p2};
   }
   friend constexpr inline Extends<QPoint> operator-(const QPoint& p1,
                                                     const Extends<QPoint>& p2) noexcept {
-    return Extends<QPoint>(p1 - static_cast<const QPoint&>(p2));
+    return Extends<QPoint>{p1 - static_cast<const QPoint&>(p2)};
   }
   friend constexpr inline Extends<QPoint> operator-(const Extends<QPoint>& p1,
                                                     const Extends<QPoint>& p2) noexcept {
-    return Extends<QPoint>(static_cast<const QPoint&>(p1) - static_cast<const QPoint&>(p2));
+    return Extends<QPoint>{static_cast<const QPoint&>(p1) - static_cast<const QPoint&>(p2)};
   }
   friend constexpr inline Extends<QPoint> operator-(const Extends<QPoint>& p1,
                                                     const QPoint& p2) noexcept {
-    return Extends<QPoint>(static_cast<const QPoint&>(p1) - p2);
+    return Extends<QPoint>{static_cast<const QPoint&>(p1) - p2};
   }
   friend constexpr inline Extends<QPoint> operator*(const Extends<QPoint>& p, float factor) {
-    return Extends<QPoint>(static_cast<const QPoint&>(p) * factor);
+    return Extends<QPoint>{static_cast<const QPoint&>(p) * factor};
   }
   friend constexpr inline Extends<QPoint> operator*(const Extends<QPoint>& p, double factor) {
-    return Extends<QPoint>(static_cast<const QPoint&>(p) * factor);
+    return Extends<QPoint>{static_cast<const QPoint&>(p) * factor};
   }
   friend constexpr inline Extends<QPoint> operator*(const Extends<QPoint>& p, int factor) noexcept {
-    return Extends<QPoint>(static_cast<const QPoint&>(p) * factor);
+    return Extends<QPoint>{static_cast<const QPoint&>(p) * factor};
   }
   friend constexpr inline Extends<QPoint> operator*(float factor, const Extends<QPoint>& p) {
-    return Extends<QPoint>(factor * static_cast<const QPoint&>(p));
+    return Extends<QPoint>{factor * static_cast<const QPoint&>(p)};
   }
   friend constexpr inline Extends<QPoint> operator*(double factor, const Extends<QPoint>& p) {
-    return Extends<QPoint>(factor * static_cast<const QPoint&>(p));
+    return Extends<QPoint>{factor * static_cast<const QPoint&>(p)};
   }
   friend constexpr inline Extends<QPoint> operator*(int factor, const Extends<QPoint>& p) noexcept {
-    return Extends<QPoint>(factor * static_cast<const QPoint&>(p));
+    return Extends<QPoint>{factor * static_cast<const QPoint&>(p)};
   }
   friend constexpr inline Extends<QPoint> operator+(const Extends<QPoint>& p) noexcept {
-    return Extends<QPoint>(p);
+    return Extends<QPoint>{p};
   }
   friend constexpr inline Extends<QPoint> operator-(const Extends<QPoint>& p) noexcept {
-    return Extends<QPoint>(-static_cast<const QPoint&>(p));
+    return Extends<QPoint>{-static_cast<const QPoint&>(p)};
   }
   friend constexpr inline Extends<QPoint> operator/(const Extends<QPoint>& p, qreal c) {
-    return Extends<QPoint>(static_cast<const QPoint&>(p) / c);
+    return Extends<QPoint>{static_cast<const QPoint&>(p) / c};
   }
 
-  constexpr Extends<QPoint> transposed() const {
-    return Extends<QPoint>(QPoint::transposed());
+  [[nodiscard]] constexpr Extends<QPoint> transposed() const {
+    return Extends<QPoint>{QPoint::transposed()};
   }
   constexpr inline void transpose() {
     *this = transposed();
@@ -135,7 +135,7 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  constexpr inline CoordType operator[](qsizetype i) const {
+  [[nodiscard]] constexpr inline CoordType operator[](qsizetype i) const {
     switch (i) {
       case 0: return x();
       case 1: return y();
@@ -143,19 +143,19 @@ class Extends<QPoint> : public QPoint {
     }
   }
 
-  constexpr inline CoordType dot(const QPoint& other) const {
+  [[nodiscard]] constexpr inline CoordType dot(const QPoint& other) const {
     return Geometry2D::dot<QPoint>(*this, other);
   }
 
-  constexpr inline CoordType cross(const QPoint& other) const {
+  [[nodiscard]] constexpr inline CoordType cross(const QPoint& other) const {
     return Geometry2D::cross<QPoint>(*this, other);
   }
 
-  constexpr inline CoordType distSquaredTo(const QPoint& other) const {
+  [[nodiscard]] constexpr inline CoordType distSquaredTo(const QPoint& other) const {
     return Geometry2D::distanceSquared<QPoint>(*this, other);
   }
 
-  constexpr inline auto distTo(const QPoint& other) const {
+  [[nodiscard]] constexpr inline auto distTo(const QPoint& other) const {
     return Geometry2D::distance<QPoint>(*this, other);
   }
 
@@ -163,7 +163,7 @@ class Extends<QPoint> : public QPoint {
     *this = Geometry2D::rotateCW90(*this);
   }
 
-  constexpr inline Extends<QPoint> rotatedCW90() const {
+  [[nodiscard]] constexpr inline Extends<QPoint> rotatedCW90() const {
     return Geometry2D::rotateCW90(*this);
   }
 
@@ -171,57 +171,61 @@ class Extends<QPoint> : public QPoint {
     *this = Geometry2D::rotateCCW90(*this);
   }
 
-  constexpr inline Extends<QPoint> rotatedCCW90() const {
+  [[nodiscard]] constexpr inline Extends<QPoint> rotatedCCW90() const {
     return Geometry2D::rotateCCW90(*this);
   }
 
-  constexpr inline auto angle() const {
+  [[nodiscard]] constexpr inline auto angle() const {
     return Geometry2D::angle(*this);
   }
 
-  constexpr inline auto angleTo(const QPoint& other) const {
+  [[nodiscard]] constexpr inline auto angleTo(const QPoint& other) const {
     return Geometry2D::angleBetween<QPoint>(*this, other);
   }
 
-  constexpr inline CoordType lengthSquared() const {
+  [[nodiscard]] constexpr inline CoordType lengthSquared() const {
     return Geometry2D::lengthSquared(*this);
   }
 
-  constexpr inline auto length() const {
+  [[nodiscard]] constexpr inline auto length() const {
     return Geometry2D::length(*this);
   }
 
-  constexpr inline auto norm() const {
+  [[nodiscard]] constexpr inline auto norm() const {
     return Geometry2D::norm(*this);
   }
 
   using QPoint::manhattanLength;
 
+  [[nodiscard]] constexpr inline Extends<QPoint> unitaryAxisDirection() const {
+    return Geometry2D::unitaryAxisDirection(*this);
+  }
+
   constexpr inline void normalize() {
     *this = Geometry2D::normalize(*this);
   }
 
-  constexpr inline Extends<QPoint> normalized() const {
+  [[nodiscard]] constexpr inline Extends<QPoint> normalized() const {
     return Geometry2D::normalize(*this);
   }
 
-  inline bool isInPolygon(const QVector<QPoint>& polygon) const {
+  [[nodiscard]] inline bool isInPolygon(const QVector<QPoint>& polygon) const {
     return Geometry2D::pointInPolygon<QPoint>(polygon, *this);
   }
 
-  constexpr inline bool isOnTheLeftOf(const QPoint& a, const QPoint& b) const {
+  [[nodiscard]] constexpr inline bool isOnTheLeftOf(const QPoint& a, const QPoint& b) const {
     return Geometry2D::isOnTheLeft<QPoint>(a, b, *this);
   }
 
-  constexpr inline bool isOnTheLeftOf(const QLine& line) const {
+  [[nodiscard]] constexpr inline bool isOnTheLeftOf(const QLine& line) const {
     return Geometry2D::isOnTheLeft<QPoint>(line.p1(), line.p2(), *this);
   }
 
-  constexpr inline bool isOnTheRightOf(const QPoint& a, const QPoint& b) const {
+  [[nodiscard]] constexpr inline bool isOnTheRightOf(const QPoint& a, const QPoint& b) const {
     return Geometry2D::isOnTheRight<QPoint>(a, b, *this);
   }
 
-  constexpr inline bool isOnTheRightOf(const QLine& line) const {
+  [[nodiscard]] constexpr inline bool isOnTheRightOf(const QLine& line) const {
     return Geometry2D::isOnTheRight<QPoint>(line.p1(), line.p2(), *this);
   }
 
@@ -326,46 +330,46 @@ class Extends<QPointF> : public QPointF {
 
   friend constexpr inline Extends<QPointF> operator+(const QPointF& p1,
                                                      const Extends<QPointF>& p2) {
-    return Extends<QPointF>(p1 + static_cast<const QPointF&>(p2));
+    return Extends<QPointF>{p1 + static_cast<const QPointF&>(p2)};
   }
   friend constexpr inline Extends<QPointF> operator+(const Extends<QPointF>& p1,
                                                      const Extends<QPointF>& p2) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p1) + static_cast<const QPointF&>(p2));
+    return Extends<QPointF>{static_cast<const QPointF&>(p1) + static_cast<const QPointF&>(p2)};
   }
   friend constexpr inline Extends<QPointF> operator+(const Extends<QPointF>& p1,
                                                      const QPointF& p2) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p1) + p2);
+    return Extends<QPointF>{static_cast<const QPointF&>(p1) + p2};
   }
   friend constexpr inline Extends<QPointF> operator-(const QPointF& p1,
                                                      const Extends<QPointF>& p2) {
-    return Extends<QPointF>(p1 - static_cast<const QPointF&>(p2));
+    return Extends<QPointF>{p1 - static_cast<const QPointF&>(p2)};
   }
   friend constexpr inline Extends<QPointF> operator-(const Extends<QPointF>& p1,
                                                      const Extends<QPointF>& p2) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p1) - static_cast<const QPointF&>(p2));
+    return Extends<QPointF>{static_cast<const QPointF&>(p1) - static_cast<const QPointF&>(p2)};
   }
   friend constexpr inline Extends<QPointF> operator-(const Extends<QPointF>& p1,
                                                      const QPointF& p2) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p1) - p2);
+    return Extends<QPointF>{static_cast<const QPointF&>(p1) - p2};
   }
   friend constexpr inline Extends<QPointF> operator*(const Extends<QPointF>& p, qreal c) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p) * c);
+    return Extends<QPointF>{static_cast<const QPointF&>(p) * c};
   }
   friend constexpr inline Extends<QPointF> operator*(qreal c, const Extends<QPointF>& p) {
-    return Extends<QPointF>(c * static_cast<const QPointF&>(p));
+    return Extends<QPointF>{c * static_cast<const QPointF&>(p)};
   }
   friend constexpr inline Extends<QPointF> operator+(const Extends<QPointF>& p) {
-    return Extends<QPointF>(p);
+    return Extends<QPointF>{p};
   }
   friend constexpr inline Extends<QPointF> operator-(const Extends<QPointF>& p) {
-    return Extends<QPointF>(-static_cast<const QPointF&>(p));
+    return Extends<QPointF>{-static_cast<const QPointF&>(p)};
   }
   friend constexpr inline Extends<QPointF> operator/(const Extends<QPointF>& p, qreal divisor) {
-    return Extends<QPointF>(static_cast<const QPointF&>(p) / divisor);
+    return Extends<QPointF>{static_cast<const QPointF&>(p) / divisor};
   }
 
-  constexpr Extends<QPointF> transposed() const {
-    return Extends<QPointF>(QPointF::transposed());
+  [[nodiscard]] constexpr Extends<QPointF> transposed() const {
+    return Extends<QPointF>{QPointF::transposed()};
   }
   constexpr inline void transpose() {
     *this = transposed();
@@ -387,75 +391,78 @@ class Extends<QPointF> : public QPointF {
     }
   }
 
-  constexpr inline CoordType dot(const QPointF& other) const {
+  [[nodiscard]] constexpr inline CoordType dot(const QPointF& other) const {
     return Geometry2D::dot<QPointF>(*this, other);
   }
 
-  constexpr inline CoordType cross(const QPointF& other) const {
+  [[nodiscard]] constexpr inline CoordType cross(const QPointF& other) const {
     return Geometry2D::cross<QPointF>(*this, other);
   }
 
-  constexpr inline CoordType distSquaredTo(const QPointF& other) const {
+  [[nodiscard]] constexpr inline CoordType distSquaredTo(const QPointF& other) const {
     return Geometry2D::distanceSquared<QPointF>(*this, other);
   }
 
-  constexpr inline auto distTo(const QPointF& other) const {
+  [[nodiscard]] constexpr inline auto distTo(const QPointF& other) const {
     return Geometry2D::distance<QPointF>(*this, other);
   }
 
-  constexpr inline auto distToLine(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline auto distToLine(const QPointF& a, const QPointF& b) const {
     return Geometry2D::distancePointLine<QPointF>(a, b, *this);
   }
 
-  constexpr inline auto distToLine(const QLineF& line) const {
+  [[nodiscard]] constexpr inline auto distToLine(const QLineF& line) const {
     return Geometry2D::distancePointLine<QPointF>(line, *this);
   }
 
-  constexpr inline auto distToSegment(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline auto distToSegment(const QPointF& a, const QPointF& b) const {
     return Geometry2D::distancePointSegment<QPointF>(a, b, *this);
   }
 
-  constexpr inline auto distToSegment(const QLineF& line) const {
+  [[nodiscard]] constexpr inline auto distToSegment(const QLineF& line) const {
     return Geometry2D::distancePointSegment<QPointF>(line, *this);
   }
 
-  constexpr inline Extends<QPointF> projectedOntoLine(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> projectedOntoLine(const QPointF& a,
+                                                                    const QPointF& b) const {
     return Geometry2D::projectPointLine<QPointF>(a, b, *this);
   }
 
-  constexpr inline Extends<QPointF> projectedOntoLine(const QLineF& line) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> projectedOntoLine(const QLineF& line) const {
     return Geometry2D::projectPointLine<QPointF>(line.p1(), line.p2(), *this);
   }
 
-  constexpr inline Extends<QPointF> projectedOntoSegment(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> projectedOntoSegment(const QPointF& a,
+                                                                       const QPointF& b) const {
     return Geometry2D::projectPointSegment<QPointF>(a, b, *this);
   }
 
-  constexpr inline Extends<QPointF> projectedOntoSegment(const QLineF& line) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> projectedOntoSegment(const QLineF& line) const {
     return Geometry2D::projectPointSegment<QPointF>(line.p1(), line.p2(), *this);
   }
 
-  constexpr inline Extends<QPointF> reflectedOntoLine(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> reflectedOntoLine(const QPointF& a,
+                                                                    const QPointF& b) const {
     return Geometry2D::reflectPointLine<QPointF>(a, b, *this);
   }
 
-  constexpr inline Extends<QPointF> reflectedOntoLine(const QLineF& line) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> reflectedOntoLine(const QLineF& line) const {
     return Geometry2D::reflectPointLine<QPointF>(line.p1(), line.p2(), *this);
   }
 
-  constexpr inline bool isOnTheLeftOf(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline bool isOnTheLeftOf(const QPointF& a, const QPointF& b) const {
     return Geometry2D::isOnTheLeft<QPointF>(a, b, *this);
   }
 
-  constexpr inline bool isOnTheLeftOf(const QLineF& line) const {
+  [[nodiscard]] constexpr inline bool isOnTheLeftOf(const QLineF& line) const {
     return Geometry2D::isOnTheLeft<QPointF>(line.p1(), line.p2(), *this);
   }
 
-  constexpr inline bool isOnTheRightOf(const QPointF& a, const QPointF& b) const {
+  [[nodiscard]] constexpr inline bool isOnTheRightOf(const QPointF& a, const QPointF& b) const {
     return Geometry2D::isOnTheRight<QPointF>(a, b, *this);
   }
 
-  constexpr inline bool isOnTheRightOf(const QLineF& line) const {
+  [[nodiscard]] constexpr inline bool isOnTheRightOf(const QLineF& line) const {
     return Geometry2D::isOnTheRight<QPointF>(line.p1(), line.p2(), *this);
   }
 
@@ -463,7 +470,7 @@ class Extends<QPointF> : public QPointF {
     *this = Geometry2D::rotateCW90(*this);
   }
 
-  constexpr inline Extends<QPointF> rotatedCW90() const {
+  [[nodiscard]] constexpr inline Extends<QPointF> rotatedCW90() const {
     return Geometry2D::rotateCW90(*this);
   }
 
@@ -471,7 +478,7 @@ class Extends<QPointF> : public QPointF {
     *this = Geometry2D::rotateCCW90(*this);
   }
 
-  constexpr inline Extends<QPointF> rotatedCCW90() const {
+  [[nodiscard]] constexpr inline Extends<QPointF> rotatedCCW90() const {
     return Geometry2D::rotateCCW90(*this);
   }
 
@@ -479,7 +486,7 @@ class Extends<QPointF> : public QPointF {
     *this = Geometry2D::rotateCW(*this, t);
   }
 
-  constexpr inline Extends<QPointF> rotatedCW(CoordType t) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> rotatedCW(CoordType t) const {
     return Geometry2D::rotateCW(*this, t);
   }
 
@@ -487,37 +494,41 @@ class Extends<QPointF> : public QPointF {
     *this = Geometry2D::rotateCCW(*this, t);
   }
 
-  constexpr inline Extends<QPointF> rotatedCCW(CoordType t) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> rotatedCCW(CoordType t) const {
     return Geometry2D::rotateCCW(*this, t);
   }
 
-  constexpr inline auto angle() const {
+  [[nodiscard]] constexpr inline auto angle() const {
     return Geometry2D::angle(*this);
   }
 
-  constexpr inline auto angleTo(const QPointF& other) const {
+  [[nodiscard]] constexpr inline auto angleTo(const QPointF& other) const {
     return Geometry2D::angleBetween<QPointF>(*this, other);
   }
 
-  constexpr inline CoordType lengthSquared() const {
+  [[nodiscard]] constexpr inline CoordType lengthSquared() const {
     return Geometry2D::lengthSquared(*this);
   }
 
-  constexpr inline auto length() const {
+  [[nodiscard]] constexpr inline auto length() const {
     return Geometry2D::length(*this);
   }
 
-  constexpr inline auto norm() const {
+  [[nodiscard]] constexpr inline auto norm() const {
     return Geometry2D::norm(*this);
   }
 
   using QPointF::manhattanLength;
 
+  [[nodiscard]] constexpr inline Extends<QPointF> unitaryAxisDirection() const {
+    return Geometry2D::unitaryAxisDirection(*this);
+  }
+
   constexpr inline void resize(CoordType t) {
     *this = Geometry2D::resize(*this, t);
   }
 
-  constexpr inline Extends<QPointF> resized(CoordType t) const {
+  [[nodiscard]] constexpr inline Extends<QPointF> resized(CoordType t) const {
     return Geometry2D::resize(*this, t);
   }
 
@@ -525,15 +536,15 @@ class Extends<QPointF> : public QPointF {
     *this = Geometry2D::normalize(*this);
   }
 
-  constexpr inline Extends<QPointF> normalized() const {
+  [[nodiscard]] constexpr inline Extends<QPointF> normalized() const {
     return Geometry2D::normalize(*this);
   }
 
-  inline bool isInPolygon(const QVector<QPointF>& polygon) const {
+  [[nodiscard]] inline bool isInPolygon(const QVector<QPointF>& polygon) const {
     return Geometry2D::pointInPolygon<QPointF>(polygon, *this);
   }
 
-  inline bool isOnPolygon(const QVector<QPointF>& polygon) const {
+  [[nodiscard]] inline bool isOnPolygon(const QVector<QPointF>& polygon) const {
     return Geometry2D::pointOnPolygon<QPointF>(polygon, *this);
   }
 
@@ -587,6 +598,18 @@ namespace std {
  * @brief Extends<QPointF> will be used as standard 2D point.
  */
 using Point [[maybe_unused]] = Extends<QPointF>;
+#endif
+
+#ifndef SOCCER_COMMON_EXTENDSPOINT_H_UNDEF_COORD_TYPE
+/*!
+ * @brief coord_type will be used as standard coordinate type.
+ */
+using coord_type = Geometry2D::CoordType<Extends<QPointF>>;
+
+/*!
+ * @brief real_type will be used as standard real type.
+ */
+using real_t = coord_type;
 #endif
 
 #pragma clang diagnostic pop

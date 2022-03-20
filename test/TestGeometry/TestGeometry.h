@@ -26,8 +26,8 @@ class TestGeometry : public QObject {
   void test_normalizeInPI_whenGivenAFloatingPoint_shouldWork();
   void test_normalizeIn180_whenGivenAFloatingPoint_shouldWork();
   void test_2D_operatorLess_whenGivenTwoPoints_shouldWork();
-  void test2D_fromPolar_whenGivenAFloatingPoint_shouldWork();
-  void test2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork();
+  void test_2D_fromPolar_whenGivenAFloatingPoint_shouldWork();
+  void test_2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork();
   void test_2D_dot_whenGivenTwoPoints_shouldWork();
   void test_2D_cross_whenGivenTwoPoints_shouldWork();
   void test_2D_distanceSquared_whenGivenFourNumbers_shouldWork();
@@ -44,6 +44,7 @@ class TestGeometry : public QObject {
   void test_2D_length_whenGivenAPoint_shouldWork();
   void test_2D_norm_whenGivenAPoint_shouldWork();
   void test_2D_manhattanLength_whenGivenAPoint_shouldWork();
+  void test_2D_unitaryAxisDirection_whenGivenAPoint_shouldWork();
   void test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork();
   void test_2D_normalize_whenGivenAFloatingPointPoint_shouldWork();
   void test_2D_normalize_whenGivenAnIntegerPoint_shouldWork();

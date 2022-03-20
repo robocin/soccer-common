@@ -156,11 +156,23 @@ namespace Geometry2D {
   using namespace Geometry;
 
   /*!
-   * @brief Return the type of Point coordinates.
+   * @brief Returns the type of Point coordinates.
    */
   template <class PT>
   using CoordType =
       std::common_type_t<decltype(std::declval<PT>().x()), decltype(std::declval<PT>().y())>;
+
+  template <class U, class V = void>
+  struct is_pt : std::false_type {};
+
+  template <class U>
+  struct is_pt<U, std::void_t<CoordType<U>>> : std::true_type {};
+
+  /*!
+   * @brief Returns if the type is a Point.
+   */
+  template <class U>
+  inline static constexpr bool is_pt_v = is_pt<U>::value;
 
   /*!
    * @param lhs, rhs values to compare.
@@ -386,6 +398,17 @@ namespace Geometry2D {
   }
 
   /*!
+   * @tparam PT Requires '.x()' and '.y()' members.
+   * @param p the vector.
+   * @return Returns the unitary value (1 or -1) in each axis, if it isn't null.
+   */
+  template <class PT>
+  constexpr PT unitaryAxisDirection(const PT& p) {
+    return PT(Math::isNull(p.x()) ? 0 : (p.x() > 0 ? 1 : -1),
+              Math::isNull(p.y()) ? 0 : (p.y() > 0 ? 1 : -1));
+  }
+
+  /*!
    * @tparam PT Requires '.x()' and '.y()' members (they must be floating point).
    * @tparam T type of the value to resize.
    * @param p, t the vector and the value to resize.
@@ -394,6 +417,9 @@ namespace Geometry2D {
   template <class PT>
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT> resize(const PT& p,
                                                                                  CoordType<PT> t) {
+    if ((Math::isNull(p.x()) && Math::isNull(p.y())) || Math::isNull(t)) {
+      return PT(0, 0);
+    }
     return static_cast<PT>(p / length(p) * t);
   }
 
@@ -416,6 +442,9 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr std::enable_if_t<std::is_integral_v<CoordType<PT>>, PT> normalize(const PT& p) {
+    if (Math::isNull(p.x()) && Math::isNull(p.y())) {
+      return PT(0, 0);
+    }
     return p / std::gcd(std::abs(p.x()), std::abs(p.y()));
   }
 
@@ -435,7 +464,7 @@ namespace Geometry2D {
   template <class PT>
   CoordType<PT> signedArea2(const QVector<PT>& polygon) {
     if (polygon.size() < 3) {
-      throw std::runtime_error("polygon size is less than 3.");
+      return 0;
     }
     int n = static_cast<int>(polygon.size());
     CoordType<PT> ret = 0;

@@ -171,14 +171,14 @@ void TestGeometry::test_2D_operatorLess_whenGivenTwoPoints_shouldWork() {
   }
 }
 
-void TestGeometry::test2D_fromPolar_whenGivenAFloatingPoint_shouldWork() {
+void TestGeometry::test_2D_fromPolar_whenGivenAFloatingPoint_shouldWork() {
   using Geometry2D::fromPolar;
   QCOMPARE(QPointF(1, 0), fromPolar<QPointF>(0));
   QCOMPARE(QPointF(0, 1), fromPolar<QPointF>(PI / 2));
   QCOMPARE(QPointF(std::sqrt(2) / 2.0, std::sqrt(2) / 2.0), fromPolar<QPointF>(PI / 4.0));
 }
 
-void TestGeometry::test2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork() {
+void TestGeometry::test_2D_fromPolar_whenGivenTwoFloatingPointNumbers_shouldWork() {
   using Geometry2D::fromPolar;
   QCOMPARE(QPointF(10, 0), fromPolar<QPointF>(10, 0));
   QCOMPARE(QPointF(0, 20), fromPolar<QPointF>(20, PI / 2));
@@ -376,6 +376,17 @@ void TestGeometry::test_2D_manhattanLength_whenGivenAPoint_shouldWork() {
 
   QCOMPARE(manhattanLength(QPoint(40, 30)), 70);
   QCOMPARE(manhattanLength(QPointF(40, 30)), 70);
+}
+
+void TestGeometry::test_2D_unitaryAxisDirection_whenGivenAPoint_shouldWork() {
+  using namespace Geometry2D;
+
+  QCOMPARE(unitaryAxisDirection(QPoint(4, 3)), QPoint(1, 1));
+  QCOMPARE(unitaryAxisDirection(QPointF(5, 4)), QPointF(1, 1));
+  QCOMPARE(unitaryAxisDirection(QPoint(0, 0)), QPoint(0, 0));
+  QCOMPARE(unitaryAxisDirection(QPointF(0, 0)), QPointF(0, 0));
+  QCOMPARE(unitaryAxisDirection(QPoint(-10, 10)), QPoint(-1, 1));
+  QCOMPARE(unitaryAxisDirection(QPointF(5, -4)), QPointF(1, -1));
 }
 
 void TestGeometry::test_2D_resize_whenGivenAFloatingPointPointAndAFloatingPoint_shouldWork() {

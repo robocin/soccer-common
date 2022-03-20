@@ -27,6 +27,20 @@ class SharedValue {
     return m_instance;
   }
 
+  template <class U = T,
+            std::enable_if_t<detail::has_clear_v<U> && detail::has_empty_v<U>, bool> = true>
+  bool extract_and_clear(T& value) {
+    value = std::move(m_instance);
+    m_instance.clear();
+    return !value.empty();
+  }
+
+  template <class U = T,
+            std::enable_if_t<detail::has_clear_v<U> && detail::has_empty_v<U>, bool> = true>
+  bool extractAndClear(T& value) {
+    return extract_and_clear(value);
+  }
+
   template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
   U get_and_clear() {
     U value = std::move(m_instance);
