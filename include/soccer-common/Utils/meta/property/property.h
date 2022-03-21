@@ -15,7 +15,7 @@
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 /*!
- * @brief declares a private type with varname and its own public set/get
+ * @brief declares a protected type with varname and its own public set/get
  * methods
  * @note varname will be wrapped by a std::optional, so, it's useful to use this
  * macro with types that doesn't contains empty constructors or with variables
@@ -46,21 +46,24 @@
     try {                                                                                          \
       return m_##varname.value();                                                                  \
     } catch (const std::bad_optional_access&) {                                                    \
-      throw std::runtime_error(                                                                    \
-          ("the field \'" + Utils::nameOfType<std::decay_t<decltype(*this)>>() +                   \
-           "::" + QString(#varname) + "()\' is std::nullopt (bad optional access).")               \
-              .toStdString());                                                                     \
+      throw std::runtime_error(("the field \'" +                                                   \
+                                Utils::nameOfType<std::decay_t<decltype(*this)>>() +               \
+                                "::" #varname "()\' is std::nullopt (bad optional access).")       \
+                                   .toStdString());                                                \
     }                                                                                              \
   }                                                                                                \
                                                                                                    \
  protected:                                                                                        \
   std::optional<type> m_##varname
 
-/*!
- * @brief declares a private type with name 'varname', given default value, and
- * its own public set/get methods
- */
-#define RC_PROPERTY_3(type, varname, default_value)                                                \
+namespace __rc_property { // NOLINT(bugprone-reserved-identifier)
+  template <class T>
+  [[noreturn]] inline T initialization_protector(const QString& message) {
+    throw std::runtime_error(message.toStdString());
+  }
+} // namespace __rc_property
+
+#define RC_PROPERTY_3_IMPL(type, varname)                                                          \
  public:                                                                                           \
   inline auto set_##varname(const type& varname)->decltype(*this)& {                               \
     m_##varname = varname;                                                                         \
@@ -76,7 +79,22 @@
   }                                                                                                \
                                                                                                    \
  protected:                                                                                        \
-  type m_##varname = default_value
+  type m_##varname
+
+/*!
+ * @brief declares a protected type with name 'varname', that must be constructed in a constructor
+ */
+#define RC_REQUIRED(type, varname)                                                                 \
+  RC_PROPERTY_3_IMPL(type, varname) = __rc_property::initialization_protector<type>(               \
+      QString("the property \'" #type " " + Utils::nameOfType<std::decay_t<decltype(*this)>>() +   \
+              "::" #varname "\' is required and must be initialized in the constructor."))
+
+/*!
+ * @brief declares a protected type with name 'varname', given default value, and its own public
+ * set/get methods
+ */
+#define RC_PROPERTY_3(type, varname, default_value)                                                \
+  RC_PROPERTY_3_IMPL(type, varname) = default_value
 
 #if !BOOST_PP_VARIADICS_MSVC
   #define RC_PROPERTY(...) BOOST_PP_OVERLOAD(RC_PROPERTY_, __VA_ARGS__)(__VA_ARGS__)
@@ -87,6 +105,7 @@
 
 #ifndef SOCCER_COMMON_PROPERTY_UNDEF
   #define PROPERTY(...) RC_PROPERTY(__VA_ARGS__)
+  #define REQUIRED(type, varname) RC_REQUIRED(type, varname)
 #endif
 
 #include "ctor.h"
