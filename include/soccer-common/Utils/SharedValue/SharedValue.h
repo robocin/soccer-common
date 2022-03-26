@@ -60,12 +60,12 @@ class SharedValue {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(FunctionPointer&& f) {
-    return std::forward<FunctionPointer>(f)(m_instance);
+    return std::invoke(std::forward<FunctionPointer>(f), m_instance);
   }
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(FunctionPointer&& f) const {
-    return std::forward<FunctionPointer>(f)(m_instance);
+    return std::invoke(std::forward<FunctionPointer>(f), m_instance);
   }
 
   template <class... Args>
@@ -194,12 +194,12 @@ class SharedValue<std::optional<T>> {
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(FunctionPointer&& f) {
-    return std::forward<FunctionPointer>(f)(m_instance);
+    return std::invoke(std::forward<FunctionPointer>(f), m_instance);
   }
 
   template <class FunctionPointer>
   constexpr decltype(auto) apply(FunctionPointer&& f) const {
-    return std::forward<FunctionPointer>(f)(m_instance);
+    return std::invoke(std::forward<FunctionPointer>(f), m_instance);
   }
 
   // observers:
