@@ -4,7 +4,7 @@
 #include <utility>
 
 namespace __rc_meta { // NOLINT(bugprone-reserved-identifier)
-  struct [[nodiscard]] [[maybe_unused]] static_block_tag {
+  struct [[maybe_unused]] static_block_tag {
     template <class Functor>
     inline explicit static_block_tag(Functor && f) {
       std::forward<Functor>(f)();
