@@ -56,11 +56,11 @@ int IndexedModuleBase::index() const {
 
 // -------------------------------------------------------------------------- //
 
-void ModuleExtension::buildParameters(Parameters::Handler&) {
+void ModuleExtension::extendedBuildParameters(Parameters::Handler&) {
 }
 
-void ModuleExtension::connectModules(const Modules*) {
+void ModuleExtension::extendedConnectModules(const Modules*) {
 }
 
-void ModuleExtension::init(const Modules*) {
+void ModuleExtension::extendedInit(const Modules*) {
 }
