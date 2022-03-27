@@ -20,5 +20,6 @@
 #include "OStream/OStream.h"
 #include "utility/utility.h"
 #include "overloaded_visitor_t/overloaded_visitor_t.h"
+#include "Hungarian/Hungarian.h"
 
 #endif // SOCCER_COMMON_UTILS_H
