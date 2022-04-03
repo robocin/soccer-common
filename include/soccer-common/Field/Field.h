@@ -373,42 +373,37 @@ namespace Common {
 
     // goal contains:
 
-    constexpr bool leftGoalContains(const PT& point,
-                                    const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool leftGoalContains(const PT& point, T radius = 0) const {
       if (radius) {
-        return contains(leftGoalInsideBottom(), leftGoalOutsideTop(), point, radius.value());
+        return contains(leftGoalInsideBottom(), leftGoalOutsideTop(), point, radius);
       } else {
         return contains(leftGoalInsideBottom(), leftGoalOutsideTop(), point);
       }
     }
 
-    constexpr bool rightGoalContains(const PT& point,
-                                     const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool rightGoalContains(const PT& point, T radius = 0) const {
       if (radius) {
-        return contains(rightGoalOutsideBottom(), rightGoalInsideTop(), point, radius.value());
+        return contains(rightGoalOutsideBottom(), rightGoalInsideTop(), point, radius);
       } else {
         return contains(rightGoalOutsideBottom(), rightGoalInsideTop(), point);
       }
     }
 
-    constexpr bool allyGoalContains(const PT& point,
-                                    const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool allyGoalContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? leftGoalContains(point, radius) :
                                     rightGoalContains(point, radius);
     }
 
-    constexpr bool enemyGoalContains(const PT& point,
-                                     const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool enemyGoalContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? rightGoalContains(point, radius) :
                                     leftGoalContains(point, radius);
     }
 
     // without goals contains:
 
-    constexpr bool withoutGoalsContains(const PT& point,
-                                        const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool withoutGoalsContains(const PT& point, T radius = 0) const {
       if (radius) {
-        return contains(bottomLeft(), topRight(), point, radius.value());
+        return contains(bottomLeft(), topRight(), point, radius);
       } else {
         return contains(bottomLeft(), topRight(), point);
       }
@@ -416,54 +411,49 @@ namespace Common {
 
     // contains:
 
-    constexpr bool contains(const PT& point, const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool contains(const PT& point, T radius = 0) const {
       return leftGoalContains(point, radius) || withoutGoalsContains(point, radius) ||
              rightGoalContains(point, radius);
     }
 
     // side contains:
 
-    constexpr bool leftSideContains(const PT& point,
-                                    const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool leftSideContains(const PT& point, T radius = 0) const {
       if (radius) {
         return leftGoalContains(point, radius) ||
-               contains(bottomLeft(), topCenter(), point, radius.value());
+               contains(bottomLeft(), topCenter(), point, radius);
       } else {
         return leftGoalContains(point, radius) || contains(bottomLeft(), topCenter(), point);
       }
     }
 
-    constexpr bool rightSideContains(const PT& point,
-                                     const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool rightSideContains(const PT& point, T radius = 0) const {
       if (radius) {
-        return contains(bottomCenter(), topRight(), point, radius.value()) ||
+        return contains(bottomCenter(), topRight(), point, radius) ||
                rightGoalContains(point, radius);
       } else {
         return contains(bottomCenter(), topRight(), point) || rightGoalContains(point, radius);
       }
     }
 
-    constexpr bool allySideContains(const PT& point,
-                                    const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool allySideContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? leftSideContains(point, radius) :
                                     rightSideContains(point, radius);
     }
 
-    constexpr bool enemySideContains(const PT& point,
-                                     const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool enemySideContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? rightSideContains(point, radius) :
                                     leftSideContains(point, radius);
     }
 
     // penalty area contains:
 
-    constexpr bool leftPenaltyAreaContains(const PT& point,
-                                           const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool leftPenaltyAreaContains(const PT& point, T radius = 0) const {
       if (radius) {
         return contains(PT(min().x(), leftPenaltyAreaCornerBottom().y()),
                         leftPenaltyAreaCornerTop(),
                         point,
-                        radius.value());
+                        radius);
       } else {
         return contains(PT(min().x(), leftPenaltyAreaCornerBottom().y()),
                         leftPenaltyAreaCornerTop(),
@@ -471,13 +461,12 @@ namespace Common {
       }
     }
 
-    constexpr bool rightPenaltyAreaContains(const PT& point,
-                                            const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool rightPenaltyAreaContains(const PT& point, T radius = 0) const {
       if (radius) {
         return contains(rightPenaltyAreaCornerBottom(),
                         PT(max().x(), rightPenaltyAreaCornerTop().y()),
                         point,
-                        radius.value());
+                        radius);
       } else {
         return contains(rightPenaltyAreaCornerBottom(),
                         PT(max().x(), rightPenaltyAreaCornerTop().y()),
@@ -485,14 +474,12 @@ namespace Common {
       }
     }
 
-    constexpr bool allyPenaltyAreaContains(const PT& point,
-                                           const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool allyPenaltyAreaContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? leftPenaltyAreaContains(point, radius) :
                                     rightPenaltyAreaContains(point, radius);
     }
 
-    constexpr bool enemyPenaltyAreaContains(const PT& point,
-                                            const std::optional<T>& radius = std::nullopt) const {
+    constexpr bool enemyPenaltyAreaContains(const PT& point, T radius = 0) const {
       return isAttackingToRight() ? rightPenaltyAreaContains(point, radius) :
                                     leftPenaltyAreaContains(point, radius);
     }
@@ -513,7 +500,7 @@ namespace Common {
              (bottomLeft.y() < point.y() && point.y() < topRight.y());
     }
 
-    static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, const T& radius) {
+    static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, T radius) {
       const PT& b1(point - PT(radius / 2, radius / 2));
       const PT& b2(point + PT(radius / 2, radius / 2));
       return ((b1.x() < a2.x()) && (a1.x() < b2.x())) && ((b1.y() < a2.y()) && (a1.y() < b2.y()));
