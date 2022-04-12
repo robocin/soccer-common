@@ -626,18 +626,19 @@ namespace Parameters {
     }
   };
 
-  class CheckBox : public ParameterType<bool> {
+  template <class B>
+  class CheckBox : public ParameterType<B> {
    public:
-    using value_type = typename Arg<bool>::value_type;
+    using value_type = typename Arg<B>::value_type;
 
    private:
-    using ParameterType<bool>::setValue;
-    using ParameterType<bool>::eval;
-    using ParameterType<bool>::ref;
+    using ParameterType<B>::setValue;
+    using ParameterType<B>::eval;
+    using ParameterType<B>::ref;
 
    public:
-    explicit CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
-        ParameterType<bool>(t_ref, t_about) {
+    explicit CheckBox(Arg<B>& t_ref, const QString& t_about = "") :
+        ParameterType<B>(t_ref, t_about) {
     }
 
     QString inputType() const final {
