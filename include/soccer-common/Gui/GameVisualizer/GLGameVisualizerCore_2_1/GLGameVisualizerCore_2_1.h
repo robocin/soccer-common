@@ -63,6 +63,9 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
     inline Polygon(const std::initializer_list<U>& polygon) :
         QVector<Vertex>(polygon.begin(), polygon.end()) {
     }
+    template <class PT>
+    inline Polygon(const QVector<PT>& polygon) : QVector<Vertex>(polygon.begin(), polygon.end()) {
+    }
 
     inline explicit operator QPolygonF() const {
       QPolygonF ret;
