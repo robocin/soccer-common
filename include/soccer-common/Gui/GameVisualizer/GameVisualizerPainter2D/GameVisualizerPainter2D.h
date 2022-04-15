@@ -81,11 +81,11 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
-      qWarning() << "at least 3 distinct points.";
+      // qWarning() << "at least 3 distinct points.";
       return;
     }
     if (thickness <= 0) {
-      qWarning() << "thickness must be positive.";
+      // qWarning() << "thickness must be positive.";
       return;
     }
 
@@ -117,7 +117,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     ScopedDrawGuard guard(this, GL_POLYGON);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
-      qWarning() << "at least 3 distinct points.";
+      // qWarning() << "at least 3 distinct points.";
       return;
     }
     putColor(color);
@@ -130,7 +130,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     TessScopedDrawGuard guard(this);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
-      qWarning() << "at least 3 distinct points.";
+      // qWarning() << "at least 3 distinct points.";
       return;
     }
     putColor(color);
@@ -151,11 +151,11 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polyline = removeCollinearPoints(polyline);
     if (polyline.size() < 2) {
-      qWarning() << "at least 2 distinct points.";
+      // qWarning() << "at least 2 distinct points.";
       return;
     }
     if (thickness <= 0) {
-      qWarning() << "thickness must be positive.";
+      // qWarning() << "thickness must be positive.";
       return;
     }
     putColor(color);
@@ -206,15 +206,15 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
                       const QColor& color) {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     if (innerRadius <= 0) {
-      qWarning() << "inner radius must be positive.";
+      // qWarning() << "inner radius must be positive.";
       return;
     }
     if (outerRadius <= 0) {
-      qWarning() << "outter radius must be positive.";
+      // qWarning() << "outter radius must be positive.";
       return;
     }
     if (innerRadius >= outerRadius) {
-      qWarning() << "inner radius must be less than outer radius.";
+      // qWarning() << "inner radius must be less than outer radius.";
       return;
     }
     putColor(color);
@@ -234,7 +234,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
   drawSector(const Vertex& origin, qreal radius, qreal theta1, qreal theta2, const QColor& color) {
     ScopedDrawGuard guard(this, GL_TRIANGLE_FAN);
     if (radius <= 0) {
-      qWarning() << "radius must be positive.";
+      // qWarning() << "radius must be positive.";
       return;
     }
     putColor(color);
@@ -252,7 +252,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
                                 const QColor& color) {
     ScopedDrawGuard guard(this, GL_POLYGON);
     if (radius <= 0) {
-      qWarning() << "radius must be positive.";
+      // qWarning() << "radius must be positive.";
       return;
     }
     putColor(color);
