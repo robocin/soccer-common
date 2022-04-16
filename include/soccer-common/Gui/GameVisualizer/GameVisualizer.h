@@ -1,5 +1,5 @@
-#ifndef SSL_UNIFICATION_GAMEVISUALIZER_H
-#define SSL_UNIFICATION_GAMEVISUALIZER_H
+#ifndef SOCCER_COMMON_GAMEVISUALIZER_H
+#define SOCCER_COMMON_GAMEVISUALIZER_H
 
 #include <QtGui>
 #include <QOpenGLWidget>
@@ -239,4 +239,4 @@ class GameVisualizer::Key : public QObject {
   Painting::Layers m_layer;
 };
 
-#endif // SSL_UNIFICATION_GAMEVISUALIZER_H
+#endif // SOCCER_COMMON_GAMEVISUALIZER_H
