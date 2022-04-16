@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_GAMEVISUALIZER_H
-#define SOCCER_COMMON_GAMEVISUALIZER_H
+#ifndef SSL_UNIFICATION_GAMEVISUALIZER_H
+#define SSL_UNIFICATION_GAMEVISUALIZER_H
 
 #include <QtGui>
 #include <QOpenGLWidget>
@@ -48,6 +48,7 @@ class GameVisualizer : public QOpenGLWidget,
   void draw(int uniqueIntegerKey, Painting* painting, Painting::Layers layer);
   void clearUniqueIntegerKey(int uniqueKey, Painting::Layers layer);
   void setVisibility(int uniqueKey, bool visibility);
+  void setUpdateGL(bool update);
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
@@ -119,6 +120,7 @@ class GameVisualizer : public QOpenGLWidget,
 
     QPointF mouse = QPointF{0, 0};
     QPointF viewOffset = QPointF{0, 0};
+    bool update = true;
   };
   Local local;
 
@@ -237,4 +239,4 @@ class GameVisualizer::Key : public QObject {
   Painting::Layers m_layer;
 };
 
-#endif // SOCCER_COMMON_GAMEVISUALIZER_H
+#endif // SSL_UNIFICATION_GAMEVISUALIZER_H

@@ -62,7 +62,9 @@ void GameVisualizer::setVisibility(int uniqueKey, bool visibility) {
   ScheduleUpdateAtEnd schedule(this);
   shared->visibility->emplace_back(uniqueKey, visibility);
 }
-
+void GameVisualizer::setUpdateGL(bool update) {
+  local.update = update;
+}
 void GameVisualizer::mousePressEvent(QMouseEvent* event) {
   ScheduleUpdateAtEnd schedule(this);
   bool leftButton = event->buttons().testFlag(Qt::LeftButton);
@@ -152,17 +154,19 @@ void GameVisualizer::resizeGL(int w, int h) {
 }
 
 void GameVisualizer::paintGL() {
-  PushPopGuard guard(this);
-  getUpdates();
-  putBackgroundColor(local.backgroundColor);
-  recomputeProjection();
-  prepareToPaint();
-  /* drawing here. */ {
-    setZ(0);
-    for (auto& painting : local.paintings) {
-      for (auto& ptr : painting) {
-        if (ptr.second.visibility()) {
-          ptr.second->run(static_cast<GameVisualizerPainter2D*>(this));
+  if (local.update) {
+    PushPopGuard guard(this);
+    getUpdates();
+    putBackgroundColor(local.backgroundColor);
+    recomputeProjection();
+    prepareToPaint();
+    /* drawing here. */ {
+      setZ(0);
+      for (auto& painting : local.paintings) {
+        for (auto& ptr : painting) {
+          if (ptr.second.visibility()) {
+            ptr.second->run(static_cast<GameVisualizerPainter2D*>(this));
+          }
         }
       }
     }
@@ -260,16 +264,29 @@ void GameVisualizer::putWidgetActions(MainWindowMenuBar& menubar) {
       }
     });
     menubar["Visualization"].addAction(changeBackgroundColor);
+
+    auto* updateGL = new QAction("Update GL", &menubar["Visualization"]);
+    updateGL->setCheckable(true);
+    updateGL->setChecked(local.update);
+    QObject::connect(updateGL, &QAction::toggled, this, [this](bool checked) {
+      checked ? setUpdateGL(true) : setUpdateGL(false);
+    });
+    menubar["Visualization"].addAction(updateGL);
   }
 }
 
 void GameVisualizer::writeLocalSettings(QSettings& settings) {
   settings.setValue("backgroundColor", local.backgroundColor);
+  settings.setValue("updateGL", local.update);
 }
 
 void GameVisualizer::loadLocalSettings(const QSettings& settings) {
   if (settings.contains("backgroundColor")) {
     auto backgroundColor = settings.value("backgroundColor").value<QColor>();
     setBackgroundColor(backgroundColor);
+  }
+  if (settings.contains("updateGL")) {
+    auto updateGL = settings.value("updateGL").value<bool>();
+    setUpdateGL(updateGL);
   }
 }
