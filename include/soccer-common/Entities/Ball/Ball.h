@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_BALL_H
-#define SOCCER_COMMON_BALL_H
+#ifndef SSL_UNIFICATION_BALL_H
+#define SSL_UNIFICATION_BALL_H
 
 #include "soccer-common/Entities/Entity/Entity.h"
 
@@ -49,6 +49,20 @@ namespace Common {
         Ball(Entity(position, velocity, acceleration)) {
     }
 
+    constexpr Ball(const PT& position,
+                   const PT& velocity,
+                   const PT& acceleration,
+                   double confidence) :
+        Ball(Entity(position, velocity, acceleration, confidence)) {
+    }
+
+    constexpr Ball(const RawBall<PT>& rawBall,
+                   const PT& velocity,
+                   const PT& acceleration,
+                   double confidence) :
+        Ball(Entity(rawBall.position(), velocity, acceleration, confidence)) {
+    }
+
     using Entity<PT>::position;
     using Entity<PT>::operator const PT&;
     using Entity<PT>::velocity;
@@ -80,4 +94,4 @@ QDebug operator<<(QDebug dbg, const Common::RawBall<PT>& ball) {
 }
 #endif
 
-#endif // SOCCER_COMMON_BALL_H
+#endif // SSL_UNIFICATION_BALL_H

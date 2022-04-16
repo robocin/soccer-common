@@ -54,8 +54,27 @@ namespace Common {
     using RawEntity<PT>::m_position;
     PT m_velocity;
     PT m_acceleration;
+    double m_confidence = 1; // 100%
 
    public:
+    constexpr Entity(const RawEntity<PT>& rawEntity,
+                     const PT& velocity,
+                     const PT& acceleration,
+                     double confidence) :
+        RawEntity<PT>(rawEntity),
+        m_velocity(velocity),
+        m_acceleration(acceleration),
+        m_confidence(confidence) {
+    }
+    constexpr Entity(const PT& position,
+                     const PT& velocity,
+                     const PT& acceleration,
+                     double confidence) :
+        RawEntity<PT>(RawEntity(position)),
+        m_velocity(velocity),
+        m_acceleration(acceleration),
+        m_confidence(confidence) {
+    }
     constexpr Entity(const RawEntity<PT>& rawEntity, const PT& velocity, const PT& acceleration) :
         RawEntity<PT>(rawEntity),
         m_velocity(velocity),
@@ -73,6 +92,10 @@ namespace Common {
     }
     constexpr const PT& acceleration() const {
       return m_acceleration;
+    }
+
+    [[nodiscard]] constexpr double confidence() const {
+      return m_confidence;
     }
 
     using RawEntity<PT>::distSquaredTo;
