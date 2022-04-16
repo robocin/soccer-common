@@ -71,7 +71,7 @@ def run_multiple_scripts(scripts: List[str]):
         cprint('\x1B[01;95m')('Running \'', script, '\'...', sep='')
         print()
         if check_script(script + '.sh'):
-            run('sh ubuntu/' + script + '.sh')
+            run('bash ubuntu/' + script + '.sh')
         else:
             cprint('\x1B[31m')('[ERROR] Script', script, 'has ambiguous name or was not found.')
             cprint('\x1B[31m')('Please, verify the name and remove extension (if it was inserted).')
