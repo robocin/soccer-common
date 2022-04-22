@@ -696,7 +696,7 @@ namespace Parameters {
       stream << Qt::fixed;
 
       for (auto it = set.begin(); it != set.end(); ++it) {
-        const T& value = *it;
+        const value_type& value = *it;
         if constexpr (std::is_base_of_v<QString, value_type>) {
           stream << Utils::quoted(value);
         } else if constexpr (std::is_enum_v<value_type>) {
@@ -737,8 +737,8 @@ namespace Parameters {
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
 
-    QMap<T, QString> leftMap;
-    QMap<QString, T> rightMap;
+    QMap<value_type, QString> leftMap;
+    QMap<QString, value_type> rightMap;
 
    public:
     MappedComboBox(Arg<T>& t_ref,
@@ -747,7 +747,7 @@ namespace Parameters {
         ParameterType<T>(t_ref, t_about),
         leftMap(t_map),
         rightMap([&t_map]() {
-          QMap<QString, T> map;
+          QMap<QString, value_type> map;
           for (auto it = t_map.begin(); it != t_map.end(); ++it) {
             map.insert(it.value(), it.key());
           }
