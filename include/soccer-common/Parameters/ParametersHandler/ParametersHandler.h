@@ -54,6 +54,7 @@ namespace Parameters {
     Handler() = default;
     ~Handler() = default;
 
+    Handler(Handler&& other) = default;
     Handler& operator=(Handler&& other) = default;
 
     template <class T, std::enable_if_t<std::is_base_of_v<ParameterBase, T>, bool> = true>
