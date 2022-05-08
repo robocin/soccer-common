@@ -7,7 +7,7 @@
 
 #include <type_traits>
 #include <functional>
-#include "soccer-common/Utils/detail/detail.h"
+#include "soccer-common/Utils/Detail/Detail.h"
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 template <class... Ts>
@@ -59,7 +59,7 @@ class [[maybe_unused]] functor_visitor_t<> {
 
 template <class... Functors>
 inline auto make_functor_visitor(Functors&&... functors) {
-  return functor_visitor_t(detail::make_functor(std::forward<Functors>(functors))...);
+  return functor_visitor_t(Detail::make_functor(std::forward<Functors>(functors))...);
 }
 
 #endif // SOCCER_COMMON_FUNCTOR_VISITOR_T_H

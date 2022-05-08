@@ -61,7 +61,8 @@ namespace Parameters {
   template <class T>
   class Arg {
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> &&
+                       !(::Detail::is_any_of_v<T, char, long double>) ) ||
                       std::is_base_of_v<T, QString>,
                   "unsupported type.");
 

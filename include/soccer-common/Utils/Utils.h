@@ -15,7 +15,7 @@
 #include "IthSender/IthSender.h"
 #include "DeleteLaterDeleter/DeleteLaterDeleter.h"
 #include "Protobuf/Protobuf.h"
-#include "detail/detail.h"
+#include "Detail/Detail.h"
 #include "is_in/is_in.h"
 #include "OStream/OStream.h"
 #include "utility/utility.h"

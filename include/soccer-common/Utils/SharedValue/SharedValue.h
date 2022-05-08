@@ -3,7 +3,7 @@
 
 #include <utility>
 #include <optional>
-#include "soccer-common/Utils/detail/detail.h"
+#include "soccer-common/Utils/Detail/Detail.h"
 
 template <class T>
 class SharedValue {
@@ -28,7 +28,7 @@ class SharedValue {
   }
 
   template <class U = T,
-            std::enable_if_t<detail::has_clear_v<U> && detail::has_empty_v<U>, bool> = true>
+            std::enable_if_t<Detail::has_clear_v<U> && Detail::has_empty_v<U>, bool> = true>
   bool extract_and_clear(T& value) {
     value = std::move(m_instance);
     m_instance.clear();
@@ -36,19 +36,19 @@ class SharedValue {
   }
 
   template <class U = T,
-            std::enable_if_t<detail::has_clear_v<U> && detail::has_empty_v<U>, bool> = true>
+            std::enable_if_t<Detail::has_clear_v<U> && Detail::has_empty_v<U>, bool> = true>
   bool extractAndClear(T& value) {
     return extract_and_clear(value);
   }
 
-  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
+  template <class U = T, std::enable_if_t<Detail::has_clear_v<U>, bool> = true>
   U get_and_clear() {
     U value = std::move(m_instance);
     m_instance.clear();
     return value;
   }
 
-  template <class U = T, std::enable_if_t<detail::has_clear_v<U>, bool> = true>
+  template <class U = T, std::enable_if_t<Detail::has_clear_v<U>, bool> = true>
   U getAndClear() {
     return get_and_clear();
   }
