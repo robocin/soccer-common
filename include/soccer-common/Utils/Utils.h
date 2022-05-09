@@ -21,5 +21,7 @@
 #include "utility/utility.h"
 #include "overloaded_visitor_t/overloaded_visitor_t.h"
 #include "Hungarian/Hungarian.h"
+#include "Concept/Concept.h"
+#include "StateMachine/StateMachine.h"
 
 #endif // SOCCER_COMMON_UTILS_H
