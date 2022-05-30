@@ -30,8 +30,8 @@ class StateMachine {
       std::invoke_result_t<decltype(PointerToMatchingFunctorDeclval<T, Fs...>)>>;
 
  public:
-  using return_type = decltype(std::visit(std::declval<overloaded_visitor_t<Functors...>>(),
-                                          std::declval<State>()));
+  using return_type = decltype(
+      std::visit(std::declval<overloaded_visitor_t<Functors...>>(), std::declval<State>()));
 
   StateMachine() requires(std::default_initializable<State>) = default;
 
@@ -48,6 +48,10 @@ class StateMachine {
     }
     last = std::move(state);
     return output;
+  }
+
+  [[nodiscard]] const State& currentState() const {
+    return last;
   }
 
   void clear() {
@@ -95,6 +99,7 @@ class StateMachine<State> : public InjectedStateMachine<State> {
 
   using InjectedStateMachine<State>::InjectedStateMachine;
   using InjectedStateMachine<State>::operator();
+  using InjectedStateMachine<State>::currentState;
   using InjectedStateMachine<State>::clear;
 };
 
@@ -131,6 +136,7 @@ class ImplicitStateMachine : public StateMachine<State> {
     return result;
   }
 
+  using StateMachine<State>::currentState;
   using StateMachine<State>::clear;
 };
 
