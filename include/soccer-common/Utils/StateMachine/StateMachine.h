@@ -30,8 +30,8 @@ class StateMachine {
       std::invoke_result_t<decltype(PointerToMatchingFunctorDeclval<T, Fs...>)>>;
 
  public:
-  using return_type = decltype(
-      std::visit(std::declval<overloaded_visitor_t<Functors...>>(), std::declval<State>()));
+  using return_type = decltype(std::visit(std::declval<overloaded_visitor_t<Functors...>>(),
+                                          std::declval<State>()));
 
   StateMachine() requires(std::default_initializable<State>) = default;
 
@@ -64,6 +64,11 @@ class StateMachine {
           }
         },
         last);
+  }
+
+  void reset(State state) {
+    clear();
+    last = std::move(state);
   }
 
  protected:
@@ -101,6 +106,7 @@ class StateMachine<State> : public InjectedStateMachine<State> {
   using InjectedStateMachine<State>::operator();
   using InjectedStateMachine<State>::currentState;
   using InjectedStateMachine<State>::clear;
+  using InjectedStateMachine<State>::reset;
 };
 
 template <Concept::Variant State>
@@ -138,6 +144,7 @@ class ImplicitStateMachine : public StateMachine<State> {
 
   using StateMachine<State>::currentState;
   using StateMachine<State>::clear;
+  using StateMachine<State>::reset;
 };
 
 #endif // SOCCER_COMMON_STATEMACHINE_H
