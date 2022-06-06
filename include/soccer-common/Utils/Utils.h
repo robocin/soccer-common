@@ -23,5 +23,6 @@
 #include "Hungarian/Hungarian.h"
 #include "Concept/Concept.h"
 #include "StateMachine/StateMachine.h"
+#include "DefaultGeometry/DefaultGeometry.h"
 
 #endif // SOCCER_COMMON_UTILS_H
