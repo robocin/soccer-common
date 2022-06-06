@@ -1,7 +1,6 @@
 #include <QtTest>
 
 #include "soccer-common/Field/Field.h"
-#include "soccer-common/Extends/Extends.h"
 
 class TestField : public QObject {
   Q_OBJECT
