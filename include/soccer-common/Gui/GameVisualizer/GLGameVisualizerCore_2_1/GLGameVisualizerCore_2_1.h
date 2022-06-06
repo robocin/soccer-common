@@ -8,6 +8,8 @@
 #include <QVector3D>
 #include <QOpenGLFunctions_2_1>
 
+#include "soccer-common/Geometry/Point2D/Point2D.h"
+
 #if __has_include(<GL/glu.h>)
   #include <GL/glu.h>
 #else
@@ -16,27 +18,7 @@
 
 class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
  public:
-  struct Vertex : public QPointF {
-    constexpr Vertex() : QPointF() {
-    }
-    constexpr Vertex(qreal x, qreal y) : QPointF(x, y) {
-    }
-    constexpr Vertex(const QPoint& p) : QPointF(p) {
-    }
-    constexpr Vertex(const QPointF& p) : QPointF(p) {
-    }
-    constexpr Vertex(const QVector2D& v) : QPointF(v.x(), v.y()) {
-    }
-    constexpr Vertex(const QVector3D& v) : QPointF(v.x(), v.y()) {
-    }
-    template <class U, class V>
-    constexpr Vertex(const std::pair<U, V>& p) : QPointF(p.first, p.second) {
-    }
-
-    friend constexpr bool operator==(const Vertex& lhs, const Vertex& rhs) {
-      return qFuzzyCompare(lhs.x(), rhs.x()) && qFuzzyCompare(lhs.y(), rhs.y());
-    }
-  };
+  using Vertex = Point2D<double>;
 
   struct Polygon : public QVector<Vertex> {
     inline Polygon() : QVector<Vertex>() {
@@ -65,15 +47,6 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
     }
     template <class PT>
     inline Polygon(const QVector<PT>& polygon) : QVector<Vertex>(polygon.begin(), polygon.end()) {
-    }
-
-    inline explicit operator QPolygonF() const {
-      QPolygonF ret;
-      ret.reserve(size());
-      for (auto vertex : *this) {
-        ret += vertex;
-      }
-      return ret;
     }
   };
 
@@ -149,9 +122,9 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
   template <class T = qreal>
   void putVertex(const Vertex& v) {
     if constexpr (std::is_same_v<T, GLfloat>) {
-      glVertex3f(v.x(), v.y(), m_z);
+      glVertex3f(v.x, v.y, m_z);
     } else if constexpr (std::is_same_v<T, GLdouble>) {
-      glVertex3d(v.x(), v.y(), m_z);
+      glVertex3d(v.x, v.y, m_z);
     }
   }
 
@@ -221,11 +194,11 @@ class GLGameVisualizerCore_2_1 : public QOpenGLFunctions_2_1 {
   template <class T>
   inline void translateXYScaleAndRotateT(const Vertex& pos, T size, T angle) {
     if constexpr (std::is_same_v<T, GLfloat>) {
-      glTranslatef(pos.x(), pos.y(), 0.0f);
+      glTranslatef(pos.x, pos.y, 0.0f);
       glScalef(size, size, 1.0f);
       glRotatef(angle, 0.0f, 0.0f, 1.0f);
     } else if constexpr (std::is_same_v<T, GLdouble>) {
-      glTranslated(pos.x(), pos.y(), 0.0);
+      glTranslated(pos.x, pos.y, 0.0);
       glScaled(size, size, 1.0);
       glRotated(angle, 0.0, 0.0, 1.0);
     } else {

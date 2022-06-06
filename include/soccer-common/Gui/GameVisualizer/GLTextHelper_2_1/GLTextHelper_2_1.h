@@ -212,7 +212,7 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
       putChar(text[i]);
       if (i + 1 < text.size()) {
         qreal d = glyphs[text[i]].width() + local.spacing;
-        translateXY(d * direction.x(), d * direction.y());
+        translateXY(d * direction.x, d * direction.y);
       }
     }
   }

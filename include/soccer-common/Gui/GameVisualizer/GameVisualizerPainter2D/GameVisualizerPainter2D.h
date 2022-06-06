@@ -73,8 +73,12 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
 
   inline void
   drawFilledRectangle(const Vertex& topLeft, const Vertex& bottomRight, const QColor& color) {
-    const auto& rect = QRectF(topLeft, bottomRight);
-    drawFilledQuad(rect.topLeft(), rect.topRight(), rect.bottomRight(), rect.bottomLeft(), color);
+    const auto& rect = QRectF(topLeft.toQPointF(), bottomRight.toQPointF());
+    drawFilledQuad(Vertex(rect.topLeft()),
+                   Vertex(rect.topRight()),
+                   Vertex(rect.bottomRight()),
+                   Vertex(rect.bottomLeft()),
+                   color);
   }
 
   inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) {
