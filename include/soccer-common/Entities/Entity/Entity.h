@@ -17,12 +17,6 @@ namespace Common {
     constexpr const PT& position() const {
       return m_position;
     }
-    constexpr Geometry2D::CoordType<PT> x() const {
-      return m_position.x();
-    }
-    constexpr Geometry2D::CoordType<PT> y() const {
-      return m_position.y();
-    }
     constexpr operator const PT&() const { // NOLINT(google-explicit-constructor)
       return position();
     }
@@ -51,7 +45,6 @@ namespace Common {
   template <class PT>
   class Entity : virtual public RawEntity<PT> {
    protected:
-    using RawEntity<PT>::m_position;
     PT m_velocity;
     PT m_acceleration;
 
@@ -65,9 +58,6 @@ namespace Common {
         Entity(RawEntity(position), velocity, acceleration) {
     }
 
-    using RawEntity<PT>::position;
-    using RawEntity<PT>::operator const PT&;
-
     constexpr const PT& velocity() const {
       return m_velocity;
     }
@@ -75,15 +65,12 @@ namespace Common {
       return m_acceleration;
     }
 
-    using RawEntity<PT>::distSquaredTo;
-    using RawEntity<PT>::distTo;
-
     constexpr bool operator<(const Entity& other) const {
-      return std::tie(m_position, m_velocity, m_acceleration) <
+      return std::tie(RawEntity<PT>::m_position, m_velocity, m_acceleration) <
              std::tie(other.m_position, other.m_velocity, other.m_acceleration);
     }
     constexpr bool operator==(const Entity& other) const {
-      return std::tie(m_position, m_velocity, m_acceleration) ==
+      return std::tie(RawEntity<PT>::m_position, m_velocity, m_acceleration) ==
              std::tie(other.m_position, other.m_velocity, other.m_acceleration);
     }
     constexpr bool operator!=(const Entity& other) const {
@@ -98,7 +85,7 @@ QDebug operator<<(QDebug dbg, const Common::RawEntity<PT>& entity) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
   dbg << Qt::fixed << qSetRealNumberPrecision(2);
-  dbg << "Entity(position(" << entity.position().x() << ',' << entity.position().y() << "))";
+  dbg << "Entity(position(" << entity.position().x << ',' << entity.position().y << "))";
   return dbg;
 }
 #endif

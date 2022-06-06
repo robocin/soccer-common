@@ -8,7 +8,7 @@
 
 namespace Common {
   /*!
-   * @tparam PT Requires '.x()' and '.y()' members.
+   * @tparam PT Requires '.x' and '.y' members.
    * @tparam T Type of values. Default is the PT type of coordinates.
    * @note The center/middle of the field is defined in (0, 0).
    */
@@ -89,19 +89,19 @@ namespace Common {
     }
 
     constexpr PT bottomCenter() const {
-      return PT(center().x(), min().y());
+      return PT(center().x, min().y);
     }
 
     constexpr PT bottomRight() const {
-      return PT(max().x(), min().y());
+      return PT(max().x, min().y);
     }
 
     constexpr PT topLeft() const {
-      return PT(min().x(), max().y());
+      return PT(min().x, max().y);
     }
 
     constexpr PT topCenter() const {
-      return PT(center().x(), max().y());
+      return PT(center().x, max().y);
     }
 
     // equals to max().
@@ -113,12 +113,12 @@ namespace Common {
 
     // left goalkeeper goal inside bottom.
     constexpr PT leftGoalInsideBottom() const {
-      return PT(min().x() - goalDepth(), center().y() - (goalWidth() / 2));
+      return PT(min().x - goalDepth(), center().y - (goalWidth() / 2));
     }
 
     // right goalkeeper goal inside bottom.
     constexpr PT rightGoalInsideBottom() const {
-      return PT(max().x() + goalDepth(), center().y() - (goalWidth() / 2));
+      return PT(max().x + goalDepth(), center().y - (goalWidth() / 2));
     }
 
     // our goalkeeper goal inside bottom.
@@ -135,12 +135,12 @@ namespace Common {
 
     // left goalkeeper goal inside center.
     constexpr PT leftGoalInsideCenter() const {
-      return PT(min().x() - goalDepth(), center().y());
+      return PT(min().x - goalDepth(), center().y);
     }
 
     // right goalkeeper goal inside center.
     constexpr PT rightGoalInsideCenter() const {
-      return PT(max().x() + goalDepth(), center().y());
+      return PT(max().x + goalDepth(), center().y);
     }
 
     // our goalkeeper goal inside center.
@@ -157,12 +157,12 @@ namespace Common {
 
     // left goalkeeper goal inside top.
     constexpr PT leftGoalInsideTop() const {
-      return PT(min().x() - goalDepth(), center().y() + (goalWidth() / 2));
+      return PT(min().x - goalDepth(), center().y + (goalWidth() / 2));
     }
 
     // right goalkeeper goal inside top.
     constexpr PT rightGoalInsideTop() const {
-      return PT(max().x() + goalDepth(), center().y() + (goalWidth() / 2));
+      return PT(max().x + goalDepth(), center().y + (goalWidth() / 2));
     }
 
     // our goalkeeper goal inside top.
@@ -179,12 +179,12 @@ namespace Common {
 
     // left goalkeeper goal outside bottom.
     constexpr PT leftGoalOutsideBottom() const {
-      return PT(min().x(), center().y() - (goalWidth() / 2));
+      return PT(min().x, center().y - (goalWidth() / 2));
     }
 
     // right goalkeeper goal outside Bottom.
     constexpr PT rightGoalOutsideBottom() const {
-      return PT(max().x(), center().y() - (goalWidth() / 2));
+      return PT(max().x, center().y - (goalWidth() / 2));
     }
 
     // our goalkeeper goal outside bottom.
@@ -201,12 +201,12 @@ namespace Common {
 
     // left goalkeeper goal outside center.
     constexpr PT leftGoalOutsideCenter() const {
-      return PT(min().x(), center().y());
+      return PT(min().x, center().y);
     }
 
     // right goalkeeper goal outside center.
     constexpr PT rightGoalOutsideCenter() const {
-      return PT(max().x(), center().y());
+      return PT(max().x, center().y);
     }
 
     // our goalkeeper goal outside center.
@@ -223,12 +223,12 @@ namespace Common {
 
     // left goalkeeper goal outside top.
     constexpr PT leftGoalOutsideTop() const {
-      return PT(min().x(), center().y() + (goalWidth() / 2));
+      return PT(min().x, center().y + (goalWidth() / 2));
     }
 
     // right goalkeeper goal outside top.
     constexpr PT rightGoalOutsideTop() const {
-      return PT(max().x(), center().y() + (goalWidth() / 2));
+      return PT(max().x, center().y + (goalWidth() / 2));
     }
 
     // our goalkeeper goal outside top.
@@ -245,12 +245,12 @@ namespace Common {
 
     // left goalkeeper penalty area corner bottom.
     constexpr PT leftPenaltyAreaCornerBottom() const {
-      return PT(min().x() + penaltyAreaDepth(), center().y() - (penaltyAreaWidth() / 2));
+      return PT(min().x + penaltyAreaDepth(), center().y - (penaltyAreaWidth() / 2));
     }
 
     // right goalkeeper penalty area corner bottom.
     constexpr PT rightPenaltyAreaCornerBottom() const {
-      return PT(max().x() - penaltyAreaDepth(), center().y() - (penaltyAreaWidth() / 2));
+      return PT(max().x - penaltyAreaDepth(), center().y - (penaltyAreaWidth() / 2));
     }
 
     // our goalkeeper penalty area corner bottom.
@@ -267,12 +267,12 @@ namespace Common {
 
     // left goalkeeper penalty area center.
     constexpr PT leftPenaltyAreaCenter() const {
-      return PT(min().x() + penaltyAreaDepth(), center().y());
+      return PT(min().x + penaltyAreaDepth(), center().y);
     }
 
     // right goalkeeper penalty area center.
     constexpr PT rightPenaltyAreaCenter() const {
-      return PT(max().x() - penaltyAreaDepth(), center().y());
+      return PT(max().x - penaltyAreaDepth(), center().y);
     }
 
     // our goalkeeper penalty area center.
@@ -289,12 +289,12 @@ namespace Common {
 
     // left goalkeeper penalty area corner top.
     constexpr PT leftPenaltyAreaCornerTop() const {
-      return PT(min().x() + penaltyAreaDepth(), center().y() + (penaltyAreaWidth() / 2));
+      return PT(min().x + penaltyAreaDepth(), center().y + (penaltyAreaWidth() / 2));
     }
 
     // right goalkeeper penalty area corner top.
     constexpr PT rightPenaltyAreaCornerTop() const {
-      return PT(max().x() - penaltyAreaDepth(), center().y() + (penaltyAreaWidth() / 2));
+      return PT(max().x - penaltyAreaDepth(), center().y + (penaltyAreaWidth() / 2));
     }
 
     // our goalkeeper penalty area corner top.
@@ -311,12 +311,12 @@ namespace Common {
 
     // left goalkeeper penalty area goal corner top.
     constexpr PT leftPenaltyAreaGoalCornerTop() const {
-      return PT(min().x(), (penaltyAreaWidth() / 2));
+      return PT(min().x, (penaltyAreaWidth() / 2));
     }
 
     // right goalkeeper penalty area goal corner top.
     constexpr PT rightPenaltyAreaGoalCornerTop() const {
-      return PT(max().x(), (penaltyAreaWidth() / 2));
+      return PT(max().x, (penaltyAreaWidth() / 2));
     }
 
     // our goalkeeper penalty area goal corner top.
@@ -335,12 +335,12 @@ namespace Common {
 
     // left goalkeeper penalty area goal corner bottom.
     constexpr PT leftPenaltyAreaGoalCornerBottom() const {
-      return PT(min().x(), -(penaltyAreaWidth() / 2));
+      return PT(min().x, -(penaltyAreaWidth() / 2));
     }
 
     // right goalkeeper penalty area goal corner bottom.
     constexpr PT rightPenaltyAreaGoalCornerBottom() const {
-      return PT(max().x(), -(penaltyAreaWidth() / 2));
+      return PT(max().x, -(penaltyAreaWidth() / 2));
     }
 
     // our goalkeeper penalty area goal corner bottom.
@@ -450,12 +450,12 @@ namespace Common {
 
     constexpr bool leftPenaltyAreaContains(const PT& point, T radius = 0) const {
       if (radius) {
-        return contains(PT(min().x(), leftPenaltyAreaCornerBottom().y()),
+        return contains(PT(min().x, leftPenaltyAreaCornerBottom().y),
                         leftPenaltyAreaCornerTop(),
                         point,
                         radius);
       } else {
-        return contains(PT(min().x(), leftPenaltyAreaCornerBottom().y()),
+        return contains(PT(min().x, leftPenaltyAreaCornerBottom().y),
                         leftPenaltyAreaCornerTop(),
                         point);
       }
@@ -464,12 +464,12 @@ namespace Common {
     constexpr bool rightPenaltyAreaContains(const PT& point, T radius = 0) const {
       if (radius) {
         return contains(rightPenaltyAreaCornerBottom(),
-                        PT(max().x(), rightPenaltyAreaCornerTop().y()),
+                        PT(max().x, rightPenaltyAreaCornerTop().y),
                         point,
                         radius);
       } else {
         return contains(rightPenaltyAreaCornerBottom(),
-                        PT(max().x(), rightPenaltyAreaCornerTop().y()),
+                        PT(max().x, rightPenaltyAreaCornerTop().y),
                         point);
       }
     }
@@ -496,14 +496,14 @@ namespace Common {
 
     // strictly contains:
     static constexpr bool contains(const PT& bottomLeft, const PT& topRight, const PT& point) {
-      return (bottomLeft.x() < point.x() && point.x() < topRight.x()) &&
-             (bottomLeft.y() < point.y() && point.y() < topRight.y());
+      return (bottomLeft.x < point.x && point.x < topRight.x) &&
+             (bottomLeft.y < point.y && point.y < topRight.y);
     }
 
     static constexpr bool contains(const PT& a1, const PT& a2, const PT& point, T radius) {
       const PT& b1(point - PT(radius / 2, radius / 2));
       const PT& b2(point + PT(radius / 2, radius / 2));
-      return ((b1.x() < a2.x()) && (a1.x() < b2.x())) && ((b1.y() < a2.y()) && (a1.y() < b2.y()));
+      return ((b1.x < a2.x) && (a1.x < b2.x)) && ((b1.y < a2.y) && (a1.y < b2.y));
     }
   };
 } // namespace Common

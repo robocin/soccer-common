@@ -7,7 +7,6 @@ namespace Common {
   template <class PT>
   class RawRobot : virtual public RawEntity<PT> {
    protected:
-    using RawEntity<PT>::m_position;
     int m_id{};
     Geometry2D::CoordType<PT> m_angle{};
 
@@ -21,9 +20,6 @@ namespace Common {
         RawRobot(id, angle, RawEntity(position)) {
     }
 
-    using RawEntity<PT>::position;
-    using RawEntity<PT>::operator const PT&;
-
     [[nodiscard]] constexpr int id() const {
       return m_id;
     }
@@ -32,11 +28,9 @@ namespace Common {
       return m_angle;
     }
 
-    using RawEntity<PT>::distSquaredTo;
-    using RawEntity<PT>::distTo;
-
     constexpr auto angleTo(const PT& p) const {
-      return Geometry2D::angleBetween<PT>(Geometry2D::fromPolar<PT>(m_angle), p - m_position);
+      return Geometry2D::angleBetween<PT>(Geometry2D::fromPolar<PT>(m_angle),
+                                          p - RawEntity<PT>::m_position);
     }
 
     constexpr bool operator<(const RawRobot& other) const {
@@ -56,10 +50,6 @@ namespace Common {
 
   template <class PT>
   class Robot : public RawRobot<PT>, public Entity<PT> {
-   protected:
-    using RawRobot<PT>::m_id;
-    using RawRobot<PT>::m_angle;
-
    public:
     constexpr Robot(int id, Geometry2D::CoordType<PT> angle, const Entity<PT>& entity) :
         RawEntity<PT>(entity.position()),
@@ -79,24 +69,16 @@ namespace Common {
         Robot(id, angle, Entity(position, velocity, acceleration)) {
     }
 
-    using RawRobot<PT>::id;
-    using RawRobot<PT>::angle;
-
-    using Entity<PT>::position;
-    using Entity<PT>::operator const PT&;
-    using Entity<PT>::velocity;
-    using Entity<PT>::acceleration;
-
-    using Entity<PT>::distSquaredTo;
-    using Entity<PT>::distTo;
-    using RawRobot<PT>::angleTo;
-
     constexpr bool operator<(const Robot& other) const {
-      return std::tie(m_id, m_angle, static_cast<const Entity<PT>&>(*this)) <
+      return std::tie(RawRobot<PT>::m_id,
+                      RawRobot<PT>::m_angle,
+                      static_cast<const Entity<PT>&>(*this)) <
              std::tie(other.m_id, other.m_angle, static_cast<const Entity<PT>&>(other));
     }
     constexpr bool operator==(const Robot& other) const {
-      return std::tie(m_id, m_angle, static_cast<const Entity<PT>&>(*this)) ==
+      return std::tie(RawRobot<PT>::m_id,
+                      RawRobot<PT>::m_angle,
+                      static_cast<const Entity<PT>&>(*this)) ==
              std::tie(other.m_id, other.m_angle, static_cast<const Entity<PT>&>(other));
     }
     constexpr bool operator!=(const Robot& other) const {
@@ -112,7 +94,7 @@ QDebug operator<<(QDebug dbg, const Common::RawRobot<PT>& robot) {
   dbg.nospace();
   dbg << Qt::fixed << qSetRealNumberPrecision(2);
   dbg << "Robot(id(" << robot.id() << "), angle(" << Geometry::radiansToDegrees(robot.angle())
-      << "), position(" << robot.position().x() << ',' << robot.position().y() << "))";
+      << "), position(" << robot.position().x << ',' << robot.position().y << "))";
   return dbg;
 }
 #endif

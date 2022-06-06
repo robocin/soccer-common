@@ -75,7 +75,7 @@ QDebug operator<<(QDebug dbg, const Common::RawBall<PT>& ball) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
   dbg << Qt::fixed << qSetRealNumberPrecision(2);
-  dbg << "Ball(position(" << ball.position().x() << ',' << ball.position().y() << "))";
+  dbg << "Ball(position(" << ball.position().x << ',' << ball.position().y << "))";
   return dbg;
 }
 #endif
