@@ -7,6 +7,7 @@
 #include <QPoint>
 #include <QPointF>
 #include <QVector2D>
+#include <QVector3D>
 
 #include "soccer-common/Math/Math.h"
 
@@ -44,6 +45,10 @@ struct Point2D {
       x(static_cast<T>(vector.x())),
       y(static_cast<T>(vector.y())) {
   }
+  inline constexpr explicit Point2D(const QVector3D& vector) :
+      x(static_cast<T>(vector.x())),
+      y(static_cast<T>(vector.y())) {
+  }
 
   // static methods:
   inline static constexpr Point2D null() {
@@ -62,6 +67,9 @@ struct Point2D {
       requires(std::integral<T>) = default;
 
   // floating-point comparison:
+  inline constexpr bool operator==(const Point2D& other) const requires(std::floating_point<T>) {
+    return Math::isNull(other.x - x) and Math::isNull(other.y - y);
+  }
   inline constexpr auto operator<=>(const Point2D& other) const requires(std::floating_point<T>) {
     if (Math::isNull(other.x - x)) {
       if (Math::isNull(other.y - y)) {
@@ -73,14 +81,11 @@ struct Point2D {
       if (y > other.y) {
         return std::strong_ordering::greater;
       }
-    } else {
-      if (x < other.x) {
-        return std::strong_ordering::less;
-      }
-      if (x > other.x) {
-        return std::strong_ordering::greater;
-      }
     }
+    if (x < other.x) {
+      return std::strong_ordering::less;
+    }
+    return std::strong_ordering::greater;
   }
 
   // arithmetic-assignment operators:
@@ -190,11 +195,15 @@ struct Point2D {
   inline constexpr auto distTo(const Point2D& other) const {
     return std::sqrt(distSquaredTo(other));
   }
-  inline constexpr auto distToLine(const Point2D& a, const Point2D& b) const {
-    return distTo(projectedOntoLine(a, b));
+  inline constexpr auto distToLine(const Point2D& a, const Point2D& b) const
+      requires(std::floating_point<T>) {
+    const auto projected = projectedOntoLine(a, b);
+    return distTo(projected);
   }
-  inline constexpr auto distToSegment(const Point2D& a, const Point2D& b) const {
-    return distTo(projectedOntoSegment(a, b));
+  inline constexpr auto distToSegment(const Point2D& a, const Point2D& b) const
+      requires(std::floating_point<T>) {
+    const auto projected = projectedOntoSegment(a, b);
+    return distTo(projected);
   }
   inline constexpr void rotateCW90() {
     std::swap(x, y), y = -y;
@@ -276,7 +285,7 @@ struct Point2D {
     return result;
   }
   inline constexpr void normalize() requires(std::integral<T>) {
-    if (auto gcd = std::gcd(std::abs(x), std::abs(x)); static_cast<bool>(gcd)) {
+    if (auto gcd = std::gcd(std::abs(x), std::abs(y)); static_cast<bool>(gcd)) {
       x /= gcd, y /= gcd;
     }
   }
@@ -285,7 +294,7 @@ struct Point2D {
     result.normalize();
     return result;
   }
-  inline constexpr void unitaryAxisNormalize() const {
+  inline constexpr void unitaryAxisNormalize() {
     x = Math::isNull(x) ? 0 : (x > 0) ? 1 : -1, y = Math::isNull(y) ? 0 : (y > 0) ? 1 : -1;
   }
   inline constexpr Point2D unitaryAxisNormalized() const {
@@ -299,11 +308,11 @@ struct Point2D {
       qFatal("projectOntoLine: a == b");
     }
     const Point2D ab = b - a;
-    *this = a + ab * ((*this - a).dot(ab) / ab.dot(ab));
+    *this = a + ab * ab.dot(*this - a) / ab.dot(ab);
   }
   inline constexpr Point2D projectedOntoLine(const Point2D& a, const Point2D& b) const
       requires(std::floating_point<T>) {
-    Point2D result;
+    Point2D result{*this};
     result.projectOntoLine(a, b);
     return result;
   }
@@ -312,26 +321,24 @@ struct Point2D {
     if (a == b) {
       qFatal("projectOntoSegment: a == b");
     }
-    auto r = dot(b - a, b - a);
+    const auto ab = b - a;
+    auto r = ab.dot(ab);
     if (Math::isNull(r)) {
       *this = a;
-      return;
-    }
-    r = dot(*this - a, b - a) / r;
-    if (r < 0) {
-      *this = a;
-      return;
-    } else if (r > 1) {
-      *this = b;
-      return;
     } else {
-      *this = a + (b - a) * r;
-      return;
+      r = (*this - a).dot(ab) / r;
+      if (r < 0) {
+        *this = a;
+      } else if (r > 1) {
+        *this = b;
+      } else {
+        *this = a + ab * r;
+      }
     }
   }
   inline constexpr Point2D projectedOntoSegment(const Point2D& a, const Point2D& b) const
       requires(std::floating_point<T>) {
-    Point2D result;
+    Point2D result{*this};
     result.projectOntoSegment(a, b);
     return result;
   }
@@ -344,7 +351,7 @@ struct Point2D {
   }
   inline constexpr Point2D reflectedOntoLine(const Point2D& a, const Point2D& b) const
       requires(std::floating_point<T>) {
-    Point2D result;
+    Point2D result{*this};
     result.reflectOntoLine(a, b);
     return result;
   }
@@ -353,6 +360,29 @@ struct Point2D {
   }
   inline constexpr bool isOnTheRightOf(const Point2D& a, const Point2D& b) const {
     return (b - a).cross(*this - a) < 0;
+  }
+  inline constexpr bool isInPolygon(const QVector<Point2D>& polygon) const {
+    int n = static_cast<int>(polygon.size());
+    bool c = false;
+    for (int i = 0, j = n - 1; i < n; j = i++) {
+      if ((polygon[i].y <= y and y < polygon[j].y) or (polygon[j].y <= y and y < polygon[i].y)) {
+        if (x < (polygon[i].x + (polygon[j].x - polygon[i].x) * (y - polygon[i].y) /
+                                    (polygon[j].y - polygon[i].y))) {
+          c = !c;
+        }
+      }
+    }
+    return c;
+  }
+  inline constexpr bool isOnPolygon(const QVector<Point2D>& polygon) const {
+    int n = static_cast<int>(polygon.size());
+    for (int i = 0; i < n; ++i) {
+      if (auto proj = projectedOntoSegment(polygon[i], polygon[(i + 1) % n]);
+          Math::isNull(distSquaredTo(proj))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // streams:
