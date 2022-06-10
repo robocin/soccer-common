@@ -147,4 +147,26 @@ class ImplicitStateMachine : public StateMachine<State> {
   using StateMachine<State>::reset;
 };
 
+template <class Output, class Input>
+struct VisitorForwarderBase {
+  inline Output operator()(Input input) {
+    return Output(std::move(input));
+  }
+
+  inline Output operator()(Input input) const {
+    return Output(std::move(input));
+  }
+};
+
+template <class Output, class... Inputs>
+struct VisitorForwarder : public VisitorForwarderBase<Output, Inputs>... {
+  static_assert(sizeof...(Inputs) > 0, "at least one input is required.");
+
+  template <class... Placeholders>
+  inline explicit VisitorForwarder(Placeholders&&...) {
+  }
+
+  using VisitorForwarderBase<Output, Inputs>::operator()...;
+};
+
 #endif // SOCCER_COMMON_STATEMACHINE_H
