@@ -31,6 +31,7 @@ class ModuleBase : public ModulePrivate {
   void setInterfaceScoreboard(int first, int second);
   void setInterfaceTeamColor(const QColor& firstColor, const QColor& secondColor);
   void setInterfaceAttackSide(bool isRight);
+  void setInterfaceRefereeCommand(const QString& command);
 
  protected:
   virtual void buildParameters(Parameters::Handler& parameters);

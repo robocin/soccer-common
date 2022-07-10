@@ -23,6 +23,10 @@ void InfoWidgets::setupInfoWidgets(MainWindow* mainWindow) {
     m_colorTeam = new ColorTeamWidget(mainWindow);
     m_layout->addWidget(m_colorTeam);
   }
+  /* adding referee command */ {
+    m_refereeCommand = new RefereeCommandWidget(mainWindow);
+    m_layout->addWidget(m_refereeCommand);
+  }
 }
 
 ScoreboardWidget* InfoWidgets::scoreboard() const {
@@ -35,4 +39,8 @@ AttackSideWidget* InfoWidgets::attackSide() const {
 
 ColorTeamWidget* InfoWidgets::colorTeam() const {
   return m_colorTeam;
+}
+
+RefereeCommandWidget* InfoWidgets::refereeCommand() const {
+  return m_refereeCommand;
 }
