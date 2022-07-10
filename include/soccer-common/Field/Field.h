@@ -408,7 +408,19 @@ namespace Common {
         return contains(bottomLeft(), topRight(), point);
       }
     }
-
+    constexpr bool
+    withoutGoalsContainsWithMargin(const PT& point, T margin = 0, T radius = 0) const {
+      if (radius) {
+        return contains(bottomLeft() + Point(margin, margin),
+                        topRight() - Point(margin, margin),
+                        point,
+                        radius);
+      } else {
+        return contains(bottomLeft() + Point(margin, margin),
+                        topRight() - Point(margin, margin),
+                        point);
+      }
+    }
     // contains:
 
     constexpr bool contains(const PT& point, T radius = 0) const {
