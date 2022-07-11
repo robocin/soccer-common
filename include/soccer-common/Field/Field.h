@@ -484,16 +484,7 @@ namespace Common {
                                     leftPenaltyAreaContains(point, radius);
     }
 
-   private:
-    bool m_isAttackingToRight;
-
-    T m_length;
-    T m_width;
-    T m_goalDepth;
-    T m_goalWidth;
-    T m_penaltyAreaDepth;
-    T m_penaltyAreaWidth;
-
+   protected:
     // strictly contains:
     static constexpr bool contains(const PT& bottomLeft, const PT& topRight, const PT& point) {
       return (bottomLeft.x() < point.x() && point.x() < topRight.x()) &&
@@ -505,6 +496,16 @@ namespace Common {
       const PT& b2(point + PT(radius / 2, radius / 2));
       return ((b1.x() < a2.x()) && (a1.x() < b2.x())) && ((b1.y() < a2.y()) && (a1.y() < b2.y()));
     }
+
+   private:
+    bool m_isAttackingToRight;
+
+    T m_length;
+    T m_width;
+    T m_goalDepth;
+    T m_goalWidth;
+    T m_penaltyAreaDepth;
+    T m_penaltyAreaWidth;
   };
 } // namespace Common
 
