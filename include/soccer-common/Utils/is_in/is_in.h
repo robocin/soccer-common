@@ -5,7 +5,7 @@
 #ifndef SOCCER_COMMON_IS_IN_H
 #define SOCCER_COMMON_IS_IN_H
 
-#include "soccer-common/Utils/detail/detail.h"
+#include "soccer-common/Utils/Detail/Detail.h"
 
 #ifdef SOCCER_COMMON_IS_IN_H_UNDEF_IS_IN
 namespace Utils {
@@ -20,24 +20,24 @@ namespace Utils {
   is_in(T&&, U&&);
 
   template <class T, class Tuple>
-  constexpr std::enable_if_t<detail::is_tuple_v<std::decay_t<Tuple>>, bool> is_in(T&&, Tuple&&);
+  constexpr std::enable_if_t<Detail::is_tuple_v<std::decay_t<Tuple>>, bool> is_in(T&&, Tuple&&);
 
   template <class T, class Optional>
-  constexpr std::enable_if_t<detail::is_optional_v<std::decay_t<Optional>>, bool> is_in(T&&,
+  constexpr std::enable_if_t<Detail::is_optional_v<std::decay_t<Optional>>, bool> is_in(T&&,
                                                                                         Optional&&);
 
   template <class T, class Variant>
-  constexpr std::enable_if_t<detail::is_variant_v<std::decay_t<Variant>>, bool> is_in(T&&,
+  constexpr std::enable_if_t<Detail::is_variant_v<std::decay_t<Variant>>, bool> is_in(T&&,
                                                                                       Variant&&);
 
   template <class T, class U>
   constexpr bool is_in(T&&, std::initializer_list<U>);
 
   template <class T, class U>
-  constexpr std::enable_if_t<detail::is_c_str_v<std::decay_t<U>>, bool> is_in(T&&, U&&);
+  constexpr std::enable_if_t<Detail::is_c_str_v<std::decay_t<U>>, bool> is_in(T&&, U&&);
 
   template <class T, class Container>
-  constexpr std::enable_if_t<detail::is_iterable_v<std::decay_t<Container>>, bool>
+  constexpr std::enable_if_t<Detail::is_iterable_v<std::decay_t<Container>>, bool>
   is_in(T&&, Container&&);
 
   // -------------------------------------------------------------------------------------------- //
@@ -54,7 +54,7 @@ namespace Utils {
   }
 
   template <class T, class Tuple>
-  constexpr std::enable_if_t<detail::is_tuple_v<std::decay_t<Tuple>>, bool> is_in(T&& lhs,
+  constexpr std::enable_if_t<Detail::is_tuple_v<std::decay_t<Tuple>>, bool> is_in(T&& lhs,
                                                                                   Tuple&& tuple) {
     return std::apply(
         [&](auto&&... args) -> bool {
@@ -64,13 +64,13 @@ namespace Utils {
   }
 
   template <class T, class Optional>
-  constexpr std::enable_if_t<detail::is_optional_v<std::decay_t<Optional>>, bool>
+  constexpr std::enable_if_t<Detail::is_optional_v<std::decay_t<Optional>>, bool>
   is_in(T&& lhs, Optional&& optional) {
     return std::forward<T>(lhs) == std::forward<Optional>(optional);
   }
 
   template <class T, class Variant>
-  constexpr std::enable_if_t<detail::is_variant_v<std::decay_t<Variant>>, bool>
+  constexpr std::enable_if_t<Detail::is_variant_v<std::decay_t<Variant>>, bool>
   is_in(T&& lhs, Variant&& variant) {
     return std::visit(
         [&](auto&& rhs) {
@@ -90,7 +90,7 @@ namespace Utils {
   }
 
   template <class T, class U>
-  constexpr std::enable_if_t<detail::is_c_str_v<std::decay_t<U>>, bool> is_in(T&& lhs, U&& str) {
+  constexpr std::enable_if_t<Detail::is_c_str_v<std::decay_t<U>>, bool> is_in(T&& lhs, U&& str) {
     for (auto ptr = std::forward<U>(str); static_cast<bool>(*ptr); ++ptr) {
       if (std::forward<T>(lhs) == *ptr) {
         return true;
@@ -100,11 +100,11 @@ namespace Utils {
   }
 
   template <class T, class U>
-  constexpr std::enable_if_t<detail::is_iterable_v<std::decay_t<U>>, bool> is_in(T&& lhs,
+  constexpr std::enable_if_t<Detail::is_iterable_v<std::decay_t<U>>, bool> is_in(T&& lhs,
                                                                                  U&& container) {
-    if constexpr (detail::has_contains_v<std::decay_t<U>>) {
+    if constexpr (Detail::has_contains_v<std::decay_t<U>>) {
       return std::forward<U>(container).contains(std::forward<T>(lhs));
-    } else if constexpr (detail::has_find_v<std::decay_t<U>>) {
+    } else if constexpr (Detail::has_find_v<std::decay_t<U>>) {
       return std::forward<U>(container).find(std::forward<T>(lhs)) !=
              std::forward<U>(container).end();
     } else {

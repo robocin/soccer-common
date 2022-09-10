@@ -14,6 +14,14 @@
   #define M_PI 3.14159265358979323846
 #endif
 
+static constexpr bool isNullable(std::floating_point auto f) {
+  return Math::isNull(f) or not std::isnormal(f);
+}
+
+static constexpr bool isNullable(std::integral auto i) {
+  return Math::isNull(i);
+}
+
 namespace Geometry {
   static constexpr double PI = M_PI;
 
@@ -404,8 +412,8 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr PT unitaryAxisDirection(const PT& p) {
-    return PT(Math::isNull(p.x()) ? 0 : (p.x() > 0 ? 1 : -1),
-              Math::isNull(p.y()) ? 0 : (p.y() > 0 ? 1 : -1));
+    return PT(isNullable(p.x()) ? 0 : (p.x() > 0 ? 1 : -1),
+              isNullable(p.y()) ? 0 : (p.y() > 0 ? 1 : -1));
   }
 
   /*!
@@ -417,7 +425,7 @@ namespace Geometry2D {
   template <class PT>
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT> resize(const PT& p,
                                                                                  CoordType<PT> t) {
-    if ((Math::isNull(p.x()) && Math::isNull(p.y())) || Math::isNull(t)) {
+    if ((isNullable(p.x()) && isNullable(p.y())) || isNullable(t)) {
       return PT(0, 0);
     }
     return static_cast<PT>(p / length(p) * t);
@@ -442,7 +450,7 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr std::enable_if_t<std::is_integral_v<CoordType<PT>>, PT> normalize(const PT& p) {
-    if (Math::isNull(p.x()) && Math::isNull(p.y())) {
+    if (isNullable(p.x()) && isNullable(p.y())) {
       return PT(0, 0);
     }
     return p / std::gcd(std::abs(p.x()), std::abs(p.y()));
@@ -651,7 +659,7 @@ namespace Geometry2D {
       throw std::runtime_error("'a' and 'b' doesn't define a line.");
     }
     CoordType<PT> r = dot<PT>(b - a, b - a);
-    if (Math::isNull(r)) {
+    if (isNullable(r)) {
       return a;
     }
     r = dot<PT>(c - a, b - a) / r;
@@ -705,7 +713,7 @@ namespace Geometry2D {
    */
   template <class PT>
   constexpr bool linesParallel(const PT& a, const PT& b, const PT& c, const PT& d) {
-    return Math::isNull(cross<PT>(b - a, c - d));
+    return isNullable(cross<PT>(b - a, c - d));
   }
 
   /*!
@@ -727,10 +735,10 @@ namespace Geometry2D {
     if (!linesParallel<PT>(a, b, c, d)) {
       return false;
     }
-    if (!Math::isNull(cross<PT>(a - b, a - c))) {
+    if (!isNullable(cross<PT>(a - b, a - c))) {
       return false;
     }
-    if (!Math::isNull(cross<PT>(c - d, c - a))) {
+    if (!isNullable(cross<PT>(c - d, c - a))) {
       return false;
     }
     return true;
@@ -753,8 +761,8 @@ namespace Geometry2D {
   template <class PT>
   constexpr bool segmentsIntersect(const PT& a, const PT& b, const PT& c, const PT& d) {
     if (linesCollinear<PT>(a, b, c, d)) {
-      if (Math::isNull(distanceSquared<PT>(a, c)) || Math::isNull(distanceSquared<PT>(a, d)) ||
-          Math::isNull(distanceSquared<PT>(b, c)) || Math::isNull(distanceSquared<PT>(b, d))) {
+      if (isNullable(distanceSquared<PT>(a, c)) || isNullable(distanceSquared<PT>(a, d)) ||
+          isNullable(distanceSquared<PT>(b, c)) || isNullable(distanceSquared<PT>(b, d))) {
         return true;
       }
       if (dot<PT>(c - a, c - b) > 0 && dot<PT>(d - a, d - b) > 0 && dot<PT>(c - b, d - b) > 0) {
@@ -793,7 +801,7 @@ namespace Geometry2D {
     const PT cd = c - d;
     const PT ac = a - c;
     const CoordType<PT> denominator = cross<PT>(cd, ba);
-    if (Math::isNull(denominator)) {
+    if (isNullable(denominator)) {
       return std::nullopt;
     }
     const CoordType<PT> reciprocal = static_cast<CoordType<PT>>(1) / denominator;
@@ -824,7 +832,7 @@ namespace Geometry2D {
     const PT cd = c - d;
     const PT ac = a - c;
     const CoordType<PT> denominator = cross<PT>(cd, ba);
-    if (Math::isNull(denominator)) {
+    if (isNullable(denominator)) {
       return std::nullopt;
     }
     const CoordType<PT> reciprocal = static_cast<CoordType<PT>>(1) / denominator;
@@ -923,7 +931,7 @@ namespace Geometry2D {
     int n = static_cast<int>(polygon.size());
     for (int i = 0; i < n; ++i) {
       if (PT proj = projectPointSegment<PT>(polygon[i], polygon[(i + 1) % n], p);
-          Math::isNull(distanceSquared<PT>(proj, p))) {
+          isNullable(distanceSquared<PT>(proj, p))) {
         return true;
       }
     }

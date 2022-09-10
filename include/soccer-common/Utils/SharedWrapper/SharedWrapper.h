@@ -2,6 +2,7 @@
 #define SOCCER_COMMON_SHAREDWRAPPER_H
 
 #include <mutex>
+#include <functional>
 
 template <class T, class Mutex, class Locker = std::lock_guard<Mutex>>
 class SharedWrapper {
@@ -49,13 +50,13 @@ class SharedWrapper {
   template <class FunctionPointer>
   decltype(auto) apply(FunctionPointer&& f) {
     Locker locker(mutex);
-    return std::forward<FunctionPointer>(f)(instance);
+    return std::invoke(std::forward<FunctionPointer>(f), instance);
   }
 
   template <class FunctionPointer>
   decltype(auto) apply(FunctionPointer&& f) const {
     Locker locker(mutex);
-    return std::forward<FunctionPointer>(f)(instance);
+    return std::invoke(std::forward<FunctionPointer>(f), instance);
   }
 
   Proxy operator->() {

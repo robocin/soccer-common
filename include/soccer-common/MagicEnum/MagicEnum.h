@@ -9,14 +9,15 @@
 
 namespace MagicEnum {
   template <class E, class BinaryPredicate>
-  constexpr std::optional<std::decay_t<E>> cast(const QString& value, const BinaryPredicate& p) {
-    return magic_enum::enum_cast<E, BinaryPredicate>(value.toUtf8().data(), p);
+  constexpr std::optional<std::decay_t<E>> cast(const QString& value, BinaryPredicate&& p) {
+    return magic_enum::enum_cast<E, BinaryPredicate>(value.toStdString(),
+                                                     std::forward<BinaryPredicate>(p));
   }
 
   template <class E, class T>
   constexpr std::optional<std::decay_t<E>> cast(const T& value) {
     if constexpr (std::is_base_of_v<QString, T>) {
-      return magic_enum::enum_cast<E>(value.toUtf8().data());
+      return magic_enum::enum_cast<E>(value.toStdString());
     } else {
       return magic_enum::enum_cast<E>(value);
     }
@@ -92,7 +93,7 @@ namespace MagicEnum {
 
   template <class E>
   constexpr bool contains(const QString& value) {
-    return magic_enum::enum_contains<E>(value.toUtf8().data());
+    return magic_enum::enum_contains<E>(value.toStdString());
   }
 }; // namespace MagicEnum
 

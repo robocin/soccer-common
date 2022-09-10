@@ -2,8 +2,6 @@
 
 #include "soccer-common/Parameters/Parameters.h"
 
-using namespace Parameters;
-
 InputWidgets::InputMethod::InputMethod(QWidget* parent) : QWidget(parent) {
   setLayout(&inputMethodLayout);
   inputMethodLayout.setSpacing(5);
@@ -24,8 +22,8 @@ InputWidgets::TextEdit::TextEdit(const QJsonObject& json, QWidget* parent) : Inp
                    this,
                    &InputWidgets::TextEdit::receiveOnValueChanged);
   inputMethodLayout.addWidget(&textEdit);
-  regex.setPattern(json[Detail::Regex].toVariant().toString());
-  QString value = json[Detail::Value].toVariant().toString();
+  regex.setPattern(json[Parameters::Detail::Regex].toVariant().toString());
+  QString value = json[Parameters::Detail::Value].toVariant().toString();
   Q_ASSERT(regex.match(value).hasMatch());
   textEdit.setText(value);
   textEdit.setAlignment(Qt::AlignCenter);
@@ -75,13 +73,13 @@ InputWidgets::FileDialog::FileDialog(const QJsonObject& json, QWidget* parent) :
   parameterLayout.addWidget(&pushButton);
   inputMethodLayout.addLayout(&parameterLayout);
 
-  QString value = json[Detail::Value].toVariant().toString();
+  QString value = json[Parameters::Detail::Value].toVariant().toString();
   textBrowser.setText(value);
   textBrowser.setAlignment(Qt::AlignCenter);
   backup = textBrowser.toPlainText();
 
-  defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
-  filter = json[Detail::Filter].toVariant().toString();
+  defaultDirectory = json[Parameters::Detail::DefaultDirectory].toVariant().toString();
+  filter = json[Parameters::Detail::Filter].toVariant().toString();
 
   QObject::connect(&pushButton, &QPushButton::clicked, this, [this]() {
     QString name = QFileDialog::getOpenFileName(this, "Open File", defaultDirectory, filter);
@@ -124,13 +122,13 @@ InputWidgets::DirectoryDialog::DirectoryDialog(const QJsonObject& json, QWidget*
   parameterLayout.addWidget(&pushButton);
   inputMethodLayout.addLayout(&parameterLayout);
 
-  QString value = json[Detail::Value].toVariant().toString();
+  QString value = json[Parameters::Detail::Value].toVariant().toString();
   textBrowser.setText(value);
   textBrowser.setAlignment(Qt::AlignCenter);
   backup = textBrowser.toPlainText();
 
-  defaultDirectory = json[Detail::DefaultDirectory].toVariant().toString();
-  options = json[Detail::Options].toVariant().toString();
+  defaultDirectory = json[Parameters::Detail::DefaultDirectory].toVariant().toString();
+  options = json[Parameters::Detail::Options].toVariant().toString();
 
   QObject::connect(&pushButton, &QPushButton::clicked, this, [this]() {
     QString name =
@@ -177,9 +175,9 @@ InputWidgets::Slider::Slider(const QJsonObject& json, QWidget* parent) : InputMe
   });
   inputMethodLayout.addWidget(&slider.slider);
   inputMethodLayout.addWidget(&slider.label);
-  int minValue = json[Detail::MinValue].toInt();
-  int maxValue = json[Detail::MaxValue].toInt();
-  int value = json[Detail::Value].toInt();
+  int minValue = json[Parameters::Detail::MinValue].toInt();
+  int maxValue = json[Parameters::Detail::MaxValue].toInt();
+  int value = json[Parameters::Detail::Value].toInt();
   slider.slider.setRange(minValue, maxValue);
   slider.slider.setValue(value);
   backup = QString::number(slider.slider.value());
@@ -211,9 +209,9 @@ InputWidgets::SpinBox::SpinBox(const QJsonObject& json, QWidget* parent) : Input
                    this,
                    &InputWidgets::SpinBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&spinBox);
-  int minValue = json[Detail::MinValue].toInt();
-  int maxValue = json[Detail::MaxValue].toInt();
-  int value = json[Detail::Value].toInt();
+  int minValue = json[Parameters::Detail::MinValue].toInt();
+  int maxValue = json[Parameters::Detail::MaxValue].toInt();
+  int value = json[Parameters::Detail::Value].toInt();
   spinBox.setRange(minValue, maxValue);
   spinBox.setValue(value);
   backup = spinBox.text();
@@ -247,15 +245,15 @@ InputWidgets::DoubleSpinBox::DoubleSpinBox(const QJsonObject& json, QWidget* par
                    &InputWidgets::DoubleSpinBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&doubleSpinBox);
 
-  int precision = json[Detail::Precision].toVariant().toInt();
+  int precision = json[Parameters::Detail::Precision].toVariant().toInt();
   doubleSpinBox.setDecimals(precision);
   doubleSpinBox.setSingleStep(std::pow(10, -precision));
 
-  double minValue = json[Detail::MinValue].toDouble();
-  double maxValue = json[Detail::MaxValue].toDouble();
+  double minValue = json[Parameters::Detail::MinValue].toDouble();
+  double maxValue = json[Parameters::Detail::MaxValue].toDouble();
   doubleSpinBox.setRange(minValue, maxValue);
 
-  double value = json[Detail::Value].toDouble();
+  double value = json[Parameters::Detail::Value].toDouble();
   doubleSpinBox.setValue(value);
 
   backup = doubleSpinBox.text();
@@ -296,7 +294,8 @@ InputWidgets::CheckBox::CheckBox(const QJsonObject& json, QWidget* parent) : Inp
                    &InputWidgets::CheckBox::receiveOnValueChanged);
   checkBox.setLayoutDirection(Qt::RightToLeft);
   inputMethodLayout.addWidget(&checkBox);
-  checkBox.setCheckState(checkStateFromBoolean(json[Detail::Value].toVariant().toBool()));
+  checkBox.setCheckState(
+      checkStateFromBoolean(json[Parameters::Detail::Value].toVariant().toBool()));
   backup = booleanFromCheckState(checkBox.checkState());
 }
 
@@ -326,8 +325,8 @@ InputWidgets::ComboBox::ComboBox(const QJsonObject& json, QWidget* parent) : Inp
                    this,
                    &InputWidgets::ComboBox::receiveOnValueChanged);
   inputMethodLayout.addWidget(&comboBox);
-  QString value = json[Detail::Value].toVariant().toString();
-  QJsonArray itemsAsJson = json[Detail::Options].toArray();
+  QString value = json[Parameters::Detail::Value].toVariant().toString();
+  QJsonArray itemsAsJson = json[Parameters::Detail::Options].toArray();
   QStringList itemsAsStringList;
 
   for (auto&& object : itemsAsJson) {
@@ -363,11 +362,11 @@ void InputWidgets::ComboBox::loadBackup() {
 
 InputWidgets::PushButton::PushButton(const QJsonObject& json, QWidget* parent) :
     InputMethod(parent) {
-  qulonglong address = json[Detail::Value].toVariant().toULongLong();
+  qulonglong address = json[Parameters::Detail::Value].toVariant().toULongLong();
   auto pointer = reinterpret_cast<std::function<void()>*>(address);
   std::function<void()> function = *pointer;
 
-  address = json[Detail::Parent].toVariant().toULongLong();
+  address = json[Parameters::Detail::Parent].toVariant().toULongLong();
   auto receiver = reinterpret_cast<QObject*>(address);
 
   QObject::connect(&pushButton, &QPushButton::clicked, receiver, function);

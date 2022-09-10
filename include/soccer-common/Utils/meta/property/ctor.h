@@ -6,24 +6,19 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 
-#define RC_CTOR_1(type)                                                                            \
- public:                                                                                           \
-  inline type() = default
+#define RC_CTOR_1(type) inline type() = default
 
 #define RC_CTOR_2(type, var1)                                                                      \
- public:                                                                                           \
   inline explicit type(decltype(m_##var1) var1) : m_##var1(std::move(var1)) {                      \
   }
 
 #define RC_CTOR_3(type, var1, var2)                                                                \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1, decltype(m_##var2) var2) :                                  \
       m_##var1(std::move(var1)),                                                                   \
       m_##var2(std::move(var2)) {                                                                  \
   }
 
 #define RC_CTOR_4(type, var1, var2, var3)                                                          \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1, decltype(m_##var2) var2, decltype(m_##var3) var3) :         \
       m_##var1(std::move(var1)),                                                                   \
       m_##var2(std::move(var2)),                                                                   \
@@ -31,7 +26,6 @@
   }
 
 #define RC_CTOR_5(type, var1, var2, var3, var4)                                                    \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -43,7 +37,6 @@
   }
 
 #define RC_CTOR_6(type, var1, var2, var3, var4, var5)                                              \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -57,7 +50,6 @@
   }
 
 #define RC_CTOR_7(type, var1, var2, var3, var4, var5, var6)                                        \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -73,7 +65,6 @@
   }
 
 #define RC_CTOR_8(type, var1, var2, var3, var4, var5, var6, var7)                                  \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -91,7 +82,6 @@
   }
 
 #define RC_CTOR_9(type, var1, var2, var3, var4, var5, var6, var7, var8)                            \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -111,7 +101,6 @@
   }
 
 #define RC_CTOR_10(type, var1, var2, var3, var4, var5, var6, var7, var8, var9)                     \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -133,7 +122,6 @@
   }
 
 #define RC_CTOR_11(type, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10)              \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -157,7 +145,6 @@
   }
 
 #define RC_CTOR_12(type, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11)       \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -195,7 +182,6 @@
                    var10,                                                                          \
                    var11,                                                                          \
                    var12)                                                                          \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -236,7 +222,6 @@
                    var11,                                                                          \
                    var12,                                                                          \
                    var13)                                                                          \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -280,7 +265,6 @@
                    var12,                                                                          \
                    var13,                                                                          \
                    var14)                                                                          \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \
@@ -327,7 +311,6 @@
                    var13,                                                                          \
                    var14,                                                                          \
                    var15)                                                                          \
- public:                                                                                           \
   inline type(decltype(m_##var1) var1,                                                             \
               decltype(m_##var2) var2,                                                             \
               decltype(m_##var3) var3,                                                             \

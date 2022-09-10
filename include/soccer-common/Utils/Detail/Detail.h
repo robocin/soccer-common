@@ -10,7 +10,7 @@
 #include <functional>
 #include <optional>
 
-namespace detail {
+namespace Detail {
   template <class F>
   inline constexpr bool is_function_pointer_v = std::is_pointer_v<std::decay_t<F>>&&
       std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>;
@@ -134,6 +134,6 @@ namespace detail {
 
   template <class S, class C>
   inline constexpr bool is_streamable_v = is_streamable<S, C>::value;
-} // namespace detail
+} // namespace Detail
 
 #endif // SOCCER_COMMON_DETAIL_H

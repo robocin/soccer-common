@@ -8,7 +8,6 @@
 #include <QString>
 #include <QFileDialog>
 #include <QTextStream>
-#include <boost/bimap.hpp>
 #include <QRegularExpression>
 #include <utility>
 #include "soccer-common/Utils/Utils.h"
@@ -62,7 +61,8 @@ namespace Parameters {
   template <class T>
   class Arg {
     static_assert(std::is_enum_v<T> ||
-                      (std::is_arithmetic_v<T> && !(detail::is_any_of_v<T, char, long double>) ) ||
+                      (std::is_arithmetic_v<T> &&
+                       !(::Detail::is_any_of_v<T, char, long double>) ) ||
                       std::is_base_of_v<T, QString>,
                   "unsupported type.");
 
@@ -627,18 +627,19 @@ namespace Parameters {
     }
   };
 
-  class CheckBox : public ParameterType<bool> {
+  template <class B>
+  class CheckBox : public ParameterType<B> {
    public:
-    using value_type = typename Arg<bool>::value_type;
+    using value_type = typename Arg<B>::value_type;
 
    private:
-    using ParameterType<bool>::setValue;
-    using ParameterType<bool>::eval;
-    using ParameterType<bool>::ref;
+    using ParameterType<B>::setValue;
+    using ParameterType<B>::eval;
+    using ParameterType<B>::ref;
 
    public:
-    explicit CheckBox(Arg<bool>& t_ref, const QString& t_about = "") :
-        ParameterType<bool>(t_ref, t_about) {
+    explicit CheckBox(Arg<B>& t_ref, const QString& t_about = "") :
+        ParameterType<B>(t_ref, t_about) {
     }
 
     QString inputType() const final {
@@ -696,7 +697,7 @@ namespace Parameters {
       stream << Qt::fixed;
 
       for (auto it = set.begin(); it != set.end(); ++it) {
-        const T& value = *it;
+        const value_type& value = *it;
         if constexpr (std::is_base_of_v<QString, value_type>) {
           stream << Utils::quoted(value);
         } else if constexpr (std::is_enum_v<value_type>) {
@@ -736,32 +737,36 @@ namespace Parameters {
     using ParameterType<T>::setValue;
     using ParameterType<T>::eval;
     using ParameterType<T>::ref;
-    boost::bimap<value_type, QString> bimap;
+
+    QMap<value_type, QString> leftMap;
+    QMap<QString, value_type> rightMap;
 
    public:
     MappedComboBox(Arg<T>& t_ref,
                    const QMap<value_type, QString>& t_map,
                    const QString& t_about = "") :
         ParameterType<T>(t_ref, t_about),
-        bimap([](const QMap<value_type, QString>& map) {
-          boost::bimap<value_type, QString> ret;
-          for (auto it = map.begin(); it != map.end(); ++it) {
-            ret.insert({it.key(), it.value()});
+        leftMap(t_map),
+        rightMap([&t_map]() {
+          QMap<QString, value_type> map;
+          for (auto it = t_map.begin(); it != t_map.end(); ++it) {
+            map.insert(it.value(), it.key());
           }
-          return ret;
-        }(t_map)) {
-      bool contains = bimap.left.find(t_ref) != bimap.left.end();
-      if (!((bimap.size() > 1) && (static_cast<int>(bimap.size()) == t_map.size()) && contains)) {
+          return map;
+        }()) {
+      bool contains = leftMap.find(t_ref) != leftMap.end();
+      if (!((leftMap.size() > 1) && (static_cast<int>(leftMap.size()) == rightMap.size()) &&
+            contains)) {
         throw std::runtime_error("the size of map must be greater than 1, and must contain ref.");
       }
     }
 
     QString value() const override {
-      auto it = bimap.left.find(ParameterType<T>::ref.value());
-      if (it == bimap.left.end()) {
+      auto it = leftMap.find(ParameterType<T>::ref.value());
+      if (it == leftMap.end()) {
         throw std::runtime_error("the value was not found.");
       } else {
-        return Utils::quoted(it->second);
+        return Utils::quoted(it.value());
       }
     }
 
@@ -778,10 +783,10 @@ namespace Parameters {
       QTextStream stream(&options);
       stream << Qt::fixed;
 
-      for (auto it = bimap.right.begin(); it != bimap.right.end(); ++it) {
-        stream << Utils::quoted(it->first);
+      for (auto it = rightMap.begin(); it != rightMap.end(); ++it) {
+        stream << Utils::quoted(it.key());
 
-        if (std::next(it) != bimap.right.end()) {
+        if (std::next(it) != rightMap.end()) {
           stream << ", ";
         }
       }
@@ -794,8 +799,8 @@ namespace Parameters {
     }
 
     bool update(const QString& str) final {
-      if (auto it = bimap.right.find(str); it != bimap.right.end()) {
-        setValue(bimap.right.find(str)->get_left());
+      if (auto it = rightMap.find(str); it != rightMap.end()) {
+        setValue(it.value());
         return true;
       }
       return false;

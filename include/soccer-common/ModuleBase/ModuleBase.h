@@ -31,6 +31,7 @@ class ModuleBase : public ModulePrivate {
   void setInterfaceScoreboard(int first, int second);
   void setInterfaceTeamColor(const QColor& firstColor, const QColor& secondColor);
   void setInterfaceAttackSide(bool isRight);
+  void setInterfaceRefereeCommand(const QString& command);
 
  protected:
   virtual void buildParameters(Parameters::Handler& parameters);
@@ -77,7 +78,7 @@ class ModuleExtension {
         m,
         [this, g = group](Parameters::Handler& parameters) {
           Parameters::Handler handler;
-          buildParameters(handler);
+          extendedBuildParameters(handler);
           if (!handler.empty()) {
             parameters[g] = std::move(handler);
           }
@@ -88,7 +89,7 @@ class ModuleExtension {
         &ModuleBase::onConnectModules,
         m,
         [this](const Modules* modules) {
-          connectModules(modules);
+          extendedConnectModules(modules);
         },
         Qt::DirectConnection);
     QObject::connect(
@@ -96,7 +97,7 @@ class ModuleExtension {
         &ModuleBase::onInit,
         m,
         [this](const Modules* modules) {
-          init(modules);
+          extendedInit(modules);
         },
         Qt::DirectConnection);
   }
@@ -105,9 +106,9 @@ class ModuleExtension {
       ModuleExtension(Utils::nameOfType<E>(), m) {
   }
   virtual ~ModuleExtension() = default;
-  virtual void buildParameters(Parameters::Handler&);
-  virtual void connectModules(const Modules*);
-  virtual void init(const Modules*);
+  virtual void extendedBuildParameters(Parameters::Handler&);
+  virtual void extendedConnectModules(const Modules*);
+  virtual void extendedInit(const Modules*);
 };
 
 #endif // SOCCER_COMMON_MODULEBASE_H

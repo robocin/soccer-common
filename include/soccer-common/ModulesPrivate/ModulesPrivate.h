@@ -156,6 +156,11 @@ class ModulesPrivate : public QObject {
                 &ModuleBase::setInterfaceAttackSide,
                 gui->attackSide(),
                 &AttackSideWidget::setRightSide);
+
+        connect(ref,
+                &ModuleBase::setInterfaceRefereeCommand,
+                gui->refereeCommand(),
+                &RefereeCommandWidget::setRefereeCommand);
       }
       return connections;
     }

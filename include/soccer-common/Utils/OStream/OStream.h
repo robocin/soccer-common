@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <optional>
 #include "soccer-common/MagicEnum/MagicEnum.h"
-#include "soccer-common/Utils/detail/detail.h"
+#include "soccer-common/Utils/Detail/Detail.h"
 #include "soccer-common/Utils/NameOfType/NameOfType.h"
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -31,21 +31,21 @@ namespace OStreamUtils {
 inline QDebug operator<<(QDebug dbg, const std::nullopt_t&);
 
 template <class T>
-std::enable_if_t<detail::is_streamable_v<QDebug, T>, QDebug>
+std::enable_if_t<Detail::is_streamable_v<QDebug, T>, QDebug>
 operator<<(QDebug dbg, const std::optional<T>& optional);
 
 inline QDebug operator<<(QDebug dbg, const std::monostate&);
 
 template <class... Args>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::variant<Args...>& variant);
 
 template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool> = true>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
 
 template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
 
 inline QDebug operator<<(QDebug dbg, const std::string& str);
@@ -75,7 +75,7 @@ inline QDebug operator<<(QDebug dbg, const std::nullopt_t&) {
 }
 
 template <class T>
-std::enable_if_t<detail::is_streamable_v<QDebug, T>, QDebug>
+std::enable_if_t<Detail::is_streamable_v<QDebug, T>, QDebug>
 operator<<(QDebug dbg, const std::optional<T>& optional) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
@@ -94,7 +94,7 @@ inline QDebug operator<<(QDebug dbg, const std::monostate&) {
 }
 
 template <class... Args>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::variant<Args...>& variant) {
   QDebugStateSaver saver(dbg);
   std::visit(
@@ -107,7 +107,7 @@ operator<<(QDebug dbg, const std::variant<Args...>& variant) {
 }
 
 template <class... Args, std::enable_if_t<sizeof...(Args) == 0, bool>>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
@@ -116,7 +116,7 @@ operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
 }
 
 template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool>>
-std::enable_if_t<(detail::is_streamable_v<QDebug, Args> && ...), QDebug>
+std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   QDebugStateSaver saver(dbg);
   dbg.nospace();
