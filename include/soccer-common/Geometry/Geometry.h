@@ -650,14 +650,14 @@ namespace Geometry2D {
    * @tparam PT Requires '.x()' and '.y()' members.
    * @param a, b, c line through (a, b) and point c.
    * @return Projects the point c onto segment through a and b.
-   * @note assuming a != b.
+   * @note assuming if a == b it returns one of the points.
    */
   template <class PT>
   constexpr std::enable_if_t<std::is_floating_point_v<CoordType<PT>>, PT>
   projectPointSegment(const PT& a, const PT& b, const PT& c) {
-    if (a == b) {
-      throw std::runtime_error("'a' and 'b' doesn't define a line.");
-    }
+    // if (a == b) {
+    //   throw std::runtime_error("'a' and 'b' doesn't define a line.");
+    // }
     CoordType<PT> r = dot<PT>(b - a, b - a);
     if (isNullable(r)) {
       return a;
