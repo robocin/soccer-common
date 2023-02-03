@@ -48,7 +48,11 @@ template <class... Args, std::enable_if_t<sizeof...(Args) != 0, bool> = true>
 std::enable_if_t<(Detail::is_streamable_v<QDebug, Args> && ...), QDebug>
 operator<<(QDebug dbg, const std::tuple<Args...>& tuple);
 
+  #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+
 inline QDebug operator<<(QDebug dbg, const std::string& str);
+
+  #endif
 
 template <class T>
 inline std::enable_if_t<std::is_enum_v<T>, QDebug> operator<<(QDebug dbg, const T& e);
@@ -126,11 +130,15 @@ operator<<(QDebug dbg, const std::tuple<Args...>& tuple) {
   return dbg;
 }
 
+  #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+
 inline QDebug operator<<(QDebug dbg, const std::string& str) {
   QDebugStateSaver saver(dbg);
   dbg << QString::fromStdString(str);
   return dbg;
 }
+
+  #endif
 
 template <class T>
 inline std::enable_if_t<std::is_enum_v<T>, QDebug> operator<<(QDebug dbg, const T& e) {
