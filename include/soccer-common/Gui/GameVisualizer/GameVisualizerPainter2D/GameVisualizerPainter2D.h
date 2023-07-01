@@ -2,9 +2,10 @@
 #define SOCCER_COMMON_GAMEVISUALIZERPAINTER2D_H
 
 #include "soccer-common/Gui/GameVisualizer/GLTextHelper_2_1/GLTextHelper_2_1.h"
+#include "soccer-common/Gui/GameVisualizer/Painter2DBase/Painter2DBase.h"
 #include <QDebug>
 
-class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
+class GameVisualizerPainter2D : public Painter2DBase, protected GLTextHelper_2_1 {
   friend class GameVisualizer;
 
   inline static Polygon removeCollinearPoints(const Polygon& polygon) {
@@ -50,12 +51,12 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  using GLTextHelper_2_1::drawText;
-  using GLTextHelper_2_1::HAlign;
-  using GLTextHelper_2_1::VAlign;
+  void drawText(const QString &text, const Vertex &position, qreal size, const QColor &color, qreal angle = 0.0, HAlign hAlign = HAlign::Center, VAlign vAlign = VAlign::Middle) override {
+    GLTextHelper_2_1::drawText(text, position, size, color, angle, hAlign, vAlign);
+  }
 
   inline void
-  drawFilledTriangle(const Vertex& a, const Vertex& b, const Vertex& c, const QColor& color) {
+  drawFilledTriangle(const Vertex& a, const Vertex& b, const Vertex& c, const QColor& color) override {
     ScopedDrawGuard guard(this, GL_TRIANGLES);
     putColor(color);
     putVertices(a, b, c);
@@ -65,19 +66,19 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
                              const Vertex& b,
                              const Vertex& c,
                              const Vertex& d,
-                             const QColor& color) {
+                             const QColor& color) override {
     ScopedDrawGuard guard(this, GL_QUADS);
     putColor(color);
     putVertices(a, b, c, d);
   }
 
   inline void
-  drawFilledRectangle(const Vertex& topLeft, const Vertex& bottomRight, const QColor& color) {
+  drawFilledRectangle(const Vertex& topLeft, const Vertex& bottomRight, const QColor& color) override {
     const auto& rect = QRectF(topLeft, bottomRight);
     drawFilledQuad(rect.topLeft(), rect.topRight(), rect.bottomRight(), rect.bottomLeft(), color);
   }
 
-  inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) {
+  inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) override {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
@@ -113,7 +114,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void drawFilledConvexPolygon(Polygon polygon, const QColor& color) {
+  inline void drawFilledConvexPolygon(Polygon polygon, const QColor& color) override {
     ScopedDrawGuard guard(this, GL_POLYGON);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
@@ -126,7 +127,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void drawFilledPolygon(Polygon polygon, const QColor& color) {
+  inline void drawFilledPolygon(Polygon polygon, const QColor& color) override {
     TessScopedDrawGuard guard(this);
     polygon = removeCollinearPoints(polygon);
     if (polygon.size() < 3) {
@@ -147,7 +148,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) {
+  inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) override {
     ScopedDrawGuard guard(this, GL_QUAD_STRIP);
     polyline = removeCollinearPoints(polyline);
     if (polyline.size() < 2) {
@@ -194,7 +195,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) {
+  inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) override {
     return drawPolyline({a, b}, color, thickness);
   }
 
@@ -262,7 +263,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     }
   }
 
-  inline void drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) {
+  inline void drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) override {
     if (!local.circleDisplayListId) {
       DisplayListGuard displayGuard(this);
       ScopedDrawGuard guard(this, GL_POLYGON, true);
@@ -280,7 +281,7 @@ class GameVisualizerPainter2D : protected GLTextHelper_2_1 {
     return callListAndIncrementZ(*local.circleDisplayListId);
   }
 
-  inline QColor backgroundColor() {
+  inline QColor backgroundColor() override {
     std::array<qreal, 4> rgba = backgroundColorRgba<qreal>();
     return QColor::fromRgbF(rgba[0], rgba[1], rgba[2], rgba[3]);
   }

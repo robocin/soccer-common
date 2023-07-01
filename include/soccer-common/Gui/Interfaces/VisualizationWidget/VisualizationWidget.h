@@ -2,20 +2,20 @@
 #define SOCCER_COMMON_VISUALIZATIONWIDGET_H
 
 #include <QSizeF>
-#include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
+#include "soccer-common/Gui/GameVisualizer/GameVisualizerBase/GameVisualizerBase.h"
 
 class MainWindow;
 
 class VisualizationWidget {
   QSizeF m_defaultSize;
-  GameVisualizer* m_gameVisualizer{};
+  GameVisualizerBase* m_gameVisualizer{};
 
  protected:
   void setupVisualizationWidget(MainWindow* mainWindow);
 
  public:
   explicit VisualizationWidget(const QSizeF& defaultSize);
-  GameVisualizer* gameVisualizer();
+  GameVisualizerBase* gameVisualizer();
 };
 
 #endif // SOCCER_COMMON_VISUALIZATIONWIDGET_H

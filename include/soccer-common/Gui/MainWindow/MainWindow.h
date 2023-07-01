@@ -1,11 +1,13 @@
-#ifndef SOCCER_COMMON_MAINWINDOW_H
-#define SOCCER_COMMON_MAINWINDOW_H
+#ifndef VSS_UNIFICATION_MAINWINDOW_H
+#define VSS_UNIFICATION_MAINWINDOW_H
 
 #include <QMainWindow>
 #include "soccer-common/Gui/Widgets/Widgets.h"
 #include "soccer-common/Gui/GuiUtils/GuiUtils.h"
 #include "soccer-common/Gui/Interfaces/Interfaces.h"
+#include "soccer-common/Gui/GameVisualizer/GameVisualizerBase/GameVisualizerBase.h"
 #include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
+#include "soccer-common/Gui/GameVisualizer/QGameVisualizer/QGameVisualizer.h"
 #include "MainWindowMenuBar/MainWindowMenuBar.h"
 
 QT_BEGIN_NAMESPACE
@@ -58,4 +60,4 @@ class MainWindow : public QMainWindow,
 
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
-#endif // SOCCER_COMMON_MAINWINDOW_H
+#endif // VSS_UNIFICATION_MAINWINDOW_H

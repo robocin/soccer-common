@@ -4,7 +4,7 @@
 #include <memory>
 #include <functional>
 
-class GameVisualizerPainter2D;
+class Painter2DBase;
 
 class Painting {
   class FunctionPainting;
@@ -14,7 +14,7 @@ class Painting {
 
   Painting() = default;
   virtual ~Painting() = default;
-  virtual void run(GameVisualizerPainter2D* f) = 0;
+  virtual void run(Painter2DBase* f) = 0;
   virtual std::unique_ptr<Painting> clone() const = 0;
 
   template <class F>
@@ -24,14 +24,14 @@ class Painting {
 enum class Painting::Layers : int { Bottom, AboveBottom, Middle, AboveMiddle, Top };
 
 class Painting::FunctionPainting : public Painting {
-  std::function<void(GameVisualizerPainter2D*)> m_function;
+  std::function<void(Painter2DBase*)> m_function;
 
  public:
   template <class F>
   inline explicit FunctionPainting(F function) : m_function(std::move(function)) {
   }
 
-  inline void run(GameVisualizerPainter2D* f) override {
+  inline void run(Painter2DBase* f) override {
     m_function(f);
   }
 

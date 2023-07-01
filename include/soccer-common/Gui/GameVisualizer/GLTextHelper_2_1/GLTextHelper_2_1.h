@@ -5,6 +5,7 @@
 #include <QFont>
 #include <QPainterPath>
 #include "soccer-common/Gui/GameVisualizer/GLTessellatorHelper_2_1/GLTessellatorHelper_2_1.h"
+#include "soccer-common/Gui/GameVisualizer/PainterText/PainterText.h"
 #include "soccer-common/Geometry/Geometry.h"
 #include "soccer-common/Utils/Utils.h"
 
@@ -158,8 +159,6 @@ class GLTextHelper_2_1 : public GLTessellatorHelper_2_1 {
   void putChar(const QChar& ch);
 
  public:
-  enum class HAlign : int { Left, Center, Right };
-  enum class VAlign : int { Bottom, Median, Middle, Top };
 
   GLTextHelper_2_1();
   ~GLTextHelper_2_1() override = default;

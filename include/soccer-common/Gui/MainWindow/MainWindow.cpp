@@ -48,7 +48,7 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
   }
   /* Mouse position on status bar */ {
-    connect(gameVisualizer(), &GameVisualizer::relativeMousePos, this, [this](const QPointF& pos) {
+    connect(gameVisualizer(), &GameVisualizerBase::relativeMousePos, this, [this](const QPointF& pos) {
       statusBar()->showMessage(
           QString("Cursor: [X = %1, Y = %2]").arg(pos.x(), 5, 'f', 2).arg(pos.y(), 5, 'f', 2));
     });
