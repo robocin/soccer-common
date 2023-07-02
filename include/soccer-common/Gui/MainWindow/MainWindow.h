@@ -22,10 +22,8 @@ class MainWindow : public QMainWindow,
 
                    public InfoWidgets,
                    public ModulesWidgets,
-                   public RobotsWidgets
-                  //  ,
-                  //  public VisualizationWidget
-                    {
+                   public RobotsWidgets,
+                   public VisualizationWidget {
   Q_OBJECT
   friend class InfoWidgets;
   QWidget* dockWidgetInfoContents();

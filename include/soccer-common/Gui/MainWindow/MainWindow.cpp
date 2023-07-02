@@ -24,7 +24,7 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     QMainWindow(parent),
     WidgetSettings(this, nullptr),
     RobotsWidgets(maxRobots),
-    // VisualizationWidget(defaultVisualizerSize),
+    VisualizationWidget(defaultVisualizerSize),
     ui(new Ui::MainWindow),
     mainWindowMenuBar(this) {
   /* performing the setup of ui and each interface (the order matters) */ {
@@ -32,7 +32,7 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     setupInfoWidgets(this);
     setupModulesWidgets(this);
     setupRobotsWidgets(this);
-    // setupVisualizationWidget(this);
+    setupVisualizationWidget(this);
   }
   /* setting dock widget corners */ {
     auto features = QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable |
@@ -48,10 +48,10 @@ MainWindow::MainWindow(int maxRobots, QSizeF defaultVisualizerSize, QWidget* par
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
   }
   /* Mouse position on status bar */ {
-    // connect(gameVisualizer(), &GameVisualizerBase::relativeMousePos, this, [this](const QPointF& pos) {
-    //   statusBar()->showMessage(
-    //       QString("Cursor: [X = %1, Y = %2]").arg(pos.x(), 5, 'f', 2).arg(pos.y(), 5, 'f', 2));
-    // });
+    connect(gameVisualizer(), &GameVisualizerBase::relativeMousePos, this, [this](const QPointF& pos) {
+      statusBar()->showMessage(
+          QString("Cursor: [X = %1, Y = %2]").arg(pos.x(), 5, 'f', 2).arg(pos.y(), 5, 'f', 2));
+    });
   }
 }
 
@@ -167,11 +167,11 @@ void MainWindow::writeLocalSettings(QSettings& settings) {
 }
 
 void MainWindow::loadLocalSettings(const QSettings& settings) {
-  // auto geometryValue = settings.value("geometry").value<QByteArray>();
-  // restoreGeometry(geometryValue);
+  auto geometryValue = settings.value("geometry").value<QByteArray>();
+  restoreGeometry(geometryValue);
 
-  // auto windowState = settings.value("windowState").value<QByteArray>();
-  // restoreState(windowState);
+  auto windowState = settings.value("windowState").value<QByteArray>();
+  restoreState(windowState);
 }
 
 void MainWindow::putWidgetActions(MainWindowMenuBar& menubar) {
