@@ -3,6 +3,7 @@
 
 #include <QSizeF>
 #include "soccer-common/Gui/GameVisualizer/GameVisualizerBase/GameVisualizerBase.h"
+#include "soccer-common/Gui/GameVisualizer/QGameVisualizer/QGameVisualizer.h"
 
 class MainWindow;
 

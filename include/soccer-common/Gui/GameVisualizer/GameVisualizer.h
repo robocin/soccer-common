@@ -6,6 +6,7 @@
 #include "GameVisualizerPainter2D/GameVisualizerPainter2D.h"
 #include "soccer-common/MagicEnum/MagicEnum.h"
 #include "GameVisualizerBase/GameVisualizerBase.h"
+
 class GameVisualizer : public GameVisualizerBase, protected GameVisualizerPainter2D {
 public:
   GameVisualizer(const QSizeF& defaultSize,

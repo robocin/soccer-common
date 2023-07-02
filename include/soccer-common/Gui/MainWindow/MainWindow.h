@@ -6,8 +6,6 @@
 #include "soccer-common/Gui/GuiUtils/GuiUtils.h"
 #include "soccer-common/Gui/Interfaces/Interfaces.h"
 #include "soccer-common/Gui/GameVisualizer/GameVisualizerBase/GameVisualizerBase.h"
-#include "soccer-common/Gui/GameVisualizer/GameVisualizer.h"
-#include "soccer-common/Gui/GameVisualizer/QGameVisualizer/QGameVisualizer.h"
 #include "MainWindowMenuBar/MainWindowMenuBar.h"
 
 QT_BEGIN_NAMESPACE

@@ -4,8 +4,7 @@
 #include "GuiFactory/GuiFactory.h"
 #include "MainWindow/MainWindow.h"
 #include "GuiUtils/GuiUtils.h"
-#include "GameVisualizer/GameVisualizer.h"
-#include "GameVisualizer/QGameVisualizer/QGameVisualizer.h"
+#include "GameVisualizer/GameVisualizerBase/GameVisualizerBase.h"
 #include "Widgets/Widgets.h"
 #include "AbstractWidgets/AbstractWidgets.h"
 
