@@ -102,8 +102,6 @@ public:
     }
 
     ~QPainter2DWrapper(){
-        delete p;
-        delete br;
     }
 };
 
