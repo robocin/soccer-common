@@ -12,6 +12,9 @@ public:
 
 protected:
     void paintEvent(QPaintEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void wheelEvent(QWheelEvent* event) override;
 };
 
 #endif // VSS_UNIFICATION_QGAMEVISUALIZER_H
