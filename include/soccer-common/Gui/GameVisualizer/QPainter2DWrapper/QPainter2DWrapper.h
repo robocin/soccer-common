@@ -7,19 +7,16 @@
 
 class QPainter2DWrapper: public Painter2DBase {
     QPainter* p = nullptr;
-    QBrush* br = nullptr;
+
 public:
 
     void setPainter(QPainter* painter){
         p = painter;
     }
 
-    void setBrush(QBrush* brush){
-        br = brush;
-    }
-
     inline void drawFilledTriangle(const Vertex& a, const Vertex& b, const Vertex& c, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
 
         QPointF tri[] = {
             a,b,c
@@ -29,19 +26,22 @@ public:
     }
 
     inline void drawFilledQuad(const Vertex& a, const Vertex& b, const Vertex& c, const Vertex& d, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         QPointF quad[] = {a,b,c,d};
         p->drawPolygon(quad, 4);
     }
 
     inline void drawFilledRectangle(const Vertex& topLeft, const Vertex& bottomRight, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         const auto& rect = QRectF(topLeft, bottomRight);
         p->drawRect(rect);
     }
     
     inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         auto* points = new QPointF[polygon.size()];
         for(int i=0; i<polygon.size(); i++){
             points[i] = polygon[i];
@@ -52,7 +52,8 @@ public:
     }
 
     inline void drawFilledConvexPolygon(Polygon polygon, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         auto* points = new QPointF[polygon.size()];
         for(int i=0; i<polygon.size(); i++){
             points[i] = polygon[i];
@@ -61,7 +62,8 @@ public:
     }
 
     inline void drawFilledPolygon(Polygon polygon, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         auto* points = new QPointF[polygon.size()];
         for(int i=0; i<polygon.size(); i++){
             points[i] = polygon[i];
@@ -70,7 +72,8 @@ public:
     }
 
     inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         auto* points = new QPointF[polyline.size()];
         for(int i=0; i<polyline.size(); i++){
             points[i] = polyline[i];
@@ -81,14 +84,16 @@ public:
     }
 
     inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         p->drawLine(a, b);
         if(thickness != 0)
             return;
     }
 
     inline void drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         p->drawEllipse(origin, radius, radius);
     }
 
@@ -97,7 +102,8 @@ public:
     }
 
     inline void drawText(const QString& text, const Vertex& position, qreal size, const QColor& color, qreal angle = 0.0, HAlign hAlign = HAlign::Center, VAlign vAlign = VAlign::Middle) override {
-        br->setColor(color);
+        QBrush br = QBrush(color);
+        p->setBrush(br);
         p->drawText(position,text);
     }
 

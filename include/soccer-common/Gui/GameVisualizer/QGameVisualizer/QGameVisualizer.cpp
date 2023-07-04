@@ -7,9 +7,10 @@ QGameVisualizer::QGameVisualizer(const QSizeF& defaultSize,
 
 void QGameVisualizer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
-    QBrush brush;
     setPainter(&painter);
-    setBrush(&brush);
+    QBrush brush;
+    brush.setColor(_local.backgroundColor);
+    painter.fillRect(event->rect(), _local.backgroundColor);
     getUpdates();
     /* drawing here. */ {
     for (auto& painting : _local.paintings) {
@@ -19,5 +20,6 @@ void QGameVisualizer::paintEvent(QPaintEvent* event) {
         }
       }
     }
+    painter.end();
   }
 }
