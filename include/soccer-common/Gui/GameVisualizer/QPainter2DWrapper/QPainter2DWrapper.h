@@ -40,15 +40,15 @@ public:
     }
     
     inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) override {
+        QPen currPen = p->pen();
         p->setBrush(Qt::NoBrush);
-        p->setPen(QPen(color));
+        p->setPen(QPen(color, thickness));
         auto* points = new QPointF[polygon.size()];
         for(int i=0; i<polygon.size(); i++){
             points[i] = polygon[i];
         }
         p->drawPolygon(points, polygon.size());
-        if(thickness != 0)
-            return;
+        p->setPen(currPen);
     }
 
     inline void drawFilledConvexPolygon(Polygon polygon, const QColor& color) override {
@@ -72,23 +72,23 @@ public:
     }
 
     inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) override {
+        QPen currPen = p->pen();
         p->setBrush(Qt::NoBrush);
-        p->setPen(QPen(color));
+        p->setPen(QPen(color, thickness));
         auto* points = new QPointF[polyline.size()];
         for(int i=0; i<polyline.size(); i++){
             points[i] = polyline[i];
         }
         p->drawPolyline(points, polyline.size());
-        if(thickness != 0)
-            return;
+        p->setPen(currPen);
     }
 
     inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) override {
+        QPen currPen = p->pen();
         p->setBrush(Qt::NoBrush);
         p->setPen(QPen(color, thickness));
         p->drawLine(a, b);
-        if(thickness != 0)
-            return;
+        p->setPen(currPen);
     }
 
     inline void drawFilledCircle(const Vertex& origin, qreal radius, const QColor& color) override {
