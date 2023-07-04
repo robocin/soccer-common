@@ -40,8 +40,8 @@ public:
     }
     
     inline void drawPolygon(Polygon polygon, const QColor& color, qreal thickness) override {
-        QBrush br = QBrush(color);
-        p->setBrush(br);
+        p->setBrush(Qt::NoBrush);
+        p->setPen(QPen(color));
         auto* points = new QPointF[polygon.size()];
         for(int i=0; i<polygon.size(); i++){
             points[i] = polygon[i];
@@ -72,8 +72,8 @@ public:
     }
 
     inline void drawPolyline(Polygon polyline, const QColor& color, qreal thickness) override {
-        QBrush br = QBrush(color);
-        p->setBrush(br);
+        p->setBrush(Qt::NoBrush);
+        p->setPen(QPen(color));
         auto* points = new QPointF[polyline.size()];
         for(int i=0; i<polyline.size(); i++){
             points[i] = polyline[i];
@@ -84,8 +84,8 @@ public:
     }
 
     inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) override {
-        QBrush br = QBrush(color);
-        p->setBrush(br);
+        p->setBrush(Qt::NoBrush);
+        p->setPen(QPen(color));
         p->drawLine(a, b);
         if(thickness != 0)
             return;
@@ -102,13 +102,12 @@ public:
     }
 
     inline void drawText(const QString& text, const Vertex& position, qreal size, const QColor& color, qreal angle = 0.0, HAlign hAlign = HAlign::Center, VAlign vAlign = VAlign::Middle) override {
-        QBrush br = QBrush(color);
-        p->setBrush(br);
+        p->setBrush(Qt::NoBrush);
+        p->setPen(QPen(color));
         p->drawText(position,text);
     }
 
-    ~QPainter2DWrapper(){
-    }
+    ~QPainter2DWrapper() = default;
 };
 
 #endif // VSS_UNIFICATION_QPAINTER2DWRAPPER_H
