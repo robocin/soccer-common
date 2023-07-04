@@ -85,7 +85,7 @@ public:
 
     inline void drawLine(const Vertex& a, const Vertex& b, const QColor& color, qreal thickness) override {
         p->setBrush(Qt::NoBrush);
-        p->setPen(QPen(color));
+        p->setPen(QPen(color, thickness));
         p->drawLine(a, b);
         if(thickness != 0)
             return;
@@ -102,9 +102,15 @@ public:
     }
 
     inline void drawText(const QString& text, const Vertex& position, qreal size, const QColor& color, qreal angle = 0.0, HAlign hAlign = HAlign::Center, VAlign vAlign = VAlign::Middle) override {
+        QPen currPen = p->pen();
         p->setBrush(Qt::NoBrush);
-        p->setPen(QPen(color));
+        p->setPen(QPen(color, size));
+        
+        p->rotate(angle);
         p->drawText(position,text);
+        p->rotate(-angle);
+
+        p->setPen(currPen);
     }
 
     ~QPainter2DWrapper() = default;
