@@ -45,7 +45,7 @@ void QGameVisualizer::mousePressEvent(QMouseEvent* event) {
     _local.mouse = event->pos();
   } else if (rightButton) {
     auto center = frameGeometry().center();
-    _local.viewOffset.rx() += _local.scale * (event->position().x() - center.x());
+    _local.viewOffset.rx() -= _local.scale * (event->position().x() - center.x());
     _local.viewOffset.ry() -= _local.scale * (event->position().y() - center.y());
   }
 }
@@ -66,7 +66,7 @@ void QGameVisualizer::mouseMoveEvent(QMouseEvent* event) {
   }
   auto center = frameGeometry().center();
   auto relativePos = _local.viewOffset;
-  relativePos.rx() += _local.scale * (event->position().x() - center.x());
+  relativePos.rx() -= _local.scale * (event->position().x() - center.x());
   relativePos.ry() -= _local.scale * (event->position().y() - center.y());
   emit relativeMousePos(relativePos);
 }
