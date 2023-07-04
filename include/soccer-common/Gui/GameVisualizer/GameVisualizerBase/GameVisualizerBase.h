@@ -55,7 +55,6 @@ class GameVisualizerBase:
   void keyPressEvent(QKeyEvent* event) override;
   void keyReleaseEvent(QKeyEvent* event) override;
 
-  static void setFormat(QOpenGLWidget* widget);
   static int getUniqueIntegerKey();
 
   class ScheduleUpdateAtEnd {

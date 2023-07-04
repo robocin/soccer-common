@@ -14,6 +14,7 @@ public:
                           Qt::WindowFlags f = Qt::WindowFlags());
 
 protected:
+  static void setFormat(QOpenGLWidget* widget);
   void initializeGL() override;
   void resizeGL(int w, int h) override;
   void paintGL() override;

@@ -6,11 +6,10 @@ GameVisualizerBase::GameVisualizerBase(const QSizeF& defaultSize,
     QOpenGLWidget(parent, f),
     WidgetSettings(this, parent),
     MenuBarOptions(parent){
-    // setFormat(this);
-    // setDefaultSize(defaultSize);
+    setDefaultSize(defaultSize);
 
-    // /* allows mouse */ { setMouseTracking(true); }
-    // /* allows keyboard */ { setFocusPolicy(Qt::StrongFocus); }
+    /* allows mouse */ { setMouseTracking(true); }
+    /* allows keyboard */ { setFocusPolicy(Qt::StrongFocus); }
 }
 
 
@@ -129,15 +128,6 @@ void GameVisualizerBase::keyPressEvent(QKeyEvent* event) {
 
 void GameVisualizerBase::keyReleaseEvent(QKeyEvent* event) {
   emit onKeyRelease(static_cast<Qt::Key>(event->key()));
-}
-
-void GameVisualizerBase::setFormat(QOpenGLWidget* widget) {
-  // QSurfaceFormat format;
-  // format.setProfile(QSurfaceFormat::CompatibilityProfile);
-  // format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-  // format.setColorSpace(QColorSpace(QColorSpace::SRgb));
-  // format.setVersion(2, 1);
-  // widget->setFormat(format);
 }
 
 int GameVisualizerBase::getUniqueIntegerKey() {

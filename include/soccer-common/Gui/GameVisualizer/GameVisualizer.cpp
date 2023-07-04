@@ -4,6 +4,16 @@
 GameVisualizer::GameVisualizer(const QSizeF& defaultSize,
                                QWidgetWith<WidgetSettings, MenuBarOptions> parent,
                                Qt::WindowFlags f): GameVisualizerBase(defaultSize, parent, f) {
+                                setFormat(this);
+}
+
+void GameVisualizer::setFormat(QOpenGLWidget* widget) {
+  QSurfaceFormat format;
+  format.setProfile(QSurfaceFormat::CompatibilityProfile);
+  format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+  format.setColorSpace(QColorSpace(QColorSpace::SRgb));
+  format.setVersion(2, 1);
+  widget->setFormat(format);
 }
 
 void GameVisualizer::initializeGL() {
