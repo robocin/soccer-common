@@ -52,7 +52,7 @@ namespace Common {
     }
 
     constexpr T penaltyAreaDepth() const {
-      return m_penaltyAreaDepth;
+      return 10;
     }
 
     constexpr T penaltyAreaWidth() const {
