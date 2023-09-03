@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_PARAMETERSDIALOG_H
-#define SOCCER_COMMON_PARAMETERSDIALOG_H
+#ifndef SSL_UNIFICATION_PARAMETERSDIALOG_H
+#define SSL_UNIFICATION_PARAMETERSDIALOG_H
 
 #include "soccer-common/Gui/GuiUtils/GuiUtils.h"
 #include "soccer-common/Gui/GuiFactory/GuiFactory.h"
@@ -10,7 +10,7 @@
 class ParameterWidget;
 class ParametersWindow;
 
-class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
+class ParametersDialog : public SearchableParametersDialogBase, public WidgetSettings {
   Q_OBJECT
 
   QString m_title;
@@ -48,6 +48,9 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   void onApplyButtonClicked() override;
   void onOkButtonClicked() override;
 
+  void onOkSearchButtonClicked() override;
+  void onCancelSearchButtonClicked() override;
+
   void writeLocalSettings(QSettings& settings) override;
   void loadLocalSettings(const QSettings& settings) override;
 
@@ -55,4 +58,4 @@ class ParametersDialog : public ParametersDialogBase, public WidgetSettings {
   void loadLocalSettings(const QJsonObject& json) override;
 };
 
-#endif // SOCCER_COMMON_PARAMETERSDIALOG_H
+#endif // SSL_UNIFICATION_PARAMETERSDIALOG_H

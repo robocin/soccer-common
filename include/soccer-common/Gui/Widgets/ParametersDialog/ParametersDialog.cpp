@@ -3,7 +3,7 @@
 
 ParametersDialog::ParametersDialog(const QString& title,
                                    QWidgetWith<WidgetSettings, MenuBarOptions> parent) :
-    ParametersDialogBase(title, parent),
+    SearchableParametersDialogBase(title, parent),
     WidgetSettings(this, parent) {
   m_parametersWindow = new ParametersWindow(parent);
   m_parametersWindow->build(m_widgets, windowTitle(), QJsonObject());
@@ -164,6 +164,16 @@ void ParametersDialog::onApplyButtonClicked() {
 void ParametersDialog::onOkButtonClicked() {
   onApplyButtonClicked();
   hide();
+}
+
+void ParametersDialog::onCancelSearchButtonClicked() {
+  resetSearchText();
+  m_parametersWindow->filterByPredicate("");
+}
+
+void ParametersDialog::onOkSearchButtonClicked() {
+  QString predicate = searchText();
+  m_parametersWindow->filterByPredicate(predicate);
 }
 
 void ParametersDialog::writeLocalSettings(QSettings& settings) {

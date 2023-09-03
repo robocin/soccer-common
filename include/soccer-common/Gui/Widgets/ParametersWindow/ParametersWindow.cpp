@@ -22,6 +22,43 @@ void ParametersWindow::build(QMap<QStringList, ParameterWidget*>& widgets,
   build(widgets, currentPath, name, json);
 }
 
+void ParametersWindow::filterByPredicate(const QString& name) {
+  clearFilter();
+  auto layout = ui->scrollAreaLayout;
+  int layoutSize = layout->count();
+  for (int i = 0; i < layoutSize; ++i) {
+    auto currentWidget = layout->itemAt(i)->widget();
+    auto parameters = currentWidget->findChildren<ParameterWidget*>();
+    bool foundInTable = false;
+    for (int j = 0; j < parameters.size(); ++j) {
+      qDebug() << "parameter: " << parameters[j]->objectName();
+      if (parameters[j]->objectName().contains(name, Qt::CaseInsensitive)) {
+        parameters[j]->show();
+        foundInTable = true;
+      } else {
+        parameters[j]->hide();
+      }
+    }
+    qDebug() << "---------------------------";
+    // if (!foundInTable) {
+    //   currentWidget->hide();
+    // }
+  }
+}
+
+void ParametersWindow::clearFilter() {
+  auto layout = ui->scrollAreaLayout;
+  int layoutSize = layout->count();
+  for (int i = 0; i < layoutSize; ++i) {
+    auto currentWidget = layout->itemAt(i)->widget();
+    auto parameters = currentWidget->findChildren<ParameterWidget*>();
+    for (int j = 0; j < parameters.size(); ++j) {
+      parameters[j]->show();
+    }
+    layout->itemAt(i)->widget()->show();
+  }
+}
+
 void ParametersWindow::build(QMap<QStringList, ParameterWidget*>& widgets,
                              QStringList& currentPath,
                              const QString& name,

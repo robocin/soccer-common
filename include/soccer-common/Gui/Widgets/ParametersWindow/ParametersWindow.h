@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QJsonObject>
+#include <qboxlayout.h>
 
 class ParameterWidget;
 
@@ -23,6 +24,9 @@ class ParametersWindow : public QWidget {
   build(QMap<QStringList, ParameterWidget*>& widgets, const QString& name, const QJsonObject& json);
   void store();
   void load();
+
+  void filterByPredicate(const QString& name);
+  void clearFilter();
 
  private:
   Ui::ParametersWindow* ui;

@@ -29,3 +29,11 @@ void ParametersDialogBase::on_buttonBox_clicked(QAbstractButton* button) {
     onApplyButtonClicked();
   }
 }
+
+void ParametersDialogBase::on_searchButtonBox_clicked(QAbstractButton* button) {
+  if (button == ui->searchButtonBox->button(QDialogButtonBox::Cancel)) {
+    // onCancelSearchButtonClicked();
+  } else if (button == ui->searchButtonBox->button(QDialogButtonBox::Ok)) {
+    // onOkSearchButtonClicked();
+  }
+}

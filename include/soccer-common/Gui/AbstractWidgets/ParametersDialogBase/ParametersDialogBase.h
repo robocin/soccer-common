@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_PARAMETERSDIALOGBASE_H
-#define SOCCER_COMMON_PARAMETERSDIALOGBASE_H
+#ifndef SSL_UNIFICATION_PARAMETERSDIALOGBASE_H
+#define SSL_UNIFICATION_PARAMETERSDIALOGBASE_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -27,11 +27,15 @@ class ParametersDialogBase : public QWidget {
   virtual void onOkButtonClicked() = 0;
   virtual void onApplyButtonClicked() = 0;
 
+  // virtual void onCancelSearchButtonClicked() = 0;
+  // virtual void onOkSearchButtonClicked() = 0;
+
  private slots:
   void on_buttonBox_clicked(QAbstractButton* button);
+  void on_searchButtonBox_clicked(QAbstractButton* button);
 
  private:
   Ui::ParametersDialogBase* ui;
 };
 
-#endif // SOCCER_COMMON_PARAMETERSDIALOGBASE_H
+#endif // SSL_UNIFICATION_PARAMETERSDIALOGBASE_H

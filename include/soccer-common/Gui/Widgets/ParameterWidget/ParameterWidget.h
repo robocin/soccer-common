@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_PARAMETERWIDGET_H
-#define SOCCER_COMMON_PARAMETERWIDGET_H
+#ifndef SSL_UNIFICATION_PARAMETERWIDGET_H
+#define SSL_UNIFICATION_PARAMETERWIDGET_H
 
 #include <QWidget>
 #include <QJsonObject>
@@ -55,4 +55,4 @@ class ParameterWidget : public QWidget {
   void receiveOnValueChanged();
 };
 
-#endif // SOCCER_COMMON_PARAMETERWIDGET_H
+#endif // SSL_UNIFICATION_PARAMETERWIDGET_H
