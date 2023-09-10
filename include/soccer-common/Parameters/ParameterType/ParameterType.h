@@ -40,6 +40,7 @@ namespace Parameters {
     static constexpr const char* Parent = "Parent";
     static constexpr const char* Filter = "Filter";
     static constexpr const char* DefaultDirectory = "DefaultDirectory";
+    static constexpr const char* Tab = "Tab";
   } // namespace Detail
 
   struct ParameterBase {

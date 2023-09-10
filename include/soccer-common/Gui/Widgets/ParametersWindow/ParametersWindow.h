@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QJsonObject>
 
+class QTabWidget;
 class ParameterWidget;
 
 namespace Ui {
@@ -44,6 +45,10 @@ class ParametersWindow : public QWidget {
                            QStringList& currentPath,
                            const QString& name,
                            const QJsonObject& json);
+  void addParametersTab(QMap<QStringList, ParameterWidget*>& widgets,
+                        QStringList& currentPath,
+                        const QString& name,
+                        const QJsonObject& json);
 };
 
 #endif // SOCCER_COMMON_PARAMETERSWINDOW_H
