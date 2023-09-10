@@ -45,6 +45,10 @@ class ParametersWindow : public QWidget {
                            QStringList& currentPath,
                            const QString& name,
                            const QJsonObject& json);
+  void addParametersTool(QMap<QStringList, ParameterWidget*>& widgets,
+                         QStringList& currentPath,
+                         const QString& name,
+                         const QJsonObject& json);
   void addParametersTab(QMap<QStringList, ParameterWidget*>& widgets,
                         QStringList& currentPath,
                         const QString& name,
