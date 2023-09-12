@@ -6,7 +6,7 @@
 namespace __rc_meta { // NOLINT(bugprone-reserved-identifier)
   struct [[maybe_unused]] static_block_tag {
     template <class Functor>
-    inline explicit static_block_tag(Functor && f) {
+    inline explicit static_block_tag(Functor&& f) {
       std::forward<Functor>(f)();
     }
     ~static_block_tag() = default;
@@ -16,7 +16,7 @@ namespace __rc_meta { // NOLINT(bugprone-reserved-identifier)
     static_block_tag& operator=(const static_block_tag&) = delete;
 
     // disable_move:
-    static_block_tag(static_block_tag &&) = delete;
+    static_block_tag(static_block_tag&&) = delete;
     static_block_tag& operator=(static_block_tag&&) = delete;
   };
 } // namespace __rc_meta

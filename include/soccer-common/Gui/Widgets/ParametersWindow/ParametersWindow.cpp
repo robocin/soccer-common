@@ -4,6 +4,9 @@
 #include "soccer-common/Gui/Widgets/ParameterWidget/ParameterWidget.h"
 #include "soccer-common/Parameters/Parameters.h"
 
+#include <QTabWidget>
+#include <QToolBox>
+
 ParametersWindow::ParametersWindow(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::ParametersWindow) {
@@ -33,11 +36,17 @@ void ParametersWindow::build(QMap<QStringList, ParameterWidget*>& widgets,
 
   for (const QString& key : keys) {
     currentPath.push_back(key);
-    if (Parameters::isParameterType(json[key].toObject())) {
+
+    if (key == Parameters::Detail::Tool) {
+      addParametersTool(widgets, currentPath, key, json[key].toObject());
+    } else if (key == Parameters::Detail::Tab) {
+      addParametersTab(widgets, currentPath, key, json[key].toObject());
+    } else if (Parameters::isParameterType(json[key].toObject())) {
       addParameterWidget(widgets, currentPath, key, json[key].toObject());
     } else {
       addParametersWindow(widgets, currentPath, key, json[key].toObject());
     }
+
     currentPath.pop_back();
   }
 }
@@ -86,4 +95,52 @@ void ParametersWindow::addParametersWindow(QMap<QStringList, ParameterWidget*>& 
   pw->setObjectName(name);
   pw->build(widgets, currentPath, name, json);
   ui->scrollAreaLayout->addWidget(pw);
+}
+
+void ParametersWindow::addParametersTool(QMap<QStringList, ParameterWidget*>& widgets,
+                                         QStringList& currentPath,
+                                         const QString& name,
+                                         const QJsonObject& json) {
+  auto addSingleItem = [&](const QString& tabName, QToolBox* toolBox) {
+    ParametersWindow* pw = new ParametersWindow(toolBox);
+
+    pw->setObjectName(tabName);
+    pw->build(widgets, currentPath, tabName, json[tabName].toObject());
+    pw->ui->groupBox->setTitle(""); // Avoid showing the name of the item in the group box.
+
+    toolBox->addItem(pw, tabName);
+  };
+
+  QToolBox* toolBox = new QToolBox(ui->scrollAreaWidgetContents);
+  ui->scrollAreaLayout->addWidget(toolBox);
+
+  for (const QString& item : json.keys()) {
+    currentPath.push_back(item);
+    addSingleItem(item, toolBox);
+    currentPath.pop_back();
+  }
+}
+
+void ParametersWindow::addParametersTab(QMap<QStringList, ParameterWidget*>& widgets,
+                                        QStringList& currentPath,
+                                        const QString& name,
+                                        const QJsonObject& json) {
+  auto addSingleTab = [&](const QString& tabName, QTabWidget* tabWidget) {
+    ParametersWindow* pw = new ParametersWindow(tabWidget);
+
+    pw->setObjectName(tabName);
+    pw->build(widgets, currentPath, tabName, json[tabName].toObject());
+    pw->ui->groupBox->setTitle(""); // Avoid showing the name of the tab in the group box.
+
+    tabWidget->addTab(pw, tabName);
+  };
+
+  QTabWidget* tabWidget = new QTabWidget(ui->scrollAreaWidgetContents);
+  ui->scrollAreaLayout->addWidget(tabWidget);
+
+  for (const QString& tab : json.keys()) {
+    currentPath.push_back(tab);
+    addSingleTab(tab, tabWidget);
+    currentPath.pop_back();
+  }
 }

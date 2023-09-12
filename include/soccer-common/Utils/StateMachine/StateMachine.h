@@ -30,8 +30,8 @@ class StateMachine {
       std::invoke_result_t<decltype(PointerToMatchingFunctorDeclval<T, Fs...>)>>;
 
  public:
-  using return_type = decltype(
-      std::visit(std::declval<overloaded_visitor_t<Functors...>>(), std::declval<State>()));
+  using return_type = decltype(std::visit(std::declval<overloaded_visitor_t<Functors...>>(),
+                                          std::declval<State>()));
 
   StateMachine() requires(std::default_initializable<State>) = default;
 
