@@ -8,18 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container: robocin/soccer-common:latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
-
-      # Install all dependencies using setup.py script inside scripts folder
-      - name: install-dependencies
-        run: cd ${GITHUB_WORKSPACE}/scripts && sudo ./setup.py --essentials
 
       - name: check-coding-style
         run: |

@@ -11,7 +11,7 @@
 namespace Protobuf {
   template <class Proto>
   QByteArray toByteArray(const Proto& proto) {
-    QByteArray datagram(static_cast<int>(proto.ByteSize()), static_cast<char>(0));
+    QByteArray datagram(static_cast<int>(proto.ByteSizeLong()), static_cast<char>(0));
     proto.SerializeToArray(datagram.data(), datagram.size());
     return datagram;
   }
