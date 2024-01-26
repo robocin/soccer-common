@@ -1,8 +1,9 @@
-#ifndef SOCCER_COMMON_MODULESPRIVATE_H
-#define SOCCER_COMMON_MODULESPRIVATE_H
+#ifndef VSS_UNIFICATION_MODULESPRIVATE_H
+#define VSS_UNIFICATION_MODULESPRIVATE_H
 
 #include "soccer-common/Gui/Gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
+#include <iostream>
 
 class ModulesPrivate : public QObject {
   Q_OBJECT
@@ -166,8 +167,6 @@ class ModulesPrivate : public QObject {
     }
 
     static void build(T*& ref, const F& factory, M* modules, ModuleBox* moduleBox, Args... args) {
-      qWarning().nospace() << "building " << Utils::nameOfType<T>() << ".";
-
       if (auto oldRef = ref) {
         ModuleBase::waitOrDelete(oldRef);
       }
@@ -176,17 +175,6 @@ class ModulesPrivate : public QObject {
       ref = factory[type](args...);
       static_cast<QObject*>(ref)->moveToThread(
           static_cast<ModulesPrivate*>(modules)->modulesThread());
-
-      QString detail;
-      if constexpr (std::is_base_of_v<IndexedModuleBase, T>) {
-        int index = static_cast<IndexedModuleBase*>(ref)->index();
-        detail += QString(" (index '%1')").arg(index);
-      }
-
-      qWarning().nospace().noquote()
-          << "a new instance of " << Utils::nameOfType<T>() << detail << " with type "
-          << "\"" << type << "\""
-          << " was created: " << ref << ".";
 
       auto connections = setDefaultConnections(ref, modules, moduleBox);
       QObject::connect(modules,
@@ -261,7 +249,6 @@ class ModulesPrivate : public QObject {
 
     template <class... Types>
     void operator()(Types&&... types) {
-      qWarning().nospace() << "making " << Utils::nameOfType<T>() << "...";
       exec(std::forward<Types>(types)...);
     }
   };
@@ -274,6 +261,7 @@ class ModulesPrivate : public QObject {
       qWarning() << "factory of" << Utils::nameOfType<T>() << "is empty.";
       return;
     }
+    qWarning() << "Building" << Utils::nameOfType<T>();
     Maker(modules, ref, factory)(std::forward<Types>(types)...);
   }
 
@@ -285,6 +273,7 @@ class ModulesPrivate : public QObject {
       return;
     }
     int n = static_cast<ModulesPrivate*>(modules)->gui()->maxRobots();
+    qWarning() << "Building" << Utils::nameOfType<T>() << "for all robots.";
     vect.resize(n);
     for (int i = 0; i < n; ++i) {
       Maker(modules, vect[i], factory)(i, std::forward<Types>(types)...);
@@ -295,4 +284,4 @@ class ModulesPrivate : public QObject {
   void prepareToDeleteAndDisconnect();
 };
 
-#endif // SOCCER_COMMON_MODULESPRIVATE_H
+#endif // VSS_UNIFICATION_MODULESPRIVATE_H

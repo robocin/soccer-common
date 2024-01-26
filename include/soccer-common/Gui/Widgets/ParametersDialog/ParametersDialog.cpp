@@ -73,8 +73,6 @@ void ParametersDialog::openCurrentFromJsonHandler(const Parameters::JsonHandler&
       }
       if (up.value() != it.value()->input()->currentValue()) {
         it.value()->input()->set(up.value());
-        qWarning().nospace() << "trying to load " << up.path() << " with value: " << up.value()
-                             << ".";
       }
     }
   }
@@ -85,12 +83,7 @@ void ParametersDialog::updateCurrentAndEmit(bool allValues) {
   UpdateRequests updates = getUpdates(true, allValues);
   if (!updates.empty()) {
     m_jsons[m_title].insert_or_assign(updates);
-    qWarning() << "emitting on changing parameters:";
-    for (const auto& up : updates) {
-      qWarning().nospace() << up.path() << " with value: " << up.value() << ".";
-    }
     emit onChangingParameters(updates);
-    qWarning() << "all changed parameters were emitted.";
   }
 }
 
