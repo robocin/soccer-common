@@ -5,3 +5,4 @@ g++
 open-gl
 protobuf
 qt
+libtorch
