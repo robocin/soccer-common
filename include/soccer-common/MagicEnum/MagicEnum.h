@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_MAGICENUM_H
-#define SOCCER_COMMON_MAGICENUM_H
+#ifndef SSL_UNIFICATION_MAGICENUM_H
+#define SSL_UNIFICATION_MAGICENUM_H
 
 #include <QVector>
 #include <QString>
@@ -9,13 +9,12 @@
 
 namespace MagicEnum {
   template <class E, class BinaryPredicate>
-  constexpr std::optional<std::decay_t<E>> cast(const QString& value, BinaryPredicate&& p) {
-    return magic_enum::enum_cast<E, BinaryPredicate>(value.toStdString(),
-                                                     std::forward<BinaryPredicate>(p));
+  constexpr auto cast(const QString& value, BinaryPredicate&& p) {
+    return magic_enum::enum_cast<E>(value.toStdString(), std::forward<BinaryPredicate>(p));
   }
 
   template <class E, class T>
-  constexpr std::optional<std::decay_t<E>> cast(const T& value) {
+  constexpr auto cast(const T& value) {
     if constexpr (std::is_base_of_v<QString, T>) {
       return magic_enum::enum_cast<E>(value.toStdString());
     } else {
@@ -97,4 +96,4 @@ namespace MagicEnum {
   }
 }; // namespace MagicEnum
 
-#endif // SOCCER_COMMON_MAGICENUM_H
+#endif // SSL_UNIFICATION_MAGICENUM_H
