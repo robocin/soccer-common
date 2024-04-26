@@ -25,6 +25,6 @@ get_filename_component(PROJECT_PATH ../ ABSOLUTE)
 ROBOCIN_LINK_PROJECT_DEFINITIONS(${PROJECT_NAME} ${PROJECT_PATH})
 ROBOCIN_LINK_FUNDAMENTAL_LIBRARIES(${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ../libs/magic_enum/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ../libs/magic_enum/include/magic_enum)
 
 ROBOCIN_DOXYGEN_CUSTOM_TARGET(${PROJECT_NAME}-documentation ../)
