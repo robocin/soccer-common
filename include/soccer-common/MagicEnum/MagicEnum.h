@@ -1,5 +1,5 @@
-#ifndef SSL_UNIFICATION_MAGICENUM_H
-#define SSL_UNIFICATION_MAGICENUM_H
+#ifndef SOCCER_COMMON_MAGICENUM_H
+#define SOCCER_COMMON_MAGICENUM_H
 
 #include <QVector>
 #include <QString>
