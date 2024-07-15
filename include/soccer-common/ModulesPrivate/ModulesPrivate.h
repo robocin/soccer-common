@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_MODULESPRIVATE_H
-#define SOCCER_COMMON_MODULESPRIVATE_H
+#ifndef SSL_UNIFICATION_MODULESPRIVATE_H
+#define SSL_UNIFICATION_MODULESPRIVATE_H
 
 #include "soccer-common/Gui/Gui.h"
 #include "soccer-common/ModuleBase/ModuleBase.h"
@@ -77,6 +77,7 @@ class ModulesPrivate : public QObject {
 
  public slots:
   void onPlayPauseButtonPressed(bool isRunning);
+  void onPlayPauseCommunicationButtonPressed(bool isRunning);
 
  protected:
   QThread* modulesThread() const;
@@ -293,6 +294,8 @@ class ModulesPrivate : public QObject {
 
  private:
   void prepareToDeleteAndDisconnect();
+  void stopCommunication();
+  void startCommunication();
 };
 
-#endif // SOCCER_COMMON_MODULESPRIVATE_H
+#endif // SSL_UNIFICATION_MODULESPRIVATE_H

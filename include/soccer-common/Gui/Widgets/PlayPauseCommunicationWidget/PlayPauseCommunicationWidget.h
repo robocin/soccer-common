@@ -1,5 +1,5 @@
-#ifndef SSL_UNIFICATION_PLAYPAUSEWIDGET_H
-#define SSL_UNIFICATION_PLAYPAUSEWIDGET_H
+#ifndef SSL_UNIFICATION_PLAYPAUSECOMMUNICATIONWIDGET_H
+#define SSL_UNIFICATION_PLAYPAUSECOMMUNICATIONWIDGET_H
 
 #include <QWidget>
 #include "soccer-common/Gui/GuiUtils/GuiUtils.h"
@@ -7,15 +7,16 @@
 #include "soccer-common/Gui/Interfaces/Interfaces.h"
 
 namespace Ui {
-  class PlayPauseWidget;
+  class PlayPauseCommunicationWidget;
 }
 
-class PlayPauseWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
+class PlayPauseCommunicationWidget : public QWidget, public WidgetSettings, public MenuBarOptions {
   Q_OBJECT
 
  public:
-  explicit PlayPauseWidget(QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
-  ~PlayPauseWidget();
+  explicit PlayPauseCommunicationWidget(
+      QWidgetWith<WidgetSettings, MenuBarOptions> parent = nullptr);
+  ~PlayPauseCommunicationWidget();
 
   bool isClicked() const;
 
@@ -30,7 +31,7 @@ class PlayPauseWidget : public QWidget, public WidgetSettings, public MenuBarOpt
   void on_pushButton_clicked(bool checked);
 
  private:
-  Ui::PlayPauseWidget* ui;
+  Ui::PlayPauseCommunicationWidget* ui;
 
   void writeLocalSettings(QSettings& settings) override;
   void loadLocalSettings(const QSettings& settings) override;
@@ -38,4 +39,4 @@ class PlayPauseWidget : public QWidget, public WidgetSettings, public MenuBarOpt
   void putWidgetActions(MainWindowMenuBar& menubar) override;
 };
 
-#endif // SSL_UNIFICATION_PLAYPAUSEWIDGET_H
+#endif // SSL_UNIFICATION_PLAYPAUSECOMMUNICATIONWIDGET_H

@@ -1,5 +1,5 @@
-#ifndef SOCCER_COMMON_MODULESWIDGETS_H
-#define SOCCER_COMMON_MODULESWIDGETS_H
+#ifndef SSL_UNIFICATION_MODULESWIDGETS_H
+#define SSL_UNIFICATION_MODULESWIDGETS_H
 
 #include <QMap>
 #include <QString>
@@ -8,11 +8,13 @@
 class ModuleBox;
 class MainWindow;
 class PlayPauseWidget;
+class PlayPauseCommunicationWidget;
 
 class ModulesWidgets {
   QLayout* m_layout;
   MainWindow* m_mainWindow;
   PlayPauseWidget* m_playPauseWidget;
+  PlayPauseCommunicationWidget* m_playPauseCommunicationWidget;
   QMap<QString, ModuleBox*> m_modules;
 
  protected:
@@ -23,6 +25,7 @@ class ModulesWidgets {
 
   ModuleBox* moduleBox(const QString& key);
   PlayPauseWidget* playPauseButton();
+  PlayPauseCommunicationWidget* playPauseCommunicationButton();
 };
 
-#endif // SOCCER_COMMON_MODULESWIDGETS_H
+#endif // SSL_UNIFICATION_MODULESWIDGETS_H

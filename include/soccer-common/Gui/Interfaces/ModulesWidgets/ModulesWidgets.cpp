@@ -16,6 +16,10 @@ void ModulesWidgets::setupModulesWidgets(MainWindow* mainWindow) {
     m_playPauseWidget = new PlayPauseWidget(m_mainWindow);
     m_layout->addWidget(m_playPauseWidget);
   }
+  /* adding play/pause communication widget */ {
+    m_playPauseCommunicationWidget = new PlayPauseCommunicationWidget(m_mainWindow);
+    m_layout->addWidget(m_playPauseCommunicationWidget);
+  }
 }
 
 ModuleBox* ModulesWidgets::moduleBox(const QString& key) {
@@ -23,8 +27,10 @@ ModuleBox* ModulesWidgets::moduleBox(const QString& key) {
     auto moduleBox = Factory::moduleBox(key, m_mainWindow);
     /* adding before play pause widget */ {
       m_layout->removeWidget(m_playPauseWidget);
+      m_layout->removeWidget(m_playPauseCommunicationWidget);
       m_layout->addWidget(moduleBox);
       m_layout->addWidget(m_playPauseWidget);
+      m_layout->addWidget(m_playPauseCommunicationWidget);
     }
     m_modules[key] = moduleBox;
   }
@@ -33,4 +39,8 @@ ModuleBox* ModulesWidgets::moduleBox(const QString& key) {
 
 PlayPauseWidget* ModulesWidgets::playPauseButton() {
   return m_playPauseWidget;
+}
+
+PlayPauseCommunicationWidget* ModulesWidgets::playPauseCommunicationButton() {
+  return m_playPauseCommunicationWidget;
 }

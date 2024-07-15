@@ -10,6 +10,7 @@
 #include "ScrollAreaForFlowLayout/ScrollAreaForFlowLayout.h"
 #include "ModuleBox/ModuleBox.h"
 #include "PlayPauseWidget/PlayPauseWidget.h"
+#include "PlayPauseCommunicationWidget/PlayPauseCommunicationWidget.h"
 #include "ParametersDialog/ParametersDialog.h"
 #include "ColorTeamWidget/ColorTeamWidget.h"
 #include "AttackSideWidget/AttackSideWidget.h"

@@ -45,8 +45,15 @@ namespace Factory {
     auto parent = optParent.value_or(mainWindow);
     auto moduleBox = new ModuleBox(key, parent);
     auto playPauseButton = mainWindow->playPauseButton();
+    auto playPauseCommunicationButton = mainWindow->playPauseCommunicationButton();
     QObject::connect(playPauseButton,
                      &PlayPauseWidget::onPushButtonClicked,
+                     moduleBox,
+                     [moduleBox](bool clicked) {
+                       moduleBox->setComboBoxEnabled(!clicked);
+                     });
+    QObject::connect(playPauseCommunicationButton,
+                     &PlayPauseCommunicationWidget::onPushButtonClicked,
                      moduleBox,
                      [moduleBox](bool clicked) {
                        moduleBox->setComboBoxEnabled(!clicked);
