@@ -11,6 +11,7 @@ PlayPauseCommunicationWidget::PlayPauseCommunicationWidget(
     MenuBarOptions(parent),
     ui(new Ui::PlayPauseCommunicationWidget) {
   ui->setupUi(this);
+  ui->pushButton->setText("⏸️");
 }
 
 PlayPauseCommunicationWidget::~PlayPauseCommunicationWidget() {

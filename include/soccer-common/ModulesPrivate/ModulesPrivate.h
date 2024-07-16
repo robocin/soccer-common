@@ -77,7 +77,6 @@ class ModulesPrivate : public QObject {
 
  public slots:
   void onPlayPauseButtonPressed(bool isRunning);
-  void onPlayPauseCommunicationButtonPressed(bool isRunning);
 
  protected:
   QThread* modulesThread() const;

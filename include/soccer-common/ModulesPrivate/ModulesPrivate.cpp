@@ -11,11 +11,6 @@ ModulesPrivate::ModulesPrivate(MainWindow* gui) :
                    this,
                    &ModulesPrivate::onPlayPauseButtonPressed);
 
-  QObject::connect(gui->playPauseCommunicationButton(),
-                   &PlayPauseCommunicationWidget::onPushButtonClicked,
-                   this,
-                   &ModulesPrivate::onPlayPauseCommunicationButtonPressed);
-
   QObject::connect(gui, &MainWindow::destroyed, m_modulesThread, &QThread::quit);
 }
 
@@ -40,14 +35,6 @@ void ModulesPrivate::onPlayPauseButtonPressed(bool isRunning) {
   }
 }
 
-void ModulesPrivate::onPlayPauseCommunicationButtonPressed(bool isRunning) {
-  if (isRunning) {
-    emit stopCommunication();
-  } else {
-    emit startCommunication();
-  }
-}
-
 QThread* ModulesPrivate::modulesThread() const {
   return m_modulesThread;
 }
@@ -56,10 +43,4 @@ void ModulesPrivate::prepareToDeleteAndDisconnect() {
   m_timers.clear();
   emit prepareToDelete();
   disconnect(this, &ModulesPrivate::prepareToDelete, nullptr, nullptr);
-}
-
-void ModulesPrivate::stopCommunication() {
-}
-
-void ModulesPrivate::startCommunication() {
 }
