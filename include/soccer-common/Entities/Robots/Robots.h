@@ -106,6 +106,36 @@ namespace Common {
       return robots;
     }
 
+    iterator furthestTo(const PT& position) {
+      std::optional<iterator> furthest;
+      for (auto it = QList<R>::begin(); it != QList<R>::end(); ++it) {
+        if (furthest) {
+          if (Geometry2D::distanceSquared<PT>(position, it->position()) >
+              Geometry2D::distanceSquared<PT>(position, furthest.value()->position())) {
+            furthest.template emplace(it);
+          }
+        } else {
+          furthest.template emplace(it);
+        }
+      }
+      return furthest.template value_or(QList<R>::end());
+    }
+
+    const_iterator furthestTo(const PT& position) const {
+      std::optional<const_iterator> furthest;
+      for (auto it = QList<R>::cbegin(); it != QList<R>::cend(); ++it) {
+        if (furthest) {
+          if (Geometry2D::distanceSquared<PT>(position, it->position()) >
+              Geometry2D::distanceSquared<PT>(position, furthest.value()->position())) {
+            furthest.template emplace(it);
+          }
+        } else {
+          furthest.template emplace(it);
+        }
+      }
+      return furthest.template value_or(QList<R>::cend());
+    }
+
     iterator closestTo(const PT& position) {
       std::optional<iterator> closest;
       for (auto it = QList<R>::begin(); it != QList<R>::end(); ++it) {
