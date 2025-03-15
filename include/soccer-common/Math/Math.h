@@ -96,6 +96,22 @@ namespace Math {
     return static_cast<bool>(numerator) ? (1 + (numerator - 1) / denominator) : 0;
   }
 
+  /*!
+   * @tparam T arithmetic type.
+   * @param value input for logistic function
+   * @param L maximum value of the logistic function
+   * @param a steepness of the curve
+   * @param b growth rate of the curve
+   * @param c x-value of the sigmoid's midpoint
+   * @return Returns the logistic function of value.
+   * @note The logistic function is defined as L / (1 + a * exp(-b * (value - c))).
+   */
+  template <class T>
+  [[maybe_unused]] constexpr T
+  logistic(T value, const T& L = 1.0, const T& a = 1.0, const T& b = 1.0, const T& c = 0.0) {
+    return (L / (1 + a * std::exp(-b * (value - c))));
+  }
+
   using std::min;
   using std::max;
   using std::minmax;
